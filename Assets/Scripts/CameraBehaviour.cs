@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-namespace TEMPLATENAMESPACE 
+namespace UNNAMED 
 { 
     /// <summary>
     /// <para>SUMMARY GOES HERE.</para>
@@ -39,3 +39,4 @@ namespace TEMPLATENAMESPACE
         #endregion
     }
 }
+ 

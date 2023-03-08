@@ -187,17 +187,6 @@ namespace DataService
         }
         #endregion
         #region loading
-
-        /*Depricated distinction between common and unique data
-        public T FetchUniqueData<T>(bool encrypted=false) where T : UNIQUEDATACLASS 
-        { 
-            return ReadData<T>(typeof(T).ToString(), encrypted);
-        }
-        public T FetchCommonData<T>(string key, bool encrypted=false) where T : COMMONDATACLASS
-        {
-            return ReadData<T>(key,encrypted);
-        }
-        */
         public bool DataAvailable(string key)
         {
             return File.Exists(DataPath(key));
@@ -305,7 +294,7 @@ namespace DataService
         protected void WipeAllData()
         {
             DirectoryInfo dir = new(FolderPath());
-            foreach (FileInfo file in dir.GetFiles()) //shouldn't thius loop be inside the other loop?
+            foreach (FileInfo file in dir.GetFiles()) //shouldn't this loop be inside the other loop?
             {
                 file.Delete();
             }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using Ink.UnityIntegration;
 using Ink.Runtime;
+using NaughtyAttributes;
 
 namespace Core
 {

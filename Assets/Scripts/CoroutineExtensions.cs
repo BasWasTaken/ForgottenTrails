@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Utility.Extensions
+namespace Extensions
 {
     /// <summary>
     /// Extension class that allows for simple access to delayed actions.

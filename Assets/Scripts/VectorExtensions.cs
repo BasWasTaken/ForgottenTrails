@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Utility.Extensions
+namespace Extensions
 {
     /// <summary>
     /// Extension class for easing vector calculations by handling associated convertions.
+    /// Taken from a gamejam project in 2022 or 2021, from Jaep.
     /// </summary>
     public static class VectorExtensions
     {

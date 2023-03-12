@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using Ink.UnityIntegration;
 using Ink.Runtime;
-using NaughtyAttributes;
+using NaughtyAttributes.Editor;
 
 namespace Core
 {
@@ -14,7 +14,7 @@ namespace Core
     /// </summary>
     [CustomEditor(typeof(BasicInkScript))]
     [InitializeOnLoad]
-    public class BasicInkEditor : Editor
+    public class BasicInkEditor : NaughtyInspector
     {
 
         static BasicInkEditor()
@@ -34,6 +34,7 @@ namespace Core
             base.OnInspectorGUI();
             var realTarget = target as BasicInkScript;
             var story = realTarget.story;
+            
             InkPlayerWindow.DrawStoryPropertyField(story, new GUIContent("Story"));
         }
     }

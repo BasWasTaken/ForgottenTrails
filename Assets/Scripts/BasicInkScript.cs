@@ -43,7 +43,7 @@ namespace Core
         public TextMeshProUGUI textPanel = null;
         [SerializeField, BoxGroup("Scene References")]
         public Image bgImage;
-        [SerializeField, BoxGroup("Scene References")]
+        [SerializeField, BoxGroup("Scene References"), Required]
         public Transform buttonAnchor;
         [SerializeField, BoxGroup("Scene References")]
         public Vector2 buttonOffset = new(0, 1);
@@ -573,10 +573,10 @@ namespace Core
         {
             /// Creates the button from a prefab
             Button choice = Instantiate(buttonPrefab) as Button;
-            choice.transform.SetParent(canvas.transform, false);
+            choice.transform.SetParent(buttonAnchor, false);
 
             /// Gets the text from the button prefab
-            Text choiceText = choice.GetComponentInChildren<Text>();
+            TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
             choiceText.text = text;
 
             /// Make the button expand to fit the text

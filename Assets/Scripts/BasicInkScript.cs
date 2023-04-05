@@ -564,8 +564,7 @@ namespace Core
 
         public void RemoveOptions()/// Destroys all the buttons from choices
         {
-            int childCount = buttonAnchor.childCount;
-            foreach(Button child in transform.GetComponentsInChildren<Button>())
+            foreach(Button child in buttonAnchor.GetComponentsInChildren<Button>())
             {
                 Destroy(child.gameObject);
             }

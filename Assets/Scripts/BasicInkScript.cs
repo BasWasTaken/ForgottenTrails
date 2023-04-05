@@ -40,7 +40,11 @@ namespace Core
 		private Canvas canvas = null;
 
         [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Panel to display current paragraph.")]
         public TextMeshProUGUI textPanel = null;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Panel to display all previous text.")]
+        public TextMeshProUGUI logPanel = null;
         [SerializeField, BoxGroup("Scene References")]
         public Image bgImage;
         [SerializeField, BoxGroup("Scene References"), Required]
@@ -103,7 +107,7 @@ namespace Core
 		public Story story;
 		public static event Action<Story> OnCreateStory;
 
-		public bool CanContinue { get; protected set; }
+		public bool CanAdvance { get; protected set; }
         public bool CompletedText => textPanel.maxVisibleCharacters == textPanel.text.Length;
         private bool completeText = false;
         private float timeSinceAdvance = 0;
@@ -115,7 +119,7 @@ namespace Core
         override protected void Awake()
 		{
 			base.Awake();
-			CanContinue = false;
+			CanAdvance = false;
 
 			if(true) // if no data present..?
 			{
@@ -174,7 +178,7 @@ namespace Core
                 {
                     completeText = true;
                 }
-                else if (story.canContinue & CanContinue & CompletedText)
+                else if (story.canContinue & CanAdvance & CompletedText)
                 {
                     StartCoroutine(AdvanceStory());
                 }
@@ -188,6 +192,11 @@ namespace Core
 
 
         #region INKY_EXTERNALS
+
+        private void DoFunction(string command)
+        {
+            Debug.Log(command);
+        }
 
         private void Spd(string speed)
         {
@@ -505,14 +514,52 @@ namespace Core
             /// Remove all the UI options on screen
             RemoveOptions();
 
-            StartCoroutine(MarkWhenContinuable());
+            /// reset the waitmarkers, and prepare behaviour for at the end of the text: 
+            /// display a "next line" icon if story is continueable, create buttons if not
+            StartCoroutine(MarkWhenAdvanceable());
 
-            /// Continue gets the next line of the story (removed .trim())
-            string text = story.Continue();
-            
-            /// Read all the content until we can't continue any more and display the text on screen!          
+            /// Assemble the next paragraph
+            string text = AssembleParagraph();
+
+            ///  display the text on screen!          
             yield return StartCoroutine(DisplayContent(text));
             
+        }
+
+        private string AssembleParagraph()
+        {
+            string text="";
+            while (story.canContinue) /// at most until the story hits a choice
+            {
+                text += story.Continue(); /// keep going into the story. Continue gets the next line of the story 
+
+                /// check for tags:
+                foreach(string tag in story.currentTags)
+                {
+                    DoFunction(tag);
+                }
+
+                if (text.Contains(":"))
+                {
+                    string[] split = text.Split(":");
+                    if (split.Length > 2)
+                    {
+                        throw new ArgumentException("Cannot handle two ':'s in 1 line.");
+                    }
+                    text = split[1];
+                    string speaker = split[0];
+                    Debug.Log("TEMP Detected speaker: " + speaker);
+                }
+
+                /// stop if you hit a paragraph break:
+                if (text.EndsWith("<br>\n"))
+                {
+                    text =text.TrimEnd("<br>\n".ToCharArray());
+                    Debug.Log("removed \"<br>\"");
+                    break;
+                }
+            }
+            return text;
         }
 
         public void RemoveOptions()/// Destroys all the buttons from choices
@@ -524,22 +571,19 @@ namespace Core
             }
         }
 
-        private IEnumerator MarkWhenContinuable()
+        private IEnumerator MarkWhenAdvanceable()
         {
             // remove bouncing arrow 
-            CanContinue = false;
+            CanAdvance = false;
             yield return new WaitUntil(() => story.canContinue);
             yield return new WaitForSecondsRealtime(advanceDialogueDelay);
             yield return new WaitUntil(() => CompletedText);
-            if (PresentButtons())
+            if (!PresentButtons()) ///try to make buttons if any
             {
-
+                /// else set bouncing triangle at most recent line
+                Debug.Log("TODO: Bouning triangle.");
             }
-            else
-            {
-                // set bouncing triangle at most recent line
-            }
-            CanContinue = true;
+            CanAdvance = true;
         }
         private bool PresentButtons()
         {
@@ -594,18 +638,19 @@ namespace Core
 		}
 
 
-        public IEnumerator DisplayContent(string text) // Creates a textbox showing the the line of text
+        public IEnumerator DisplayContent(string text) // Creates a textbox showing the the poaragraph of text
         {
             timeSinceAdvance = 0;
-            textPanel.text = text;
-            for (int i = 0; i < text.Length + 1; i++)
+            logPanel.text = textPanel.text;
+            textPanel.text += text;
+            for (int i = 0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;
                 yield return new WaitForSecondsRealtime(1 / textSpeed);
                 yield return new WaitUntil(() => isActiveAndEnabled);
                 if (completeText)
                 {
-                    textPanel.maxVisibleCharacters = text.Length;
+                    textPanel.maxVisibleCharacters = textPanel.text.Length;
                     completeText = false;
                     yield break;
                 }

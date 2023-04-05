@@ -531,7 +531,21 @@ namespace Core
             string text="";
             while (story.canContinue) /// at most until the story hits a choice
             {
-                text += story.Continue(); /// keep going into the story. Continue gets the next line of the story 
+                string newLine = story.Continue(); ///Continue gets the next line of the story 
+
+                if (newLine.Contains(": ")) /// (example) check if this line is being spoken my anybody specific
+                {
+                    string[] split = newLine.Split(':');
+                    if (split.Length > 2)
+                    {
+                        throw new ArgumentException("Cannot handle two ':'s in 1 line.");
+                    }
+                    newLine = split[1];
+                    string speaker = split[0];
+
+                }
+
+                text += newLine; /// add the newline of the story
 
                 /// check for tags:
                 foreach(string tag in story.currentTags)
@@ -539,23 +553,12 @@ namespace Core
                     DoFunction(tag);
                 }
 
-                if (text.Contains(":"))
-                {
-                    string[] split = text.Split(":");
-                    if (split.Length > 2)
-                    {
-                        throw new ArgumentException("Cannot handle two ':'s in 1 line.");
-                    }
-                    text = split[1];
-                    string speaker = split[0];
-                    Debug.Log("TEMP Detected speaker: " + speaker);
-                }
+                
 
                 /// stop if you hit a paragraph break:
                 if (text.EndsWith("<br>\n"))
                 {
-                    text =text.TrimEnd("<br>\n".ToCharArray());
-                    Debug.Log("removed \"<br>\"");
+                    text = text.TrimEnd("<br>\n".ToCharArray());
                     break;
                 }
             }
@@ -580,7 +583,7 @@ namespace Core
             if (!PresentButtons()) ///try to make buttons if any
             {
                 /// else set bouncing triangle at most recent line
-                Debug.Log("TODO: Bouning triangle.");
+                Debug.Log("TODO: Bouncing triangle.");
             }
             CanAdvance = true;
         }
@@ -640,8 +643,8 @@ namespace Core
         public IEnumerator DisplayContent(string text) // Creates a textbox showing the the poaragraph of text
         {
             timeSinceAdvance = 0;
-            logPanel.text = textPanel.text;
-            textPanel.text += text;
+            logPanel.text += "\r\n\n" + textPanel.text;
+            textPanel.text = text;
             for (int i = 0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;

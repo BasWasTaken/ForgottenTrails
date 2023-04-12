@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,25 +20,25 @@ namespace Core
     /// This is a behaviour script based on an example script of how to play and display a ink story in Unity. Further functionality has been canibalised from mso project. 
     /// Taken from the Inky demo on 2023-03-08, 14:45 and adapted by Bas Vegt.
     public class BasicInkScript : MonoSingleton<BasicInkScript>
-	{
-		#region INSPECTOR VARIABLES	
+    {
+        #region INSPECTOR VARIABLES	
 
-		/// ASSETS
-		[SerializeField, BoxGroup("Assets"), Required]
-		[Tooltip("Here drag the INK object containing the dialogue behaviour")]
-		private TextAsset inkJSONAsset = null;
+        /// ASSETS
+        [SerializeField, BoxGroup("Assets"), Required]
+        [Tooltip("Here drag the INK object containing the dialogue behaviour")]
+        private TextAsset inkJSONAsset = null;
 
         [SerializeField, BoxGroup("Assets")]
         [Tooltip("Data object containing INK data.")]
         private InkData inkData;
 
-		[SerializeField, BoxGroup("Assets"), Required]
-		private Button buttonPrefab = null;
+        [SerializeField, BoxGroup("Assets"), Required]
+        private Button buttonPrefab = null;
 
-		/// SCENE REFERENCES
-		[SerializeField, BoxGroup("Scene References"), Required]
-		[Tooltip("The main canvas used for GUI elements in this scene.")]
-		private Canvas canvas = null;
+        /// SCENE REFERENCES
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("The main canvas used for GUI elements in this scene.")]
+        private Canvas canvas = null;
 
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Panel to display current paragraph.")]
@@ -55,32 +56,34 @@ namespace Core
         public Animator triangle;
 
         [SerializeField, BoxGroup("Scene References"), Required]
-		[Tooltip("Here drag the component used for sfx.")]
-		private AudioSource audioSourceSfx;
-		[SerializeField, BoxGroup("Scene References"), Required]
-		[Tooltip("Here drag the component used for music.")]
-		private AudioSource audioSourceMusic;
-		[SerializeField, BoxGroup("Scene References"), Required]
-		[Tooltip("Here drag the component used for ambiance.")]
-		private AudioSource audioSourceAmbiance;
+        [Tooltip("Here drag the component used for sfx.")]
+        private AudioSource audioSourceSfx;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for music.")]
+        private AudioSource audioSourceMusic;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for ambiance.")]
+        private AudioSource audioSourceAmbiance;
 
 
 
 
         [SerializeField, BoxGroup("Settings")]
-		[Tooltip("Delay after which space button advances dialogue.")]
-		protected float advanceDialogueDelay = .1f;
-		public float AdvanceDialogueDelay => advanceDialogueDelay;
+        [Tooltip("Delay after which space button advances dialogue.")]
+        protected float advanceDialogueDelay = .1f;
+        public float AdvanceDialogueDelay => advanceDialogueDelay;
 
-		[SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
-		[Tooltip("Choose a numeric value for this option.")]
-		private float slowText = 10f;
-		[SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
-		[Tooltip("Choose a numeric value for this option.")]
-		private float mediumText = 50f;
-		[SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
-		[Tooltip("Choose a numeric value for this option.")]
-		private float fastText = 200f;
+        private bool halted = false;
+
+        [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
+        [Tooltip("Choose a numeric value for this option.")]
+        private float slowText = 10f;
+        [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
+        [Tooltip("Choose a numeric value for this option.")]
+        private float mediumText = 50f;
+        [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
+        [Tooltip("Choose a numeric value for this option.")]
+        private float fastText = 200f;
         [BoxGroup("Settings")]
         [Tooltip("Rate of typewriter effect in nr of characters per second.")]
         public float textSpeed = 50;
@@ -90,24 +93,24 @@ namespace Core
         #region INSPECTOR_HELPERS
 
         [SerializeField, Button("ResetInkData")]
-		private void ResetInkDataButton() { inkData = CreateBlankData(); }
-		[SerializeField, Button("LoadData")]
-		private void LoadDataButton() { TryLoadData(); }
+        private void ResetInkDataButton() { inkData = CreateBlankData(); }
+        [SerializeField, Button("LoadData")]
+        private void LoadDataButton() { TryLoadData(); }
 
-		protected bool IsValidFolder(string path)
-		{
-			return Directory.Exists(path);
-		}
+        protected bool IsValidFolder(string path)
+        {
+            return Directory.Exists(path);
+        }
 
-		#endregion INSPECTOR_HELPERS
+        #endregion INSPECTOR_HELPERS
 
 
-		#region BACKEND FIELDS
-		private const string dataLabel = "BasicInkScript"; // but isn't this ridiculous? if you'll be using this object as ink interface all the time, it should't itelf store particular data, you should have objets etc store data... else all will be under here, won't it? or will it just be settings?
-		public Story story;
-		public static event Action<Story> OnCreateStory;
+        #region BACKEND FIELDS
+        private const string dataLabel = "BasicInkScript"; // but isn't this ridiculous? if you'll be using this object as ink interface all the time, it should't itelf store particular data, you should have objets etc store data... else all will be under here, won't it? or will it just be settings?
+        public Story story;
+        public static event Action<Story> OnCreateStory;
 
-		public bool CanAdvance { get; protected set; }
+        public bool CanAdvance { get; protected set; }
         public bool CompletedText => textPanel.maxVisibleCharacters == textPanel.text.Length;
         private bool completeText = false;
         private float timeSinceAdvance = 0;
@@ -117,54 +120,47 @@ namespace Core
         #region LIFESPAN	
 
         override protected void Awake()
-		{
-			base.Awake();
-			CanAdvance = false;
-
-			if(true) // if no data present..?
-			{
-				inkData = CreateBlankData();
-			}
-		}
+        {
+            base.Awake();
+            CanAdvance = false;
+            
+            if (true) // if no data present..?
+            {
+                inkData = CreateBlankData();
+            }
+        }
         private void Start()
         {
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y);
             if (inkJSONAsset != null)
             {
-				StartStory();
-			}
+                StartStory();
+            }
         }
 
         /// Creates a new Story object with the compiled story which we can then play!
         void StartStory()
-		{
-			story = new Story(inkJSONAsset.text);
+        {
+            story = new Story(inkJSONAsset.text);
 
-			story.BindExternalFunction("Spd", (string speed) => Spd(speed));
-			story.BindExternalFunction("Bg", (string fileName) => SetBackdrop(fileName));
-			story.BindExternalFunction("Msc", (string fileName) => SetMusic(fileName));
-			story.BindExternalFunction("Ambi", (string fileName) => SetAmbiance(fileName));
-			story.BindExternalFunction("Sfx", (string fileName) => PlaySfx(fileName));
-			story.BindExternalFunction("ConsoleMessage", (string text) => ConsoleLogInk(text, false));
-			story.BindExternalFunction("ConsoleWarning", (string text) => ConsoleLogInk(text, true));
+            story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
+            OnCreateStory?.Invoke(story);
 
-			OnCreateStory?.Invoke(story);
+            TryLoadData();
 
-			TryLoadData();
-
-			if (inkData.saveStateCur != "")
-			{
-				Debug.Log("continueing from savepoint!");
-				story.state.LoadJson(inkData.saveStateCur);
-			}
-			else
-			{
-				Debug.Log("no save point detected, starting from start");
-				story.state.GoToStart();
-			}
+            if (inkData.saveStateCur != "")
+            {
+                Debug.Log("continueing from savepoint!");
+                story.state.LoadJson(inkData.saveStateCur);
+            }
+            else
+            {
+                Debug.Log("no save point detected, starting from start");
+                story.state.GoToStart();
+            }
 
 
-			if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
+            if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
 		}
         #endregion LIFESPAN
 
@@ -199,7 +195,7 @@ namespace Core
             string command = split[0];
             string parameter = split[1];
 
-            if (command=="backdrop")
+            if (command == "backdrop")
             {
                 SetBackdrop(parameter);
             }
@@ -207,7 +203,7 @@ namespace Core
             {
                 SetMusic(parameter);
             }
-            else if(command=="ambiance")
+            else if (command == "ambiance")
             {
                 SetAmbiance(parameter);
             }
@@ -215,7 +211,27 @@ namespace Core
             {
                 PlaySfx(parameter);
             }
+            else if (command == "pause")
+            {
+                HaltTextFor(parameter);
+                Debug.LogAssertion("Please Note: I am still working my way up to handling timing well in unity stories. The parsing of text by the computer is near-instantaneous, but it takes a while for the text to be presented on screen, particularly using our typewriter effect. I haven't yet thought of how to synch up any function to when it appears in the text. Timing related functions might not (yet) work properly or have the desired effect.");
+            }
         }
+
+        IEnumerator HaltText(int seconds)
+        {
+            halted = true;
+            yield return new WaitForSecondsRealtime(seconds);
+            halted = false;
+        }
+
+        void HaltTextFor(string time)
+        {
+            time = time.Trim('s');
+            Int32.TryParse(time, out int seconds);
+            StartCoroutine(HaltText(seconds));
+        }
+
 
         private void Spd(string speed)
         {
@@ -246,12 +262,12 @@ namespace Core
 
         private void SetBackdrop(string fileName)
         {
-            Sprite sprite=null; /// clear bg if no other value is given
-            if(!(fileName == "" | fileName == "null"))
+            Sprite sprite = null; /// clear bg if no other value is given
+            if (!(fileName == "" | fileName == "null"))
             {
                 try
                 {
-                    if(!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
+                    if (!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
                     {
                         throw new FileNotFoundException("File not found: " + fileName);
                     }
@@ -266,7 +282,6 @@ namespace Core
                     // throw it to the parent method.
                     if (e.Source != null)
                         Console.WriteLine("IOException source: {0}", e.Source);
-                    bgImage.sprite = null;
                     throw;
                 }
             }
@@ -277,101 +292,126 @@ namespace Core
 
         private void SetMusic(string fileName)
         {
-            Debug.LogError("Not yet implemented. Use addressables for this.");
-            // old function:
-            /*
-           if (fileName == "")
-           {
-               audioSourceMusic.Stop();
-           }
-           else
-           {
-               try
-               {
-                   AudioClip var = (AudioClip)Resources.Load(musicDirectory + fileName, typeof(AudioClip));
-
-                   if (audioSourceMusic.clip != var)
-                   {
-                       audioSourceMusic.clip = var;
-                       inkData.sceneState.activeMusic = fileName;
-                       audioSourceMusic.Play();
-                   }
-
-               }
-               catch (Exception e)
-               {
-                   // Extract some information from this exception, and then
-                   // throw it to the parent method.
-                   if (e.Source != null)
-                       Console.WriteLine("IOException source: {0}", e.Source);
-                   throw;
-               }
-           }
-            */
-       }
-       private void SetAmbiance(string fileName)
-       {
-            Debug.LogError("Not yet implemented. Use addressables for this.");
-            // old function:
-            /*
-          if (fileName == "")
-          {
-              audioSourceAmbiance.Stop();
-          }
-          else
-          {
-              try
-              {
-                  AudioClip var = (AudioClip)Resources.Load(sfxDirectory + fileName, typeof(AudioClip));
-
-                  if (audioSourceAmbiance.clip != var)
-                  {
-                      audioSourceAmbiance.clip = var;
-                      inkData.sceneState.activeAmbiance = fileName;
-                      audioSourceAmbiance.Play();
-                  }
-
-              }
-              catch (Exception e)
-              {
-                  // Extract some information from this exception, and then
-                  // throw it to the parent method.
-                  if (e.Source != null)
-                      Console.WriteLine("IOException source: {0}", e.Source);
-                  throw;
-              }
-          }
-            */
-      }
-
-      private void PlaySfx(string fileName)
-      {
-            Debug.LogError("Not yet implemented. Use addressables for this.");
-            // old function:
-            /*
-            try
+            AudioClip audioClip = null; /// clear music if no other value is given
+            if (!(fileName == "" | fileName == "null"))
             {
-                AudioClip var = (AudioClip)Resources.Load(sfxDirectory + fileName, typeof(AudioClip));
-                if (var == null)
+                try
                 {
-                    throw new FileNotFoundException("File not found: " + sfxDirectory + fileName);
+                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName, out AudioClip audioClip1))
+                    {
+                        throw new FileNotFoundException("File not found: " + fileName);
+                    }
+                    else
+                    {
+                        audioClip = audioClip1;
+                    }
                 }
-                if (audioSourceSfx.clip != var)
+                catch (Exception e)
                 {
-                    audioSourceSfx.clip = var;
-                    audioSourceSfx.PlayOneShot(var);
+                    // Extract some information from this exception, and then
+                    // throw it to the parent method.
+                    if (e.Source != null)
+                        Console.WriteLine("IOException source: {0}", e.Source);
+                    throw;
                 }
             }
-            catch (Exception e)
+            if (audioClip != null)
             {
-                // Extract some information from this exception, and then
-                // throw it to the parent method.
-                if (e.Source != null)
-                    Console.WriteLine("IOException source: {0}", e.Source);
-                throw;
+                if (audioSourceMusic.clip != audioClip)
+                {
+                    audioSourceMusic.clip = audioClip;
+                    inkData.sceneState.activeMusic = fileName;
+                    audioSourceMusic.Play();
+                }
             }
-            */
+            else
+            {
+                audioSourceMusic.Stop();
+                inkData.sceneState.activeMusic = "";
+            }
         }
+        private void SetAmbiance(string fileName)
+        {
+            AudioClip audioClip = null; /// clear music if no other value is given
+            if (!(fileName == "" | fileName == "null"))
+            {
+                try
+                {
+                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName, out AudioClip audioClip1))
+                    {
+                        throw new FileNotFoundException("File not found: " + fileName);
+                    }
+                    else
+                    {
+                        audioClip = audioClip1;
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Extract some information from this exception, and then
+                    // throw it to the parent method.
+                    if (e.Source != null)
+                        Console.WriteLine("IOException source: {0}", e.Source);
+                    throw;
+                }
+            }
+            if (audioClip != null)
+            {
+                if (audioSourceAmbiance.clip != audioClip)
+                {
+                    audioSourceAmbiance.clip = audioClip;
+                    inkData.sceneState.activeAmbiance = fileName;
+                    audioSourceAmbiance.Play();
+                }
+            }
+            else
+            {
+                audioSourceAmbiance.Stop();
+                inkData.sceneState.activeAmbiance = "";
+            }
+        }
+
+        private void PlaySfx(string fileName)
+        {
+            AudioClip audioClip = null; /// clear music if no other value is given
+            if (!(fileName == "" | fileName == "null"))
+            {
+                try
+                {
+                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName, out AudioClip audioClip1))
+                    {
+                        throw new FileNotFoundException("File not found: " + fileName);
+                    }
+                    else
+                    {
+                        audioClip = audioClip1;
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Extract some information from this exception, and then
+                    // throw it to the parent method.
+                    if (e.Source != null)
+                        Console.WriteLine("IOException source: {0}", e.Source);
+                    throw;
+                }
+            }
+            if (audioClip != null)
+            {
+                if (true)//audioSourceSfx.clip != audioClip)
+                {
+                    audioSourceSfx.clip = audioClip;
+                    audioSourceSfx.PlayOneShot(audioClip);
+                    StartCoroutine(RemoveClipWhenFinished(audioSourceSfx));
+                }
+            }
+        }
+        IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
+        {
+            yield return new WaitWhile(() => audioSource.isPlaying);
+            audioSource.clip = null;
+        }
+
 
         private void ConsoleLogInk(string text, bool warning = false)
         {
@@ -527,40 +567,45 @@ namespace Core
 
             ///  display the text on screen!          
             yield return StartCoroutine(DisplayContent(text));
-            
+
         }
 
         private string AssembleParagraph()
         {
-            string text="";
+            string text = "";
             while (story.canContinue) /// at most until the story hits a choice
             {
                 string newLine = story.Continue(); ///Continue gets the next line of the story 
-
-                if (newLine.Contains(": ")) /// (example) check if this line is being spoken my anybody specific
+                if (newLine.StartsWith(">>>")) /// (example) check if this line is being spoken my anybody specific
                 {
-                    string[] split = newLine.Split(':');
-                    if (split.Length > 2)
+                    PlaySfx(newLine.Split(">>>")[1].TrimEnd('\n').TrimEnd(' ').ToLower());
+                }
+                else
+                {
+                    if (new Regex(".+:\\s\\w+").IsMatch(newLine)) /// (example) check if this line is being spoken my anybody specific
                     {
-                        throw new ArgumentException("Cannot handle two ':'s in 1 line.");
+                        string[] split = newLine.Split(':');
+                        if (split.Length > 2)
+                        {
+                            throw new ArgumentException("Cannot handle two ':'s in 1 line.");
+                        }
+                        newLine = "\"" + split[1] + "\"";
+                        string speaker = split[0];
                     }
-                    newLine = split[1];
-                    string speaker = split[0];
 
+                    text += newLine; /// add the newline of the story
                 }
 
-                text += newLine; /// add the newline of the story
-
                 /// check for tags:
-                foreach(string tag in story.currentTags)
+                foreach (string tag in story.currentTags)
                 {
                     DoFunction(tag);
                 }
 
-                
+
 
                 /// stop if you hit a paragraph break:
-                if (text.EndsWith("<br>\n"))
+                if (text.EndsWith("\n<br>\n"))
                 {
                     text = text.TrimEnd("<br>\n".ToCharArray());
                     break;
@@ -571,7 +616,7 @@ namespace Core
 
         public void RemoveOptions()/// Destroys all the buttons from choices
         {
-            foreach(Button child in buttonAnchor.GetComponentsInChildren<Button>())
+            foreach (Button child in buttonAnchor.GetComponentsInChildren<Button>())
             {
                 Destroy(child.gameObject);
             }
@@ -653,6 +698,7 @@ namespace Core
             {
                 textPanel.maxVisibleCharacters = i;
                 yield return new WaitForSecondsRealtime(1 / textSpeed);
+                yield return new WaitWhile(() => halted);
                 yield return new WaitUntil(() => isActiveAndEnabled);
                 if (completeText)
                 {

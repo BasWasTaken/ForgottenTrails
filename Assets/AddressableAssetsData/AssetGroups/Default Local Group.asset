@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Assets/Art/Whiterun.bmp
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: ba486475ea3444145a81d4544dd1e7a0
+    m_Address: gong
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a51d926a23798f04882e41c9fa83e15a, type: 2}
   m_SchemaSet:

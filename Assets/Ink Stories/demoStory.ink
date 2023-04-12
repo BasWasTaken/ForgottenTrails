@@ -1,45 +1,45 @@
 -> Start
-// reminder to self: check out https://github.com/inkle/ink/blob/master/Documentation/WritingWithInk.md#5-functions and https://github.com/inkle/ink/blob/master/Documentation/WritingWithInk.md#part-5-advanced-state-tracking and https://www.patreon.com/posts/tips-and-tricks-18637020
-
-#Backdrop sampleBG.png // This should set the background
-
-#Music sampleMusic.mp3 // This should set the background music
-#Music nothing
-
-#Ambiance sampleAmbiance.mp3 // This should set the ambiance sound
-#Ambiance nothing
-
-#SFX sampleSFX.mp3 // This should play a one-off sound effect.
-#Spd slow // Sets speed to slow, normal or fast.
-
-#Log Hello World! // This prints the text to the unity console.
-#LogWarning WARNING MESSAGE // This prints the text to the unity console in a warning format.
-
-
-
-
-=== function VoorbeeldFunctie(VoorbeeldParameter) ===
-	~ return VoorbeeldVariabele
+    // reminder to self: check out https://github.com/inkle/ink/blob/master/Documentation/WritingWithInk.md#5-functions and https://github.com/inkle/ink/blob/master/Documentation/WritingWithInk.md#part-5-advanced-state-tracking and https://www.patreon.com/posts/tips-and-tricks-18637020
+    // mandatory reading for both Bas and Joris: https://github.com/inkle/ink/blob/master/Documentation/RunningYourInk.md#marking-up-your-ink-content-with-tags
 	
+	/// following 2 are not implemented
+    >>>warning: Sample! // This prints the text to the unity console as a warning message.
+    >>>log: Hello World! // This prints the text to the unity console.
+    /// preceding 2 are not implemented
+
 === Start ===
-VAR VoorbeeldVariabele = "VoorbeeldWaarde"
-
-Aan Joris de vraag, welke manier van een functie callen hem het fijnst lijkt werken:
-~ VoorbeeldFunctie("VoorbeeldParameter") // hiervan zie je in de tekst niets.
-{VoorbeeldFunctie("VoorbeeldParameter")} // Hiervan zie je zo mogelijk direct de waarde inline.
->>> VoorbeeldFunctie VoorbeeldParameter // Deze zie je in de ink preview, alsof het text is. 
-#VoorbeeldFunctie VoorbeeldParameter//Deze zie je in de Ink preview rechts, als tags, tot er een paragraph break komt)
-<br> // <br> Wordt als Inky laten zien als paragraph spacing, en interpreteert mijn unity code ook als paragraaf!
-Bas: Kijk, op deze manier kan je een spreker aanduiden. Op dit moment wordt daar nog niets mee gedaan behalve dat de naam weg wordt gehaald in Unity. Maar dit zou je dus kunnen gebruiken voor nametags etc. Wsl voor ons niet per se relevant meer, maar als je het wel wil hebben, laat vooral even weten. Betekent dus wel dat je niet zomaar een dubbepunt kan gebruiken in je schrijven verder. Wsl zou ik er een escape functionaliteit voor moeten schrijven.
-<br> 
-The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. 
-The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. 
-<br>
-(Internal): Op deze manier zou je gedachten aan kunnen duiden.
-
-Aan het eind van deze zin wordt een command doorgegeven #voorbeeld van een command
-Je kan er ook meerdere doorgeven # dit is commando 1 en # dit is commando 2 
-
+    #backdrop:whiterun // This should set the background
+    #ambiance:chatter // this should set the ambiance
+    #music:the streets of whiterun //this should set the music
+    This is the beginning of the ink story.
+    #sfx: gong.wav // this should play a sound
+    Gong! 
+    -> sfx
+    
+=== sfx ===
+    Did you like the sound effect? Here, you can sound it as many times as you want:
+    + [Hit it again.] -> sfx #sfx: gong
+    * Continue -> continue
+=== continue ===
+    Tekst komt binnen in ons tekst vakje, en vult het langzaamaan op.
+    The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. 
+    <br>
+    De linebreak geeft aan wanneer een nieuwe paragraaf begint. Het textvak wordt dan geleegd, de log erboven wordt aangevuld met de tekst die net weggehaald is, en het tekstvak wordt aangevuld met deze nieuwe tekst.
+    Op dit moment zijn dit de enige twee manieren om tekst te splitten: newlines en linebreaks. Gezien alle newlines in één keer worden getoond (tot er een linebreak of ink keuze komt), is er nu nog geen manier om een paragraaf in een paar stukjes te splitten, zonder dat meteen de vorige stukken weggaan.
+    * [Nu ja, behalve dan door een keuze te gebruiken.] 
+    Keuzes breken de tekst op zonder dat automatisch de voorgaande tekst wordt geleegd. Die truc zou je dus ook kunnen gebruiken.
+    <br>
+    Het lijkt me in ieder geval, dat er voor nu genoeg functionaliteit is, dat de de geavanceerder linebreak methodes voor nu geen prioriteit zijn.
+    -> next
+=== next ===
+    * [Agreed.] What's next?
+    Bas: Door deze zin te beginnen met een naam gevolgd door een dubbele punt, heb ik een spreker aangeduid. Voor nu maakt dat alleen dat deze tekst binnen aanhalingstekens komt, maar hier kun je nog van alles mee doen.
+    Ik moet alleen nog wel een escape clause schrijven om te voorkomen dat er geen gekke dingen gebeuren als je elders in je tekst een dubbele punt gebruikt.
+    -> showme
+=== showme ===
+    <br>
+    * [Show me inkle's demo.] Inkle's demo:
+    <br>
 - I looked at Monsieur Fogg. 
 *   ... and I could contain myself no longer.
     'What is the purpose of our journey, Monsieur?'

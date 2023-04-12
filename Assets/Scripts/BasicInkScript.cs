@@ -141,10 +141,10 @@ namespace Core
 			story = new Story(inkJSONAsset.text);
 
 			story.BindExternalFunction("Spd", (string speed) => Spd(speed));
-			story.BindExternalFunction("Bg", (string fileName) => Bg(fileName));
-			story.BindExternalFunction("Msc", (string fileName) => Msc(fileName));
-			story.BindExternalFunction("Ambi", (string fileName) => Ambi(fileName));
-			story.BindExternalFunction("Sfx", (string fileName) => Sfx(fileName));
+			story.BindExternalFunction("Bg", (string fileName) => SetBackdrop(fileName));
+			story.BindExternalFunction("Msc", (string fileName) => SetMusic(fileName));
+			story.BindExternalFunction("Ambi", (string fileName) => SetAmbiance(fileName));
+			story.BindExternalFunction("Sfx", (string fileName) => PlaySfx(fileName));
 			story.BindExternalFunction("ConsoleMessage", (string text) => ConsoleLogInk(text, false));
 			story.BindExternalFunction("ConsoleWarning", (string text) => ConsoleLogInk(text, true));
 
@@ -193,9 +193,28 @@ namespace Core
 
         #region INKY_EXTERNALS
 
-        private void DoFunction(string command)
+        private void DoFunction(string tag)
         {
-            Debug.Log(command);
+            string[] split = tag.ToLower().Split(':');
+            string command = split[0];
+            string parameter = split[1];
+
+            if (command=="backdrop")
+            {
+                SetBackdrop(parameter);
+            }
+            else if (command == "music")
+            {
+                SetMusic(parameter);
+            }
+            else if(command=="ambiance")
+            {
+                SetAmbiance(parameter);
+            }
+            else if (command == "sfx")
+            {
+                PlaySfx(parameter);
+            }
         }
 
         private void Spd(string speed)
@@ -225,37 +244,21 @@ namespace Core
             }
         }
 
-        private void Bg(string fileName)
+        private void SetBackdrop(string fileName)
         {
-             Debug.LogError("Not yet implemented. Use addressables for this.");
-             // old function:
-             /*
-            if (fileName == "" | fileName == "null")
-            {
-                //        Debug.Log("no bg loaded.");
-            }
-            else
+            Sprite sprite=null; /// clear bg if no other value is given
+            if(!(fileName == "" | fileName == "null"))
             {
                 try
                 {
-                   
-
-                    string fileNameFull = bgDirectory + fileName;
-                    Sprite bg = (Sprite)Resources.Load(fileNameFull, typeof(Sprite));
-                    if (bg == null)
+                    if(!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
                     {
-                        throw new FileNotFoundException("File not found: " + bgDirectory + fileName);
+                        throw new FileNotFoundException("File not found: " + fileName);
                     }
-                    //if (State.displayState == NovelState.DisplayState.Dialogue)
-                    //{
-                    dialogueWindowObject.bgImage.sprite = bg;
-                    inkData.sceneState.background = fileName;
-                    //}
-                    //else if (State.displayState == NovelState.DisplayState.Narration)
-                    //{
-                    dialogueWindowObject.bgImageAlt.sprite = bg;
-                    inkData.sceneState.backgroundAlt = fileName;
-                    //}
+                    else
+                    {
+                        sprite = sprite1;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -263,15 +266,16 @@ namespace Core
                     // throw it to the parent method.
                     if (e.Source != null)
                         Console.WriteLine("IOException source: {0}", e.Source);
+                    bgImage.sprite = null;
                     throw;
                 }
             }
-             */
-
+            bgImage.sprite = sprite;
+            inkData.sceneState.background = fileName;
         }
 
 
-        private void Msc(string fileName)
+        private void SetMusic(string fileName)
         {
             Debug.LogError("Not yet implemented. Use addressables for this.");
             // old function:
@@ -305,7 +309,7 @@ namespace Core
            }
             */
        }
-       private void Ambi(string fileName)
+       private void SetAmbiance(string fileName)
        {
             Debug.LogError("Not yet implemented. Use addressables for this.");
             // old function:
@@ -340,7 +344,7 @@ namespace Core
             */
       }
 
-      private void Sfx(string fileName)
+      private void PlaySfx(string fileName)
       {
             Debug.LogError("Not yet implemented. Use addressables for this.");
             // old function:
@@ -492,9 +496,9 @@ namespace Core
         {
             Spd("M");
 
-            Msc(newData.sceneState.activeMusic);
-            Ambi(newData.sceneState.activeAmbiance);
-            Bg(newData.sceneState.background);
+            SetMusic(newData.sceneState.activeMusic);
+            SetAmbiance(newData.sceneState.activeAmbiance);
+            SetBackdrop(newData.sceneState.background);
         }
         #endregion DATA
 

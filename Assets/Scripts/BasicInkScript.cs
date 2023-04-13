@@ -582,6 +582,7 @@ namespace Core
                 }
                 else
                 {
+                    /* removed speaker option
                     if (new Regex(".+:\\s\\w+").IsMatch(newLine)) /// (example) check if this line is being spoken my anybody specific
                     {
                         string[] split = newLine.Split(':');
@@ -592,8 +593,10 @@ namespace Core
                         newLine = "\"" + split[1] + "\"";
                         string speaker = split[0];
                     }
+                    */
 
                     text += newLine; /// add the newline of the story
+                    
                 }
 
                 /// check for tags:

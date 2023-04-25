@@ -677,9 +677,12 @@ namespace Core
             TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
             choiceText.text = text;
 
+
             /// Make the button expand to fit the text
+                        /* we don't want that, i want the reverse
             HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
             layoutGroup.childForceExpandHeight = false;
+                        */
 
             return choice;
         }

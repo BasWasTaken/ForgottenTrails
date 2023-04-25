@@ -11,7 +11,7 @@ EXTERNAL Print(string)
     #backdrop:whiterun // This should set the background
     #ambiance:chatter // this should set the ambiance
     #music:the streets of whiterun //this should set the music
-    ~ Print("Hello world!")// This prints the text to the unity console as a warning message.
+    ~ Print("Hello world!")// This prints the text to the unity console
     This is the beginning of the ink story.
     -> sfx
 === sfx ===

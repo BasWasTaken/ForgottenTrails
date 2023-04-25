@@ -193,7 +193,7 @@ namespace Core
         {
             string[] split = tag.ToLower().Split(':');
             string command = split[0];
-            string parameter = split[1];
+            string parameter = split[1].TrimStart(' ');
 
             if (command == "backdrop")
             {

@@ -8,9 +8,9 @@ EXTERNAL Print(string)
 <i>Print to console:</i> {a}
 
 === Start ===
-    #backdrop:whiterun // This should set the background
-    #ambiance:chatter // this should set the ambiance
-    #music:the streets of whiterun //this should set the music
+    #backdrop: whiterun // This should set the background
+    #ambiance: chatter // this should set the ambiance
+    #music: the streets of whiterun //this should set the music
     ~ Print("Hello world!")// This prints the text to the unity console
     This is the beginning of the ink story.
     -> sfx

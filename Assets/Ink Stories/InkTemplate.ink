@@ -25,7 +25,6 @@ EXTERNAL Print(string)
     ~ Print("Hello world!")// This prints the text to the unity console
     // Later functions such as picking up items would ideally be handled in a similar matter, e.g. #pickup:sword or ~ Pickup("sword") depending on the implementation. I'll look at those in detail when we get to them and add them as we go along.
     #sfx:gong // this plays a sound. 
-    >>>gong// this is an alternative method of playing a sound. Let me know which if any you prefer
     -> LoremIpsum
 === LoremIpsum ===
     <br>

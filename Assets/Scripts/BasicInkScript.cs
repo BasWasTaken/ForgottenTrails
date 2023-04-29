@@ -43,9 +43,6 @@ namespace Core
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Panel to display current paragraph.")]
         public TextMeshProUGUI textPanel = null;
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Panel to display all previous text.")]
-        public TextMeshProUGUI logPanel = null;
         [SerializeField, BoxGroup("Scene References")]
         public Image bgImage;
         [SerializeField, BoxGroup("Scene References"), Required]
@@ -698,8 +695,7 @@ namespace Core
         public IEnumerator DisplayContent(string text) // Creates a textbox showing the the poaragraph of text
         {
             timeSinceAdvance = 0;
-            logPanel.text += "\r\n\n" + textPanel.text;
-            textPanel.text = text;
+            textPanel.text += text;
             for (int i = 0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;

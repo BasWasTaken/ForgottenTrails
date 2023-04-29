@@ -20,6 +20,7 @@ EXTERNAL Print(string)
     ___________________________________________________________________________________________
     This is the beginning of the ink story. Feel free to edit anything after this point.
     #backdrop:whiterun // this should set the background
+    #sprites:b34auw3h_0, b34auw3h_1, b34auw3h_2 // this should set images in front of the background (removing all previous ones)
     #ambiance:chatter // this should set the ambiance
     #music:the streets of whiterun // this should set the music
     ~ Print("Hello world!")// This prints the text to the unity console
@@ -30,6 +31,8 @@ EXTERNAL Print(string)
     <br>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam pellentesque ipsum scelerisque molestie. Nam condimentum neque non interdum feugiat. Curabitur eget dolor eget sapien condimentum aliquet. Donec mattis laoreet bibendum. Duis tincidunt egestas sem, sit amet tempor nunc varius luctus. Nam iaculis, lorem id ultrices tincidunt, enim tortor iaculis dui, eu consequat elit odio non massa. Suspendisse et sapien eu lorem gravida rhoncus. Nulla lorem nisl, pharetra sit amet bibendum vel, aliquet eu massa. Proin velit nunc, porttitor et ligula et, tincidunt rhoncus nisi. Maecenas nisi risus, laoreet eu commodo a, eleifend non odio. Sed eros sem, mollis sit amet elit vel, venenatis dapibus ipsum. Vivamus rhoncus malesuada dictum. 
     <br>
+    #backdrop: // this removes the backdrop
+    #sprites: // this removes all sprites
     Praesent bibendum sagittis velit, ut semper mi tristique nec. In venenatis nunc eu scelerisque eleifend. Donec elementum metus non ipsum accumsan tristique. Duis fermentum et ante et feugiat. Etiam ut lobortis lectus. Praesent nunc urna, faucibus quis pretium at, feugiat varius turpis. Etiam eget enim dictum, molestie turpis nec, posuere lacus. In et ante nec velit porttitor mollis et id ex. Nullam tincidunt iaculis dolor a sodales. Proin non tempor tellus. 
     <br>
     -> END

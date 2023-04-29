@@ -34,6 +34,8 @@ namespace Core
 
         [SerializeField, BoxGroup("Assets"), Required]
         private Button buttonPrefab = null;
+        [SerializeField, BoxGroup("Assets"), Required]
+        private Image portraitPrefab = null;
 
         /// SCENE REFERENCES
         [SerializeField, BoxGroup("Scene References"), Required]
@@ -45,6 +47,8 @@ namespace Core
         public TextMeshProUGUI textPanel = null;
         [SerializeField, BoxGroup("Scene References")]
         public Image bgImage;
+        [SerializeField, BoxGroup("Scene References")]
+        public HorizontalLayoutGroup portraits;
         [SerializeField, BoxGroup("Scene References"), Required]
         public Transform buttonAnchor;
         [SerializeField, BoxGroup("Scene References")]
@@ -194,6 +198,10 @@ namespace Core
             {
                 SetBackdrop(parameter);
             }
+            if (command == "sprites")
+            {
+                SetSprites(parameter);
+            }
             else if (command == "music")
             {
                 SetMusic(parameter);
@@ -283,8 +291,47 @@ namespace Core
             bgImage.sprite = sprite;
             inkData.sceneState.background = fileName;
         }
+        private void SetSprites(string fileNames)
+        {
+            /// first clear all portraits
+            foreach (Image item in portraits.GetComponentsInChildren<Image>())
+            {
+                Destroy(item.gameObject);
+            }
 
+            string[] fileNamesSplit = fileNames.Split(',');
 
+            foreach (string fileName in fileNamesSplit)
+            {
+                Sprite sprite = null; /// clear bg if no other value is given
+
+                if (!(fileName == "" | fileName == "null"))
+                {
+                    try
+                    {
+                        if (!AssetManager.Instance.Sprites.TryGetValue(fileName.ToLower().Trim(' '), out Sprite sprite1))
+                        {
+                            throw new FileNotFoundException("File not found: " + fileName);
+                        }
+                        else
+                        {
+                            sprite = sprite1;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Extract some information from this exception, and then
+                        // throw it to the parent method.
+                        if (e.Source != null)
+                            Console.WriteLine("IOException source: {0}", e.Source);
+                        throw;
+                    }
+                }
+
+                Instantiate(portraitPrefab, portraits.transform).sprite=sprite;
+                Debug.Log("TODO: Add portrait to scenedata");
+            }
+        }
         private void SetMusic(string fileName)
         {
             AudioClip audioClip = null; /// clear music if no other value is given
@@ -605,7 +652,7 @@ namespace Core
                 /// stop if you hit a paragraph break:
                 if (text.EndsWith("\n<br>\n"))
                 {
-                    text = text.TrimEnd("<br>\n".ToCharArray());
+                    //text = text.TrimEnd("<br>\n".ToCharArray()); dit niet meer sinds papyrus scroll
                     break;
                 }
             }

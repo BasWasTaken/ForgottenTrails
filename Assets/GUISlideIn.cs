@@ -29,7 +29,7 @@ namespace MyGUI
         public Vector2Int direction;
 
         [ReadOnly]
-        [SerializeField] Vector2 displacement;
+        [SerializeField] Vector3 displacement;
 
 
         #endregion
@@ -57,15 +57,15 @@ namespace MyGUI
             if (!displaced)
             {
                 displaced = true;
-                transform.Translate(displacement);
+                transform.localPosition+=displacement;
             }
         }
         public void Replace()
         {
             if (displaced)
             {
-                displaced = false;
-                transform.Translate(-displacement);
+                displaced = false; 
+                transform.localPosition -= displacement;
             }
         }
     }

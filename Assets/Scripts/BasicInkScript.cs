@@ -48,9 +48,7 @@ namespace Core
         [SerializeField, BoxGroup("Scene References"), Required]
         public Transform buttonAnchor;
         [SerializeField, BoxGroup("Scene References")]
-        public Vector2 buttonOffset = new(0, 1);
-        [SerializeField, BoxGroup("Scene References")]
-        public Animator triangle;
+        public Animator floatingMarker;
 
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for sfx.")]
@@ -695,8 +693,9 @@ namespace Core
         public IEnumerator DisplayContent(string text) // Creates a textbox showing the the poaragraph of text
         {
             timeSinceAdvance = 0;
+            int i0 = textPanel.text.Length;
             textPanel.text += text;
-            for (int i = 0; i < textPanel.text.Length + 1; i++)
+            for (int i = i0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;
                 yield return new WaitForSecondsRealtime(1 / textSpeed);

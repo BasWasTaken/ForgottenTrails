@@ -14,7 +14,11 @@ namespace Controls
 
 		void Update()
 		{
-			if (Input.GetKeyDown(key)) Application.Quit();
+			if (Input.GetKeyDown(key)) Quit();
+		}
+		public void Quit()
+        {
+			Application.Quit();
 		}
 	}
 }

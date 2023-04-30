@@ -17,8 +17,10 @@ EXTERNAL Print(string)
     <i>Print to console:</i> {a}
 
 === Start ===
-    ___________________________________________________________________________________________
     This is the beginning of the ink story. Feel free to edit anything after this point.
+-> Setup
+=== Setup ===
+    Now we will set up some effects.
     #backdrop:whiterun // this should set the background
     #sprites:b34auw3h_0, b34auw3h_1, b34auw3h_2 // this should set images in front of the background (removing all previous ones)
     #ambiance:chatter // this should set the ambiance
@@ -28,11 +30,20 @@ EXTERNAL Print(string)
     #sfx:gong // this plays a sound. 
     -> LoremIpsum
 === LoremIpsum ===
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam pellentesque ipsum scelerisque molestie. Nam condimentum neque non interdum feugiat. Curabitur eget dolor eget sapien condimentum aliquet. Donec mattis laoreet bibendum. Duis tincidunt egestas sem, sit amet tempor nunc varius luctus. Nam iaculis, lorem id ultrices tincidunt, enim tortor iaculis dui, eu consequat elit odio non massa. Suspendisse et sapien eu lorem gravida rhoncus. 
     <br>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam pellentesque ipsum scelerisque molestie. Nam condimentum neque non interdum feugiat. Curabitur eget dolor eget sapien condimentum aliquet. Donec mattis laoreet bibendum. Duis tincidunt egestas sem, sit amet tempor nunc varius luctus. Nam iaculis, lorem id ultrices tincidunt, enim tortor iaculis dui, eu consequat elit odio non massa. Suspendisse et sapien eu lorem gravida rhoncus. Nulla lorem nisl, pharetra sit amet bibendum vel, aliquet eu massa. Proin velit nunc, porttitor et ligula et, tincidunt rhoncus nisi. Maecenas nisi risus, laoreet eu commodo a, eleifend non odio. Sed eros sem, mollis sit amet elit vel, venenatis dapibus ipsum. Vivamus rhoncus malesuada dictum. 
+    The next time you click space it will remove the images and music.
     <br>
-    #backdrop: // this removes the backdrop
-    #sprites: // this removes all sprites
+    #music: // you can give no parameter to remove the given image/music
+    #sprites:null //  you can also give "null" to achieve the same
     Praesent bibendum sagittis velit, ut semper mi tristique nec. In venenatis nunc eu scelerisque eleifend. Donec elementum metus non ipsum accumsan tristique. Duis fermentum et ante et feugiat. Etiam ut lobortis lectus. Praesent nunc urna, faucibus quis pretium at, feugiat varius turpis. Etiam eget enim dictum, molestie turpis nec, posuere lacus. In et ante nec velit porttitor mollis et id ex. Nullam tincidunt iaculis dolor a sodales. Proin non tempor tellus. 
     <br>
-    -> END
+    + Choice
+    + Another choice
+    
+    - Nulla lorem nisl, pharetra sit amet bibendum vel, aliquet eu massa. Proin velit nunc, porttitor et ligula et, tincidunt rhoncus nisi. Maecenas nisi risus, laoreet eu commodo a, eleifend non odio. Sed eros sem, mollis sit amet elit vel, venenatis dapibus ipsum. Vivamus rhoncus malesuada dictum. 
+    <br>
+    Let's bring the gezelligheid back.
+    <br>
+->Setup
+-> END

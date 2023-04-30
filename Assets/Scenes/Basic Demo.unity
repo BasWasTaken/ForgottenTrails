@@ -1469,7 +1469,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2635881727774412562, guid: 6c8dea734029fa746b646d766bdd7f0f, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2439,8 +2439,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 3204158409753166979, guid: 6c8dea734029fa746b646d766bdd7f0f, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 2846093082071e64192f3e32d060cb55, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2609,6 +2609,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 2009679607}
+        m_TargetAssemblyTypeName: Core.BasicInkScript, Assembly-CSharp
+        m_MethodName: PutDataIntoStash
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 216994403}
         m_TargetAssemblyTypeName: DataService.DataManager, Assembly-CSharp
         m_MethodName: WriteStashedDataToDisk
@@ -4114,7 +4126,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7937792933779330808, guid: 6c8dea734029fa746b646d766bdd7f0f, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -5283,8 +5295,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 5122959037946697382, guid: 6c8dea734029fa746b646d766bdd7f0f, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 6214018f039a7ee4b819dfa3f6b8af42, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

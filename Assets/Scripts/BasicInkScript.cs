@@ -91,12 +91,21 @@ namespace Core
 
         #region INSPECTOR_HELPERS
 
-        [SerializeField, Button("ResetInkData")]
+        [SerializeField, Button("ResetInkData",EButtonEnableMode.Editor)]
         public void ResetInkDataButton() { inkData = CreateBlankData(); }
         [SerializeField, Button("LoadData")]
-        public void LoadDataButton() { TryLoadData(); }
+        public void LoadDataButton() { 
+            TryLoadData();
+#if UNITY_EDITOR
+            if (UnityEditor.EditorApplication.isPlaying == true)
+            {
+                StartLoadedStory();
+                Debug.Log(new NotImplementedException("You should reset the scene here."));
+            }
+#endif
+        }
 
-        protected bool IsValidFolder(string path)
+            protected bool IsValidFolder(string path)
         {
             return Directory.Exists(path);
         }
@@ -147,10 +156,16 @@ namespace Core
 
             TryLoadData();
 
+            StartLoadedStory();
+		}
+        void StartLoadedStory()
+        {
             if (inkData.saveStateCur != "")
             {
                 Debug.Log("continueing from savepoint!");
                 story.state.LoadJson(inkData.saveStateCur);
+
+                    Debug.Log(new NotImplementedException("You activate the ink interface here"));
             }
             else
             {
@@ -160,7 +175,7 @@ namespace Core
 
 
             if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
-		}
+        }
         #endregion LIFESPAN
 
         #region LOOP
@@ -329,7 +344,7 @@ namespace Core
                 }
 
                 Instantiate(portraitPrefab, portraits.transform).sprite=sprite;
-                Debug.Log("TODO: Add portrait to scenedata");
+                inkData.sceneState.sprites += ", " + fileName;
             }
         }
         private void SetMusic(string fileName)
@@ -368,6 +383,7 @@ namespace Core
             }
             else
             {
+                audioSourceMusic.clip = audioClip;
                 audioSourceMusic.Stop();
                 inkData.sceneState.activeMusic = "";
             }
@@ -482,7 +498,7 @@ namespace Core
         /// <summary>
         /// preps data for saving. happens at the end of every bit of dialogue.
         /// </summary>
-        protected void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
+        public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
             ObserveNewVariables(); // adds any new variables that exist in the story to our list and start keeping track.
             /// save all the things
@@ -495,10 +511,10 @@ namespace Core
             if (DataManager.Instance.DataAvailable(inkData.Key))
             {
                 inkData = LoadData(DataManager.Instance.FetchData<InkData>(inkData.Key));
-
                 return true;
             }
             else { Debug.Log("No data found."); return false; }
+
         }
         private InkData LoadData(InkData input)
         {
@@ -514,6 +530,7 @@ namespace Core
                 LoadObjectsIntoScene(input);
 
                 //      Debug.Log("will now assign inkdata");
+
                 return input;
             }
             else
@@ -581,6 +598,7 @@ namespace Core
             SetMusic(newData.sceneState.activeMusic);
             SetAmbiance(newData.sceneState.activeAmbiance);
             SetBackdrop(newData.sceneState.background);
+            SetSprites(newData.sceneState.sprites);
         }
         #endregion DATA
 
@@ -774,7 +792,7 @@ namespace Core
             PutDataIntoStash();
             inkJSONAsset = null;
             story = null;
-            throw new NotImplementedException();
+            Debug.Log(new NotImplementedException());
             // evt volgende story feeden
         }
 
@@ -808,6 +826,8 @@ namespace Core
         public string text = "null";
 
         public string background = "null";
+        public string sprites = "null";
+
 
         public string activeMusic = "null";
         public string activeAmbiance = "null";

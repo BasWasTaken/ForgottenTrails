@@ -956,6 +956,8 @@ MonoBehaviour:
   - {fileID: 988771827, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
   - {fileID: 1874724987, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
   - {fileID: -1967812621, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
+  - {fileID: 21300000, guid: c8ac78193918c8c4b9cb20d4ffb083eb, type: 3}
+  - {fileID: 21300000, guid: 9f9f4113ed820a24f864e88290d91a6a, type: 3}
   audioClips:
   - {fileID: 8300000, guid: ba486475ea3444145a81d4544dd1e7a0, type: 3}
   - {fileID: 8300000, guid: 6214018f039a7ee4b819dfa3f6b8af42, type: 3}
@@ -1592,9 +1594,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -6094,7 +6096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647b6e8d84f5aed4792243cb6105a457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSONAsset: {fileID: 4900000, guid: 6ef543270a9139a4e93947f5a08f9ebd, type: 3}
+  inkJSONAsset: {fileID: 4900000, guid: 5bbdd3ef5e69e7148bb60dbbba09fafa, type: 3}
   inkData:
     inkVarsKeys: []
     inkVarsValues: []

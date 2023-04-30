@@ -139,6 +139,7 @@ namespace Core
         }
         private void Start()
         {
+            textPanel.text = "";
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y);
             if (inkJSONAsset != null)
             {
@@ -565,6 +566,7 @@ namespace Core
         /// </summary>
         protected void ObserveNewVariables()
         {
+            /*
             /// make an empty list
             List<string> newVariables = new();
 
@@ -583,12 +585,15 @@ namespace Core
                 inkData.inkVarsKeys.Add(newVariable); /// and at it to the cheatsheets
                 inkData.inkVarsValues.Add((string)story.variablesState[newVariable]);
 
+                
                 story.ObserveVariable(newVariable, (string key, object value) =>
                 {/// finally ask ink to keep the dataclass updated in the event of any changes
                     inkData.inkVars[key] = value;
                     inkData.inkVarsValues[inkData.inkVarsKeys.IndexOf(newVariable)] = (string)value;
                 });
+                
             }
+            */
         }
 
         protected void LoadObjectsIntoScene(InkData newData)

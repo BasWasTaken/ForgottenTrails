@@ -92,9 +92,9 @@ namespace Core
         #region INSPECTOR_HELPERS
 
         [SerializeField, Button("ResetInkData")]
-        private void ResetInkDataButton() { inkData = CreateBlankData(); }
+        public void ResetInkDataButton() { inkData = CreateBlankData(); }
         [SerializeField, Button("LoadData")]
-        private void LoadDataButton() { TryLoadData(); }
+        public void LoadDataButton() { TryLoadData(); }
 
         protected bool IsValidFolder(string path)
         {
@@ -700,7 +700,7 @@ namespace Core
             /// If we've read all the content and there's no choices, the story is finished!
             else
             {
-                Button choice = PresentButton("End of story.\nRestart?");
+                Button choice = PresentButton("End of story.");
                 choice.onClick.AddListener(delegate {
                     RemoveOptions();
                     OnInteractionEnd();
@@ -774,6 +774,7 @@ namespace Core
             PutDataIntoStash();
             inkJSONAsset = null;
             story = null;
+            throw new NotImplementedException();
             // evt volgende story feeden
         }
 

@@ -211,6 +211,7 @@ namespace DataService
         {
             throw new NotImplementedException();
             // iets van foreach file found en dan in de stash gooien? maar tbh kan ik dit beter gewoon niet gebruiken denk ik, en data loaden as needed
+            // tbh wsl een selectiescherm op de andere pagina showen met welke savefile je wil laden en dan daarmee de scene reloaden
         }
         
         public T ReadDataFromDisk<T>(string key, bool encrypted=false) where T : DataClass

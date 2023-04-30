@@ -52,7 +52,7 @@ namespace Core
         [SerializeField, BoxGroup("Scene References"), Required]
         public Transform buttonAnchor;
         [SerializeField, BoxGroup("Scene References")]
-        public Animator floatingMarker;
+        public Image floatingMarker;
 
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for sfx.")]

@@ -17,7 +17,16 @@ public class SetVolume : MonoBehaviour
     }
     public void SetLevel(float sliderValue)
     {
-        audioGroup.audioMixer.SetFloat(parameterName, Mathf.Log10(sliderValue) * 20);
-        PlayerPrefs.SetFloat(parameterName, sliderValue);
+        float newValue;
+        if (sliderValue == 0)
+        {
+            newValue = -80;
+        }
+        else
+        {
+            newValue = Mathf.Log10(sliderValue) * 20;
+        }
+        audioGroup.audioMixer.SetFloat(parameterName, newValue);
+        PlayerPrefs.SetFloat(parameterName, newValue);
     }
 }

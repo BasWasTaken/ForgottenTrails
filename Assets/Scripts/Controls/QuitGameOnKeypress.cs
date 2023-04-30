@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 namespace Controls
 { 
@@ -14,7 +15,15 @@ namespace Controls
 
 		void Update()
 		{
-			if (Input.GetKeyDown(key)) Application.Quit();
+			if (Input.GetKeyDown(key)) Quit();
+		}
+		public void Quit()
+        {
+			#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+			#else
+			Application.Quit();
+			#endif
 		}
 	}
 }

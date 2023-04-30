@@ -670,7 +670,8 @@ namespace Core
                 /// stop if you hit a paragraph break:
                 if (text.EndsWith("\n<br>\n"))
                 {
-                    //text = text.TrimEnd("<br>\n".ToCharArray()); dit niet meer sinds papyrus scroll
+                    //text = text.TrimEnd("<br>\n".ToCharArray()); 
+                    text = "__________\n" + text;
                     break;
                 }
             }
@@ -687,7 +688,7 @@ namespace Core
 
         private IEnumerator MarkWhenAdvanceable()
         {
-            // remove bouncing arrow 
+            floatingMarker.gameObject.SetActive(false);
             CanAdvance = false;
             yield return new WaitUntil(() => story.canContinue);
             yield return new WaitForSecondsRealtime(advanceDialogueDelay);
@@ -695,7 +696,7 @@ namespace Core
             if (!PresentButtons()) ///try to make buttons if any
             {
                 /// else set bouncing triangle at most recent line
-                Debug.Log("TODO: Bouncing triangle.");
+                floatingMarker.gameObject.SetActive(true);
             }
             CanAdvance = true;
         }

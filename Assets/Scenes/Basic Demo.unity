@@ -6094,7 +6094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647b6e8d84f5aed4792243cb6105a457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSONAsset: {fileID: 4900000, guid: 1fe6b91c925d014469ed62fa21cb4f7f, type: 3}
+  inkJSONAsset: {fileID: 4900000, guid: 6ef543270a9139a4e93947f5a08f9ebd, type: 3}
   inkData:
     inkVarsKeys: []
     inkVarsValues: []

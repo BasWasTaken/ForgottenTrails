@@ -43,6 +43,10 @@ namespace Core
         private Canvas canvas = null;
 
         [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("The scrollbar used for the paper scroll.")]
+        public Scrollbar scrollbar;
+
+        [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Panel to display current paragraph.")]
         public TextMeshProUGUI textPanel = null;
         [SerializeField, BoxGroup("Scene References")]
@@ -763,12 +767,16 @@ namespace Core
 
         public IEnumerator DisplayContent(string text) // Creates a textbox showing the the poaragraph of text
         {
+
+
             timeSinceAdvance = 0;
             int i0 = textPanel.text.Length;
             textPanel.text += text;
+
             for (int i = i0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;
+                scrollbar.value = 0;
                 yield return new WaitForSecondsRealtime(1 / textSpeed);
                 yield return new WaitWhile(() => halted);
                 yield return new WaitUntil(() => isActiveAndEnabled);

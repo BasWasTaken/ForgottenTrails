@@ -139,8 +139,8 @@ namespace Core
         {
             base.Awake();
             CanAdvance = false;
-            spacer.minHeight = Camera.main.pixelHeight/2f;
-
+            //spacer.minHeight = Camera.main.scaledPixelHeight;
+            scrollbar.value = 1;
             if (true) // if no data present..?
             {
                 inkData = CreateBlankData();
@@ -728,6 +728,7 @@ namespace Core
                         OnClickChoiceButton(choice);
                     });
                 }
+                //scrollbar.value = 0;
                 return true;
             }
             /// If we've read all the content and there's no choices, the story is finished!
@@ -775,7 +776,7 @@ namespace Core
             timeSinceAdvance = 0;
             int i0 = textPanel.text.Length;
             textPanel.text += newText;
-            scrollbar.value = 0;
+            //scrollbar.value = 0;
 
             for (int i = i0; i < textPanel.text.Length + 1; i++)
             {

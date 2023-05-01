@@ -2356,7 +2356,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.8846041
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2434,7 +2434,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -10, y: -10}
+  m_AnchoredPosition: {x: -10, y: -9.9999695}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &531542277
@@ -3561,11 +3561,11 @@ RectTransform:
   m_Father: {fileID: 92809127}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1100308609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3619,8 +3619,8 @@ MonoBehaviour:
   m_Padding:
     m_Left: 100
     m_Right: 100
-    m_Top: 0
-    m_Bottom: 50
+    m_Top: 50
+    m_Bottom: -75
   m_ChildAlignment: 7
   m_Spacing: 10
   m_ChildForceExpandWidth: 1
@@ -6324,13 +6324,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-    venenatis condimentum nunc iaculis pulvinar. Curabitur sollicitudin dolor vitae
-    maximus consectetur. Integer ornare ligula ut leo dictum, in rutrum lacus facilisis.
+  m_text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis
+    condimentum nunc iaculis pulvinar. Curabitur sollicitudin dolor vitae maximus
+    consectetur. Integer ornare ligula ut leo dictum, in rutrum lacus facilisis.
     Suspendisse nec libero a lectus pretium pellentesque. Nunc facilisis orci interdum
     neque lobortis blandit. Suspendisse porta dictum cursus. Sed tincidunt feugiat
     arcu, vestibulum mattis justo luctus a.
@@ -6412,7 +6408,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

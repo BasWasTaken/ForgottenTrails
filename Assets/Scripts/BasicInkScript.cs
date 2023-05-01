@@ -45,6 +45,10 @@ namespace Core
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("The scrollbar used for the paper scroll.")]
         public Scrollbar scrollbar;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("The spacer used at bottom of the paper scroll.")]
+        public LayoutElement spacer;
+
 
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Panel to display current paragraph.")]
@@ -135,7 +139,8 @@ namespace Core
         {
             base.Awake();
             CanAdvance = false;
-            
+            spacer.minHeight = Camera.main.pixelHeight/1.5f;
+
             if (true) // if no data present..?
             {
                 inkData = CreateBlankData();
@@ -770,9 +775,33 @@ namespace Core
 
 
             timeSinceAdvance = 0;
-            int i0 = textPanel.text.Length;
-            textPanel.text += text;
+            //int i0 = textPanel.text.Length;
+            // in with the new
 
+            /// add one letter at a time
+            char[] textArray = text.ToCharArray();
+            foreach (char character in textArray)
+            {
+                if (!completeText)
+                {
+                    yield return new WaitWhile(() => halted);
+                    yield return new WaitUntil(() => isActiveAndEnabled);
+                    yield return new WaitForSecondsRealtime(1 / textSpeed);
+                }   
+/*                else
+                {
+                    completeText = false;
+                    yield break;
+                }
+*/
+                textPanel.text += character;
+                scrollbar.value = 0;
+            }
+            completeText = false;
+
+            /* out with the old
+            
+            textPanel.text += text;
             for (int i = i0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;
@@ -787,6 +816,7 @@ namespace Core
                     yield break;
                 }
             }
+            */
         }
         /*UNUSED DEFAULT METHOD FOR CREATING CONTENT:
         /// Creates a textbox showing the the line of text

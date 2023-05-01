@@ -16,7 +16,7 @@ public class BookMarkClicked : MonoBehaviour
         {
             if (rectTransform.gameObject == button.gameObject)
             {
-                rectTransform.sizeDelta = new(startingValues.size.x, startingValues.size.y - 150);
+                rectTransform.sizeDelta = new(startingValues.size.x, startingValues.size.y/2);
             }
             else
             {

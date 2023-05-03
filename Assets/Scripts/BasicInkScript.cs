@@ -71,6 +71,9 @@ namespace Core
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for ambiance.")]
         private AudioSource audioSourceAmbiance;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for system sounds like ui.")]
+        private AudioSource audioSourceSystem;
 
 
 
@@ -81,6 +84,8 @@ namespace Core
         public float AdvanceDialogueDelay => advanceDialogueDelay;
 
         private bool halted = false;
+
+        private bool playing = false;
 
         [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
         [Tooltip("Choose a numeric value for this option.")]
@@ -99,18 +104,28 @@ namespace Core
 
         #region INSPECTOR_HELPERS
 
-        [SerializeField, Button("ResetInkData",EButtonEnableMode.Editor)]
-        public void ResetInkDataButton() { inkData = CreateBlankData(); }
+        public Dictionary<VariablesState, object> inkVars = new();
+
+
+        [SerializeField, Tooltip("Reset ink data in object. Note: does not remove data from file"), Button("ResetInkData",EButtonEnableMode.Editor)]
+        public void ResetInkDataButton() { inkData = CreateBlankData(); PrepStory(); }
         [SerializeField, Button("LoadData")]
-        public void LoadDataButton() { 
-            TryLoadData();
+        public void LoadDataButton() {
 #if UNITY_EDITOR
             if (UnityEditor.EditorApplication.isPlaying == true)
             {
-                StartLoadedStory();
+                StopPlayingStory();
+            }
+#endif 
+            ResetInkDataButton();
+#if UNITY_EDITOR
+            if (UnityEditor.EditorApplication.isPlaying == true)
+            {
+                StartStory();
                 Debug.Log(new NotImplementedException("You should reset the scene here."));
             }
 #endif
+
         }
 
             protected bool IsValidFolder(string path)
@@ -148,43 +163,59 @@ namespace Core
         }
         private void Start()
         {
-            textPanel.text = "";
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y);
             if (inkJSONAsset != null)
             {
+                PrepStory();
                 StartStory();
             }
         }
 
-        /// Creates a new Story object with the compiled story which we can then play!
-        void StartStory()
+        void PrepStory()
         {
+            textPanel.text = "";
             story = new Story(inkJSONAsset.text);
 
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
             OnCreateStory?.Invoke(story);
-
-            TryLoadData();
-
-            StartLoadedStory();
-		}
-        void StartLoadedStory()
+        }
+        /// Creates a new Story object with the compiled story which we can then play!
+        void StartStory()
         {
-            if (inkData.saveStateCur != "")
+            if (DataManager.Instance.DataAvailable(inkData.Key))
             {
-                Debug.Log("continueing from savepoint!");
-                story.state.LoadJson(inkData.saveStateCur);
-
-                    Debug.Log(new NotImplementedException("You activate the ink interface here"));
+                TryLoadData();
             }
             else
             {
-                Debug.Log("no save point detected, starting from start");
-                story.state.GoToStart();
+                inkData = CreateBlankData();
+            }
+            if (!playing)
+            {
+                playing = true;
+                if (inkData.storyStateJson != "")
+                {
+                    Debug.Log("continueing from savepoint!");
+                    story.state.LoadJson(inkData.storyStateJson);
+                    throw new Exception("Here you must hotsave the state of the text and buttons of inky!");
+                }
+                else
+                {
+                    Debug.Log("no save point detected, starting from start");
+                    story.state.GoToStart();
+                }
+                if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
+            }
+            else
+            {
+                Debug.LogError("Still playing according to bool!");
             }
 
-
-            if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
+        }
+        void StopPlayingStory()
+        {
+            completeText = true;
+            playing = false;
         }
         #endregion LIFESPAN
 
@@ -326,17 +357,18 @@ namespace Core
 
             string[] fileNamesSplit = fileNames.Split(',');
 
-            foreach (string fileName in fileNamesSplit)
+            foreach (string fileName0 in fileNamesSplit)
             {
-                Sprite sprite = null; /// clear bg if no other value is given
+                Sprite sprite = null; /// clear if no other value is given
 
+                string fileName = fileName0.ToLower().Trim(' '); // trim spaces
                 if (!(fileName == "" | fileName == "null"))
                 {
                     try
                     {
-                        if (!AssetManager.Instance.Sprites.TryGetValue(fileName.ToLower().Trim(' '), out Sprite sprite1))
+                        if (!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
                         {
-                            throw new FileNotFoundException("File not found: " + fileName);
+                            Debug.LogError(new FileNotFoundException("File not found: " + fileName));
                         }
                         else
                         {
@@ -496,12 +528,13 @@ namespace Core
         #endregion InkyExternals
 
         #region Data
+        /// <summary>
+        /// Make a new inkdata object
+        /// </summary>
+        /// <returns>The freshly maked blank data</returns>
         public InkData CreateBlankData()
         {
-            InkData data;
-
-            data = new(dataLabel + "DemoScene");
-            // some sort of init here
+            InkData data = new(dataLabel + "DemoScene");
             return data;
         }
 
@@ -510,109 +543,80 @@ namespace Core
         /// </summary>
         public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
-            ObserveNewVariables(); // adds any new variables that exist in the story to our list and start keeping track.
-            /// save all the things
-
-            inkData.saveStateCur = story.state.ToJson();
+            /// save all the things (scene does't need to be stashed, is always stashed ad hoc)
+            inkData.storyStateJson = story.state.ToJson();
             inkData.StashData();
         }
-        private bool TryLoadData()
+        public bool TryLoadData()
         {
-            if (DataManager.Instance.DataAvailable(inkData.Key))
-            {
-                inkData = LoadData(DataManager.Instance.FetchData<InkData>(inkData.Key));
-                return true;
-            }
-            else { Debug.Log("No data found."); return false; }
-
+            return TryLoadData(ref inkData);
         }
-        private InkData LoadData(InkData input)
+        private bool TryLoadData(ref InkData output) 
         {
-            //Debug.Log("gonna try to load data!");
-            if (inkData != input)
+            if (!DataManager.Instance.DataAvailable(output.Key))
             {
-                //Debug.Log("confirmed data is not identical");
-                //Debug.Log("now deleting own data to avoid confusion");
-                inkData = CreateBlankData();
-                //    Debug.Log("wil now load the variables into ink");
-                LoadVarsIntoInk(ref input);
-                //    Debug.Log("will now load all the objects!");
-                LoadObjectsIntoScene(input);
-
-                //      Debug.Log("will now assign inkdata");
-
-                return input;
+                Debug.LogError("Error code 404: No data found available.");
+                return false;
             }
             else
             {
-                Debug.Log("ah, no, that's just this data. gonna remove it from cache for testing");
+                InkData input = DataManager.Instance.FetchData<InkData>(inkData.Key);
+                if (output == input)
+                {
+                    Debug.LogError("Error code 11: input data is same as output data; nothing to load.");
 
-                DataManager.Instance.RemoveFromCache<InkData>(inkData.Key);
-                return inkData;
-            }
-        }
+                    // will this ever be the case if i don't use two refs?
 
-        protected void LoadVarsIntoInk(ref InkData newData)
-        {
-            string message = "InkVars:";
-            foreach (var item in newData.inkVars)
-            {
-                story.variablesState[item.Key] = item.Value;
-                message += "\n" + item.Key + ": " + item.Value.ToString();
-            }
-            Debug.Log(message);
-            newData.inkVars.Clear();
-            newData.inkVarsKeys.Clear();
-            newData.inkVarsValues.Clear();
-        }
+                    /*Debug.Log("ah, no, that's just this data. gonna remove it from cache for testing");
 
-        /// <summary>
-        /// Purpose: to synch variables between dataclass and ink. get all of the data that is on ink's side in my datafile.
-        /// Any data that may be on my file, but not on ink's  side, that's useless. it hasn't gotten there yet apperantly and when it will it will be overridden.
-        ///  So this should just happen unilaterally: clear inkdata's variables and observe all of inky's.
-        /// Should be started whenever data is attempted to be added to cash, so that that data is always up to date.
-        /// also probably when loading data in.
-        /// </summary>
-        protected void ObserveNewVariables()
-        {
-            /*
-            /// make an empty list
-            List<string> newVariables = new();
+                    DataManager.Instance.RemoveFromCache<InkData>(inkData.Key);*/
+                    return false;
+                }
+                else
+                {
+                    output = CreateBlankData();
 
-            /// fill it with all the variables that we have not yet collected:
-            foreach (var variable in story.variablesState)
-            {/// get all variables
-                if (!inkData.inkVars.ContainsKey(variable))
-                {/// check all new ones
-                    newVariables.Add(variable); /// add it to our list
+                    try
+                    {
+                        PopulateStoryVarsFromData(input, ref output);
+
+                        PopulateSceneFromData(input);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    /// Successfully loaded data!
+                    return true;
                 }
             }
 
-            foreach (var newVariable in newVariables)
-            {/// for each of our new variables:
-                inkData.inkVars.Add(newVariable, story.variablesState[newVariable]); /// add it to our dataclass
-                inkData.inkVarsKeys.Add(newVariable); /// and at it to the cheatsheets
-                inkData.inkVarsValues.Add((string)story.variablesState[newVariable]);
-
-                
-                story.ObserveVariable(newVariable, (string key, object value) =>
-                {/// finally ask ink to keep the dataclass updated in the event of any changes
-                    inkData.inkVars[key] = value;
-                    inkData.inkVarsValues[inkData.inkVarsKeys.IndexOf(newVariable)] = (string)value;
-                });
-                
-            }
-            */
         }
 
-        protected void LoadObjectsIntoScene(InkData newData)
+        protected void PopulateStoryVarsFromData(InkData input, ref InkData output)
+        {
+            string message = "InkVars:";
+
+
+            story.state.LoadJson(input.storyStateJson);
+            output.storyStateJson = story.state.ToJson();
+
+            foreach (string item in story.state.variablesState)
+            {
+                message += "\n" + item + ": " + story.state.variablesState[item].ToString();
+            }
+
+            Debug.Log(message);
+        }
+
+        protected void PopulateSceneFromData(InkData inPut) // no out parameter used because each function "outputs" to inkdata global field anyway
         {
             Spd("M");
 
-            SetMusic(newData.sceneState.activeMusic);
-            SetAmbiance(newData.sceneState.activeAmbiance);
-            SetBackdrop(newData.sceneState.background);
-            SetSprites(newData.sceneState.sprites);
+            SetMusic(inPut.sceneState.activeMusic);
+            SetAmbiance(inPut.sceneState.activeAmbiance);
+            SetBackdrop(inPut.sceneState.background);
+            SetSprites(inPut.sceneState.sprites);
         }
         #endregion DATA
 
@@ -765,8 +769,7 @@ namespace Core
         void OnClickChoiceButton(Choice choice)
         {
             story.ChooseChoiceIndex(choice.index); /// feed the choice
-            inkData.saveStateCur = story.state.ToJson(); /// save the story state
-            inkData.variableState = story.state.variablesState.ToString(); /// save the variables
+            inkData.storyStateJson = story.state.ToJson(); /// save the story state
             StartCoroutine(AdvanceStory()); /// next bit
 		}
 
@@ -814,23 +817,17 @@ namespace Core
     [Serializable]
     public class InkData : DataClass
     {
-        [SerializeField, BoxGroup("INK"), ReadOnly]
-        [Tooltip("view which variables have been saved on the ink object")]
-        public List<string> inkVarsKeys = new();
-        [SerializeField, BoxGroup("INK"), ReadOnly]
-        [Tooltip("view which variables have been saved on the ink object")]
-        public List<string> inkVarsValues = new();
-        public Dictionary<string, object> inkVars = new();
-        public InkData(string label) : base(label) { }
+        public InkData(string label) : base(label)
+        {
+        }
 
-        public string variableState = ""; /// class containing states of all variables in story
-        public string saveStateCur = ""; /// string indicating most recently saved state of the ink object.
-
-        public StorySceneState sceneState = new();
+        //removed bc why do i need this if I have the story? public VariablesState variablesState = null; /// class containing states of all variables in story
+        public string storyStateJson = ""; /// string indicating most recently saved state of the ink object.
+        public SceneState sceneState = new();
     }
 
     [Serializable]
-    public class StorySceneState
+    public class SceneState
     {
 
         public string text = "null";
@@ -841,6 +838,7 @@ namespace Core
 
         public string activeMusic = "null";
         public string activeAmbiance = "null";
+
     }
 
 

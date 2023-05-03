@@ -10,10 +10,10 @@ public class SetVolume : MonoBehaviour
     public Slider slider;
     [Tooltip("The volume to change")]
     public AudioMixerGroup audioGroup;
-    private string parameterName => audioGroup.ToString()+"Volume";
+    private string ParameterName => audioGroup.ToString()+"Volume";
     void Start()
     {
-        slider.value = PlayerPrefs.GetFloat(parameterName, 0.75f);
+        slider.value = PlayerPrefs.GetFloat(ParameterName, 0.75f);
     }
     public void SetLevel(float sliderValue)
     {
@@ -26,7 +26,7 @@ public class SetVolume : MonoBehaviour
         {
             newValue = Mathf.Log10(sliderValue) * 20;
         }
-        audioGroup.audioMixer.SetFloat(parameterName, newValue);
-        PlayerPrefs.SetFloat(parameterName, newValue);
+        audioGroup.audioMixer.SetFloat(ParameterName, newValue);
+        PlayerPrefs.SetFloat(ParameterName, newValue);
     }
 }

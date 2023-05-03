@@ -174,6 +174,7 @@ namespace Core
         void PrepStory()
         {
             textPanel.text = "";
+            RemoveOptions();
             story = new Story(inkJSONAsset.text);
 
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
@@ -197,7 +198,10 @@ namespace Core
                 {
                     Debug.Log("continueing from savepoint!");
                     story.state.LoadJson(inkData.storyStateJson);
-                    throw new Exception("Here you must hotsave the state of the text and buttons of inky!");
+                    StartCoroutine(DisplayContent(story.currentText));
+                    PresentButtons();
+                    //throw new Exception("Here you must hotsave the state of the text and buttons of inky!");
+
                 }
                 else
                 {

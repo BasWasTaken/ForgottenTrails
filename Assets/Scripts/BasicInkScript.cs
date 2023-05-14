@@ -155,7 +155,7 @@ namespace Core
         {
             base.Awake();
             textPanel.text = ""; //clear lorum ipsum
-            Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
+            //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
             CanAdvance = false;
             //spacer.minHeight = Camera.main.scaledPixelHeight;
             scrollbar.value = 1;
@@ -557,6 +557,11 @@ namespace Core
             inkData.storyStateJson = story.state.ToJson();
             inkData.StashData();
         }
+        public void SaveData()
+        {
+            PutDataIntoStash();
+            DataManager.Instance.WriteStashedDataToDisk();
+        }
         public bool TryLoadData()
         {
             return TryLoadData(ref inkData);
@@ -803,7 +808,7 @@ namespace Core
                                               // but, this seems like a possibly bad idea in actual build, since any issue caused is immediately on your stash. although, not yet on data actually saved to disk, so that might be alright.
                                               // we can later add a buffer between stash and disk and also have redundancy with autosaves etc 
 
-            Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
+            //Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
             //scrollbar.value = 0;
 
             for (int i = i0; i < textPanel.text.Length + 1; i++)

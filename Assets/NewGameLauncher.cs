@@ -16,8 +16,10 @@ public class NewGameLauncher : MonoBehaviour
     }
     public void StartNewGame(int slot)
     {
+        Scene scene = SceneManager.GetActiveScene();
         DataManager.Instance.NewGameOnSaveSlot(slot);
-        SceneManager.LoadScene(AssetManager.Instance.newGameScene);
+        SceneManager.LoadScene(AssetManager.Instance.newGameScene);//, LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync(scene);
     }
 
 }

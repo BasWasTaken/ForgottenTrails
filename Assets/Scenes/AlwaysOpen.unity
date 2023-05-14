@@ -130,14 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: scene
-      value: Basic Demo
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: newGameScene
-      value: AlwaysOpen
-      objectReference: {fileID: 0}
     - target: {fileID: 8663880123288258833, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: m_RootOrder
       value: 0

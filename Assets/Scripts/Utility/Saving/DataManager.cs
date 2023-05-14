@@ -87,6 +87,14 @@ namespace DataService
                 WipeDataFromSlot(slot);
             }
         }
+        public void ContinueFromSaveSlot(int slot)
+        {
+            SaveSlot = slot;
+            if (!Directory.Exists(DataPath(metaData.Key)))
+            {
+                Debug.LogWarning("TODO: prompt user. No data detected in slot " + slot);
+            }
+        }
 
         public bool StashData<T>(T data, bool encrypted = false) where T : DataClass
         {

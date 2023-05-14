@@ -4,15 +4,20 @@ using UnityEngine;
 using NaughtyAttributes;
 using UnityEngine.SceneManagement;
 
-public class LoadEssentials : MonoBehaviour
+namespace Utility
 {
-    [Scene] public string alwaysOpenScene;
-    private void Awake()
+    public class LoadEssentials : MonoBehaviour
     {
-        Scene scene = SceneManager.GetSceneByName(alwaysOpenScene);
-        if (!scene.isLoaded)
+        [Scene] public string alwaysOpenScene;
+        private void Awake()
         {
-            SceneManager.LoadScene(alwaysOpenScene, LoadSceneMode.Additive);
+            Scene scene = SceneManager.GetSceneByName(alwaysOpenScene);
+            if (!scene.isLoaded)
+            {
+                SceneManager.LoadScene(alwaysOpenScene, LoadSceneMode.Additive);
+            }
         }
     }
 }
+
+

@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   masterFolder: PlayerData
-  saveSlot: 1
   fileExtension: .json
   metaData:
     created: 0
@@ -99,3 +98,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ba486475ea3444145a81d4544dd1e7a0, type: 3}
   - {fileID: 8300000, guid: 6214018f039a7ee4b819dfa3f6b8af42, type: 3}
   - {fileID: 8300000, guid: 2846093082071e64192f3e32d060cb55, type: 3}
+  newGameScene: AlwaysOpen

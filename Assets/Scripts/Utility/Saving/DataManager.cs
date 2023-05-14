@@ -24,9 +24,7 @@ namespace DataService
         [Tooltip("Name of the folder to read from and write to")]
         [SerializeField, ReadOnly]
         private string masterFolder = "PlayerData";
-        [Tooltip("SaveSlot to read from and write to.")]
-        [SerializeField, Range(1,3)]
-        private int saveSlot = 1;
+        public int SaveSlot { get; private set; }
         [Tooltip("File extension to use.")]
         [SerializeField, ReadOnly]
         private string fileExtension = ".json";
@@ -45,14 +43,22 @@ namespace DataService
         private const string iv = "JZuM0HQsWSBVpRHTeRZMYQ==";
 
 
-        private string FolderPath()
+        private string MasterFolderPath()
         {
             string masterFolderPath = Application.persistentDataPath + "/" + masterFolder;
-            string subFolderPath = masterFolderPath + "/" + "Slot" + saveSlot;
             if (!Directory.Exists(masterFolderPath))
             {
                 Directory.CreateDirectory(masterFolderPath);
             }
+            return masterFolderPath;
+        }
+        private string FolderPath()
+        {
+            return FolderPath(SaveSlot);
+        }
+        private string FolderPath(int saveSlot)
+        {
+            string subFolderPath = MasterFolderPath() + "/" + "Slot" + saveSlot;
             if (!Directory.Exists(subFolderPath))
             {
                 Directory.CreateDirectory(subFolderPath);
@@ -63,6 +69,7 @@ namespace DataService
         {
             return FolderPath() + "/" + dataKey + fileExtension; 
         }
+
         #endregion
         ///___METHODS___///
         protected override void Awake()
@@ -71,6 +78,16 @@ namespace DataService
             DontDestroyOnLoad(gameObject);
         }
         #region saving
+        public void NewGameOnSaveSlot(int slot)
+        {
+            SaveSlot = slot;
+            if (Directory.Exists(DataPath(metaData.Key)))
+            {
+                Debug.LogWarning("TODO: prompt user. Clearing data in slot " + slot);
+                WipeDataFromSlot(slot);
+            }
+        }
+
         public bool StashData<T>(T data, bool encrypted = false) where T : DataClass
         {
             metaData.stashed = DateTime.Now.Ticks;
@@ -291,21 +308,26 @@ namespace DataService
             }
         }
 
-        [Button("Clear Data From Disk", EButtonEnableMode.Editor)]
-        protected void WipeAllData()
+        [Button("Clear Data From Slot", EButtonEnableMode.Editor)]
+        public void WipeDataFromSlot()
         {
-            DirectoryInfo dir = new(FolderPath());
-            foreach (FileInfo file in dir.GetFiles()) //shouldn't this loop be inside the other loop?
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo subdir in dir.GetDirectories())
-            {
-                subdir.Delete(true);
-            }
-            dir.Delete();
-            Debug.Log("Deleted folder");
+            WipeDataFromSlot(SaveSlot);
         }
+        public void WipeDataFromSlot(int i)
+        {
+            DirectoryInfo dir = new(FolderPath(i));
+            dir.Delete(true);
+            Debug.Log("Deleted data in slot " + i);
+        }
+
+        [Button("Clear Data From Disk", EButtonEnableMode.Editor)]
+        public void WipeDataFromAllSlots()
+        {
+            DirectoryInfo dir = new(MasterFolderPath());
+            dir.Delete(true);
+            Debug.Log("Deleted data in all saveslots");
+        }
+
         #endregion
 
         #region loop

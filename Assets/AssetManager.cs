@@ -10,6 +10,7 @@ using Utility;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
+using NaughtyAttributes;
 
 namespace DataService
 {
@@ -28,6 +29,10 @@ namespace DataService
         [SerializeField]
         private AudioClip[] audioClips;
         public Dictionary<string, AudioClip> AudioClips;
+
+        [Scene]
+        [Tooltip("The scene to load on new game")]
+        public string newGameScene;
         #endregion
         #region backend
         #endregion

@@ -106,7 +106,7 @@ namespace DataService
         [Button("SaveData")]
         public void WriteStashedDataToDisk(bool encrypted = false)
         {
-            string message ="Saved following data:";
+            string message = string.Format("Saved following data to {0}:", FolderPath());
             int i = 0;
             foreach (DataClass data in dataQueue.Values)
             {

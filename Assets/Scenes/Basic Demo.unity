@@ -6993,6 +6993,7 @@ MonoBehaviour:
       sprites: null
       activeMusic: null
       activeAmbiance: null
+    textLog: 
   buttonPrefab: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
   portraitPrefab: {fileID: 8404248775511915677, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
   canvas: {fileID: 1908123726}
@@ -7007,7 +7008,6 @@ MonoBehaviour:
   audioSourceMusic: {fileID: 1711546200}
   audioSourceAmbiance: {fileID: 600074592}
   audioSourceSystem: {fileID: 326884563}
-  advanceDialogueDelay: 0.1
   slowText: 10
   mediumText: 50
   fastText: 200

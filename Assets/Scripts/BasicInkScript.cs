@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utility;
 
@@ -78,7 +79,7 @@ namespace Core
 
 
 
-        [SerializeField, BoxGroup("Settings")]
+        //[SerializeField, BoxGroup("Settings")]
         [Tooltip("Delay after which space button advances dialogue.")]
         protected float advanceDialogueDelay = .1f;
         public float AdvanceDialogueDelay => advanceDialogueDelay;
@@ -122,7 +123,7 @@ namespace Core
             if (UnityEditor.EditorApplication.isPlaying == true)
             {
                 StartStory();
-                Debug.Log(new NotImplementedException("You should reset the scene here."));
+                SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
             }
 #endif
 
@@ -153,10 +154,12 @@ namespace Core
         override protected void Awake()
         {
             base.Awake();
+            textPanel.text = ""; //clear lorum ipsum
+            Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
             CanAdvance = false;
             //spacer.minHeight = Camera.main.scaledPixelHeight;
             scrollbar.value = 1;
-            if (true) // if no data present..?
+            if (true) // why do i need to make blank data here always? is it just so that i don't get nullerrors later?
             {
                 inkData = CreateBlankData();
             }
@@ -171,9 +174,11 @@ namespace Core
             }
         }
 
+        /// <summary>
+        /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
+        /// </summary>
         void PrepStory()
         {
-            textPanel.text = "";
             RemoveOptions();
             story = new Story(inkJSONAsset.text);
 
@@ -185,11 +190,12 @@ namespace Core
         {
             if (DataManager.Instance.DataAvailable(inkData.Key))
             {
+                Debug.Log("found data! trying to load...");
                 TryLoadData();
             }
             else
             {
-                inkData = CreateBlankData();
+                inkData = CreateBlankData(); // you're making data a second time, there's already blank data made.
             }
             if (!playing)
             {
@@ -200,15 +206,14 @@ namespace Core
                     story.state.LoadJson(inkData.storyStateJson);
                     StartCoroutine(DisplayContent(story.currentText));
                     PresentButtons();
-                    //throw new Exception("Here you must hotsave the state of the text and buttons of inky!");
-
                 }
                 else
                 {
                     Debug.Log("no save point detected, starting from start");
                     story.state.GoToStart();
                 }
-                if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
+                if (story.canContinue) AdvanceStory(); /// show the first bit of story
+
             }
             else
             {
@@ -235,7 +240,7 @@ namespace Core
                 }
                 else if (story.canContinue & CanAdvance & CompletedText)
                 {
-                    StartCoroutine(AdvanceStory());
+                    AdvanceStory();
                 }
             }
             timeSinceAdvance += Time.unscaledDeltaTime; // note don't let overflow
@@ -539,6 +544,7 @@ namespace Core
         public InkData CreateBlankData()
         {
             InkData data = new(dataLabel + "DemoScene");
+            Debug.Log("Created new data " + data.Label);
             return data;
         }
 
@@ -547,7 +553,7 @@ namespace Core
         /// </summary>
         public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
-            /// save all the things (scene does't need to be stashed, is always stashed ad hoc)
+            /// save all the things //(scene and text does't need to be stashed, is always stashed ad hoc)
             inkData.storyStateJson = story.state.ToJson();
             inkData.StashData();
         }
@@ -578,19 +584,24 @@ namespace Core
                 }
                 else
                 {
-                    output = CreateBlankData();
+                    output = CreateBlankData(); // again creating new data, to copy the existing data into i guess
+                    // wait, why? so we don't touch the other data?
+                    // i guess just because all the functions prior to the textline already set their data to the new datafile, so you want to make sure you read from the ifrst datafile so you read the original and not anything yo ujust added.
+                    // okay, that just means we should manually add the textdata to the new outputdata
 
                     try
                     {
                         PopulateStoryVarsFromData(input, ref output);
 
-                        PopulateSceneFromData(input);
+                        PopulateSceneFromData(input, ref output);
+                        
+
                     }
                     catch (Exception)
                     {
                         throw;
                     }
-                    /// Successfully loaded data!
+                    Debug.Log("Successfully loaded data!");
                     return true;
                 }
             }
@@ -613,14 +624,17 @@ namespace Core
             Debug.Log(message);
         }
 
-        protected void PopulateSceneFromData(InkData inPut) // no out parameter used because each function "outputs" to inkdata global field anyway
+        protected void PopulateSceneFromData(InkData input, ref InkData output) 
         {
             Spd("M");
 
-            SetMusic(inPut.sceneState.activeMusic);
-            SetAmbiance(inPut.sceneState.activeAmbiance);
-            SetBackdrop(inPut.sceneState.background);
-            SetSprites(inPut.sceneState.sprites);
+            textPanel.text = inkData.textLog;
+            output.textLog = input.textLog;
+            //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
+            SetMusic(input.sceneState.activeMusic);
+            SetAmbiance(input.sceneState.activeAmbiance);
+            SetBackdrop(input.sceneState.background);
+            SetSprites(input.sceneState.sprites);
         }
         #endregion DATA
 
@@ -632,11 +646,8 @@ namespace Core
         /// Destroys all the old content and choices.
         /// Continues over all the lines of text, then displays all the choices. If there are no choices, the story is finished!
         /// NOTE this adapted version goes over one or a few lines at a time, rather than displaying all at once. It also renders lines per letter. 
-        private IEnumerator AdvanceStory()
+        private void AdvanceStory()
         {
-            /// save prev state
-            PutDataIntoStash();
-
             /// Remove all the UI options on screen
             RemoveOptions();
 
@@ -647,8 +658,12 @@ namespace Core
             /// Assemble the next paragraph
             string text = AssembleParagraph();
 
+
+            /// stash the new state
+            PutDataIntoStash(); 
+
             ///  display the text on screen!          
-            yield return StartCoroutine(DisplayContent(text));
+            StartCoroutine(DisplayContent(text));
 
         }
 
@@ -773,16 +788,22 @@ namespace Core
         void OnClickChoiceButton(Choice choice)
         {
             story.ChooseChoiceIndex(choice.index); /// feed the choice
-            inkData.storyStateJson = story.state.ToJson(); /// save the story state
-            StartCoroutine(AdvanceStory()); /// next bit
+            inkData.storyStateJson = story.state.ToJson(); /// record the story state
+            AdvanceStory(); /// next bit
 		}
 
 
         public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
         {
-            timeSinceAdvance = 0;
-            int i0 = textPanel.text.Length;
-            textPanel.text += newText;
+            timeSinceAdvance = 0; // reset timer for skip button
+            int i0 = inkData.textLog.Length; // set startpoint for forloop
+            inkData.textLog += newText; // add the nex text
+            textPanel.text = inkData.textLog; //set the textpanel to whatever the inkdata has.
+                                              // (okay, voordeel van het zo doen: inkdata and textpanel are always the same, dat is fijner met playtesting for visibility
+                                              // but, this seems like a possibly bad idea in actual build, since any issue caused is immediately on your stash. although, not yet on data actually saved to disk, so that might be alright.
+                                              // we can later add a buffer between stash and disk and also have redundancy with autosaves etc 
+
+            Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
             //scrollbar.value = 0;
 
             for (int i = i0; i < textPanel.text.Length + 1; i++)
@@ -798,6 +819,7 @@ namespace Core
                     yield break;
                 }
             }
+
         }
 
         /// When we click the choice button, tell the story to choose that choice!
@@ -825,9 +847,10 @@ namespace Core
         {
         }
 
-        //removed bc why do i need this if I have the story? public VariablesState variablesState = null; /// class containing states of all variables in story
+
         public string storyStateJson = ""; /// string indicating most recently saved state of the ink object.
         public SceneState sceneState = new();
+        public string textLog = "";
     }
 
     [Serializable]

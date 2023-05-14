@@ -31,6 +31,9 @@ namespace DataService
         public Dictionary<string, AudioClip> AudioClips;
 
         [Scene]
+        [Tooltip("The main menu scene")]
+        public string menuScene;
+        [Scene]
         [Tooltip("The scene to load on new game")]
         public string newGameScene;
         #endregion
@@ -55,5 +58,6 @@ namespace DataService
                 AudioClips.Add(audioClip.name.ToLower().Split('.')[0], audioClip);
             }
         }
+
     }
 }

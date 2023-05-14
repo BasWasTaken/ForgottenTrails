@@ -6,7 +6,7 @@ using Utility;
 using DataService;
 using UnityEngine.SceneManagement;
 
-public class GameLauncher : MonoBehaviour
+public class GameLauncher : MonoSingleton<GameLauncher>
 {
     [Required]
     public TMPro.TMP_Dropdown saveSlotSelector;
@@ -25,14 +25,12 @@ public class GameLauncher : MonoBehaviour
     }
     public void ContinueGame(int slot)
     {
-        Scene scene = SceneManager.GetActiveScene();
         DataManager.Instance.ContinueFromSaveSlot(slot);
+        LaunchGame();
     }
     private void LaunchGame()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(AssetManager.Instance.newGameScene);//, LoadSceneMode.Additive);
-        SceneManager.UnloadSceneAsync(scene);
+        SceneManager.LoadScene(AssetManager.Instance.newGameScene, LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync(AssetManager.Instance.menuScene);
     }
-
 }

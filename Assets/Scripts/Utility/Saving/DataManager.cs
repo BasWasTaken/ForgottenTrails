@@ -30,7 +30,7 @@ namespace DataService
         private string fileExtension = ".json";
 
         [SerializeField]
-        protected MetaData metaData = new("Meta02211281838");
+        protected MetaData metaData = new("Meta202305142002");
         public MetaData MetaData => metaData;
         #endregion
         #region backend
@@ -81,9 +81,9 @@ namespace DataService
         public void NewGameOnSaveSlot(int slot)
         {
             SaveSlot = slot;
-            if (Directory.Exists(DataPath(metaData.Key)))
+            if (File.Exists(DataPath(metaData.Key)))
             {
-                Debug.LogWarning("TODO: prompt user. Clearing data in slot " + slot);
+                Debug.LogAssertion("TODO: prompt user. Clearing data in slot " + slot);
                 WipeDataFromSlot(slot);
             }
         }
@@ -92,7 +92,7 @@ namespace DataService
             SaveSlot = slot;
             if (!Directory.Exists(DataPath(metaData.Key)))
             {
-                Debug.LogWarning("TODO: prompt user. No data detected in slot " + slot);
+                Debug.LogWarning("No data detected in slot " + slot);
             }
         }
 

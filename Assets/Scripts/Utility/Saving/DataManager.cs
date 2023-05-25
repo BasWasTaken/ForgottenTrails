@@ -92,7 +92,7 @@ namespace DataService
             SaveSlot = slot;
             if (!Directory.Exists(DataPath(metaData.Key)))
             {
-                Debug.LogWarning("No data detected in slot " + slot);
+                Debug.LogWarning("No data detected in slot " + slot+"\n Heads up! This message can sometimes fire incorrectly!");
             }
         }
 

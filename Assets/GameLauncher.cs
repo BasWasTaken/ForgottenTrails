@@ -6,7 +6,7 @@ using Utility;
 using DataService;
 using UnityEngine.SceneManagement;
 
-public class GameLauncher : MonoSingleton<GameLauncher>
+public class GameLauncher : MonoBehaviour
 {
     [Required]
     public TMPro.TMP_Dropdown saveSlotSelector;

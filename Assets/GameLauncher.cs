@@ -31,6 +31,20 @@ public class GameLauncher : MonoBehaviour
     private void LaunchGame()
     {
         SceneManager.LoadScene(AssetManager.Instance.newGameScene, LoadSceneMode.Additive);
-        SceneManager.UnloadSceneAsync(AssetManager.Instance.menuScene);
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
+
+    private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(AssetManager.Instance.newGameScene));
+        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+    }
+
+    private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
+    {
+        SceneManager.UnloadSceneAsync(AssetManager.Instance.menuScene);
+        SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+    }
+
 }

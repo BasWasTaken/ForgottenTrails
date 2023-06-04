@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: gong
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 992a9f703a4c26d46bcbc2076fe90b93
+    m_Address: Assets/TextMesh Pro/Fonts/PTSerif-Regular.ttf
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a51d926a23798f04882e41c9fa83e15a, type: 2}
   m_SchemaSet:

@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls game volume through slider objects and stores value in playerprefs.
+/// </summary>
 public class SetVolume : MonoBehaviour
 {
     [Tooltip("The slider to use as value")]
@@ -11,10 +14,20 @@ public class SetVolume : MonoBehaviour
     [Tooltip("The volume to change")]
     public AudioMixerGroup audioGroup;
     private string ParameterName => audioGroup.ToString()+"Volume";
-    void Start()
+    void Awake()
     {
-        Debug.Log("Getting volume level from playerprefs");
-        slider.value = PlayerPrefs.GetFloat(ParameterName, 0.75f);
+        Debug.Log("Getting volume level from playerprefs: " + PlayerPrefs.GetFloat(ParameterName));
+        float storedValue = PlayerPrefs.GetFloat(ParameterName, 0.75f);
+        float sliderValue;
+        if (storedValue <= -80)
+        {
+            sliderValue = 0; // Set minimum value on the slider
+        }
+        else
+        {
+            sliderValue = Mathf.Pow(10, storedValue / 20); // Reverse conversion to get slider value
+        }
+        slider.value = sliderValue;
     }
     public void SetLevel(float sliderValue)
     {

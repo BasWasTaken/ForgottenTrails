@@ -40,7 +40,7 @@ public class SetVolume : MonoBehaviour
         {
             newValue = Mathf.Log10(sliderValue) * 20;
         }
-        audioGroup.audioMixer.SetFloat(ParameterName, newValue);
+        audioGroup.audioMixer.SetFloat(ParameterName, newValue);    
         PlayerPrefs.SetFloat(ParameterName, newValue);
     }
 }

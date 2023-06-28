@@ -712,7 +712,7 @@ namespace Core
 
 
                 /// stop if you hit a paragraph break:
-                if (text.EndsWith("\n<br>\n"))
+                if (text.EndsWith("\n<stop>\n"))
                 {
                     //text = text.TrimEnd("<br>\n".ToCharArray()); 
                     text = "__________\n" + text;

@@ -30,6 +30,7 @@ Home? Didn't you leave home months ago?
 
 You ponder this briefly. A dream perhaps? Maybe. Surely! Maybe... 
 The thought has nearly solidified in your mind when an unexpected blow knocks you to the ground. As you look up you see one of the caretakers on the floor, just like you, with books scattered about everywhere. The young man begins to apoligize profusely, all the while gathering the dropped books. Before you can even get a word in he has already reformed the towering stack, undoubtedly the thing that obstructed his vision in the first place, and has continued on his way. 
+<br>
 On the floor, a mirror sparkles with light's reflection. Did he drop this?
 *(MirrorY)[Pick it up]
 As you reach to pick it up, a reflection stares back at you.

@@ -678,6 +678,12 @@ namespace Core
             while (story.canContinue) /// at most until the story hits a choice
             {
                 string newLine = story.Continue(); ///Continue gets the next line of the story 
+
+                if (newLine == "\n<br>\n")
+                {
+                    text += "\n";
+                }
+
                 if (newLine.StartsWith("..."))
                 {
                     inkData.textLog = inkData.textLog.Trim('\n') + ' ';
@@ -712,16 +718,9 @@ namespace Core
 
 
                 /// stop if you hit a stop tag:
-                if (text.EndsWith("\n<stop>\n"))
+                if (newLine.EndsWith("\n<stop>\n"))
                 {
-                    //text = text.TrimEnd("<br>\n".ToCharArray()); 
-                    text = "__________\n" + text;
                     break;
-                }
-                if (text.EndsWith("\n<br>\n"))
-                {
-                    //text = text.TrimEnd("<br>\n".ToCharArray()); 
-                    text += "\n" + newLine;
                 }
             }
             return text;

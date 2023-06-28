@@ -721,7 +721,7 @@ namespace Core
                 if (text.EndsWith("\n<br>\n"))
                 {
                     //text = text.TrimEnd("<br>\n".ToCharArray()); 
-                    text += "__________\n" + text;
+                    text += "\n" + newLine;
                 }
             }
             return text;

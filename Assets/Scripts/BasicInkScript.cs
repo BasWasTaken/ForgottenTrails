@@ -718,6 +718,11 @@ namespace Core
                     text = "__________\n" + text;
                     break;
                 }
+                if (text.EndsWith("\n<br>\n"))
+                {
+                    //text = text.TrimEnd("<br>\n".ToCharArray()); 
+                    text += "__________\n" + text;
+                }
             }
             return text;
         }

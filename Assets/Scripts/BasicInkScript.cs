@@ -678,9 +678,11 @@ namespace Core
             while (story.canContinue) /// at most until the story hits a choice
             {
                 string newLine = story.Continue(); ///Continue gets the next line of the story 
-                if (newLine.StartsWith(">>>")) /// (example) check if this line is being spoken my anybody specific
+                if (newLine.StartsWith("..."))
                 {
-                    PlaySfx(newLine.Split(">>>")[1].TrimEnd('\n').TrimEnd(' ').ToLower());
+                    inkData.textLog = inkData.textLog.Trim('\n') + ' ';
+
+                    text += newLine.TrimStart('.');
                 }
                 else
                 {
@@ -800,6 +802,16 @@ namespace Core
 
         public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
         {
+            /* REMOVE
+            if (glueLater.Length > 0)
+            {
+                Debug.Log("glued");
+                inkData.textLog = inkData.textLog.TrimEnd('\n');
+                glueLater = "";
+            }
+            Debug.Log("nothing to be glued");
+            */
+
             timeSinceAdvance = 0; // reset timer for skip button
             int i0 = inkData.textLog.Length; // set startpoint for forloop
             inkData.textLog += newText; // add the nex text

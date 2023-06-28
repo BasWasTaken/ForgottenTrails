@@ -38,14 +38,14 @@ As you reach to pick it up, a reflection stares back at you.
 If he left it behind then that is his problem. But as you stand up you cannot help but notice your reflection in the glass.
 -> Opening.CharCreation0
 = CharCreation0
-You see
-+a young man <>
+You see <>
++...a young man <>
 ~ players_gender = "male"
 -> Opening.CharCreation1
-+a young woman <>
++...a young woman <>
 ~ players_gender = "female"
 -> Opening.CharCreation1
-+a young, androgynous person <>
++...a young androgynous person <>
 ~ players_gender = "nonbinary"
 -> Opening.CharCreation1
 
@@ -59,7 +59,7 @@ You see
 //For 80 Days, we labelled choices with a leading "..." if there were intended to be glued in this fashion; the engine then looked for the dots, stripped them out, and told the UI to append the text rather than starting a new paragraph.
 
 //This is the same approach as you might take if a line was intended to be dialogue for a certain character; or a chapter title; or an instruction to play a sound effect, etc etc.
-with eyes that shine a bright
+with eyes that shine a bright <>
 +...blue[.] 
 ~ players_eyecolor = "Blue"
 -> Opening.CharCreation2
@@ -83,7 +83,7 @@ with eyes that shine a bright
 -> Opening.CharCreation2
 
 = CharCreation2
-Your hair
+Your hair <>
 +...flows down far beyond your shoulders<>
 ~ players_hair = "long"
 -> Opening.CharCreation3

@@ -2485,7 +2485,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.36991975
+  m_Size: 0.15600798
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7163,8 +7163,8 @@ MonoBehaviour:
     egestas, quam enim tempus tellus, a feugiat sapien justo quis diam. Aliquam erat
     volutpat. Ut nec nibh ut libero posuere maximus. Cras id suscipit leo. '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 975ac60ce9333754da89a67e8aeaf275, type: 2}
+  m_sharedMaterial: {fileID: -2803204394490697467, guid: 975ac60ce9333754da89a67e8aeaf275, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7188,8 +7188,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7200,7 +7200,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 10
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0

@@ -366,6 +366,7 @@ namespace DataService
 
         public string testText = "nulled";
         public const string textConst = "const";
+        public string playerName = "Sam";
 
         public string Report
         {

@@ -10,6 +10,8 @@ public class GameLauncher : MonoBehaviour
 {
     [Required]
     public TMPro.TMP_Dropdown saveSlotSelector;
+    [Required]
+    public TMPro.TMP_InputField nameInput;
     public void StartNewGame()
     {
         StartNewGame(saveSlotSelector.value);
@@ -17,6 +19,7 @@ public class GameLauncher : MonoBehaviour
     public void StartNewGame(int slot)
     {
         DataManager.Instance.NewGameOnSaveSlot(slot);
+        DataManager.Instance.MetaData.playerName = nameInput.text;
         LaunchGame();
     }
     public void ContinueGame()

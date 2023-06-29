@@ -3,17 +3,34 @@ LIST VisitedState = Yes, No
 
 LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
+VAR Name = "Alex"
+
+
 VAR players_gender = "Undefined"
 VAR players_eyecolor = "Undefined"
 VAR players_hair = "Undefined"
 VAR players_hair_color = "Undefined"
 VAR players_hair_style = "Undefined"
+
+VAR androgynous = "androgynous"
+VAR they = "they"
+VAR them = "them"
+VAR their = "their"
+VAR theirs = "theirs"
+VAR Mx = "Mx"
+VAR master = "master"
+VAR person = "person"
+VAR kid = "kid"
+VAR lad = "lass"
+VAR guy = "guy"
+
 EXTERNAL Print(string)
 
-=== function Print(a)
+=== function Print(a) ===
     <i>Print to console:</i> {a}
 
 === Start ===
+#backdrop:whiterun
 ~ TimeOfDay = Dawn
     -> Opening
     
@@ -39,27 +56,59 @@ If he left it behind then that is his problem. But as you stand up you cannot he
 -> Opening.CharCreation0
 = CharCreation0
 You see <>
-+...a young man <>
++...a young, male figure[], <>
 ~ players_gender = "male"
 -> Opening.CharCreation1
-+...a young woman <>
++...a young, female figure[], <>
 ~ players_gender = "female"
 -> Opening.CharCreation1
-+...a young androgynous person <>
++...a young, androgynous figure[], <>
 ~ players_gender = "nonbinary"
 -> Opening.CharCreation1
 
 = CharCreation1
-//And here we have our first Unity - Inky crossover thingamajing! I want to glue the outcome of a choice to the line before it, which it turns out isn't natively possible. Jon Ingold (the head of Inkle) posted this response to someone with the same issue: 
+{
+	- players_gender == "male":
+	    ~ androgynous = "masculine"
+		~ they = "he"
+        ~ them = "him"
+        ~ their = "his"
+        ~ theirs = "his"
+        ~ Mx = "Mr"
+        ~ master = "mister"
+        ~ person = "man"
+        ~ kid = "boy"
+        ~ lad = "lad"
+        ~ guy = "guy"        
+        
+    - players_gender == "female":
+        ~ androgynous = "feminine"
+        ~ they = "she"
+        ~ them = "her"
+        ~ their = "her"
+        ~ theirs = "hers"
+        ~ Mx = "Ms"
+        ~ master = "missus"
+        ~ person = "woman"
+        ~ kid = "girl"
+        ~ lad = "lass"
+        ~ guy = "gal"
+        
+	- else:
+	    ~ androgynous = "androgynous"
+        ~ they = "they"
+        ~ them = "them"
+        ~ their = "their"
+        ~ theirs = "theirs"
+        ~ Mx = "Mx"
+        ~ master = "master"
+        ~ person = "person"
+        ~ kid = "kid"
+        ~ lad = "lad"
+        ~ guy = "guy"
+}
 
-//This is a UI issue, not an ink-level one. To explain - the ink presents text, choice, text, but it's up to the game how to display that content. If you intend the outcome of a choice to be 'glued' to the previous paragraph, you'll need to write UI code to actually do that.
-
-//You can't do this using glue because glue happens within the ink processing step; by the time the output appears, the glue has been resolved.
-
-//For 80 Days, we labelled choices with a leading "..." if there were intended to be glued in this fashion; the engine then looked for the dots, stripped them out, and told the UI to append the text rather than starting a new paragraph.
-
-//This is the same approach as you might take if a line was intended to be dialogue for a certain character; or a chapter title; or an instruction to play a sound effect, etc etc.
-with eyes that shine a bright <>
+whose eyes shine a bright <>
 +...blue[]. 
 ~ players_eyecolor = "Blue"
 -> Opening.CharCreation2
@@ -83,14 +132,14 @@ with eyes that shine a bright <>
 -> Opening.CharCreation2
 
 = CharCreation2
-Your hair <>
-+...flows down far beyond your shoulders<>
+{their} hair <>
++...flows down far beyond {their} shoulders<>
 ~ players_hair = "long"
 -> Opening.CharCreation3
 +...falls to about shoulder length<>
 ~ players_hair = "medium"
 -> Opening.CharCreation3
-+...gently covers the top part of your ears and neck<>
++...gently covers the top part of {their} ears and neck<>
 ~ players_hair = "short"
 -> Opening.CharCreation3
 +...has been kept short<>
@@ -164,17 +213,30 @@ Your hair <>
 -> Opening.Mirror
 }
 = Mirror
-Yes, a young {players_gender == "male": man}{players_gender == "female": woman}{players_gender == "nonbinary": person} with{players_eyecolor == "Blue": blue}{players_eyecolor == "Green": green}{players_eyecolor == "Brown": brown}{players_eyecolor == "Grey": grey}{players_eyecolor == "Hazel": hazel}{players_eyecolor == "Amber": amber}{players_eyecolor == "Red": red} eyes gently smiles at you,{players_hair == "long": {players_gender == "male": his}{players_gender == "female": her}{players_gender == "nonbinary": their} face framed by{players_hair_style == "straight": straight}{players_hair_style == "wavy": wavy}{players_hair_style == "curly": curly}{players_hair_color == "black": black}{players_hair_color == "brown": brown}{players_hair_color == "auburn": auburn}{players_hair_color == "red": red}{players_hair_color == "blonde": blonde}{players_hair_color == "white": white} hair.}
-+Disregarding your reflection, you move on[].
--> Opening.Master
+Yes, a young {person} with{players_eyecolor == "Blue": blue}{players_eyecolor == "Green": green}{players_eyecolor == "Brown": brown}{players_eyecolor == "Grey": grey}{players_eyecolor == "Hazel": hazel}{players_eyecolor == "Amber": amber}{players_eyecolor == "Red": red} eyes gently smiles at you,{players_hair == "long": {their} face framed by{players_hair_style == "straight": straight}{players_hair_style == "wavy": wavy}{players_hair_style == "curly": curly}{players_hair_color == "black": black}{players_hair_color == "brown": brown}{players_hair_color == "auburn": auburn}{players_hair_color == "red": red}{players_hair_color == "blonde": blonde}{players_hair_color == "white": white} hair.}
++And you recognise the face as yours[].
+-> Opening.Recognition
 +But you do not recognize yourself[].
 You blink and a different face stares back at you.
 ->Opening.CharCreation0
 
+= Recognition
+You consider the name that belongs to this face. A young {person} called {Name}.
++ I've always thought it seemed to fit.
+-> Opening.Acceptance
+* It never seemed right somehow. <>
+Too bad you can't change your name.
+-> Opening.Acceptance
+
+
+= Acceptance
++Disregarding your reflection, you move on.
+-> Opening.Master
+
 = Master
 {Opening.MirrorY: As you lower the mirror in your hand}{Opening.MirrorN: As you leave the mirror on the floor} you hear a familiar voice call out to you. You turn to face it and find that the scenery has changed around you. The comforting smell of books remains but a small open window provides some fresh air. The office is just as you remember it: a small space that forms a stark contrast with the garden outside its window. Its floorboards are barely visible beneath the array of books, knick-knacks and tea cups that should have been returned to the kitchen days ago. You're sitting in a woodback chair. Across from you, behind a hardwooden desk, sits an elderly man. His kind eyes look into yours and you feel a bout of homesickness brewing in your stomach, although cannot fathom why. <br>
 He hands you a large, leatherbound tome: your journal. Your most important possession. If you can fill its pages with knowledge not yet held within the Vault, or document where and how you found a tome not yet present on its shelves, you can become like the man in front of you: a keeper. A guaranteed lifetime within these halls, curating knowledge and educating the next generation. If you can't...<br>
-You decide not to think about that. You give your master a 
+You decide not to think about that. You give your master a <>
 *...firm handshake <>
 and walk out the door.
 ->Opening.Crossroads
@@ -244,7 +306,7 @@ As you crest the hilltop a gatehouse comes into view. Its stones are worn, ancie
 
 *   "Man!" [] you shout back at him. 
     After a brief moment of quiet a reply comes from inside:
-    "Alright lad, approach!"
+    "Alright {lad}, approach!"
     -> CastleEntranceFirstApproach
     
 *   (joke)"Beast!" [] you shout back, mockingly.
@@ -256,7 +318,7 @@ As you crest the hilltop a gatehouse comes into view. Its stones are worn, ancie
         "I won't ask again! Identify yourself!"
     **   [Identify yourself] "Just a traveler!" you shout.
         There's a slight pause and while you can't hear it through the thick walls, you can only imagine the guardsman let out a sigh of relief before replying
-        "Don't scare me like that lad! Please, approach!"
+        "Don't scare me like that {lad}! Please, approach!"
         -> CastleEntranceFirstApproach
     **   [Remain quiet]
         You hear a bell being rung on the otherside of the wall. The next few moments pass by in a blurr as you hear several people shouting and running behind the wall. There's a low thud followed by a piercing pain. You look down at your chest and as you see the shaft of an arrow sticking out, you realize the gravity of your mistake. You try to raise your arms to somehow remedy the situation, but two more arrows find their mark. You fall to the ground, quickly shifting out of concsiousness and this mortal plane. 
@@ -265,9 +327,9 @@ As you crest the hilltop a gatehouse comes into view. Its stones are worn, ancie
 = CastleEntranceFirstApproach
 You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the archway, barring the way forward. As you stand before them a small latch is opened to reveal two {TimeOfDay == Dawn: tired blue eyes} crowned by a pair of bushy eyebrows{CastleEntranceFirst.joke: that are frowning in disaproval}.
 
-{CastleEntranceFirst.joke: The man sighs, "Look lad, I appreciate your attempt at a joke -Gods know we could use some more humor out here- but on a bad day behaviour like that could get you killed. I've heard stories of wraiths speaking, wouldn't want to accidentally think you're one." | "Welcome to the castle lad, safest place in the North!" The man's eyes smile, most likely along with his mouth that's still hidden behind the door, "Sorry for all the precaution, can't be too careful with them wraiths out there."}
+{CastleEntranceFirst.joke: The man sighs, "Look {lad}, I appreciate your attempt at a joke -Gods know we could use some more humor out here- but on a bad day behaviour like that could get you killed. I've heard stories of wraiths speaking, wouldn't want to accidentally think you're one." | "Welcome to the castle {lad}, safest place in the North!" The man's eyes smile, most likely along with his mouth that's still hidden behind the door, "Sorry for all the precaution, can't be too careful with them wraiths out there."}
 *"Could you let me in?"
-    {CastleEntranceFirst.joke: "Alright, just behave would ye?" | "Of course lad, just a moment."}
+    {CastleEntranceFirst.joke: "Alright, just behave would ye?" | "Of course {lad}, just a moment."}
     The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man stands behind it holding the door open for you with one hand while leaning on a spear with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
     
     As you step inside the man shuts the door behind you, taking great care to put the locks back into place. 
@@ -324,8 +386,8 @@ Her expression grows solemn. "That depends" she says. "What did you hear?"
 *"Do I need a reason?"
 {EdCastlePrison.MaryPrisonGreeting.rude: "Well if you do not have any business here, leave me be. I have nothing to say to you." The woman pulls her hood back over her head and turns away from you. -> MaryPrisonUpset | "Mhm, I suppose not. Would you like to chat for a bit? It has been a while since anyone came down here that was willing to engage me in conversation. I am called Mary, by the way."}
     - (MaryNameLoop) 
-    **(MetMary)"A pleasure to meet you Mary, I'm PLAYERNAME"
-        She smiles warmly at you, "The pleasure is all mine, PLAYERNAME."
+    **(MetMary)"A pleasure to meet you Mary, I'm {Name}"
+        She smiles warmly at you, "The pleasure is all mine,{Name}."
         ->MaryPrisonConvo2
     **"Simply Mary?"
         She smiles sadly, "These days yes, simply Mary. I do not feel quite worthy to use the full name I once bore." -> MaryNameLoop

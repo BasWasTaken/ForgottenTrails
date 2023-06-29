@@ -617,14 +617,20 @@ namespace Core
         {
             string message = "InkVars:";
 
+            
+            story.state.LoadJson(input.storyStateJson); // get storystate from json
 
-            story.state.LoadJson(input.storyStateJson);
-            output.storyStateJson = story.state.ToJson();
+            story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // assign name to storystate
+
+            output.storyStateJson = story.state.ToJson(); //put storystate into inkdata
 
             foreach (string item in story.state.variablesState)
             {
                 message += "\n" + item + ": " + story.state.variablesState[item].ToString();
             }
+
+
+
 
             Debug.Log(message);
         }

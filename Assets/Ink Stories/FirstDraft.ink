@@ -39,6 +39,7 @@ And so ends this tale. Another apprentice that would never return, their finding
 ->END
 
 === Opening ===
+#backdrop:Vault1
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, reading. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
 <br>
 It's a place that in a forgotten past held a different name but you know it by two: The Vault of Forgotten Books and Home. 
@@ -213,7 +214,7 @@ whose eyes shine a bright <>
 -> Opening.Mirror
 }
 = Mirror
-Yes, a young {person} with{players_eyecolor == "Blue": blue}{players_eyecolor == "Green": green}{players_eyecolor == "Brown": brown}{players_eyecolor == "Grey": grey}{players_eyecolor == "Hazel": hazel}{players_eyecolor == "Amber": amber}{players_eyecolor == "Red": red} eyes gently smiles at you,{players_hair == "long": {their} face framed by{players_hair_style == "straight": straight}{players_hair_style == "wavy": wavy}{players_hair_style == "curly": curly}{players_hair_color == "black": black}{players_hair_color == "brown": brown}{players_hair_color == "auburn": auburn}{players_hair_color == "red": red}{players_hair_color == "blonde": blonde}{players_hair_color == "white": white} hair.}
+Yes, a young {person} with{players_eyecolor == "Blue": blue}{players_eyecolor == "Green": green}{players_eyecolor == "Brown": brown}{players_eyecolor == "Grey": grey}{players_eyecolor == "Hazel": hazel}{players_eyecolor == "Amber": amber}{players_eyecolor == "Red": red} eyes gently smiles at you, {their} {players_hair == "long":face framed by}{players_hair == "medium":face framed by}{players_hair == "short":head crowned by}{players_hair == "very_short":head adorned with short}{players_hair == "bald":head cleanly shaven}{players_hair_style == "straight": straight}{players_hair_style == "wavy": wavy}{players_hair_style == "curly": curly}{players_hair_color == "black": black}{players_hair_color == "brown": brown}{players_hair_color == "auburn": auburn}{players_hair_color == "red": red}{players_hair_color == "blonde": blonde}{players_hair_color == "white": white}{players_hair == "bald":. | hair.}
 +And you recognise the face as yours[].
 -> Opening.Recognition
 +But you do not recognize yourself[].
@@ -269,27 +270,72 @@ You wave happily at the approachinig figure, although they don't return the gest
 *[Walk towards them]
 You decide to take the initiative and walk out to meet them on the road. 
 ->Opening.Hills2
-*[Await them patiently]
+*(Boulder)[Await them patiently]
 As luck would have it there's a nice boulder by the roadside. You decide to take a break while the stranger approaches. 
 ->Opening.Hills2
 
 =Hills2
-As the stranger comes closer into view, you feel as if something is a bit off. Their clothing seems to be consist out of rags, and their left leg is . 
+As the stranger comes closer into view, you feel as if something is a bit off. Their clothing seems to consist out of rags, and their left leg is dragging behind them. Are they hurt? You
+*...run towards them to help[]. <>
+    You quickly close the gap, the stranger only being a several feet away from you now, allowing you to clearly see their face. <>
+    ->Hills3
+*...cautiously await their approach[].  <>
+{Hills.Boulder:The boulder you're sitting on is actually rather comfortable, so why get up? Nevertheless, you |You }ready yourself, just in case they're hostile. It hasn't happened often on the road, but it's always good to be careful, right? 
+    The stranger draws nearer, now being only several feet away from you, allowing a clear view of their face. <>
+    ->Hills3
+*(run)...decide you'd rather pass on this chance encounter and run in the other direction[]. <>
+Breaking into a sprint, you head away from whoever is coming up the road. But as you run, you hear frantic footsteps behind you... And they're catching up. A powerful blow hits you in the back, sending you sprawling to the ground. You turn around to face your would be attacker, now in clear view.
+->Hills3
+
+=Hills3
+You recoil. Its face is a horrible contradiction. Its right half takes the shape of a beautiful young man, with blemishless skin and perfect features. The left half however, betrays what lies underneath: twisted, rusting metal. It looks at you and smiles, the teeth on its left side stretching disconcerningly further than the remains of its lips on the right would allow. A word forms into your mind:
+    
+    Wraith. 
+    
+    Panic sets in. You
+    **(fight)...fight[]. 
+    With all your might you throw yourself at the horrid creature. As you collide with it, it feels as if you smack into a wall. You bounce of it and fall down to the ground{Hills2.run: once more}. <> 
+    ->Hills4
+    **(scream)...scream<>
+    , but no sound comes from your lips. <>
+    ->Hills4
+    **(run)...run[].
+    {Hills2.run:Perhaps against better judgement, you try to make another break for it. You have barely gotten to your feet before the creature knocks you down once more, a sharp pain shooting through your arm as you fall. Did you break something? |You turn and bolt away at full speed. The creature is much faster. A powerful blow hits you in the back, sending you sprawling to the ground. With what strength you have left, you turn to face it.} <> 
+    ->Hills4
+=Hills4
+The wraith simply tilts its head at you, still wearing its grotesque smile, almost as if to mock your {Hills3.fight:bravery}{Hills3.run:speed}{Hills3.scream:terror}. Slowly, it starts to advance toward you. It raises its left arm, presumably to strike you with it. You shield yourself with your arms, although you know it will probably be for naught. You brace yourself, agonizing seconds ticking by as you wait for the end, and then-
+        A roar. 
+        A bestial growl reverberates through your body. You look up, just in time to see a bear collide forcefully with the creature. The beast tears into the wraith, somehow capable of tearing through metal as if it were cloth. Between the harsh sounds of ripping metal you hear the monster scream. Inhuman, horrible, but scream nonetheless. Then, silence. 
+        The bear stands there, panting. Still catching his breath, he turns towards you. He slowly walks over, his mouth dripping with salliva. He sniffs you. His mouth, reeking with a nearly bloodlike metal smell, mere inches from your face. Without a sound, he opens his strong jaws and bites down on you-
+            ->Awakening
 
 =Woodland
 The wood looks more appealing and you set off it its direction at a trot. 
 
 -> END
+
+=== Awakening ===
+~TimeOfDay = Dawn
+You awaken with a start. A dream after all. Of course it was, now that you look back on it. 
+You turn on your back, the small canvas tent that shields you from the elements coming into view. You can smell the morning forest and the smouldering remains of your campfire.
+->Awakening.Tent
+
+=Tent
+You decide to
+*...pack up[].
+*...make some breakfast first[]. 
+*...sleep in[]. One way to shake a nightmare is with a new dream but sadly, sleep doesn't come.
+->Tent
 //Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown wood you found yourself in only two days ago.
 //*[Put another foot forward]You take another step. And another. Your legs have carried you all the way from Barralon to here: the far North of the Forgotten Isles. 
-  //  **[Readjust your backpack]You shift the weight of the pack on your shoulders. It's heavy, but that's a small burden to bear for the essentials you carry. No explorer worth their salt would set out without a tent, sleeping bag, flint and steel or a cooking pan. 
+  //  **[Readjust your backpack]You shift the weight of the pack on your shoulders. It's heavy, but that's a small burden to bear for the essentials you carry. No explorer worth their salt would set out without a tent, sleeping bag, flint and steel or a cooking pot. 
         
     //    Of course, your most important possession is not carried on your back. Chained to your belt is a large, leatherbound book: your journal. You give it a reaffirming tap. A record of all the things you've seen so far and, equally important, plenty of empty pages left to fill with discoveries of the North. 
         
       //  No keeper has set foot here in two hundred years, and even those long dead explorers never ventured deeply into the wilds. Without a doubt, you will be able to complete your task here; to find knowledge not yet stored in the Vault of Barralon. From local folklore to a survey of the wildlife, anything will do. But you did not venture all this way to write down the mundane. You came to find something old. Something ancient, from before the sundering. 
         
         //As you contemplate your quest, you realize your feet have carried you to the top of the hill. 
-    //    ***[Survey the landscape]Beneath an amber sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a sturdy hill. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
+    //    ***[Survey the landscape]Beneath a pink morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a sturdy hill. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
         
       //      As your gaze returns to the path before you, you realize you missed something on your first viewing: a person. Still far in the distance, but
 

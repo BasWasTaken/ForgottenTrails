@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utility;
 
@@ -34,6 +35,8 @@ namespace Core
 
         [SerializeField, BoxGroup("Assets"), Required]
         private Button buttonPrefab = null;
+        [SerializeField, BoxGroup("Assets"), Required]
+        private Image portraitPrefab = null;
 
         /// SCENE REFERENCES
         [SerializeField, BoxGroup("Scene References"), Required]
@@ -41,19 +44,24 @@ namespace Core
         private Canvas canvas = null;
 
         [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("The scrollbar used for the paper scroll.")]
+        public Scrollbar scrollbar;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("The spacer used at bottom of the paper scroll.")]
+        public LayoutElement spacer;
+
+
+        [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Panel to display current paragraph.")]
         public TextMeshProUGUI textPanel = null;
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Panel to display all previous text.")]
-        public TextMeshProUGUI logPanel = null;
         [SerializeField, BoxGroup("Scene References")]
         public Image bgImage;
+        [SerializeField, BoxGroup("Scene References")]
+        public HorizontalLayoutGroup portraits;
         [SerializeField, BoxGroup("Scene References"), Required]
         public Transform buttonAnchor;
         [SerializeField, BoxGroup("Scene References")]
-        public Vector2 buttonOffset = new(0, 1);
-        [SerializeField, BoxGroup("Scene References")]
-        public Animator triangle;
+        public Image floatingMarker;
 
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for sfx.")]
@@ -64,16 +72,21 @@ namespace Core
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for ambiance.")]
         private AudioSource audioSourceAmbiance;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for system sounds like ui.")]
+        private AudioSource audioSourceSystem;
 
 
 
 
-        [SerializeField, BoxGroup("Settings")]
+        //[SerializeField, BoxGroup("Settings")]
         [Tooltip("Delay after which space button advances dialogue.")]
         protected float advanceDialogueDelay = .1f;
         public float AdvanceDialogueDelay => advanceDialogueDelay;
 
         private bool halted = false;
+
+        private bool playing = false;
 
         [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
         [Tooltip("Choose a numeric value for this option.")]
@@ -92,12 +105,31 @@ namespace Core
 
         #region INSPECTOR_HELPERS
 
-        [SerializeField, Button("ResetInkData")]
-        private void ResetInkDataButton() { inkData = CreateBlankData(); }
-        [SerializeField, Button("LoadData")]
-        private void LoadDataButton() { TryLoadData(); }
+        public Dictionary<VariablesState, object> inkVars = new();
 
-        protected bool IsValidFolder(string path)
+
+        [SerializeField, Tooltip("Reset ink data in object. Note: does not remove data from file"), Button("ResetInkData",EButtonEnableMode.Editor)]
+        public void ResetInkDataButton() { inkData = CreateBlankData(); PrepStory(); }
+        [SerializeField, Button("LoadData")]
+        public void LoadDataButton() {
+#if UNITY_EDITOR
+            if (UnityEditor.EditorApplication.isPlaying == true)
+            {
+                StopPlayingStory();
+            }
+#endif 
+            ResetInkDataButton();
+#if UNITY_EDITOR
+            if (UnityEditor.EditorApplication.isPlaying == true)
+            {
+                StartStory();
+                SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+            }
+#endif
+
+        }
+
+            protected bool IsValidFolder(string path)
         {
             return Directory.Exists(path);
         }
@@ -122,9 +154,12 @@ namespace Core
         override protected void Awake()
         {
             base.Awake();
+            textPanel.text = ""; //clear lorum ipsum
+            //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
             CanAdvance = false;
-            
-            if (true) // if no data present..?
+            //spacer.minHeight = Camera.main.scaledPixelHeight;
+            scrollbar.value = 1;
+            if (true) // why do i need to make blank data here always? is it just so that i don't get nullerrors later?
             {
                 inkData = CreateBlankData();
             }
@@ -134,34 +169,65 @@ namespace Core
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y);
             if (inkJSONAsset != null)
             {
+                PrepStory();
                 StartStory();
             }
         }
 
-        /// Creates a new Story object with the compiled story which we can then play!
-        void StartStory()
+        /// <summary>
+        /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
+        /// </summary>
+        void PrepStory()
         {
+            RemoveOptions();
             story = new Story(inkJSONAsset.text);
+            story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
+            Debug.Log(story.state.variablesState["Name"]);
 
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
             OnCreateStory?.Invoke(story);
-
-            TryLoadData();
-
-            if (inkData.saveStateCur != "")
+        }
+        /// Creates a new Story object with the compiled story which we can then play!
+        void StartStory()
+        {
+            if (DataManager.Instance.DataAvailable(inkData.Key))
             {
-                Debug.Log("continueing from savepoint!");
-                story.state.LoadJson(inkData.saveStateCur);
+                Debug.Log("found data! trying to load...");
+                TryLoadData();
             }
             else
             {
-                Debug.Log("no save point detected, starting from start");
-                story.state.GoToStart();
+                inkData = CreateBlankData(); // you're making data a second time, there's already blank data made.
+            }
+            if (!playing)
+            {
+                playing = true;
+                if (inkData.storyStateJson != "")
+                {
+                    Debug.Log("continueing from savepoint!");
+                    story.state.LoadJson(inkData.storyStateJson);
+                    StartCoroutine(DisplayContent(story.currentText));
+                    PresentButtons();
+                }
+                else
+                {
+                    Debug.Log("no save point detected, starting from start");
+                    story.state.GoToStart();
+                }
+                if (story.canContinue) AdvanceStory(); /// show the first bit of story
+
+            }
+            else
+            {
+                Debug.LogError("Still playing according to bool!");
             }
 
-
-            if (story.canContinue) StartCoroutine(AdvanceStory()); /// show the first bit of story
-		}
+        }
+        void StopPlayingStory()
+        {
+            completeText = true;
+            playing = false;
+        }
         #endregion LIFESPAN
 
         #region LOOP
@@ -176,7 +242,7 @@ namespace Core
                 }
                 else if (story.canContinue & CanAdvance & CompletedText)
                 {
-                    StartCoroutine(AdvanceStory());
+                    AdvanceStory();
                 }
             }
             timeSinceAdvance += Time.unscaledDeltaTime; // note don't let overflow
@@ -193,11 +259,15 @@ namespace Core
         {
             string[] split = tag.ToLower().Split(':');
             string command = split[0];
-            string parameter = split[1];
+            string parameter = split[1].TrimStart(' ');
 
             if (command == "backdrop")
             {
                 SetBackdrop(parameter);
+            }
+            if (command == "sprites")
+            {
+                SetSprites(parameter);
             }
             else if (command == "music")
             {
@@ -288,8 +358,48 @@ namespace Core
             bgImage.sprite = sprite;
             inkData.sceneState.background = fileName;
         }
+        private void SetSprites(string fileNames)
+        {
+            /// first clear all portraits
+            foreach (Image item in portraits.GetComponentsInChildren<Image>())
+            {
+                Destroy(item.gameObject);
+            }
 
+            string[] fileNamesSplit = fileNames.Split(',');
 
+            foreach (string fileName0 in fileNamesSplit)
+            {
+                Sprite sprite = null; /// clear if no other value is given
+
+                string fileName = fileName0.ToLower().Trim(' '); // trim spaces
+                if (!(fileName == "" | fileName == "null"))
+                {
+                    try
+                    {
+                        if (!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
+                        {
+                            Debug.LogError(new FileNotFoundException("File not found: " + fileName));
+                        }
+                        else
+                        {
+                            sprite = sprite1;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Extract some information from this exception, and then
+                        // throw it to the parent method.
+                        if (e.Source != null)
+                            Console.WriteLine("IOException source: {0}", e.Source);
+                        throw;
+                    }
+                }
+
+                Instantiate(portraitPrefab, portraits.transform).sprite=sprite;
+                inkData.sceneState.sprites += ", " + fileName;
+            }
+        }
         private void SetMusic(string fileName)
         {
             AudioClip audioClip = null; /// clear music if no other value is given
@@ -326,6 +436,7 @@ namespace Core
             }
             else
             {
+                audioSourceMusic.clip = audioClip;
                 audioSourceMusic.Stop();
                 inkData.sceneState.activeMusic = "";
             }
@@ -428,117 +539,113 @@ namespace Core
         #endregion InkyExternals
 
         #region Data
+        /// <summary>
+        /// Make a new inkdata object
+        /// </summary>
+        /// <returns>The freshly maked blank data</returns>
         public InkData CreateBlankData()
         {
-            InkData data;
-
-            data = new(dataLabel + "DemoScene");
-            // some sort of init here
+            InkData data = new(dataLabel + "DemoScene");
+            Debug.Log("Created new data " + data.Label);
             return data;
         }
 
         /// <summary>
         /// preps data for saving. happens at the end of every bit of dialogue.
         /// </summary>
-        protected void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
+        public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
-            ObserveNewVariables(); // adds any new variables that exist in the story to our list and start keeping track.
-            /// save all the things
-
-            inkData.saveStateCur = story.state.ToJson();
+            /// save all the things //(scene and text does't need to be stashed, is always stashed ad hoc)
+            inkData.storyStateJson = story.state.ToJson();
             inkData.StashData();
         }
-        private bool TryLoadData()
+        public void SaveData()
         {
-            if (DataManager.Instance.DataAvailable(inkData.Key))
-            {
-                inkData = LoadData(DataManager.Instance.FetchData<InkData>(inkData.Key));
-
-                return true;
-            }
-            else { Debug.Log("No data found."); return false; }
+            PutDataIntoStash();
+            DataManager.Instance.WriteStashedDataToDisk();
         }
-        private InkData LoadData(InkData input)
+        public bool TryLoadData()
         {
-            //Debug.Log("gonna try to load data!");
-            if (inkData != input)
+            return TryLoadData(ref inkData);
+        }
+        private bool TryLoadData(ref InkData output) 
+        {
+            if (!DataManager.Instance.DataAvailable(output.Key))
             {
-                //Debug.Log("confirmed data is not identical");
-                //Debug.Log("now deleting own data to avoid confusion");
-                inkData = CreateBlankData();
-                //    Debug.Log("wil now load the variables into ink");
-                LoadVarsIntoInk(ref input);
-                //    Debug.Log("will now load all the objects!");
-                LoadObjectsIntoScene(input);
-
-                //      Debug.Log("will now assign inkdata");
-                return input;
+                Debug.LogError("Error code 404: No data found available.");
+                return false;
             }
             else
             {
-                Debug.Log("ah, no, that's just this data. gonna remove it from cache for testing");
+                InkData input = DataManager.Instance.FetchData<InkData>(inkData.Key);
+                if (output == input)
+                {
+                    Debug.LogError("Error code 11: input data is same as output data; nothing to load.");
 
-                DataManager.Instance.RemoveFromCache<InkData>(inkData.Key);
-                return inkData;
-            }
-        }
+                    // will this ever be the case if i don't use two refs?
 
-        protected void LoadVarsIntoInk(ref InkData newData)
-        {
-            string message = "InkVars:";
-            foreach (var item in newData.inkVars)
-            {
-                story.variablesState[item.Key] = item.Value;
-                message += "\n" + item.Key + ": " + item.Value.ToString();
-            }
-            Debug.Log(message);
-            newData.inkVars.Clear();
-            newData.inkVarsKeys.Clear();
-            newData.inkVarsValues.Clear();
-        }
+                    /*Debug.Log("ah, no, that's just this data. gonna remove it from cache for testing");
 
-        /// <summary>
-        /// Purpose: to synch variables between dataclass and ink. get all of the data that is on ink's side in my datafile.
-        /// Any data that may be on my file, but not on ink's  side, that's useless. it hasn't gotten there yet apperantly and when it will it will be overridden.
-        ///  So this should just happen unilaterally: clear inkdata's variables and observe all of inky's.
-        /// Should be started whenever data is attempted to be added to cash, so that that data is always up to date.
-        /// also probably when loading data in.
-        /// </summary>
-        protected void ObserveNewVariables()
-        {
-            /// make an empty list
-            List<string> newVariables = new();
+                    DataManager.Instance.RemoveFromCache<InkData>(inkData.Key);*/
+                    return false;
+                }
+                else
+                {
+                    output = CreateBlankData(); // again creating new data, to copy the existing data into i guess
+                    // wait, why? so we don't touch the other data?
+                    // i guess just because all the functions prior to the textline already set their data to the new datafile, so you want to make sure you read from the ifrst datafile so you read the original and not anything yo ujust added.
+                    // okay, that just means we should manually add the textdata to the new outputdata
 
-            /// fill it with all the variables that we have not yet collected:
-            foreach (var variable in story.variablesState)
-            {/// get all variables
-                if (!inkData.inkVars.ContainsKey(variable))
-                {/// check all new ones
-                    newVariables.Add(variable); /// add it to our list
+                    try
+                    {
+                        PopulateStoryVarsFromData(input, ref output);
+
+                        PopulateSceneFromData(input, ref output);
+                        
+
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    Debug.Log("Successfully loaded data!");
+                    return true;
                 }
             }
 
-            foreach (var newVariable in newVariables)
-            {/// for each of our new variables:
-                inkData.inkVars.Add(newVariable, story.variablesState[newVariable]); /// add it to our dataclass
-                inkData.inkVarsKeys.Add(newVariable); /// and at it to the cheatsheets
-                inkData.inkVarsValues.Add((string)story.variablesState[newVariable]);
-
-                story.ObserveVariable(newVariable, (string key, object value) =>
-                {/// finally ask ink to keep the dataclass updated in the event of any changes
-                    inkData.inkVars[key] = value;
-                    inkData.inkVarsValues[inkData.inkVarsKeys.IndexOf(newVariable)] = (string)value;
-                });
-            }
         }
 
-        protected void LoadObjectsIntoScene(InkData newData)
+        protected void PopulateStoryVarsFromData(InkData input, ref InkData output)
+        {
+            string message = "InkVars:";
+
+            
+            story.state.LoadJson(input.storyStateJson); // get storystate from json
+
+            output.storyStateJson = story.state.ToJson(); //put storystate into inkdata
+
+            foreach (string item in story.state.variablesState)
+            {
+                message += "\n" + item + ": " + story.state.variablesState[item].ToString();
+            }
+
+
+
+
+            Debug.Log(message);
+        }
+
+        protected void PopulateSceneFromData(InkData input, ref InkData output) 
         {
             Spd("M");
 
-            SetMusic(newData.sceneState.activeMusic);
-            SetAmbiance(newData.sceneState.activeAmbiance);
-            SetBackdrop(newData.sceneState.background);
+            textPanel.text = inkData.textLog;
+            output.textLog = input.textLog;
+            //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
+            SetMusic(input.sceneState.activeMusic);
+            SetAmbiance(input.sceneState.activeAmbiance);
+            SetBackdrop(input.sceneState.background);
+            SetSprites(input.sceneState.sprites);
         }
         #endregion DATA
 
@@ -550,11 +657,8 @@ namespace Core
         /// Destroys all the old content and choices.
         /// Continues over all the lines of text, then displays all the choices. If there are no choices, the story is finished!
         /// NOTE this adapted version goes over one or a few lines at a time, rather than displaying all at once. It also renders lines per letter. 
-        private IEnumerator AdvanceStory()
+        private void AdvanceStory()
         {
-            /// save prev state
-            PutDataIntoStash();
-
             /// Remove all the UI options on screen
             RemoveOptions();
 
@@ -565,8 +669,12 @@ namespace Core
             /// Assemble the next paragraph
             string text = AssembleParagraph();
 
+
+            /// stash the new state
+            PutDataIntoStash(); 
+
             ///  display the text on screen!          
-            yield return StartCoroutine(DisplayContent(text));
+            StartCoroutine(DisplayContent(text));
 
         }
 
@@ -576,9 +684,17 @@ namespace Core
             while (story.canContinue) /// at most until the story hits a choice
             {
                 string newLine = story.Continue(); ///Continue gets the next line of the story 
-                if (newLine.StartsWith(">>>")) /// (example) check if this line is being spoken my anybody specific
+
+                if (newLine == "\n<br>\n")
                 {
-                    PlaySfx(newLine.Split(">>>")[1].TrimEnd('\n').TrimEnd(' ').ToLower());
+                    text += "\n";
+                }
+
+                if (newLine.StartsWith("..."))
+                {
+                    inkData.textLog = inkData.textLog.Trim('\n') + ' ';
+
+                    text += newLine.TrimStart('.');
                 }
                 else
                 {
@@ -607,10 +723,9 @@ namespace Core
 
 
 
-                /// stop if you hit a paragraph break:
-                if (text.EndsWith("\n<br>\n"))
+                /// stop if you hit a stop tag:
+                if (newLine.EndsWith("\n<stop>\n"))
                 {
-                    text = text.TrimEnd("<br>\n".ToCharArray());
                     break;
                 }
             }
@@ -627,7 +742,7 @@ namespace Core
 
         private IEnumerator MarkWhenAdvanceable()
         {
-            // remove bouncing arrow 
+            floatingMarker.gameObject.SetActive(false);
             CanAdvance = false;
             yield return new WaitUntil(() => story.canContinue);
             yield return new WaitForSecondsRealtime(advanceDialogueDelay);
@@ -635,7 +750,7 @@ namespace Core
             if (!PresentButtons()) ///try to make buttons if any
             {
                 /// else set bouncing triangle at most recent line
-                Debug.Log("TODO: Bouncing triangle.");
+                floatingMarker.gameObject.SetActive(true);
             }
             CanAdvance = true;
         }
@@ -653,12 +768,13 @@ namespace Core
                         OnClickChoiceButton(choice);
                     });
                 }
+                //scrollbar.value = 0;
                 return true;
             }
             /// If we've read all the content and there's no choices, the story is finished!
             else
             {
-                Button choice = PresentButton("End of story.\nRestart?");
+                Button choice = PresentButton("End of story.");
                 choice.onClick.AddListener(delegate {
                     RemoveOptions();
                     OnInteractionEnd();
@@ -677,27 +793,47 @@ namespace Core
             TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
             choiceText.text = text;
 
+
             /// Make the button expand to fit the text
+                        /* we don't want that, i want the reverse
             HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
             layoutGroup.childForceExpandHeight = false;
+                        */
 
             return choice;
         }
         void OnClickChoiceButton(Choice choice)
         {
             story.ChooseChoiceIndex(choice.index); /// feed the choice
-            inkData.saveStateCur = story.state.ToJson(); /// save the story state
-            inkData.variableState = story.state.variablesState.ToString(); /// save the variables
-            StartCoroutine(AdvanceStory()); /// next bit
+            inkData.storyStateJson = story.state.ToJson(); /// record the story state
+            AdvanceStory(); /// next bit
 		}
 
 
-        public IEnumerator DisplayContent(string text) // Creates a textbox showing the the poaragraph of text
+        public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
         {
-            timeSinceAdvance = 0;
-            logPanel.text += "\r\n\n" + textPanel.text;
-            textPanel.text = text;
-            for (int i = 0; i < textPanel.text.Length + 1; i++)
+            /* REMOVE
+            if (glueLater.Length > 0)
+            {
+                Debug.Log("glued");
+                inkData.textLog = inkData.textLog.TrimEnd('\n');
+                glueLater = "";
+            }
+            Debug.Log("nothing to be glued");
+            */
+
+            timeSinceAdvance = 0; // reset timer for skip button
+            int i0 = inkData.textLog.Length; // set startpoint for forloop
+            inkData.textLog += newText; // add the nex text
+            textPanel.text = inkData.textLog; //set the textpanel to whatever the inkdata has.
+                                              // (okay, voordeel van het zo doen: inkdata and textpanel are always the same, dat is fijner met playtesting for visibility
+                                              // but, this seems like a possibly bad idea in actual build, since any issue caused is immediately on your stash. although, not yet on data actually saved to disk, so that might be alright.
+                                              // we can later add a buffer between stash and disk and also have redundancy with autosaves etc 
+
+            //Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
+            //scrollbar.value = 0;
+
+            for (int i = i0; i < textPanel.text.Length + 1; i++)
             {
                 textPanel.maxVisibleCharacters = i;
                 yield return new WaitForSecondsRealtime(1 / textSpeed);
@@ -710,16 +846,9 @@ namespace Core
                     yield break;
                 }
             }
+
         }
-        /*UNUSED DEFAULT METHOD FOR CREATING CONTENT:
-        /// Creates a textbox showing the the line of text
-        void CreateContentView(string text)
-        {
-            Text storyText = Instantiate(textPrefab) as Text;
-            storyText.text = text;
-            storyText.transform.SetParent(canvas.transform, false);
-        }
-        */
+
         /// When we click the choice button, tell the story to choose that choice!
 
 
@@ -729,6 +858,7 @@ namespace Core
             PutDataIntoStash();
             inkJSONAsset = null;
             story = null;
+            Debug.Log(new NotImplementedException());
             // evt volgende story feeden
         }
 
@@ -740,31 +870,29 @@ namespace Core
     [Serializable]
     public class InkData : DataClass
     {
-        [SerializeField, BoxGroup("INK"), ReadOnly]
-        [Tooltip("view which variables have been saved on the ink object")]
-        public List<string> inkVarsKeys = new();
-        [SerializeField, BoxGroup("INK"), ReadOnly]
-        [Tooltip("view which variables have been saved on the ink object")]
-        public List<string> inkVarsValues = new();
-        public Dictionary<string, object> inkVars = new();
-        public InkData(string label) : base(label) { }
+        public InkData(string label) : base(label)
+        {
+        }
 
-        public string variableState = ""; /// class containing states of all variables in story
-        public string saveStateCur = ""; /// string indicating most recently saved state of the ink object.
 
-        public StorySceneState sceneState = new();
+        public string storyStateJson = ""; /// string indicating most recently saved state of the ink object.
+        public SceneState sceneState = new();
+        public string textLog = "";
     }
 
     [Serializable]
-    public class StorySceneState
+    public class SceneState
     {
 
         public string text = "null";
 
         public string background = "null";
+        public string sprites = "null";
+
 
         public string activeMusic = "null";
         public string activeAmbiance = "null";
+
     }
 
 

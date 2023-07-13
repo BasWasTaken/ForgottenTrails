@@ -24,15 +24,13 @@ namespace DataService
         [Tooltip("Name of the folder to read from and write to")]
         [SerializeField, ReadOnly]
         private string masterFolder = "PlayerData";
-        [Tooltip("SaveSlot to read from and write to.")]
-        [SerializeField, Range(1,3)]
-        private int saveSlot = 1;
+        public int SaveSlot { get; private set; }
         [Tooltip("File extension to use.")]
         [SerializeField, ReadOnly]
         private string fileExtension = ".json";
 
         [SerializeField]
-        protected MetaData metaData = new("Meta02211281838");
+        protected MetaData metaData = new("Meta202305142002");
         public MetaData MetaData => metaData;
         #endregion
         #region backend
@@ -45,14 +43,22 @@ namespace DataService
         private const string iv = "JZuM0HQsWSBVpRHTeRZMYQ==";
 
 
-        private string FolderPath()
+        private string MasterFolderPath()
         {
             string masterFolderPath = Application.persistentDataPath + "/" + masterFolder;
-            string subFolderPath = masterFolderPath + "/" + "Slot" + saveSlot;
             if (!Directory.Exists(masterFolderPath))
             {
                 Directory.CreateDirectory(masterFolderPath);
             }
+            return masterFolderPath;
+        }
+        private string FolderPath()
+        {
+            return FolderPath(SaveSlot);
+        }
+        private string FolderPath(int saveSlot)
+        {
+            string subFolderPath = MasterFolderPath() + "/" + "Slot" + saveSlot;
             if (!Directory.Exists(subFolderPath))
             {
                 Directory.CreateDirectory(subFolderPath);
@@ -63,6 +69,7 @@ namespace DataService
         {
             return FolderPath() + "/" + dataKey + fileExtension; 
         }
+
         #endregion
         ///___METHODS___///
         protected override void Awake()
@@ -71,6 +78,24 @@ namespace DataService
             DontDestroyOnLoad(gameObject);
         }
         #region saving
+        public void NewGameOnSaveSlot(int slot)
+        {
+            SaveSlot = slot;
+            if (File.Exists(DataPath(metaData.Key)))
+            {
+                Debug.LogAssertion("TODO: prompt user. Clearing data in slot " + slot);
+                WipeDataFromSlot(slot);
+            }
+        }
+        public void ContinueFromSaveSlot(int slot)
+        {
+            SaveSlot = slot;
+            if (!Directory.Exists(DataPath(metaData.Key)))
+            {
+                Debug.LogWarning("No data detected in slot " + slot+"\n Heads up! This message can sometimes fire incorrectly!");
+            }
+        }
+
         public bool StashData<T>(T data, bool encrypted = false) where T : DataClass
         {
             metaData.stashed = DateTime.Now.Ticks;
@@ -106,7 +131,7 @@ namespace DataService
         [Button("SaveData")]
         public void WriteStashedDataToDisk(bool encrypted = false)
         {
-            string message ="Saved following data:";
+            string message = string.Format("Saved following data to {0}:", FolderPath());
             int i = 0;
             foreach (DataClass data in dataQueue.Values)
             {
@@ -211,6 +236,7 @@ namespace DataService
         {
             throw new NotImplementedException();
             // iets van foreach file found en dan in de stash gooien? maar tbh kan ik dit beter gewoon niet gebruiken denk ik, en data loaden as needed
+            // tbh wsl een selectiescherm op de andere pagina showen met welke savefile je wil laden en dan daarmee de scene reloaden
         }
         
         public T ReadDataFromDisk<T>(string key, bool encrypted=false) where T : DataClass
@@ -290,21 +316,26 @@ namespace DataService
             }
         }
 
-        [Button("Clear Data From Disk", EButtonEnableMode.Editor)]
-        protected void WipeAllData()
+        [Button("Clear Data From Slot", EButtonEnableMode.Editor)]
+        public void WipeDataFromSlot()
         {
-            DirectoryInfo dir = new(FolderPath());
-            foreach (FileInfo file in dir.GetFiles()) //shouldn't this loop be inside the other loop?
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo subdir in dir.GetDirectories())
-            {
-                subdir.Delete(true);
-            }
-            dir.Delete();
-            Debug.Log("Deleted folder");
+            WipeDataFromSlot(SaveSlot);
         }
+        public void WipeDataFromSlot(int i)
+        {
+            DirectoryInfo dir = new(FolderPath(i));
+            dir.Delete(true);
+            Debug.Log("Deleted data in slot " + i);
+        }
+
+        [Button("Clear Data From Disk", EButtonEnableMode.Editor)]
+        public void WipeDataFromAllSlots()
+        {
+            DirectoryInfo dir = new(MasterFolderPath());
+            dir.Delete(true);
+            Debug.Log("Deleted data in all saveslots");
+        }
+
         #endregion
 
         #region loop
@@ -335,6 +366,7 @@ namespace DataService
 
         public string testText = "nulled";
         public const string textConst = "const";
+        public string playerName = "Sam";
 
         public string Report
         {

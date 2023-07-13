@@ -143,8 +143,8 @@ namespace Core
         public static event Action<Story> OnCreateStory;
 
         public bool CanAdvance { get; protected set; }
-        public bool CompletedText => textPanel.maxVisibleCharacters == textPanel.text.Length;
-        private bool completeText = false;
+        public bool CompletedText => textPanel.maxVisibleCharacters == textPanel.text.Length; // this might be dangerous, easy to mess up by adding cahracters later
+        private bool skip = false;
         private float timeSinceAdvance = 0;
 
         #endregion BACKEND FIELDS
@@ -225,7 +225,7 @@ namespace Core
         }
         void StopPlayingStory()
         {
-            completeText = true;
+            skip = true;
             playing = false;
         }
         #endregion LIFESPAN
@@ -238,7 +238,7 @@ namespace Core
             {
                 if (CompletedText == false & timeSinceAdvance > advanceDialogueDelay)
                 {
-                    completeText = true;
+                    skip = true;
                 }
                 else if (story.canContinue & CanAdvance & CompletedText)
                 {
@@ -677,7 +677,10 @@ namespace Core
             StartCoroutine(DisplayContent(text));
 
         }
-
+        /// <summary>
+        /// Go through story content and concatenate text into a long string on a perline basis.
+        /// </summary>
+        /// <returns>A paragraph of text, consiting of the content from <see cref="Story.canContinue"/> until it hits a stop tap or question. </returns>
         private string AssembleParagraph()
         {
             string text = "";
@@ -689,8 +692,7 @@ namespace Core
                 {
                     text += "\n";
                 }
-
-                if (newLine.StartsWith("..."))
+                else if (newLine.StartsWith("..."))
                 {
                     inkData.textLog = inkData.textLog.Trim('\n') + ' ';
 
@@ -698,19 +700,6 @@ namespace Core
                 }
                 else
                 {
-                    /* removed speaker option
-                    if (new Regex(".+:\\s\\w+").IsMatch(newLine)) /// (example) check if this line is being spoken my anybody specific
-                    {
-                        string[] split = newLine.Split(':');
-                        if (split.Length > 2)
-                        {
-                            throw new ArgumentException("Cannot handle two ':'s in 1 line.");
-                        }
-                        newLine = "\"" + split[1] + "\"";
-                        string speaker = split[0];
-                    }
-                    */
-
                     text += newLine; /// add the newline of the story
                     
                 }
@@ -720,7 +709,6 @@ namespace Core
                 {
                     DoFunction(tag);
                 }
-
 
 
                 /// stop if you hit a stop tag:
@@ -839,10 +827,10 @@ namespace Core
                 yield return new WaitForSecondsRealtime(1 / textSpeed);
                 yield return new WaitWhile(() => halted);
                 yield return new WaitUntil(() => isActiveAndEnabled);
-                if (completeText)
+                if (skip)
                 {
                     textPanel.maxVisibleCharacters = textPanel.text.Length;
-                    completeText = false;
+                    skip = false;
                     yield break;
                 }
             }

@@ -39,28 +39,28 @@ namespace Core
         private Image portraitPrefab = null;
 
         /// SCENE REFERENCES
-        [SerializeField, BoxGroup("Scene References"), Required]
+        [BoxGroup("Scene References"), Required]
         [Tooltip("The main canvas used for GUI elements in this scene.")]
-        private Canvas canvas = null;
+        public Canvas canvas = null;
 
-        [SerializeField, BoxGroup("Scene References"), Required]
+        [BoxGroup("Scene References"), Required]
         [Tooltip("The scrollbar used for the paper scroll.")]
         public Scrollbar scrollbar;
-        [SerializeField, BoxGroup("Scene References"), Required]
+        [BoxGroup("Scene References"), Required]
         [Tooltip("The spacer used at bottom of the paper scroll.")]
         public LayoutElement spacer;
 
 
-        [SerializeField, BoxGroup("Scene References"), Required]
+        [BoxGroup("Scene References"), Required]
         [Tooltip("Panel to display current paragraph.")]
         public TextMeshProUGUI textPanel = null;
-        [SerializeField, BoxGroup("Scene References")]
+        [BoxGroup("Scene References")]
         public Image bgImage;
-        [SerializeField, BoxGroup("Scene References")]
+        [BoxGroup("Scene References")]
         public HorizontalLayoutGroup portraits;
-        [SerializeField, BoxGroup("Scene References"), Required]
+        [BoxGroup("Scene References"), Required]
         public Transform buttonAnchor;
-        [SerializeField, BoxGroup("Scene References")]
+        [BoxGroup("Scene References")]
         public Image floatingMarker;
 
         [SerializeField, BoxGroup("Scene References"), Required]

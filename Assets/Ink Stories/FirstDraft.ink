@@ -302,6 +302,7 @@ You recoil. Its face is a horrible contradiction. Its right half takes the shape
     **(run)...run[].
     {Hills2.run:Perhaps against better judgement, you try to make another break for it. You have barely gotten to your feet before the creature knocks you down once more, a sharp pain shooting through your arm as you fall. Did you break something? |You turn and bolt away at full speed. The creature is much faster. A powerful blow hits you in the back, sending you sprawling to the ground. With what strength you have left, you turn to face it.} <> 
     ->Hills4
+    
 =Hills4
 The wraith simply tilts its head at you, still wearing its grotesque smile, almost as if to mock your {Hills3.fight:bravery}{Hills3.run:speed}{Hills3.scream:terror}. Slowly, it starts to advance toward you. It raises its left arm, presumably to strike you with it. You shield yourself with your arms, although you know it will probably be for naught. You brace yourself, agonizing seconds ticking by as you wait for the end, and then-
         A roar. 
@@ -310,7 +311,17 @@ The wraith simply tilts its head at you, still wearing its grotesque smile, almo
             ->Awakening
 
 =Woodland
-The wood looks more appealing and you set off it its direction at a trot. 
+The wood looks more appealing and you set off in its direction at a trot. Before long, you find yourself surrounded by tall oaks, beeches and other greenery. A gentle breeze carries the song of a variety of birds. 
+
+As you press on, your ears pick up another melody. Faintly at first, but with every step you hear it more clearly: a melancholic tune in a woman's voice. You decide to
+*...look for the source[].
+    Thankfully, the tune is not hard to track down. Following your ears quickly leads you to a small, sunlit meadow. In its center you spot the music's source, although it's not quite what you expected: a small bird, draped in bright blue, orange and yellow feathers sits on a small boulder. While her appearance and the sound coming from her beak are a clear mismatch, she's unmistakenbly the one responsible for the song you hear. 
+        **[Listen quietly]
+        You stand there quietly, making sure not to disturb the creature as you enjoy her performance. 
+        **[Softly approach the bird]
+        **[Throw something at it]
+*...follow the path[].
+*...turn back towards the plains[].
 
 -> END
 

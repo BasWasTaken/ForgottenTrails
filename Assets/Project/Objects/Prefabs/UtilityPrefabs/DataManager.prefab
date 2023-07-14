@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8663880123288258839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8663880123288258833}
+  - component: {fileID: 8663880123288258838}
+  - component: {fileID: 8663880123288258832}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8663880123288258833
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663880123288258839}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8663880123288258838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663880123288258839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d89db130aad3342901cedd64a93981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterFolder: PlayerData
+  fileExtension: .json
+  metaData:
+    created: 0
+    fetched: 0
+    read: 0
+    stashed: 0
+    written: 638142389522182787
+    testText: nulled
+    playerName: Sam
+--- !u!114 &8663880123288258832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663880123288258839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f927f67d7d8baee4a9fd0ab37bdfc02a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 36a1aec2ff46ffb49b3a26082eb51f1d, type: 3}
+  - {fileID: 21300000, guid: c8ac78193918c8c4b9cb20d4ffb083eb, type: 3}
+  - {fileID: 21300000, guid: 9f9f4113ed820a24f864e88290d91a6a, type: 3}
+  - {fileID: 21300000, guid: 5795ed8f7c0e75342a1e04a7b525d2f8, type: 3}
+  - {fileID: 21300000, guid: c7c468a13dc026941b0f207429162421, type: 3}
+  - {fileID: 21300000, guid: 5e77a89e5a176eb4994d8eb6edc530bb, type: 3}
+  audioClips:
+  - {fileID: 8300000, guid: ba486475ea3444145a81d4544dd1e7a0, type: 3}
+  - {fileID: 8300000, guid: 6214018f039a7ee4b819dfa3f6b8af42, type: 3}
+  - {fileID: 8300000, guid: 2846093082071e64192f3e32d060cb55, type: 3}
+  menuScene: MainMenu
+  newGameScene: BasicDemo

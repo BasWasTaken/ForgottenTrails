@@ -23,9 +23,14 @@ namespace items
 
     public enum Context
     {
-        Combat_Attacking,
-        Combat_Defending,
-        Speech,
-        Crafting
+        /*
+         * NOT: Trying to predict what scenarios will come up in the game.
+         * More: what trais does an object have, what affordances does this object have?
+         */
+        Weapon,
+        Tool,
+        Axe,
+        Sword
+            //vul aan
     }
 }

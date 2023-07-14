@@ -23,8 +23,6 @@ EXTERNAL Print(string)
     Tekst komt binnen in ons tekst vakje, en vult het langzaamaan op.
     The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. 
     You can play sounds like so-
-    #sfx:gong
-    And you can play sounds like so-
     >>>gong
     <br>
     De linebreak geeft aan wanneer een nieuwe paragraaf begint. Het textvak wordt dan geleegd, de log erboven wordt aangevuld met de tekst die net weggehaald is, en het tekstvak wordt aangevuld met deze nieuwe tekst.

@@ -185,6 +185,7 @@ namespace Core
             Debug.Log(story.state.variablesState["Name"]);
 
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
+            //story.BindExternalFunction("Spd", (string text) => Spd(text, false)); NOTE Make this numeric! See notes
             OnCreateStory?.Invoke(story);
         }
         /// Creates a new Story object with the compiled story which we can then play!
@@ -701,21 +702,28 @@ namespace Core
                 else
                 {
                     text += newLine; /// add the newline of the story
-                    
+
+                }
+                /// stop if you hit a stop command:
+                if (newLine.Contains("<stop>"))
+                {
+                    if (!newLine.Contains("<stop>\n")) 
+                    { 
+                        Debug.Log("Only use <stop> at end of line!"); 
+                    }
+
+                    text += newLine.Remove(newLine.IndexOf("<stop>"));
+                    break;
                 }
 
                 /// check for tags:
                 foreach (string tag in story.currentTags)
                 {
+                    Debug.Log(tag);
                     DoFunction(tag);
                 }
 
 
-                /// stop if you hit a stop tag:
-                if (newLine.EndsWith("\n<stop>\n"))
-                {
-                    break;
-                }
             }
             return text;
         }

@@ -19,7 +19,7 @@ public class GameLauncher : MonoBehaviour
     public void StartNewGame(int slot)
     {
         DataManager.Instance.NewGameOnSaveSlot(slot);
-        DataManager.Instance.MetaData.playerName = nameInput.text;
+        DataManager.Instance.MetaData.playerName = nameInput.text; /// set name to metadata from inpoout field //(might do differently later)
         LaunchGame();
     }
     public void ContinueGame()

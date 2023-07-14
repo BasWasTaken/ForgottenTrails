@@ -181,6 +181,8 @@ namespace Core
         {
             RemoveOptions();
             story = new Story(inkJSONAsset.text);
+            story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
+            Debug.Log(story.state.variablesState["Name"]);
 
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
             OnCreateStory?.Invoke(story);
@@ -619,8 +621,6 @@ namespace Core
 
             
             story.state.LoadJson(input.storyStateJson); // get storystate from json
-
-            story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // assign name to storystate
 
             output.storyStateJson = story.state.ToJson(); //put storystate into inkdata
 

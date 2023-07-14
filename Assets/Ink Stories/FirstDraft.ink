@@ -3,7 +3,7 @@ LIST VisitedState = Yes, No
 
 LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
-VAR Name = "Alex"
+VAR Name = "PlayerName"
 
 
 VAR players_gender = "Undefined"

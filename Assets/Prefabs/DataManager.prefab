@@ -54,6 +54,7 @@ MonoBehaviour:
     stashed: 0
     written: 638142389522182787
     testText: nulled
+    playerName: Sam
 --- !u!114 &8663880123288258832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,32 +69,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprites:
   - {fileID: 21300000, guid: 36a1aec2ff46ffb49b3a26082eb51f1d, type: 3}
-  - {fileID: 952890271, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -965337067, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1439569223, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -1837438540, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -719193548, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1755443764, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -1810231158, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 94676363, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1622616638, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 602086892, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 900238383, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 253670034, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1680137229, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -1511767253, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -153838262, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -2076538950, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -2138728152, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1404482252, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 949649233, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1177077907, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 123739409, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 988771827, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: 1874724987, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
-  - {fileID: -1967812621, guid: 19f9350fc1ce5134bbdb611b4d6db1f7, type: 3}
   - {fileID: 21300000, guid: c8ac78193918c8c4b9cb20d4ffb083eb, type: 3}
   - {fileID: 21300000, guid: 9f9f4113ed820a24f864e88290d91a6a, type: 3}
+  - {fileID: 21300000, guid: 5795ed8f7c0e75342a1e04a7b525d2f8, type: 3}
+  - {fileID: 21300000, guid: c7c468a13dc026941b0f207429162421, type: 3}
+  - {fileID: 21300000, guid: 5e77a89e5a176eb4994d8eb6edc530bb, type: 3}
   audioClips:
   - {fileID: 8300000, guid: ba486475ea3444145a81d4544dd1e7a0, type: 3}
   - {fileID: 8300000, guid: 6214018f039a7ee4b819dfa3f6b8af42, type: 3}

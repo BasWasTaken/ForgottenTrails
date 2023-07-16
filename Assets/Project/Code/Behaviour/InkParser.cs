@@ -202,7 +202,7 @@ namespace ForgottenTrails
                 {
                     Debug.Log("continueing from savepoint!");
                     story.state.LoadJson(inkData.storyStateJson);
-                    StartCoroutine(DisplayContent(story.currentText));
+                    textProducer.FeedText(story.currentText);
                     PresentButtons();
                 }
                 else
@@ -633,18 +633,9 @@ namespace ForgottenTrails
 
         #region STORY ADVANCEMENT
 
-        // REMOVE THIS FUNCITON
+        /* DEPRICATED, MOVED TO TEXTPRODUCER
         public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
         {
-            /* REMOVE
-            if (glueLater.Length > 0)
-            {
-                Debug.Log("glued");
-                inkData.textLog = inkData.textLog.TrimEnd('\n');
-                glueLater = "";
-            }
-            Debug.Log("nothing to be glued");
-            */
 
             timeSinceAdvance = 0; // reset timer for skip button
             int i0 = inkData.textLog.Length; // set startpoint for forloop
@@ -672,7 +663,7 @@ namespace ForgottenTrails
             }
 
         }
-
+        */
 
         /// This is the main function called every time the story changes. It does a few things:
         /// Destroys all the old content and choices.

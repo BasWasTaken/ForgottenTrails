@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Core
+namespace ForgottenTrails
 {
     /// <summary>
     /// <para>Abstract for every type of scriptableobject use for ink.</para>

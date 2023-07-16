@@ -12,15 +12,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utility;
 
-namespace Core
+namespace ForgottenTrails
 {
-
     /// <summary>
     /// <para>Behaviour for displaying ink text and allowing the player to input choices.</para>
     /// </summary>
     /// This is a behaviour script based on an example script of how to play and display a ink story in Unity. Further functionality has been canibalised from mso project. 
     /// Taken from the Inky demo on 2023-03-08, 14:45 and adapted by Bas Vegt.
-    public class BasicInkScript : MonoSingleton<BasicInkScript>
+    public class InkParser : MonoSingleton<InkParser>
     {
         #region INSPECTOR VARIABLES	
 
@@ -76,7 +75,8 @@ namespace Core
         [Tooltip("Here drag the component used for system sounds like ui.")]
         private AudioSource audioSourceSystem;
 
-
+        [SerializeField, BoxGroup("Components"), Required]
+        private TextProducer textProducer;
 
 
         //[SerializeField, BoxGroup("Settings")]
@@ -88,18 +88,16 @@ namespace Core
 
         private bool playing = false;
 
-        [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
-        [Tooltip("Choose a numeric value for this option.")]
-        private float slowText = 10f;
-        [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
-        [Tooltip("Choose a numeric value for this option.")]
-        private float mediumText = 50f;
-        [SerializeField, BoxGroup("Settings"), Foldout("TextSpeed")]
-        [Tooltip("Choose a numeric value for this option.")]
-        private float fastText = 200f;
-        [BoxGroup("Settings")]
-        [Tooltip("Rate of typewriter effect in nr of characters per second.")]
-        public float textSpeed = 50;
+        public enum TextSpeed
+        {
+            slow = 10,
+            medium = 50,
+            fast = 200
+        }
+
+        public TextSpeed textSpeedBase = TextSpeed.medium;
+
+        public float TextSpeedActual => ((float)textSpeedBase) * inkData.sceneState.textSpeedMod;
 
         #endregion INSPECTOR VARIABLES
 
@@ -173,7 +171,6 @@ namespace Core
                 StartStory();
             }
         }
-
         /// <summary>
         /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
         /// </summary>
@@ -183,9 +180,7 @@ namespace Core
             story = new Story(inkJSONAsset.text);
             story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
             Debug.Log(story.state.variablesState["Name"]);
-
-            story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
-            //story.BindExternalFunction("Spd", (string text) => Spd(text, false)); NOTE Make this numeric! See notes
+            BindExternalFunctions(story);
             OnCreateStory?.Invoke(story);
         }
         /// Creates a new Story object with the compiled story which we can then play!
@@ -253,82 +248,31 @@ namespace Core
 
         #region METHODS
 
-
         #region INKY_EXTERNALS
-
-        private void DoFunction(string tag)
+        private void BindExternalFunctions(Story story)
         {
-            string[] split = tag.ToLower().Split(':');
-            string command = split[0];
-            string parameter = split[1].TrimStart(' ');
-
-            if (command == "backdrop")
-            {
-                SetBackdrop(parameter);
-            }
-            if (command == "sprites")
-            {
-                SetSprites(parameter);
-            }
-            else if (command == "music")
-            {
-                SetMusic(parameter);
-            }
-            else if (command == "ambiance")
-            {
-                SetAmbiance(parameter);
-            }
-            else if (command == "sfx")
-            {
-                PlaySfx(parameter);
-            }
-            else if (command == "pause")
-            {
-                HaltTextFor(parameter);
-                Debug.LogAssertion("Please Note: I am still working my way up to handling timing well in unity stories. The parsing of text by the computer is near-instantaneous, but it takes a while for the text to be presented on screen, particularly using our typewriter effect. I haven't yet thought of how to synch up any function to when it appears in the text. Timing related functions might not (yet) work properly or have the desired effect.");
-            }
+            story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
+            story.BindExternalFunction("PrintWarning", (string text) => ConsoleLogInk(text, true));
+            story.BindExternalFunction("Spd", (float mod) => Spd(mod));
+            story.BindExternalFunction("Halt", (float dur) => StartCoroutine(HaltText(dur)));
+            story.BindExternalFunction("Bg", (string fileName) => SetBackdrop(fileName));
+            story.BindExternalFunction("Sprite", (string fileNames) => SetSprites(fileNames));
+            story.BindExternalFunction("Voice", (string fileName, float relVol) => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol));
+            story.BindExternalFunction("Sfx", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol));
+            story.BindExternalFunction("Ambiance", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Ambiance,relVol));
+            story.BindExternalFunction("Music", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Music, relVol));
         }
 
-        IEnumerator HaltText(int seconds)
+        private void Spd(float speed)
+        {
+            inkData.sceneState.textSpeedMod = speed;
+        }
+
+        IEnumerator HaltText(float seconds)
         {
             halted = true;
             yield return new WaitForSecondsRealtime(seconds);
             halted = false;
-        }
-
-        void HaltTextFor(string time)
-        {
-            time = time.Trim('s');
-            Int32.TryParse(time, out int seconds);
-            StartCoroutine(HaltText(seconds));
-        }
-
-
-        private void Spd(string speed)
-        {
-            char first = speed[0];
-            if (first == 'S' | first == 's')
-            {
-                textSpeed = slowText;
-            }
-            else if (first == 'M' | first == 'm')
-            {
-                textSpeed = mediumText;
-            }
-            else if (first == 'F' | first == 'f')
-            {
-                textSpeed = fastText;
-            }
-            else
-            {
-                Debug.LogError("INKY Error: Speed value \"" + speed + "\" not recognised. Please supply either the letter \'S\' for slow, \'M\' for medium, or \'F\' for fast. Speed was not changed.");
-                return;
-            }
-
-            if (speed.Length > 1)
-            {
-                Debug.LogWarning(string.Format("Note: You requested the textSpeed be changed to {0}, which was recognised as {1} and the applied accordingly. However, you only need to supply either the letter \'S\' for slow, \'M\' for medium, or \'F\' for fast. Please address this in your INK Story.", speed, first));
-            }
         }
 
         private void SetBackdrop(string fileName)
@@ -359,6 +303,7 @@ namespace Core
             bgImage.sprite = sprite;
             inkData.sceneState.background = fileName;
         }
+
         private void SetSprites(string fileNames)
         {
             /// first clear all portraits
@@ -401,9 +346,11 @@ namespace Core
                 inkData.sceneState.sprites += ", " + fileName;
             }
         }
-        private void SetMusic(string fileName)
+
+        #region AUDIO
+        private void ParseAudio(string fileName, AudioManager.AudioGroup audioGroup, float relVol =.5f)
         {
-            AudioClip audioClip = null; /// clear music if no other value is given
+            AudioClip audioClip = null; /// clear audio if no other value is given
             if (!(fileName == "" | fileName == "null"))
             {
                 try
@@ -426,104 +373,100 @@ namespace Core
                     throw;
                 }
             }
-            if (audioClip != null)
+            if (relVol > 1)
             {
-                if (audioSourceMusic.clip != audioClip)
-                {
-                    audioSourceMusic.clip = audioClip;
-                    inkData.sceneState.activeMusic = fileName;
-                    audioSourceMusic.Play();
-                }
+                Debug.LogWarning(string.Format("Relative volume of {0} exceeds accepted cap of 1.", relVol));
+                relVol = 1;
+            }
+            else if (relVol < 0)
+            {
+                Debug.LogWarning(string.Format("Relative volume of {0} does not exceed minimum value of 0.", relVol));
+                relVol = 0;
+            }
+            bool oneShot = false;
+            bool loop = false;
+            if(audioGroup == AudioManager.AudioGroup.Music)
+            {
+                //oneShot = false;
+                loop = true;
+                inkData.sceneState.activeMusic = fileName;
+            }
+            else if (audioGroup == AudioManager.AudioGroup.Ambiance)
+            {
+                //oneShot = false;
+                loop = true;
+                inkData.sceneState.activeAmbiance = fileName;
+            }
+            PlayAudio(audioClip, audioGroup, relVol, oneShot: oneShot,loop:loop);
+        }
+        private void PlayAudio(AudioClip audioClip, AudioManager.AudioGroup audioGroup, float relVol = .5f, bool oneShot = false, bool loop = false)
+        {
+            /*
+            AudioSource audioSource = audioGroup switch
+            {
+                AudioManager.AudioGroup.Sfx => audioSourceSfx,
+                AudioManager.AudioGroup.Ambiance => audioSourceAmbiance,
+                AudioManager.AudioGroup.Music => audioSourceMusic,
+                AudioManager.AudioGroup.Voice => AudioManager.Instance.GlobalAudio(AudioManager.AudioGroup.Voice),
+                AudioManager.AudioGroup.System => audioSourceSystem,
+                _ => audioSourceSystem,
+            };
+            */
+            AudioSource audioSource = AudioManager.Instance.GlobalAudio(audioGroup); /// get correct audiosource
+            
+            if (audioClip == null)
+            {
+                audioSource.clip = null;
+                audioSource.Stop();
             }
             else
             {
-                audioSourceMusic.clip = audioClip;
-                audioSourceMusic.Stop();
-                inkData.sceneState.activeMusic = "";
+                if (oneShot)
+                {
+                    audioSource.PlayOneShot(audioClip, relVol);
+                }
+                else
+                {
+                    if (audioSource.clip != audioClip) /// if it's a different clip than before, start playing at volume
+                    {
+                        audioSource.clip = audioClip;
+                        audioSource.volume = relVol;
+                        audioSource.Play();
+                    }
+                    else /// otherwise just apply the volume, but gradually
+                    {
+                        StartCoroutine(ShiftVolumeGradually(audioSource,audioClip,relVol));
+                    }
+
+                    if (loop)
+                    {
+                        audioSource.loop = true;
+                    }
+                    else
+                    {
+                        audioSource.loop = false;
+                        StartCoroutine(RemoveClipWhenFinished(audioSource));
+                    }
+                }
             }
         }
-        private void SetAmbiance(string fileName)
+        IEnumerator ShiftVolumeGradually(AudioSource audioSource, AudioClip audioClip, float relVol)
         {
-            AudioClip audioClip = null; /// clear music if no other value is given
-            if (!(fileName == "" | fileName == "null"))
+            float t = .1f; ///how long to wait before each increment
+            float d = .01f; ///size of an increment
+            while (audioSource.clip == audioClip & audioSource.volume != relVol)
             {
-                try
-                {
-                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName, out AudioClip audioClip1))
-                    {
-                        throw new FileNotFoundException("File not found: " + fileName);
-                    }
-                    else
-                    {
-                        audioClip = audioClip1;
-                    }
-                }
-                catch (Exception e)
-                {
-                    // Extract some information from this exception, and then
-                    // throw it to the parent method.
-                    if (e.Source != null)
-                        Console.WriteLine("IOException source: {0}", e.Source);
-                    throw;
-                }
-            }
-            if (audioClip != null)
-            {
-                if (audioSourceAmbiance.clip != audioClip)
-                {
-                    audioSourceAmbiance.clip = audioClip;
-                    inkData.sceneState.activeAmbiance = fileName;
-                    audioSourceAmbiance.Play();
-                }
-            }
-            else
-            {
-                audioSourceAmbiance.Stop();
-                inkData.sceneState.activeAmbiance = "";
+                yield return new WaitForSeconds(t);
+                audioSource.volume = Mathf.MoveTowards(audioSource.volume, relVol, d);
             }
         }
 
-        private void PlaySfx(string fileName)
-        {
-            AudioClip audioClip = null; /// clear music if no other value is given
-            if (!(fileName == "" | fileName == "null"))
-            {
-                try
-                {
-                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName, out AudioClip audioClip1))
-                    {
-                        throw new FileNotFoundException("File not found: " + fileName);
-                    }
-                    else
-                    {
-                        audioClip = audioClip1;
-                    }
-                }
-                catch (Exception e)
-                {
-                    // Extract some information from this exception, and then
-                    // throw it to the parent method.
-                    if (e.Source != null)
-                        Console.WriteLine("IOException source: {0}", e.Source);
-                    throw;
-                }
-            }
-            if (audioClip != null)
-            {
-                if (true)//audioSourceSfx.clip != audioClip)
-                {
-                    audioSourceSfx.clip = audioClip;
-                    audioSourceSfx.PlayOneShot(audioClip);
-                    StartCoroutine(RemoveClipWhenFinished(audioSourceSfx));
-                }
-            }
-        }
         IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
         {
             yield return new WaitWhile(() => audioSource.isPlaying);
             audioSource.clip = null;
         }
-
+        #endregion AUDIO
 
         private void ConsoleLogInk(string text, bool warning = false)
         {
@@ -536,6 +479,41 @@ namespace Core
                 Debug.Log("Message from INK Script: " + text);
             }
         }
+
+        /*Depricated: tags no longer used.
+        private void DoFunction(string tag)
+        {
+            string[] split = tag.ToLower().Split(':');
+            string command = split[0];
+            string parameter = split[1].TrimStart(' ');
+
+            if (command == "backdrop")
+            {
+                SetBackdrop(parameter);
+            }
+            if (command == "sprites")
+            {
+                SetSprites(parameter);
+            }
+            else if (command == "music")
+            {
+                SetMusic(parameter);
+            }
+            else if (command == "ambiance")
+            {
+                SetAmbiance(parameter);
+            }
+            else if (command == "sfx")
+            {
+                PlaySfx(parameter);
+            }
+            else if (command == "pause")
+            {
+                HaltTextFor(parameter);
+                Debug.LogAssertion("Please Note: I am still working my way up to handling timing well in unity stories. The parsing of text by the computer is near-instantaneous, but it takes a while for the text to be presented on screen, particularly using our typewriter effect. I haven't yet thought of how to synch up any function to when it appears in the text. Timing related functions might not (yet) work properly or have the desired effect.");
+            }
+        }
+        */
 
         #endregion InkyExternals
 
@@ -638,15 +616,15 @@ namespace Core
 
         protected void PopulateSceneFromData(InkData input, ref InkData output) 
         {
-            Spd("M");
-
             textPanel.text = inkData.textLog;
             output.textLog = input.textLog;
             //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
-            SetMusic(input.sceneState.activeMusic);
-            SetAmbiance(input.sceneState.activeAmbiance);
+            ParseAudio(input.sceneState.activeMusic,AudioManager.AudioGroup.Music);
+            ParseAudio(input.sceneState.activeAmbiance,AudioManager.AudioGroup.Ambiance);
             SetBackdrop(input.sceneState.background);
             SetSprites(input.sceneState.sprites);
+            SetSprites(input.sceneState.sprites);
+            Spd(input.sceneState.textSpeedMod);
         }
         #endregion DATA
 
@@ -654,6 +632,48 @@ namespace Core
 
 
         #region STORY ADVANCEMENT
+
+        // REMOVE THIS FUNCITON
+        public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
+        {
+            /* REMOVE
+            if (glueLater.Length > 0)
+            {
+                Debug.Log("glued");
+                inkData.textLog = inkData.textLog.TrimEnd('\n');
+                glueLater = "";
+            }
+            Debug.Log("nothing to be glued");
+            */
+
+            timeSinceAdvance = 0; // reset timer for skip button
+            int i0 = inkData.textLog.Length; // set startpoint for forloop
+            inkData.textLog += newText; // add the nex text
+            textPanel.text = inkData.textLog; //set the textpanel to whatever the inkdata has.
+                                              // (okay, voordeel van het zo doen: inkdata and textpanel are always the same, dat is fijner met playtesting for visibility
+                                              // but, this seems like a possibly bad idea in actual build, since any issue caused is immediately on your stash. although, not yet on data actually saved to disk, so that might be alright.
+                                              // we can later add a buffer between stash and disk and also have redundancy with autosaves etc 
+
+            //Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
+            //scrollbar.value = 0;
+
+            for (int i = i0; i < textPanel.text.Length + 1; i++)
+            {
+                textPanel.maxVisibleCharacters = i;
+                yield return new WaitForSecondsRealtime(1 / TextSpeedActual);
+                yield return new WaitWhile(() => halted);
+                yield return new WaitUntil(() => isActiveAndEnabled);
+                if (skip)
+                {
+                    textPanel.maxVisibleCharacters = textPanel.text.Length;
+                    skip = false;
+                    yield break;
+                }
+            }
+
+        }
+
+
         /// This is the main function called every time the story changes. It does a few things:
         /// Destroys all the old content and choices.
         /// Continues over all the lines of text, then displays all the choices. If there are no choices, the story is finished!
@@ -672,13 +692,13 @@ namespace Core
 
 
             /// stash the new state
-            PutDataIntoStash(); 
+            PutDataIntoStash();
 
             ///  display the text on screen!          
-            StartCoroutine(DisplayContent(text));
+            textProducer.FeedText(text);//StartCoroutine(DisplayContent(text));
 
         }
-        /// <summary>
+        /// <summary>utility 
         /// Go through story content and concatenate text into a long string on a perline basis.
         /// </summary>
         /// <returns>A paragraph of text, consiting of the content from <see cref="Story.canContinue"/> until it hits a stop tap or question. </returns>
@@ -689,7 +709,7 @@ namespace Core
             {
                 string newLine = story.Continue(); ///Continue gets the next line of the story 
 
-                if (newLine == "\n<br>\n")
+                if (newLine == "<br>\n" | newLine == "<br>") //which is it?
                 {
                     text += "\n";
                 }
@@ -698,7 +718,11 @@ namespace Core
                     inkData.textLog = inkData.textLog.Trim('\n') + ' ';
 
                     text += newLine.TrimStart('.');
-                }
+                }/*
+                else if (newLine.StartsWith(">>"))
+                {
+                    PlaySfx(newLine.Split(">>")[1].TrimEnd('\n').TrimEnd(' ').ToLower());
+                }*/
                 else
                 {
                     text += newLine; /// add the newline of the story
@@ -716,12 +740,14 @@ namespace Core
                     break;
                 }
 
+                /* Depricated: no longer using tags
                 /// check for tags:
                 foreach (string tag in story.currentTags)
                 {
                     Debug.Log(tag);
                     DoFunction(tag);
                 }
+                */
 
 
             }
@@ -742,7 +768,7 @@ namespace Core
             CanAdvance = false;
             yield return new WaitUntil(() => story.canContinue);
             yield return new WaitForSecondsRealtime(advanceDialogueDelay);
-            yield return new WaitUntil(() => CompletedText);
+            yield return new WaitUntil(() => textProducer.DoneAndReady);
             if (!PresentButtons()) ///try to make buttons if any
             {
                 /// else set bouncing triangle at most recent line
@@ -806,44 +832,7 @@ namespace Core
 		}
 
 
-        public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
-        {
-            /* REMOVE
-            if (glueLater.Length > 0)
-            {
-                Debug.Log("glued");
-                inkData.textLog = inkData.textLog.TrimEnd('\n');
-                glueLater = "";
-            }
-            Debug.Log("nothing to be glued");
-            */
-
-            timeSinceAdvance = 0; // reset timer for skip button
-            int i0 = inkData.textLog.Length; // set startpoint for forloop
-            inkData.textLog += newText; // add the nex text
-            textPanel.text = inkData.textLog; //set the textpanel to whatever the inkdata has.
-                                              // (okay, voordeel van het zo doen: inkdata and textpanel are always the same, dat is fijner met playtesting for visibility
-                                              // but, this seems like a possibly bad idea in actual build, since any issue caused is immediately on your stash. although, not yet on data actually saved to disk, so that might be alright.
-                                              // we can later add a buffer between stash and disk and also have redundancy with autosaves etc 
-
-            //Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
-            //scrollbar.value = 0;
-
-            for (int i = i0; i < textPanel.text.Length + 1; i++)
-            {
-                textPanel.maxVisibleCharacters = i;
-                yield return new WaitForSecondsRealtime(1 / textSpeed);
-                yield return new WaitWhile(() => halted);
-                yield return new WaitUntil(() => isActiveAndEnabled);
-                if (skip)
-                {
-                    textPanel.maxVisibleCharacters = textPanel.text.Length;
-                    skip = false;
-                    yield break;
-                }
-            }
-
-        }
+        
 
         /// When we click the choice button, tell the story to choose that choice!
 
@@ -859,6 +848,10 @@ namespace Core
         }
 
         #endregion STORY ADVANCEMENT
+
+
+
+
 
         #endregion METHODS
     }
@@ -888,6 +881,8 @@ namespace Core
 
         public string activeMusic = "null";
         public string activeAmbiance = "null";
+
+        public float textSpeedMod = 1;
 
     }
 

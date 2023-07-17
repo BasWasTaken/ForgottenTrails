@@ -19,6 +19,7 @@ namespace ForgottenTrails
     /// </summary>
     /// This is a behaviour script based on an example script of how to play and display a ink story in Unity. Further functionality has been canibalised from mso project. 
     /// Taken from the Inky demo on 2023-03-08, 14:45 and adapted by Bas Vegt.
+    [RequireComponent(typeof(TextProducer))]
     public class InkParser : MonoSingleton<InkParser>
     {
         #region INSPECTOR VARIABLES	
@@ -42,16 +43,17 @@ namespace ForgottenTrails
         [Tooltip("The main canvas used for GUI elements in this scene.")]
         public Canvas canvas = null;
 
+        /*
         [BoxGroup("Scene References"), Required]
         [Tooltip("The scrollbar used for the paper scroll.")]
         public Scrollbar scrollbar;
         [BoxGroup("Scene References"), Required]
         [Tooltip("The spacer used at bottom of the paper scroll.")]
         public LayoutElement spacer;
+        */
 
 
-        [BoxGroup("Scene References"), Required]
-        [Tooltip("Panel to display current paragraph.")]
+
         public TextMeshProUGUI textPanel = null;
         [BoxGroup("Scene References")]
         public Image bgImage;
@@ -75,7 +77,6 @@ namespace ForgottenTrails
         [Tooltip("Here drag the component used for system sounds like ui.")]
         private AudioSource audioSourceSystem;
 
-        [SerializeField, BoxGroup("Components"), Required]
         private TextProducer textProducer;
 
 
@@ -152,11 +153,13 @@ namespace ForgottenTrails
         override protected void Awake()
         {
             base.Awake();
+            textProducer = GetComponent<TextProducer>();
+
             textPanel.text = ""; //clear lorum ipsum
             //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
             ReceptiveForInput = false;
             //spacer.minHeight = Camera.main.scaledPixelHeight;
-            scrollbar.value = 1;
+//            scrollbar.value = 1;
             if (true) // why do i need to make blank data here always? is it just so that i don't get nullerrors later?
             {
                 inkData = CreateBlankData();

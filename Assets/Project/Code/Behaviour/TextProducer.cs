@@ -7,6 +7,7 @@ using TMPro;
 using Extensions;
 using Ink.UnityIntegration;
 using Ink.Runtime;
+using NaughtyAttributes;
 
 namespace ForgottenTrails 
 { 
@@ -17,15 +18,20 @@ namespace ForgottenTrails
     public class TextProducer : MonoBehaviour
     {
 
-        [SerializeField] 
+        [BoxGroup("Scene References"), Required, SerializeField]
+        [Tooltip("Panel to display current paragraph.")]
         private TextMeshProUGUI textBox;
-        [SerializeField]
+        [BoxGroup("Scene References"), Required, SerializeField]
+        [Tooltip("Panel to collect overflow text.")]
         private TextMeshProUGUI overFlowTextBox;
-        [SerializeField]
+        [BoxGroup("Scene References"), Required, SerializeField]
+        [Tooltip("Panel to display previous text.")]
         private TextMeshProUGUI historyTextBox;
-        [SerializeField] 
+        [BoxGroup("Settings"), SerializeField]
+        [Tooltip("Define pause timings here.")]
         private PauseInfo pauseInfo;
 
+        [BoxGroup("Settings"), SerializeField]
         [Tooltip("Delay after which space button advances dialogue.")]
         protected float advanceDialogueDelay = .1f;
         public float AdvanceDialogueDelay => advanceDialogueDelay;

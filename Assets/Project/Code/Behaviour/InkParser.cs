@@ -252,9 +252,10 @@ namespace ForgottenTrails
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
             story.BindExternalFunction("PrintWarning", (string text) => ConsoleLogInk(text, true));
             story.BindExternalFunction("Spd", (float mod) => Spd(mod));
+            story.BindExternalFunction("Clear", () => textProducer.ClearPage());
             story.BindExternalFunction("Halt", (float dur) => StartCoroutine(HaltText(dur)));
             story.BindExternalFunction("Bg", (string fileName) => SetBackdrop(fileName));
-            story.BindExternalFunction("Sprite", (string fileNames) => SetSprites(fileNames));
+            story.BindExternalFunction("Sprites", (string fileNames) => SetSprites(fileNames));
             story.BindExternalFunction("Voice", (string fileName, float relVol) => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol));
             story.BindExternalFunction("Sfx", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol));
             story.BindExternalFunction("Ambiance", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Ambiance,relVol));

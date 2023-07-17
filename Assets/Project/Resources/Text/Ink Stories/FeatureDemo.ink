@@ -51,6 +51,28 @@ EXTERNAL Music(string, float)
 <<i>Audio: {clip}</i>>
 
 // End of List
+VAR Name = "PlayerName"
+
+
+VAR players_gender = "Undefined"
+VAR players_eyecolor = "Undefined"
+VAR players_hair = "Undefined"
+VAR players_hair_color = "Undefined"
+VAR players_hair_style = "Undefined"
+
+VAR androgynous = "androgynous"
+VAR they = "they"
+VAR them = "them"
+VAR their = "their"
+VAR theirs = "theirs"
+VAR Mx = "Mx"
+VAR master = "master"
+VAR person = "person"
+VAR kid = "kid"
+VAR lad = "lass"
+VAR guy = "guy"
+
+
 
 
 === Start ===

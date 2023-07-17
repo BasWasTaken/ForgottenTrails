@@ -87,6 +87,7 @@ namespace ForgottenTrails
         private void Awake()
         {
             textBox.text = ""; //clear lorum ipsum
+            historyTextBox.text = ""; //clear lorum ipsum
             inkParser = GetComponent<InkParser>();
         }
         public void FeedText(string newText)

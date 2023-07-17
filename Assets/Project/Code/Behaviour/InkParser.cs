@@ -51,10 +51,6 @@ namespace ForgottenTrails
         [Tooltip("The spacer used at bottom of the paper scroll.")]
         public LayoutElement spacer;
         */
-
-
-
-        public TextMeshProUGUI textPanel = null;
         [BoxGroup("Scene References")]
         public Image bgImage;
         [BoxGroup("Scene References")]
@@ -85,9 +81,10 @@ namespace ForgottenTrails
         protected float advanceDialogueDelay = .1f;
         public float AdvanceDialogueDelay => advanceDialogueDelay;
 
-        private bool halted = false;
-
         private bool playing = false;
+
+
+        public bool Halted { get; private set; }
 
         public enum TextSpeed
         {
@@ -97,8 +94,8 @@ namespace ForgottenTrails
         }
 
         public TextSpeed textSpeedBase = TextSpeed.medium;
-
         public float TextSpeedActual => ((float)textSpeedBase) * inkData.sceneState.textSpeedMod;
+
 
         #endregion INSPECTOR VARIABLES
 
@@ -142,7 +139,6 @@ namespace ForgottenTrails
         public static event Action<Story> OnCreateStory;
 
         public bool ReceptiveForInput { get; protected set; }
-        public bool CompletedText => textPanel.maxVisibleCharacters == textPanel.text.Length; // this might be dangerous, easy to mess up by adding cahracters later
         private bool skip = false;
         private float timeSinceAdvance = 0;
 
@@ -155,7 +151,6 @@ namespace ForgottenTrails
             base.Awake();
             textProducer = GetComponent<TextProducer>();
 
-            textPanel.text = ""; //clear lorum ipsum
             //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
             ReceptiveForInput = false;
             //spacer.minHeight = Camera.main.scaledPixelHeight;
@@ -235,11 +230,11 @@ namespace ForgottenTrails
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (CompletedText == false & timeSinceAdvance > advanceDialogueDelay)
+                if (textProducer.DoneAndReady == false & timeSinceAdvance > advanceDialogueDelay)
                 {
-                    skip = true;
+                    textProducer.SkipLine();
                 }
-                else if (story.canContinue & ReceptiveForInput & CompletedText)
+                else if (story.canContinue & ReceptiveForInput & textProducer.DoneAndReady)
                 {
                     AdvanceStory();
                 }
@@ -271,11 +266,11 @@ namespace ForgottenTrails
             inkData.sceneState.textSpeedMod = speed;
         }
 
-        IEnumerator HaltText(float seconds)
+        private IEnumerator HaltText(float seconds)
         {
-            halted = true;
+            Halted = true;
             yield return new WaitForSecondsRealtime(seconds);
-            halted = false;
+            Halted = false;
         }
 
         private void SetBackdrop(string fileName)
@@ -537,7 +532,9 @@ namespace ForgottenTrails
         /// </summary>
         public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
-            /// save all the things //(scene and text does't need to be stashed, is always stashed ad hoc)
+            /// save all the things 
+            inkData.currentText = textProducer.CurrentlyDisplayed;
+            inkData.historyText = textProducer.PreviouslyDisplayed; 
             inkData.storyStateJson = story.state.ToJson();
             inkData.StashData();
         }
@@ -619,8 +616,6 @@ namespace ForgottenTrails
 
         protected void PopulateSceneFromData(InkData input, ref InkData output) 
         {
-            textPanel.text = inkData.textLog;
-            output.textLog = input.textLog;
             //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
             ParseAudio(input.sceneState.activeMusic,AudioManager.AudioGroup.Music);
             ParseAudio(input.sceneState.activeAmbiance,AudioManager.AudioGroup.Ambiance);
@@ -628,6 +623,9 @@ namespace ForgottenTrails
             SetSprites(input.sceneState.sprites);
             SetSprites(input.sceneState.sprites);
             Spd(input.sceneState.textSpeedMod);
+            textProducer.FeedText(inkData.currentText);
+            output.currentText = input.currentText;
+            output.historyText = input.historyText;
         }
         #endregion DATA
 
@@ -635,38 +633,6 @@ namespace ForgottenTrails
 
 
         #region STORY ADVANCEMENT
-
-        /* DEPRICATED, MOVED TO TEXTPRODUCER
-        public IEnumerator DisplayContent(string newText) // Creates a textbox showing the the poaragraph of text
-        {
-
-            timeSinceAdvance = 0; // reset timer for skip button
-            int i0 = inkData.textLog.Length; // set startpoint for forloop
-            inkData.textLog += newText; // add the nex text
-            textPanel.text = inkData.textLog; //set the textpanel to whatever the inkdata has.
-                                              // (okay, voordeel van het zo doen: inkdata and textpanel are always the same, dat is fijner met playtesting for visibility
-                                              // but, this seems like a possibly bad idea in actual build, since any issue caused is immediately on your stash. although, not yet on data actually saved to disk, so that might be alright.
-                                              // we can later add a buffer between stash and disk and also have redundancy with autosaves etc 
-
-            //Debug.Log("This is when the textpanel was set to the contents of the newly updated indata: " + textPanel.text);
-            //scrollbar.value = 0;
-
-            for (int i = i0; i < textPanel.text.Length + 1; i++)
-            {
-                textPanel.maxVisibleCharacters = i;
-                yield return new WaitForSecondsRealtime(1 / TextSpeedActual);
-                yield return new WaitWhile(() => halted);
-                yield return new WaitUntil(() => isActiveAndEnabled);
-                if (skip)
-                {
-                    textPanel.maxVisibleCharacters = textPanel.text.Length;
-                    skip = false;
-                    yield break;
-                }
-            }
-
-        }
-        */
         /// <summary>
         /// Main function driving changes in what is being shown on screen based on the story.
         /// </summary>
@@ -771,12 +737,17 @@ namespace ForgottenTrails
         /// </summary>
         private IEnumerator ProduceText()
         {
+            PutDataIntoStash(); /// stash current scene state
             do
             {
-                PutDataIntoStash(); /// stash current scene state
+                // i should prevent saving here, since that could result in correct text logs i think
+
+                timeSinceAdvance = 0; /// reset timer for skip button
+
                 textProducer.FeedText(story.Continue());   /// Parse the ink story for functions and text: run functions and display text
                 yield return new WaitUntil(() => textProducer.DoneAndReady);
             } while (story.canContinue);
+            PutDataIntoStash();
         }
 
 
@@ -810,7 +781,8 @@ namespace ForgottenTrails
 
         public string storyStateJson = ""; /// string indicating most recently saved state of the ink object.
         public SceneState sceneState = new();
-        public string textLog = "";
+        public string currentText = "";
+        public string historyText = "";
     }
 
     [Serializable]
@@ -818,6 +790,7 @@ namespace ForgottenTrails
     {
 
         public string text = "null";
+        public string history = "null";
 
         public string background = "null";
         public string sprites = "null";

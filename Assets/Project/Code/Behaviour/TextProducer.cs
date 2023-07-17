@@ -17,19 +17,44 @@ namespace ForgottenTrails
     /// // from https://github.com/Tioboon/LogWritter/blob/main/EventController.cs
     public class TextProducer : MonoBehaviour
     {
+        private InkParser inkParser;
 
         [BoxGroup("Scene References"), Required, SerializeField]
         [Tooltip("Panel to display current paragraph.")]
         private TextMeshProUGUI textBox;
+        public string CurrentlyDisplayed => textBox.text;
         [BoxGroup("Scene References"), Required, SerializeField]
         [Tooltip("Panel to collect overflow text.")]
         private TextMeshProUGUI overFlowTextBox;
         [BoxGroup("Scene References"), Required, SerializeField]
         [Tooltip("Panel to display previous text.")]
         private TextMeshProUGUI historyTextBox;
+        public string PreviouslyDisplayed => historyTextBox.text;
         [BoxGroup("Settings"), SerializeField]
         [Tooltip("Define pause timings here.")]
-        private PauseInfo pauseInfo;
+        private PauseInfo _pauseInfo = new() 
+        {
+            _dotPause = .5f,
+            _commaPause = .2f,
+            _spacePause = .05f,
+            _normalPause = .01f
+        };
+        private PauseInfo _noPause = new()
+        {
+            _dotPause = 0.001f,
+            _commaPause = 0.001f,
+            _spacePause = 0.001f,
+            _normalPause = 0.001f
+        };
+        public PauseInfo PauseInfo 
+        { 
+            get
+            {
+                return skipping ? _noPause : _pauseInfo;
+            } 
+        }
+        private bool skipping = false;
+        public void SkipLine() { skipping = true; }
 
         [BoxGroup("Settings"), SerializeField]
         [Tooltip("Delay after which space button advances dialogue.")]
@@ -59,6 +84,11 @@ namespace ForgottenTrails
         private bool TooMuchText => overFlowTextBox.text.Length > 0;
 
         #region Methods
+        private void Awake()
+        {
+            textBox.text = ""; //clear lorum ipsum
+            inkParser = GetComponent<InkParser>();
+        }
         public void FeedText(string newText)
         {
             if (!DoneAndReady)
@@ -152,17 +182,16 @@ namespace ForgottenTrails
                 ///Actualize on screen
                 textBox.maxVisibleCharacters++; //is this questionable?
                 letterIndex++; /// increment
-                float delay = letter switch
-                {
-                    '.' => pauseInfo.dotPause,
-                    ',' => pauseInfo.commaPause,
-                    ' ' => pauseInfo.spacePause,
-                    _ => pauseInfo.normalPause,
-                };
+                float delay = PauseInfo.Pause(letter) * inkParser.TextSpeedActual;
                 this.DelayedAction(() =>
                 {
                     ShowNextLetter(); /// continue loop at letter,
-                }, delay); /// after delay
+                }, delay /// after delay
+                , isActiveAndEnabled /// when conditions are met
+                , inkParser.Halted
+                ); 
+
+                
             }
             else
             {
@@ -184,6 +213,7 @@ namespace ForgottenTrails
                     {
                         Debug.Log("Only use <stop> at end of line!");
                         FinalText = FinalText.Remove(FinalText.IndexOf("<stop>"));
+                        PlaceNextWord();
                         /// This also ends the loop since readyanddone should now evalaute true.
                     }
                 }
@@ -198,19 +228,36 @@ namespace ForgottenTrails
             else
             {
                 Debug.Log("Done reproducing!");
+                skipping = false;
             }
             
         }
 
+
+
         #endregion
+
+
 
     }
     [Serializable]
     public class PauseInfo
     {
-        public float dotPause = .5f;
-        public float commaPause = .2f;
-        public float spacePause = .05f;
-        public float normalPause = .01f;
+        public float _dotPause = .5f;
+        public float _commaPause = .2f;
+        public float _spacePause = .05f;
+        public float _normalPause = .01f;
+
+        public float Pause(char letter)
+        {
+            float delay = letter switch
+                {
+                    '.' => _dotPause,
+                    ',' => _commaPause,
+                    ' ' => _spacePause,
+                    _ => _normalPause,
+                };
+            return delay;
+        }
     }
 }

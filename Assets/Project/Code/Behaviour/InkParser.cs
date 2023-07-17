@@ -140,7 +140,7 @@ namespace ForgottenTrails
         public Story story;
         public static event Action<Story> OnCreateStory;
 
-        public bool CanAdvance { get; protected set; }
+        public bool ReceptiveForInput { get; protected set; }
         public bool CompletedText => textPanel.maxVisibleCharacters == textPanel.text.Length; // this might be dangerous, easy to mess up by adding cahracters later
         private bool skip = false;
         private float timeSinceAdvance = 0;
@@ -154,7 +154,7 @@ namespace ForgottenTrails
             base.Awake();
             textPanel.text = ""; //clear lorum ipsum
             //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
-            CanAdvance = false;
+            ReceptiveForInput = false;
             //spacer.minHeight = Camera.main.scaledPixelHeight;
             scrollbar.value = 1;
             if (true) // why do i need to make blank data here always? is it just so that i don't get nullerrors later?
@@ -236,7 +236,7 @@ namespace ForgottenTrails
                 {
                     skip = true;
                 }
-                else if (story.canContinue & CanAdvance & CompletedText)
+                else if (story.canContinue & ReceptiveForInput & CompletedText)
                 {
                     AdvanceStory();
                 }
@@ -664,108 +664,47 @@ namespace ForgottenTrails
 
         }
         */
-
-        /// This is the main function called every time the story changes. It does a few things:
-        /// Destroys all the old content and choices.
-        /// Continues over all the lines of text, then displays all the choices. If there are no choices, the story is finished!
-        /// NOTE this adapted version goes over one or a few lines at a time, rather than displaying all at once. It also renders lines per letter. 
+        /// <summary>
+        /// Main function driving changes in what is being shown on screen based on the story.
+        /// </summary>
         private void AdvanceStory()
         {
-            /// Remove all the UI options on screen
-            RemoveOptions();
-
-            /// reset the waitmarkers, and prepare behaviour for at the end of the text: 
-            /// display a "next line" icon if story is continueable, create buttons if not
-            StartCoroutine(MarkWhenAdvanceable());
-
-            /// Assemble the next paragraph
-            string text = AssembleParagraph();
-
-
-            /// stash the new state
-            PutDataIntoStash();
-
-            ///  display the text on screen!          
-            textProducer.FeedText(text);//StartCoroutine(DisplayContent(text));
-
-        }
-        /// <summary>utility 
-        /// Go through story content and concatenate text into a long string on a perline basis.
-        /// </summary>
-        /// <returns>A paragraph of text, consiting of the content from <see cref="Story.canContinue"/> until it hits a stop tap or question. </returns>
-        private string AssembleParagraph()
-        {
-            string text = "";
-            while (story.canContinue) /// at most until the story hits a choice
+            if (!story.canContinue) OnInteractionEnd();
+            else
             {
-                string newLine = story.Continue(); ///Continue gets the next line of the story 
-
-                if (newLine == "<br>\n" | newLine == "<br>") //which is it?
-                {
-                    text += "\n";
-                }
-                else if (newLine.StartsWith("..."))
-                {
-                    inkData.textLog = inkData.textLog.Trim('\n') + ' ';
-
-                    text += newLine.TrimStart('.');
-                }/*
-                else if (newLine.StartsWith(">>"))
-                {
-                    PlaySfx(newLine.Split(">>")[1].TrimEnd('\n').TrimEnd(' ').ToLower());
-                }*/
-                else
-                {
-                    text += newLine; /// add the newline of the story
-
-                }
-                /// stop if you hit a stop command:
-                if (newLine.Contains("<stop>"))
-                {
-                    if (!newLine.Contains("<stop>\n")) 
-                    { 
-                        Debug.Log("Only use <stop> at end of line!"); 
-                    }
-
-                    text += newLine.Remove(newLine.IndexOf("<stop>"));
-                    break;
-                }
-
-                /* Depricated: no longer using tags
-                /// check for tags:
-                foreach (string tag in story.currentTags)
-                {
-                    Debug.Log(tag);
-                    DoFunction(tag);
-                }
-                */
-
-
+                RemoveOptions(); /// Destroy old choices
+                StartCoroutine(MarkWhenAdvanceable()); /// reset the waitmarkers, and prepare behaviour for at the end of the text.
+                StartCoroutine(ProduceText()); /// Run text generator (until next stop or choice point.)
             }
-            return text;
         }
+        /// <summary>
+        /// Remove the "next line" marker.
+        /// Prepares behaviour for at the end: isplay a "next line" icon if story is continueable, create buttons if not
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator MarkWhenAdvanceable()
+        {
+            floatingMarker.gameObject.SetActive(false);
+            ReceptiveForInput = false; /// prevent input while working
 
+            yield return new WaitUntil(() => story.canContinue); /// when this is being called, the story technically canContinue because we haven't continued it.
+            yield return new WaitUntil(() => !textProducer.DoneAndReady); /// first wait until the textproducer has actually started producing text
+            yield return new WaitUntil(() => textProducer.DoneAndReady); /// wait until current line has finished production
+            yield return new WaitForSecondsRealtime(advanceDialogueDelay); /// wait for a little bit of extra time to account for human reaction time
+
+            if (!PresentButtons()) ///try to make buttons if any
+            {
+                floatingMarker.gameObject.SetActive(true); /// else set bouncing triangle at most recent line
+            }
+            ReceptiveForInput = true; /// allow input again
+        }
+        #region Choices
         public void RemoveOptions()/// Destroys all the buttons from choices
         {
             foreach (Button child in buttonAnchor.GetComponentsInChildren<Button>())
             {
                 Destroy(child.gameObject);
             }
-        }
-
-        private IEnumerator MarkWhenAdvanceable()
-        {
-            floatingMarker.gameObject.SetActive(false);
-            CanAdvance = false;
-            yield return new WaitUntil(() => story.canContinue);
-            yield return new WaitForSecondsRealtime(advanceDialogueDelay);
-            yield return new WaitUntil(() => textProducer.DoneAndReady);
-            if (!PresentButtons()) ///try to make buttons if any
-            {
-                /// else set bouncing triangle at most recent line
-                floatingMarker.gameObject.SetActive(true);
-            }
-            CanAdvance = true;
         }
         private bool PresentButtons()
         {
@@ -814,20 +753,31 @@ namespace ForgottenTrails
                         */
 
             return choice;
-        }
+        } 
+        /// When we click the choice button, tell the story to choose that choice!
         void OnClickChoiceButton(Choice choice)
         {
             story.ChooseChoiceIndex(choice.index); /// feed the choice
             inkData.storyStateJson = story.state.ToJson(); /// record the story state
             AdvanceStory(); /// next bit
 		}
+        #endregion Choices
+
+        /// <summary>
+        /// Runs the per line steps required for parsing and showing ink story
+        /// </summary>
+        private IEnumerator ProduceText()
+        {
+            do
+            {
+                PutDataIntoStash(); /// stash current scene state
+                textProducer.FeedText(story.Continue());   /// Parse the ink story for functions and text: run functions and display text
+                yield return new WaitUntil(() => textProducer.DoneAndReady);
+            } while (story.canContinue);
+        }
 
 
-        
-
-        /// When we click the choice button, tell the story to choose that choice!
-
-
+       
         protected void OnInteractionEnd()
         {
             story.RemoveVariableObserver();

@@ -67,7 +67,9 @@ You should hear ambiant chatter {Ambiance("chatter", 1)}<b>now</b>.<stop>
 The chatter should stop {Ambiance("",1)}now.<stop>
 -> sfx
 === sfx ===
-Ideally, a soft sound should play when {Sfx("gong", 0.5)}<b>this</b> word appears and a loud sound should play when {Sfx("gong", 2)}<b>this</b> word appears.
+Ideally, a soft sound should play when 
+...{Sfx("gong", 0.5)}<b>this</b> word appears and a loud sound should play when 
+...{Sfx("gong", 2)}<b>this</b> word appears.
     Did that sound right? You can check it again if you want.
     + [Hit it again.] -> sfx
     + [Continue] -> spd

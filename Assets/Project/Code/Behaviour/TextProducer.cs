@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEditor;
 using TMPro;
 using Extensions;
+using Ink.UnityIntegration;
+using Ink.Runtime;
 
 namespace ForgottenTrails 
 { 
@@ -39,7 +41,7 @@ namespace ForgottenTrails
             }
         }
         public string[] FinalWords => _finalWords;
-        public string CurrentWord => FinalWords[wordIndex];
+        public string NextWord => FinalWords[wordIndex];
 
         private string CurrentText => textBox.text;
 
@@ -60,15 +62,55 @@ namespace ForgottenTrails
             }
             else
             {
-                string bufferText = CurrentText; // make backup
-                textBox.text += newText; // add the text
-                if (TooMuchText) // if overflow detected
-                {
-                    textBox.text = bufferText; // restore backup
-                    ClearPage();
-                }
-                FinalText += newText;
-                ShowNextLetter();
+                ParseText(ref newText);
+                TryFitText(newText); /// check size and clear page if needed
+                FinalText += newText; /// add new text to target
+                StartProducing();
+            }
+        }
+
+        private string ParseText(ref string input)
+        {
+            string output = "";
+            if (input == "<br>\n" | input == "<br>") /// when hitting explicit linebreak //which is it?
+            {
+                output += "\n"; //add a newline
+            }
+            else if (input.StartsWith("...")) /// when hitting agreed upon syntax for advanced glueing
+            {
+                textBox.text = textBox.text.TrimEnd('\n') + ' '; /// replace linebreak by space
+
+                output += input.TrimStart('.'); /// and remove the syntax
+            }
+            /*
+            else if (newLine.StartsWith(">>"))
+            {
+                PlaySfx(newLine.Split(">>")[1].TrimEnd('\n').TrimEnd(' ').ToLower());
+            }
+            */
+            else
+            {
+                output += input; /// leave the input unaltered
+            }
+            /* Depricated: no longer using tags
+            /// check for tags:
+            foreach (string tag in story.currentTags)
+            {
+                Debug.Log(tag);
+                DoFunction(tag);
+            }
+            */
+
+            return output;
+        }
+        private void TryFitText(string newText)
+        {
+            string bufferText = CurrentText; // make backup
+            textBox.text += newText; // add the text
+            if (TooMuchText) // if overflow detected
+            {
+                textBox.text = bufferText; // restore backup
+                ClearPage();
             }
         }
 
@@ -84,21 +126,26 @@ namespace ForgottenTrails
                 historyTextBox.text = textBox.text;
                 textBox.text = "";
                 FinalText = "";
-                letterIndex = 0;
+                wordIndex = 0;
             }
+        }
+
+        private void StartProducing()
+        {
+            ShowNextLetter();
         }
 
         private void ShowNextLetter()
         {
             ///if not readied all letters in this word
-            if (letterIndex < CurrentWord.Length) 
+            if (letterIndex < NextWord.Length) 
             {
                 /// get the letter
-                char letter = CurrentWord[letterIndex];
+                char letter = NextWord[letterIndex];
 
                 ///Actualize on screen
                 textBox.maxVisibleCharacters++; //is this questionable?
-                letterIndex++;
+                letterIndex++; /// increment
                 float delay = letter switch
                 {
                     '.' => pauseInfo.dotPause,
@@ -108,12 +155,12 @@ namespace ForgottenTrails
                 };
                 this.DelayedAction(() =>
                 {
-                    ShowNextLetter();
-                }, delay);
+                    ShowNextLetter(); /// continue loop at letter,
+                }, delay); /// after delay
             }
             else
             {
-                PlaceNextWord();
+                PlaceNextWord(); /// continue loop at word
             }
         }
         private void PlaceNextWord()
@@ -121,17 +168,34 @@ namespace ForgottenTrails
             //if not readied all words in this string
             if (wordIndex < FinalWords.Length)
             {
-                string nextWord = FinalWords[wordIndex];
-                textBox.text += nextWord;
-                wordIndex++;
-                letterIndex = 0;
+                string word = NextWord;
+
+
+
+                if (word =="<stop>") /// now check for stop command, as it could appear here too
+                {
+                    if (FinalWords.Length > wordIndex+1) /// throw error if there are still words remaining
+                    {
+                        Debug.Log("Only use <stop> at end of line!");
+                        FinalText = FinalText.Remove(FinalText.IndexOf("<stop>"));
+                        /// This also ends the loop since readyanddone should now evalaute true.
+                    }
+                }
+                else  /// in the normal case
+                {
+                    textBox.text += word;   /// place word 
+                    wordIndex++; /// increment
+                    letterIndex = 0; /// reset letter index
+                    ShowNextLetter(); /// continue loop at letter
+                }
             }
             else
             {
                 Debug.Log("Done reproducing!");
             }
+            
         }
-        //make canreproduce{advance} loop?
+
         #endregion
 
     }

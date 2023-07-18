@@ -93,8 +93,17 @@ namespace ForgottenTrails
             fast = 200
         }
 
-        public TextSpeed textSpeedBase = TextSpeed.medium;
-        public float TextSpeedActual => ((float)textSpeedBase) * inkData.sceneState.textSpeedMod;
+        private TextSpeed _textSpeedBase = TextSpeed.medium;
+        private TextSpeed TextSpeedBase 
+        { get 
+            { return _textSpeedBase; } 
+            set 
+            {
+                _textSpeedBase = value;
+                PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
+            }
+        }
+        public float TextSpeedActual => ((float)TextSpeedBase) *  inkData.sceneState.textSpeedMod;
 
 
         #endregion INSPECTOR VARIABLES
@@ -139,7 +148,6 @@ namespace ForgottenTrails
         public static event Action<Story> OnCreateStory;
 
         public bool ReceptiveForInput { get; protected set; }
-        private bool skip = false;
         private float timeSinceAdvance = 0;
 
         #endregion BACKEND FIELDS
@@ -159,6 +167,7 @@ namespace ForgottenTrails
             {
                 inkData = CreateBlankData();
             }
+            TextSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
         }
         private void Start()
         {
@@ -177,7 +186,7 @@ namespace ForgottenTrails
             RemoveOptions();
             story = new Story(inkJSONAsset.text);
             story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
-            Debug.Log(story.state.variablesState["Name"]);
+            //Debug.Log(story.state.variablesState["Name"]);
             BindExternalFunctions(story);
             OnCreateStory?.Invoke(story);
         }
@@ -219,7 +228,6 @@ namespace ForgottenTrails
         }
         void StopPlayingStory()
         {
-            skip = true;
             playing = false;
         }
         #endregion LIFESPAN
@@ -230,13 +238,17 @@ namespace ForgottenTrails
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (textProducer.DoneAndReady == false & timeSinceAdvance > advanceDialogueDelay)
+                if (textProducer.GetState == TextProducer.State.Producing & timeSinceAdvance > advanceDialogueDelay)
                 {
                     textProducer.SkipLine();
                 }
-                else if (story.canContinue & ReceptiveForInput & textProducer.DoneAndReady)
+                else if (story.canContinue & ReceptiveForInput & textProducer.GetState==TextProducer.State.Idle)
                 {
                     AdvanceStory();
+                }
+                else
+                {
+                    Debug.LogWarning("Something weird going on with the spacebar.");
                 }
             }
             timeSinceAdvance += Time.unscaledDeltaTime; // note don't let overflow
@@ -658,8 +670,8 @@ namespace ForgottenTrails
             ReceptiveForInput = false; /// prevent input while working
 
             yield return new WaitUntil(() => story.canContinue); /// when this is being called, the story technically canContinue because we haven't continued it.
-            yield return new WaitUntil(() => !textProducer.DoneAndReady); /// first wait until the textproducer has actually started producing text
-            yield return new WaitUntil(() => textProducer.DoneAndReady); /// wait until current line has finished production
+            yield return new WaitWhile(() => textProducer.GetState==TextProducer.State.Idle); /// first wait until the textproducer has actually started producing text
+            yield return new WaitWhile(() => textProducer.IsWorking); /// wait until current line has finished production
             yield return new WaitForSecondsRealtime(advanceDialogueDelay); /// wait for a little bit of extra time to account for human reaction time
 
             if (!PresentButtons()) ///try to make buttons if any
@@ -744,13 +756,14 @@ namespace ForgottenTrails
                 // i should prevent saving here, since that could result in correct text logs i think
 
                 timeSinceAdvance = 0; /// reset timer for skip button
-
                 textProducer.FeedText(story.Continue());   /// Parse the ink story for functions and text: run functions and display text
-                yield return new WaitUntil(() => textProducer.DoneAndReady);
-            } while (story.canContinue);
+                yield return new WaitUntil(() => textProducer.GetState == TextProducer.State.Idle);
+            } while (story.canContinue & !encounteredStop);
+            encounteredStop = false;
             PutDataIntoStash();
         }
 
+        public bool encounteredStop = false;
 
        
         protected void OnInteractionEnd()

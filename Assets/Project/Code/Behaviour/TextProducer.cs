@@ -8,6 +8,7 @@ using Extensions;
 using Ink.UnityIntegration;
 using Ink.Runtime;
 using NaughtyAttributes;
+using System.Text.RegularExpressions;
 
 namespace ForgottenTrails 
 { 
@@ -50,11 +51,21 @@ namespace ForgottenTrails
         { 
             get
             {
-                return skipping ? _noPause : _pauseInfo;
+                return state == State.Skipping ? _noPause : _pauseInfo;
             } 
         }
-        private bool skipping = false;
-        public void SkipLine() { skipping = true; }
+        public void SkipLine() 
+        {
+            if (state == State.Producing)
+            {
+                Debug.Log("Skip this line!");
+                state = State.Skipping;
+            }
+            else
+            {
+                Debug.LogWarning("Cannot skip right now.");
+            }
+        }
 
         [BoxGroup("Settings"), SerializeField]
         [Tooltip("Delay after which space button advances dialogue.")]
@@ -62,24 +73,38 @@ namespace ForgottenTrails
         public float AdvanceDialogueDelay => advanceDialogueDelay;
 
         private string _finalText = "";
-        private string[] _finalWords;
-        public string FinalText
+        public string[] NewWords { get; private set; }
+        private string NewText
         {
-            get { return _finalText; }
             set { 
-                _finalText = value;
-                _finalWords = value.Split(' ');
+                NewWords = SplitIntoWords(value);
+                _finalText += string.Concat(NewWords);
             }
         }
-        public string[] FinalWords => _finalWords;
-        public string NextWord => FinalWords[wordIndex];
+        private string[] SplitIntoWords(string input)
+        {
+            Regex regex = new("/s+"); // split on whitespace cahracters
+            string[] split = regex.Split(input);
+            List<string> output = new();
+            return output.ToArray();
+        }
+        public string CurrentWord = "";
 
         private string CurrentText => textBox.text;
 
         private int letterIndex;
         private int wordIndex;
-
-        public bool DoneAndReady => CurrentText.Length == FinalText.Length & textBox.text.Length == textBox.maxVisibleCharacters;
+        public enum State 
+        { 
+            Booting,
+            Idle,
+            Producing,
+            Skipping,
+            Stuck
+        }
+        private State state = State.Booting;
+        public State GetState => state;
+        public bool IsWorking => state == State.Producing | state == State.Skipping;
 
         private bool TooMuchText => overFlowTextBox.text.Length > 0;
 
@@ -87,26 +112,30 @@ namespace ForgottenTrails
         private void Awake()
         {
             textBox.text = ""; //clear lorum ipsum
+            textBox.maxVisibleCharacters = 0;
             historyTextBox.text = ""; //clear lorum ipsum
             inkParser = GetComponent<InkParser>();
+            state = State.Idle;
         }
         public void FeedText(string newText)
         {
-            if (!DoneAndReady)
+            if (state != State.Idle)
             {
-                Debug.LogError("Text displayer is busy!");
+                Debug.LogError(string.Format("Text displayer is {0}", state.ToString()));
+
                 return;
             }
             else
             {
-                ParseText(ref newText);
-                TryFitText(newText); /// check size and clear page if needed
-                FinalText += newText; /// add new text to target
+                string parsedText = ParseText(newText);
+                TryFitText(parsedText); /// check size and clear page if needed
+
+                NewText = parsedText; /// add new text to target
                 StartProducing();
             }
         }
 
-        private string ParseText(ref string input)
+        private string ParseText(string input)
         {
             string output = "";
             if (input == "<br>\n" | input == "<br>") /// when hitting explicit linebreak //which is it?
@@ -138,7 +167,35 @@ namespace ForgottenTrails
             }
             */
 
-            return output;
+            if (output.Contains("<stop>"))
+            {
+                Debug.Log("recognised stop tag");
+                inkParser.encounteredStop = true;
+                output = output.Remove(output.IndexOf("<stop>"));
+            }
+
+            /*
+            /// break down the input into words
+            Regex tags = new(@"\<([^>]+)\>");
+
+            foreach (string word in split)
+            {
+                if (tags.IsMatch(word))
+                {
+                    Debug.Log("found tag in " + word);
+                    output.Add(tags.Replace(word, ""));
+  
+                    //output.Add(tags.Match(word).Value);
+                }
+                else
+                {
+                    output.Add(word);
+                }
+            }
+            */
+
+            return output;   
+            
         }
         private void TryFitText(string newText)
         {
@@ -153,89 +210,91 @@ namespace ForgottenTrails
 
         public void ClearPage()
         {
-            if (!DoneAndReady)
+            if (state != State.Idle)
             {
                 Debug.LogError("Text displayer is busy!");
                 return;
             }
             else
             {
-                historyTextBox.text = textBox.text;
-                textBox.text = "";
-                FinalText = "";
-                wordIndex = 0;
+                historyTextBox.text = textBox.text; /// move all text to the history log
+                textBox.text = NewText = ""; /// clear current and prospective texts
+                wordIndex = letterIndex = textBox.maxVisibleCharacters = 0; /// reset indexes of word and letter iteration
             }
         }
 
         private void StartProducing()
         {
-            ShowNextLetter();
+            if(state != State.Producing)
+            {
+                state = State.Producing;
+                ShowNextLetter();
+            }
+            else
+            {
+                throw new Exception("Wrong state");
+            }
         }
 
         private void ShowNextLetter()
         {
-            ///if not readied all letters in this word
-            if (letterIndex < NextWord.Length) 
+            if(state==State.Producing | state == State.Skipping)
             {
-                /// get the letter
-                char letter = NextWord[letterIndex];
-
-                ///Actualize on screen
-                textBox.maxVisibleCharacters++; //is this questionable?
-                letterIndex++; /// increment
-                float delay = PauseInfo.Pause(letter) * inkParser.TextSpeedActual;
-                this.DelayedAction(() =>
+                ///if not readied all letters in this word
+                if (letterIndex < CurrentWord.Length)
                 {
-                    ShowNextLetter(); /// continue loop at letter,
-                }, delay /// after delay
+                    /// get the letter
+                    char letter = CurrentWord[letterIndex];
+
+                    ///Actualize on screen
+                    textBox.maxVisibleCharacters++; //is this questionable?
+                    letterIndex++; /// increment
+                    float delay = PauseInfo.Pause(letter) * 1 / inkParser.TextSpeedActual;
+                    this.DelayedAction(() =>
+                    {
+                        ShowNextLetter(); /// continue loop at letter,
+                    }, delay /// after delay
                 , isActiveAndEnabled /// when conditions are met
                 , inkParser.Halted
-                ); 
+                    );
 
-                
+
+                }
+                else
+                {
+                    PlaceNextWord(); /// continue loop at word
+                }
             }
             else
             {
-                PlaceNextWord(); /// continue loop at word
+                throw new Exception("Wrong state");
             }
         }
         private void PlaceNextWord()
         {
-            //if not readied all words in this string
-            if (wordIndex < FinalWords.Length)
+            if (state == State.Producing | state == State.Skipping)
             {
-                string word = NextWord;
 
-
-
-                if (word =="<stop>") /// now check for stop command, as it could appear here too
+                //if not readied all words in this string
+                if (wordIndex < NewWords.Length)
                 {
-                    if (FinalWords.Length > wordIndex+1) /// throw error if there are still words remaining
-                    {
-                        Debug.Log("Only use <stop> at end of line!");
-                        FinalText = FinalText.Remove(FinalText.IndexOf("<stop>"));
-                        PlaceNextWord();
-                        /// This also ends the loop since readyanddone should now evalaute true.
-                    }
-                }
-                else  /// in the normal case
-                {
-                    textBox.text += word;   /// place word 
+                    CurrentWord = NewWords[wordIndex];
                     wordIndex++; /// increment
+                    textBox.text += CurrentWord;   /// place word 
                     letterIndex = 0; /// reset letter index
                     ShowNextLetter(); /// continue loop at letter
+                }
+                else
+                {
+                    Debug.Log("Done reproducing following text:\n" + string.Concat(NewWords));
+                    state = State.Idle;
                 }
             }
             else
             {
-                Debug.Log("Done reproducing!");
-                skipping = false;
+                throw new Exception("Wrong state");
             }
-            
         }
-
-
-
         #endregion
 
 

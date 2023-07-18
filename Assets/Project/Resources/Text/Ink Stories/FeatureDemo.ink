@@ -28,7 +28,7 @@ EXTERNAL Music(string, float)
 
 === function Stop()
 #stop
-//<stop><br>
+<stop><br>
 
 VAR stop = "<stop>"
 
@@ -81,15 +81,20 @@ VAR guy = "guy"
 === Start ===
 ~ Print("Hello world!")// This prints the text to the unity console
 ~Bg("whiterun")
+~Spd(0.01)
 You should now see whiterun.<stop>
+This is just another line.<stop>
+And so is this.
+And this as well.
+How is this?<stop>
 You should now see {Sprites("b34auw3h_0")}one<stop>
 {Sprites("b34auw3h_0, b34auw3h_1")}...two,<stop>
-{Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}...three<stop> characters appear.{Stop()}
+{Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}...three<stop> characters appear.<stop>
 They should {Sprites("")}now be gone.<stop>
 ~Music("the streets of whiterun",1)
 You should hear music.<stop>    
-You should hear ambiant chatter {Ambiance("chatter", 1)}<b>now</b>.
-The chatter should stop {Ambiance("",1)}now.{stop}
+You should hear ambiant chatter {Ambiance("chatter", 1)}<b>now</b>.<stop>
+The chatter should stop {Ambiance("",1)}now.<stop>
 -> sfx
 === sfx ===
 Ideally, a soft sound should play when 

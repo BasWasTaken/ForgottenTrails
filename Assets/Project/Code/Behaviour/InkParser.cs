@@ -76,7 +76,7 @@ namespace ForgottenTrails
         private TextProducer textProducer;
 
 
-        //[SerializeField, BoxGroup("Settings")]
+        [SerializeField, BoxGroup("Settings")]
         [Tooltip("Delay after which space button advances dialogue.")]
         protected float advanceDialogueDelay = .1f;
         public float AdvanceDialogueDelay => advanceDialogueDelay;
@@ -670,7 +670,7 @@ namespace ForgottenTrails
             ReceptiveForInput = false; /// prevent input while working
 
             yield return new WaitUntil(() => story.canContinue); /// when this is being called, the story technically canContinue because we haven't continued it.
-            yield return new WaitWhile(() => textProducer.GetState==TextProducer.State.Idle); /// first wait until the textproducer has actually started producing text
+            yield return new WaitForFixedUpdate();//yield return new WaitWhile(() => textProducer.GetState==TextProducer.State.Idle); /// first wait until the textproducer has actually started producing text
             yield return new WaitWhile(() => textProducer.IsWorking); /// wait until current line has finished production
             yield return new WaitForSecondsRealtime(advanceDialogueDelay); /// wait for a little bit of extra time to account for human reaction time
 
@@ -750,14 +750,18 @@ namespace ForgottenTrails
         /// </summary>
         private IEnumerator ProduceText()
         {
+            timeSinceAdvance = 0; /// reset timer for skip button
             PutDataIntoStash(); /// stash current scene state
             do
             {
+                
                 // i should prevent saving here, since that could result in correct text logs i think
 
-                timeSinceAdvance = 0; /// reset timer for skip button
-                textProducer.FeedText(story.Continue());   /// Parse the ink story for functions and text: run functions and display text
-                yield return new WaitUntil(() => textProducer.GetState == TextProducer.State.Idle);
+                string newLine = story.Continue();
+                Debug.Log("Write a line: " + newLine);
+                textProducer.FeedText(newLine);   /// Parse the ink story for functions and text: run functions and display text
+                yield return new WaitForFixedUpdate();//yield return new WaitWhile(() => textProducer.GetState == TextProducer.State.Idle); /// first wait until the textproducer has actually started producing text
+                yield return new WaitUntil(() => textProducer.GetState==TextProducer.State.Idle); /// wait until current line has finished production
             } while (story.canContinue & !encounteredStop);
             encounteredStop = false;
             PutDataIntoStash();

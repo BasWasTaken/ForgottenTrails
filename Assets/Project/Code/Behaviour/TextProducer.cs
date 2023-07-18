@@ -67,26 +67,14 @@ namespace ForgottenTrails
             }
         }
 
-        [BoxGroup("Settings"), SerializeField]
-        [Tooltip("Delay after which space button advances dialogue.")]
-        protected float advanceDialogueDelay = .1f;
-        public float AdvanceDialogueDelay => advanceDialogueDelay;
-
-        private string _finalText = "";
+        private string prospectedText = "";
         public string[] NewWords { get; private set; }
-        private string NewText
-        {
-            set { 
-                NewWords = SplitIntoWords(value);
-                _finalText += string.Concat(NewWords);
-            }
-        }
+
         private string[] SplitIntoWords(string input)
         {
             Regex regex = new("/s+"); // split on whitespace cahracters
             string[] split = regex.Split(input);
-            List<string> output = new();
-            return output.ToArray();
+            return split;
         }
         public string CurrentWord = "";
 
@@ -105,8 +93,6 @@ namespace ForgottenTrails
         private State state = State.Booting;
         public State GetState => state;
         public bool IsWorking => state == State.Producing | state == State.Skipping;
-
-        private bool TooMuchText => overFlowTextBox.text.Length > 0;
 
         #region Methods
         private void Awake()
@@ -131,10 +117,8 @@ namespace ForgottenTrails
                 TryFitText(parsedText); /// check size and clear page if needed
 
                 NewText = parsedText; /// add new text to target
-                StartProducing();
             }
         }
-
         private string ParseText(string input)
         {
             string output = "";
@@ -167,16 +151,25 @@ namespace ForgottenTrails
             }
             */
 
-            if (output.Contains("<stop>"))
-            {
-                Debug.Log("recognised stop tag");
-                inkParser.encounteredStop = true;
-                output = output.Remove(output.IndexOf("<stop>"));
-            }
 
-            /*
+            Regex tags = new(@"\<([^>]+)\>");
+
+            foreach (Match match in tags.Matches(output))
+            {
+                Debug.Log(string.Format("Encountered tag {0} in {1}",match.Value,output));
+
+                if (match.Value=="<stop>")
+                {
+                    Debug.Log("recognised stop tag");
+                    inkParser.encounteredStop = true;
+                }
+                output = output.Replace(match.Value, "");
+            } 
+
+            /* from when this code was part of the wordsplitter
             /// break down the input into words
             Regex tags = new(@"\<([^>]+)\>");
+            List<string> output = new();
 
             foreach (string word in split)
             {
@@ -194,18 +187,30 @@ namespace ForgottenTrails
             }
             */
 
-            return output;   
-            
+            Debug.Log("Write line as: " + output);
+            return output;
+
         }
+        private string NewText
+        {
+            set
+            {
+                NewWords = SplitIntoWords(value);
+                prospectedText = CurrentText + string.Concat(NewWords);
+                StartProducing();
+            }
+        }
+
         private void TryFitText(string newText)
         {
-            string bufferText = CurrentText; // make backup
-            textBox.text += newText; // add the text
-            if (TooMuchText) // if overflow detected
-            {
-                textBox.text = bufferText; // restore backup
-                ClearPage();
-            }
+            string bufferText = CurrentText; /// make backup
+            textBox.text += newText; /// test if the text will fit
+            bool overflow = overFlowTextBox.text.Length > 0; /// store result
+
+            textBox.text = bufferText; /// restore backup
+
+            if (overflow) ClearPage(); /// clear page if needed
+
         }
 
         public void ClearPage()
@@ -245,7 +250,7 @@ namespace ForgottenTrails
                 {
                     /// get the letter
                     char letter = CurrentWord[letterIndex];
-
+                    Debug.Log("show me " + letter);
                     ///Actualize on screen
                     textBox.maxVisibleCharacters++; //is this questionable?
                     letterIndex++; /// increment
@@ -255,13 +260,14 @@ namespace ForgottenTrails
                         ShowNextLetter(); /// continue loop at letter,
                     }, delay /// after delay
                 , isActiveAndEnabled /// when conditions are met
-                , inkParser.Halted
+                , !inkParser.Halted
                     );
 
 
                 }
                 else
                 {
+                    letterIndex = 0; /// reset letter index
                     PlaceNextWord(); /// continue loop at word
                 }
             }
@@ -279,15 +285,25 @@ namespace ForgottenTrails
                 if (wordIndex < NewWords.Length)
                 {
                     CurrentWord = NewWords[wordIndex];
+                    Debug.Log("Write " + CurrentWord);
                     wordIndex++; /// increment
                     textBox.text += CurrentWord;   /// place word 
-                    letterIndex = 0; /// reset letter index
                     ShowNextLetter(); /// continue loop at letter
                 }
                 else
                 {
-                    Debug.Log("Done reproducing following text:\n" + string.Concat(NewWords));
-                    state = State.Idle;
+                    wordIndex = 0;
+                    if(CurrentText == prospectedText)
+                    {
+                        Debug.Log("Done reproducing following text:\n" + string.Concat(NewWords));
+
+                        state = State.Idle;
+                    }
+                    else
+                    {
+                        state = State.Stuck;
+                        throw new Exception("Unable to accurately reproduce line.");
+                    }
                 }
             }
             else

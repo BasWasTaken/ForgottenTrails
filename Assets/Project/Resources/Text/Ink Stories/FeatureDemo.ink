@@ -3,13 +3,14 @@
 // Unity functions:
 EXTERNAL Print(string)
 EXTERNAL PrintWarning(string)
-EXTERNAL Spd(float)
+VAR spd = 1.0 //number expressed as multiplier (eg .8 for 80%)
+//EXTERNAL Spd(float)
 EXTERNAL Halt(float)
 //EXTERNAL Stop()
 EXTERNAL Clear()
 EXTERNAL Bg(string)
 EXTERNAL Sprites(string)
-EXTERNAL Voice(string, float)
+EXTERNAL Vox(string, float)
 EXTERNAL Sfx(string, float)
 EXTERNAL Ambiance(string, float)
 EXTERNAL Music(string, float)
@@ -20,8 +21,8 @@ EXTERNAL Music(string, float)
 === function PrintWarning(value)
 <<i>LogWarning: {value}</i>>
 
-=== function Spd(value) //number expressed as multiplier (eg .8 for 80%)
-~return
+=== function Spd(value) 
+~spd=value
 
 === function Halt(duration)
 ~return
@@ -30,7 +31,9 @@ EXTERNAL Music(string, float)
 #stop
 <stop><br>
 
-VAR stop = "<stop>"
+VAR stop = "\{stop\}"
+
+VAR glue = "\{glue\}"
 
 === function Clear()
 ~return
@@ -41,7 +44,7 @@ VAR stop = "<stop>"
 === function Sprites(image)
 ~return
 
-=== function Voice(clip, volume) // volume between 0.0 and 1.0
+=== function Vox(clip, volume) // volume between 0.0 and 1.0
 <<i>Audio: {clip}</i>> // note to self: could also link this to tags or always have mumbling when someoneis speaking
 
 === function Sfx(clip, volume) // volume between 0.0 and 1.0
@@ -52,6 +55,11 @@ VAR stop = "<stop>"
 
 === function Music(clip, volume) // volume between 0.0 and 1.0
 <<i>Audio: {clip}</i>>
+
+=== function Reset()
+~Spd(1)
+~Sfx("",1)
+~Vox("",1)
 
 // End of List
 VAR Name = "PlayerName"
@@ -79,44 +87,54 @@ VAR guy = "guy"
 
 
 === Start ===
+~Reset()
 ~ Print("Hello world!")// This prints the text to the unity console
 ~Bg("whiterun")
-~Spd(0.01)
-You should now see whiterun.<stop>
-This is just another line.<stop>
-And so is this.
-And this as well.
-How is this?<stop>
-You should now see {Sprites("b34auw3h_0")}one<stop>
-{Sprites("b34auw3h_0, b34auw3h_1")}...two,<stop>
-{Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}...three<stop> characters appear.<stop>
-They should {Sprites("")}now be gone.<stop>
+~Spd(1)
+You should now see whiterun.{stop}
+You should now see {Sprites("b34auw3h_0")}one {glue}
+{Sprites("b34auw3h_0, b34auw3h_1")}two, {glue}
+{Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}three characters appear.{glue}{stop}
+They should {Sprites("")}now be gone.{stop}
+
 ~Music("the streets of whiterun",1)
-You should hear music.<stop>    
-You should hear ambiant chatter {Ambiance("chatter", 1)}<b>now</b>.<stop>
-The chatter should stop {Ambiance("",1)}now.<stop>
+You should hear music.{stop}
+You should hear ambiant chatter {glue}
+{Ambiance("chatter", 1)}<b>now</b>.{stop}
+The chatter should stop {glue}
+{Ambiance("",1)}now.{stop}
 -> sfx
 === sfx ===
-Ideally, a soft sound should play when 
-...{Sfx("gong", 0.5)}<b>this</b> word appears and a loud sound should play when 
-...{Sfx("gong", 2)}<b>this</b> word appears.
+~ Reset()
+Get ready for some sounds.
+Ideally, a soft sound should play when {glue}
+{Sfx("gong", 0.25)}<b>this</b> word appears and a loud sound should play when {glue}
+{Sfx("",0)}{Sfx("gong", 1)}<b>this</b> word appears.
     Did that sound right? You can check it again if you want.
     + [Hit it again.] -> sfx
-    + [Continue] -> spd
-=== spd ===
-{Spd(2)}<b>This</b> {Spd(1)}is a fast word, {Spd(0.5)}<b>this</b> {Spd(1)}is a slow word. 
-{Spd(2)}<b>This {Spd(1)}is a fast sentence</b>, {Spd(0.5)}<b>this {Spd(1)}is a slow sentence</b>.
-    Did you get that? Or do you want to see it again?
-    + [Run it again.] -> spd
+    + [Continue] -> spdtst
+=== spdtst ===
+{Spd(2)}<b>This</b> {glue}
+{Spd(1)}is a fast word, {glue} 
+{Spd(0.5)}<b>this</b> {glue}
+{Spd(1)}is a slow word.{stop}
+{Spd(100)}<b>This is a fast sentence</b>, {glue}
+{Spd(0.01)}<b>this is a slow sentence</b>.{stop}
+{Spd(1)}Did you get that? Or do you want to see it again?
+    + [Run it again.] -> spdtst
     + [Give me the sounds again.] -> sfx
     + [Continue] -> next
     
 === next ===
-Text should stop flowing <b>now</b>.<stop> (And any text you type after the stop tag, such as this sentence, is lost.)
-Experiment: how does the stop tag work<stop><>
+This is just another line.{stop}
+And so is this.
+And this as well.
+This working for you?{stop}
+Text should stop flowing <b>now</b>.{stop} (Any text you type after the stop tag, such as this sentence, is sent anyway, which causes confusing behaviour.)
+Experiment: how does the stop tag work{stop}<>
 with glue?
-This sentence should <b>halt</b>{Halt(3)} for a few seconds before continueing.<stop>
-After you next push Space, all text should be cleared.<stop>
+This sentence should <b>halt</b>{Halt(3)} for a few seconds before continueing.{stop}
+After you next push Space, all text should be cleared.{stop}
 ~Clear()
 -> flow
 === flow ===

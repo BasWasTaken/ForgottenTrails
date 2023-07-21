@@ -1986,10 +1986,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.05
+  m_fontSize: 28
   m_fontSizeBase: 28
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 28
   m_fontStyle: 0
@@ -3861,7 +3861,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1100308608}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4063,8 +4063,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2084113305}
   - {fileID: 1041656654}
+  - {fileID: 2084113305}
   m_Father: {fileID: 92809127}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6378,8 +6378,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4290117887
+  m_fontColor: {r: 1, g: 0, b: 0.71341753, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6399,7 +6399,7 @@ MonoBehaviour:
   m_fontSize: 28
   m_fontSizeBase: 28
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 28
   m_fontStyle: 0
@@ -6882,6 +6882,8 @@ MonoBehaviour:
   audioSourceMusic: {fileID: 4636245370335439450}
   audioSourceAmbiance: {fileID: 4636245371363056738}
   audioSourceSystem: {fileID: 4636245370548742609}
+  advanceDialogueDelay: 0.1
+  peeking: 0
 --- !u!114 &2009679607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6898,12 +6900,18 @@ MonoBehaviour:
   overFlowTextBox: {fileID: 1778654252}
   historyTextBox: {fileID: 2084113306}
   _pauseInfo:
-    _dotPause: 0.5
-    _commaPause: 0.2
-    _spacePause: 0.05
+    _dotPause: 0.2
+    _commaPause: 0.1
+    _spacePause: 0.02
     _normalPause: 0.01
-  advanceDialogueDelay: 0.1
+  _noPauseInfo:
+    _dotPause: 0.0005
+    _commaPause: 0.0002
+    _spacePause: 0.00005
+    _normalPause: 0.00001
   CurrentWord: 
+  encounteredStop: 0
+  AlwaysPause: 0
 --- !u!1 &2051102300
 GameObject:
   m_ObjectHideFlags: 0
@@ -7076,7 +7084,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1100308608}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

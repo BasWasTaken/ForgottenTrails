@@ -79,6 +79,9 @@ namespace ForgottenTrails
         [SerializeField, BoxGroup("Settings")]
         [Tooltip("Delay after which space button advances dialogue.")]
         protected float advanceDialogueDelay = .1f;
+        [SerializeField, BoxGroup("Settings")]
+        [Tooltip("Delay after which space button skips new dialogue.")]
+        protected float skipDelay = .2f;
         public float AdvanceDialogueDelay => advanceDialogueDelay;
 
         private bool playing = false;
@@ -88,8 +91,8 @@ namespace ForgottenTrails
 
         public enum TextSpeed
         {
-            slow = 10,
-            medium = 50,
+            slow = 50,
+            medium = 100,
             fast = 200
         }
 
@@ -103,7 +106,7 @@ namespace ForgottenTrails
                 PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
             }
         }
-        public float TextSpeedActual => ((float)TextSpeedBase) *  inkData.sceneState.textSpeedMod;
+        public float TextSpeedActual => ((float)TextSpeedBase/100) *  inkData.sceneState.textSpeedMod;
 
 
         #endregion INSPECTOR VARIABLES
@@ -147,7 +150,8 @@ namespace ForgottenTrails
         public Story story;
         public static event Action<Story> OnCreateStory;
 
-        public bool ReceptiveForInput { get; protected set; }
+        private bool _receptiveForInput = false;
+
         private float timeSinceAdvance = 0;
 
         #endregion BACKEND FIELDS
@@ -160,12 +164,11 @@ namespace ForgottenTrails
             textProducer = GetComponent<TextProducer>();
 
             //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
-            ReceptiveForInput = false;
             //spacer.minHeight = Camera.main.scaledPixelHeight;
 //            scrollbar.value = 1;
             if (true) // why do i need to make blank data here always? is it just so that i don't get nullerrors later?
             {
-                inkData = CreateBlankData();
+                inkData = CreateBlankData(true);
             }
             TextSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
         }
@@ -177,7 +180,18 @@ namespace ForgottenTrails
                 PrepStory();
                 StartStory();
             }
+            story.onEvaluateFunction += Story_onEvaluateFunction;
+            story.onCompleteEvaluateFunction += Story_onCompleteEvaluateFunction;
         }
+        private void Story_onEvaluateFunction(string arg1, object[] arg2)
+        {
+            //Halted = true;
+        }
+        private void Story_onCompleteEvaluateFunction(string arg1, object[] arg2, string arg3, object arg4)
+        {
+            //Halted = false;
+        }
+
         /// <summary>
         /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
         /// </summary>
@@ -187,7 +201,7 @@ namespace ForgottenTrails
             story = new Story(inkJSONAsset.text);
             story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
             //Debug.Log(story.state.variablesState["Name"]);
-            BindExternalFunctions(story);
+            BindAndObserve(story);
             OnCreateStory?.Invoke(story);
         }
         /// Creates a new Story object with the compiled story which we can then play!
@@ -209,15 +223,14 @@ namespace ForgottenTrails
                 {
                     Debug.Log("continueing from savepoint!");
                     story.state.LoadJson(inkData.storyStateJson);
-                    textProducer.FeedText(story.currentText);
-                    PresentButtons();
+                    StartCoroutine(textProducer.FeedText(story.currentText));
                 }
                 else
                 {
                     Debug.Log("no save point detected, starting from start");
                     story.state.GoToStart();
                 }
-                if (story.canContinue) AdvanceStory(); /// show the first bit of story
+                AdvanceStory(); /// show the first bit of story
 
             }
             else
@@ -236,39 +249,77 @@ namespace ForgottenTrails
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (!false)//if not pause
             {
-                if (textProducer.GetState == TextProducer.State.Producing & timeSinceAdvance > advanceDialogueDelay)
+                if(true)//if handling input
                 {
-                    textProducer.SkipLine();
+                    switch (textProducer.State) /// check that state's input
+                    {
+                        // dit kan mooier met een machine state en interne update loops daarin., like state.update() (met daarin een .oninpout en .always ofzo).
+                        case TextProducer.PState.Booting:
+                            break;
+                        case TextProducer.PState.Idle:
+
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                if (story.canContinue)
+                                {
+                                    if (HandleAdvancement)
+                                    {
+                                        AdvanceStory();
+                                    }
+                                    else
+                                    {
+                                        Debug.LogWarning("Cannot continue");
+                                    }
+                                }
+                            }
+                            break;
+                        case TextProducer.PState.Producing:
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                if (timeSinceAdvance > skipDelay)
+                                {
+                                    textProducer.SkipLines();
+                                }
+                            }
+                            if (Input.GetKeyDown(KeyCode.Escape))
+                            {
+                                if (textProducer.Skipping) textProducer.ResetSkipping();
+                            }
+                            break;
+                        case TextProducer.PState.Stuck:
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                else if (story.canContinue & ReceptiveForInput & textProducer.GetState==TextProducer.State.Idle)
-                {
-                    AdvanceStory();
-                }
-                else
-                {
-                    Debug.LogWarning("Something weird going on with the spacebar.");
-                }
+                timeSinceAdvance += Time.unscaledDeltaTime; // note don't let overflow
             }
-            timeSinceAdvance += Time.unscaledDeltaTime; // note don't let overflow
         }
 
         #endregion LOOP
-
+        [HideInInspector]
+        public bool peeking;
         #region METHODS
 
         #region INKY_EXTERNALS
-        private void BindExternalFunctions(Story story)
+        private void BindAndObserve(Story story)
         {
+            
             story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
             story.BindExternalFunction("PrintWarning", (string text) => ConsoleLogInk(text, true));
+
+            story.ObserveVariable("spd", (variableName, newValue) =>
+            {
+                Spd(float.Parse(newValue.ToString()));
+            });
             story.BindExternalFunction("Spd", (float mod) => Spd(mod));
             story.BindExternalFunction("Clear", () => textProducer.ClearPage());
             story.BindExternalFunction("Halt", (float dur) => StartCoroutine(HaltText(dur)));
             story.BindExternalFunction("Bg", (string fileName) => SetBackdrop(fileName));
             story.BindExternalFunction("Sprites", (string fileNames) => SetSprites(fileNames));
-            story.BindExternalFunction("Voice", (string fileName, float relVol) => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol));
+            story.BindExternalFunction("Vox", (string fileName, float relVol) => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol));
             story.BindExternalFunction("Sfx", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol));
             story.BindExternalFunction("Ambiance", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Ambiance,relVol));
             story.BindExternalFunction("Music", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Music, relVol));
@@ -276,11 +327,13 @@ namespace ForgottenTrails
 
         private void Spd(float speed)
         {
-            inkData.sceneState.textSpeedMod = speed;
+            if (peeking) return;
+                inkData.sceneState.textSpeedMod = speed;
         }
 
-        private IEnumerator HaltText(float seconds)
+        public IEnumerator HaltText(float seconds)
         {
+            if (peeking) yield break;
             Halted = true;
             yield return new WaitForSecondsRealtime(seconds);
             Halted = false;
@@ -288,6 +341,7 @@ namespace ForgottenTrails
 
         private void SetBackdrop(string fileName)
         {
+            if (peeking) return;
             Sprite sprite = null; /// clear bg if no other value is given
             if (!(fileName == "" | fileName == "null"))
             {
@@ -317,6 +371,7 @@ namespace ForgottenTrails
 
         private void SetSprites(string fileNames)
         {
+            if (peeking) return;
             /// first clear all portraits
             foreach (Image item in portraits.GetComponentsInChildren<Image>())
             {
@@ -361,6 +416,7 @@ namespace ForgottenTrails
         #region AUDIO
         private void ParseAudio(string fileName, AudioManager.AudioGroup audioGroup, float relVol =.5f)
         {
+            if (peeking) return;
             AudioClip audioClip = null; /// clear audio if no other value is given
             if (!(fileName == "" | fileName == "null"))
             {
@@ -467,20 +523,21 @@ namespace ForgottenTrails
             float d = .01f; ///size of an increment
             while (audioSource.clip == audioClip & audioSource.volume != relVol)
             {
-                yield return new WaitForSeconds(t);
+                yield return new WaitForSecondsRealtime(t);
                 audioSource.volume = Mathf.MoveTowards(audioSource.volume, relVol, d);
             }
         }
 
         IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
         {
-            yield return new WaitWhile(() => audioSource.isPlaying);
+            if (audioSource.isPlaying)yield return new WaitWhile(() => audioSource.isPlaying);
             audioSource.clip = null;
         }
         #endregion AUDIO
 
         private void ConsoleLogInk(string text, bool warning = false)
         {
+            if (peeking) return;
             if (warning)
             {
                 Debug.LogWarning("Warning from INK Script: " + text);
@@ -532,11 +589,11 @@ namespace ForgottenTrails
         /// <summary>
         /// Make a new inkdata object
         /// </summary>
-        /// <returns>The freshly maked blank data</returns>
-        public InkData CreateBlankData()
+        /// <returns>The freshly made blank data</returns>
+        public InkData CreateBlankData(bool forBootup=false)
         {
             InkData data = new(dataLabel + "DemoScene");
-            Debug.Log("Created new data " + data.Label);
+            if(!forBootup)Debug.Log("Created new data " + data.Label);
             return data;
         }
 
@@ -636,14 +693,11 @@ namespace ForgottenTrails
             SetSprites(input.sceneState.sprites);
             SetSprites(input.sceneState.sprites);
             Spd(input.sceneState.textSpeedMod);
-            textProducer.FeedText(inkData.currentText);
+            StartCoroutine(textProducer.FeedText(inkData.currentText));
             output.currentText = input.currentText;
             output.historyText = input.historyText;
         }
         #endregion DATA
-
-
-
 
         #region STORY ADVANCEMENT
         /// <summary>
@@ -651,35 +705,67 @@ namespace ForgottenTrails
         /// </summary>
         private void AdvanceStory()
         {
-            if (!story.canContinue) OnInteractionEnd();
+            if (!story.canContinue)
+            {
+                if (PresentButtons()) ///try to make buttons if any
+                {
+
+                }
+                else
+                {
+                    OnInteractionEnd();
+                }
+            }
             else
             {
-                RemoveOptions(); /// Destroy old choices
-                StartCoroutine(MarkWhenAdvanceable()); /// reset the waitmarkers, and prepare behaviour for at the end of the text.
-                StartCoroutine(ProduceText()); /// Run text generator (until next stop or choice point.)
+                StartCoroutine(Advance()); /// reset the waitmarkers, and prepare behaviour for at the end of the text.
             }
         }
+
         /// <summary>
         /// Remove the "next line" marker.
         /// Prepares behaviour for at the end: isplay a "next line" icon if story is continueable, create buttons if not
         /// </summary>
         /// <returns></returns>
-        private IEnumerator MarkWhenAdvanceable()
+        private IEnumerator Advance()
         {
-            floatingMarker.gameObject.SetActive(false);
-            ReceptiveForInput = false; /// prevent input while working
-
-            yield return new WaitUntil(() => story.canContinue); /// when this is being called, the story technically canContinue because we haven't continued it.
-            yield return new WaitForFixedUpdate();//yield return new WaitWhile(() => textProducer.GetState==TextProducer.State.Idle); /// first wait until the textproducer has actually started producing text
-            yield return new WaitWhile(() => textProducer.IsWorking); /// wait until current line has finished production
-            yield return new WaitForSecondsRealtime(advanceDialogueDelay); /// wait for a little bit of extra time to account for human reaction time
-
-            if (!PresentButtons()) ///try to make buttons if any
-            {
-                floatingMarker.gameObject.SetActive(true); /// else set bouncing triangle at most recent line
-            }
-            ReceptiveForInput = true; /// allow input again
+            HandleAdvancement = false; /// prevent input while working
+            PutDataIntoStash(); /// stash current scene state
+            timeSinceAdvance = 0; /// reset timer for skip button
+            yield return textProducer.ProduceTextOuter(); /// Run text generator (until next stop or choice point.)
+            HandleAdvancement = true; /// activate continue marker or button
         }
+        public bool HandleAdvancement
+        {
+            get { return _receptiveForInput; }
+            protected set
+            {
+                _receptiveForInput = value; 
+                if (_receptiveForInput)
+                {
+                   // Debug.Log("Turning input on.");
+                    if (PresentButtons()) ///try to make buttons if any
+                    {
+
+                    }
+                    else
+                    {
+                        floatingMarker.gameObject.SetActive(true); /// else set bouncing triangle at most recent line
+                    }
+                }
+                else
+                {
+
+//                    Debug.Log("Turning input off.");
+                    RemoveOptions(); /// Destroy old choices
+                    floatingMarker.gameObject.SetActive(false); /// remove marker 
+
+                }
+            }
+        }
+        
+
+
         #region Choices
         public void RemoveOptions()/// Destroys all the buttons from choices
         {
@@ -690,11 +776,17 @@ namespace ForgottenTrails
         }
         private bool PresentButtons()
         {
-            if (story.canContinue) return false;
+            if (story.canContinue) 
+            {
+                //Debug.Log("no choices detected at this point");
+                return false;
+            }
             else if (story.currentChoices.Count > 0) /// Display all the choices, if there are any!
             {
+                //Debug.Log("Choices detected!");
                 for (int i = 0; i < story.currentChoices.Count; i++)
                 {
+                    
                     Choice choice = story.currentChoices[i];
                     Button button = PresentButton(choice.text.Trim());
                     /// Tell the button what to do when we press it
@@ -719,6 +811,7 @@ namespace ForgottenTrails
         /// Creates a button showing the choice text
 		Button PresentButton(string text)
         {
+            Debug.Log("make button for " + text);
             /// Creates the button from a prefab
             Button choice = Instantiate(buttonPrefab) as Button;
             choice.transform.SetParent(buttonAnchor, false);
@@ -745,30 +838,7 @@ namespace ForgottenTrails
 		}
         #endregion Choices
 
-        /// <summary>
-        /// Runs the per line steps required for parsing and showing ink story
-        /// </summary>
-        private IEnumerator ProduceText()
-        {
-            timeSinceAdvance = 0; /// reset timer for skip button
-            PutDataIntoStash(); /// stash current scene state
-            do
-            {
-                
-                // i should prevent saving here, since that could result in correct text logs i think
-
-                string newLine = story.Continue();
-                Debug.Log("Write a line: " + newLine);
-                textProducer.FeedText(newLine);   /// Parse the ink story for functions and text: run functions and display text
-                yield return new WaitForFixedUpdate();//yield return new WaitWhile(() => textProducer.GetState == TextProducer.State.Idle); /// first wait until the textproducer has actually started producing text
-                yield return new WaitUntil(() => textProducer.GetState==TextProducer.State.Idle); /// wait until current line has finished production
-            } while (story.canContinue & !encounteredStop);
-            encounteredStop = false;
-            PutDataIntoStash();
-        }
-
-        public bool encounteredStop = false;
-
+        
        
         protected void OnInteractionEnd()
         {

@@ -1,67 +1,70 @@
 -> Start
 
-// Unity functions:
-EXTERNAL Print(string)
-EXTERNAL PrintWarning(string)
-VAR spd = 1.0 //number expressed as multiplier (eg .8 for 80%)
-EXTERNAL Spd(float)
-EXTERNAL Halt(float)
-//EXTERNAL Stop()
-EXTERNAL Clear()
-EXTERNAL Bg(string)
-EXTERNAL Sprites(string)
-EXTERNAL Vox(string, float)
-EXTERNAL Sfx(string, float)
-EXTERNAL Ambiance(string, float)
-EXTERNAL Music(string, float)
+//BEGIN LIST Unity functionality
 
-=== function Print(value)
+EXTERNAL Print(string)
+// send text to unity console as message
+=== function Print(value) 
 <<i>Log: {value}</i>>
 
+EXTERNAL PrintWarning(string)
+// send text to unity console as warning
 === function PrintWarning(value)
 <<i>LogWarning: {value}</i>>
 
-=== function Spd(value) 
+EXTERNAL Halt(float) 
+// [EXPERIMENTAL] pause text for x seconds 
+=== function Halt(duration) 
+<<i>Halt: {duration}</i>> 
+
+EXTERNAL Clear()
+ // Clears the textbox and moves that text to log
+=== function Clear()
+<<i>Clear Page</i>>
+
+VAR stop = "\{stop\}" // Used in Unity for stopping the continue loop
+
+VAR glue = "\{glue\}" // used to glue next line to this.
+
+VAR aglue = "\{aglue\}" // used to glue this to previous line
+
+VAR spd = 1.0 
+EXTERNAL Spd(float) 
+// [TEMPRAMENTAL] change the text speed 
+=== function Spd(value) //positive number, expressed as multiplier (eg .8 for 80%)
 ~spd=value
 
-=== function Halt(duration)
-~return
-
-=== function Stop()
-#stop
-<stop><br>
-
-VAR stop = "\{stop\}"
-
-VAR glue = "\{glue\}"
-
-=== function Clear()
-~return
-
+EXTERNAL Bg(string)
+ // sets background to image (fade WIP)
 === function Bg(image)
-<<i>Backdrop: {image}</i>>
+<<i>Backdrop: {image}</i>> 
 
-=== function Sprites(image)
-~return
+EXTERNAL Sprites(string)
+// sets sprites for characters, etc. 
+=== function Sprites(images) //If multiple sprites, separated by comma.
+<<i>Images: {images}</i>> 
 
-=== function Vox(clip, volume) // volume between 0.0 and 1.0
-<<i>Audio: {clip}</i>> // note to self: could also link this to tags or always have mumbling when someoneis speaking
+EXTERNAL Vox(string, float)
+// plays audio on voice channel, unlooped
+=== function Vox(clip, volume) // use volume between 0.0 and 1.0
+<<i>Vox: {clip}</i>> 
+// note to self: could perhaps also play appropriate sound when someone is speaking via use of inky tags
 
-=== function Sfx(clip, volume) // volume between 0.0 and 1.0
-<<i>Audio: {clip}</i>>
+EXTERNAL Sfx(string, float)
+// plays audio on sfx channel, unlooped
+=== function Sfx(clip, volume) // use volume between 0.0 and 1.0
+<<i>Sfx: {clip}</i>>
 
-=== function Ambiance(clip, volume) // volume between 0.0 and 1.0
-<<i>Audio: {clip}</i>>
+EXTERNAL Ambiance(string, float)
+// plays audio on ambiance channel, looping
+=== function Ambiance(clip, volume) //use "" to stop loop.  use volume between 0.0 and 1.0
+<<i>Ambiance: {clip}</i>>
 
-=== function Music(clip, volume) // volume between 0.0 and 1.0
-<<i>Audio: {clip}</i>>
-
-=== function Reset()
-~Spd(1)
-~Sfx("",1)
-~Vox("",1)
-
-// End of List
+EXTERNAL Music(string, float)
+// plays audio on music channel, looping
+=== function Music(clip, volume) //use "" to stop audio. use volume between 0.0 and 1.0
+<<i>Music: {clip}</i>>
+// END OF LIST Unity Functionality
 VAR Name = "PlayerName"
 
 
@@ -85,9 +88,7 @@ VAR guy = "guy"
 
 
 
-
 === Start ===
-~Reset()
 ~ Print("Hello world!")// This prints the text to the unity console
 ~Bg("whiterun")
 ~Spd(1)
@@ -96,8 +97,7 @@ You should now see {Sprites("b34auw3h_0")}one {glue}
 {Sprites("b34auw3h_0, b34auw3h_1")}two, {glue}
 {Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}three characters appear.{glue}{stop}
 They should {Sprites("")}now be gone.{stop}
-
-~Music("the streets of whiterun",1)
+~Music("the streets of whiterun",1.0)
 You should hear music.{stop}
 You should hear ambiant chatter {glue}
 {Ambiance("chatter", 1)}<b>now</b>.{stop}
@@ -105,7 +105,6 @@ The chatter should stop {glue}
 {Ambiance("",1)}now.{stop}
 -> sfx
 === sfx ===
-~ Reset()
 Get ready for some sounds.
 Ideally, a soft sound should play when {glue}
 {Sfx("gong", 0.25)}<b>this</b> word appears, {glue}
@@ -132,9 +131,8 @@ And so is this.
 And this as well.
 This working for you?{stop}
 Text should stop flowing <b>now</b>.{stop} (Any text you type after the stop tag, such as this sentence, is sent anyway, which causes confusing behaviour.)
-Experiment: how does the stop tag work{stop}<>
-with glue?
-This sentence should <b>halt</b>{Halt(3)} for a few seconds before continueing.{stop}
+This sentence should <b>halt</b> {glue}
+{Halt(3)}for a few seconds before continueing.{stop}
 After you next push Space, all text should be cleared.{stop}
 ~Clear()
 -> flow

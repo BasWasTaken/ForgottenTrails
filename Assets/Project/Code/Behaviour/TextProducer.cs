@@ -208,7 +208,7 @@ namespace ForgottenTrails
                 {
                     input = input.TrimEnd('\n'); /// remove linebreak from this
                 }
-                else if (match.Value == "{afterglue}")
+                else if (match.Value == "{aglue}")
                 {
                     textBox.text = textBox.text.TrimEnd('\n'); /// remove linebreak from previous
                 }
@@ -283,6 +283,7 @@ namespace ForgottenTrails
                 CurrentlyVisible = 0;
             }
         }
+        public bool autoAdvance = false;
         public bool AlwaysPause = false;
         private string _newText;
         private string NewText
@@ -446,7 +447,7 @@ namespace ForgottenTrails
                         stopwatch.Restart();
                     }
                 }
-
+                
                 Debug.Log(message);
                 #endregion RevealLetters
 
@@ -535,7 +536,7 @@ namespace ForgottenTrails
                 {
                     encounteredStop = false;
                     /// exit the loop or continue with a small delay
-                    if (Skipping)
+                    if (autoAdvance)
                     {
                         yield return new WaitForFixedUpdate();
                     }

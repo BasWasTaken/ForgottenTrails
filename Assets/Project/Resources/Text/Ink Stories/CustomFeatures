@@ -34,9 +34,9 @@ EXTERNAL Spd(float)
 === function Spd(value) //positive number, expressed as multiplier (eg .8 for 80%)
 ~spd=value
 
-EXTERNAL Bg(string)
- // sets background to image (fade WIP)
-=== function Bg(image)
+EXTERNAL Bg(string,duration)
+ // sets background to image by fading
+=== function Bg(image, duration) // duration in seconds (e.g. 0.5)
 <<i>Backdrop: {image}</i>> 
 
 EXTERNAL Sprites(string)

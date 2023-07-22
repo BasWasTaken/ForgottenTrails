@@ -1,7 +1,7 @@
 INCLUDE CustomFeatures
 === Start ===
 ~ Print("Hello world!")// This prints the text to the unity console
-~Bg("whiterun")
+~Bg("whiterun",0)
 ~Spd(1)
 You should now see <b>whiterun</b>.{stop}
 You should now see {Sprites("b34auw3h_0")}one {glue}

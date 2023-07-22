@@ -22,11 +22,11 @@ namespace DataService
         #region inspector
         [Tooltip("Sprites to be made accessible in scenes.")]
         [SerializeField]
-        private Sprite[] sprites;
+        private List<Sprite> sprites;
         public Dictionary<string, Sprite> Sprites;
         [Tooltip("Audiofiles to be made accessible in scenes.")]
         [SerializeField]
-        private AudioClip[] audioClips;
+        private List<AudioClip> audioClips;
         public Dictionary<string, AudioClip> AudioClips;
 
         [Scene]
@@ -43,16 +43,19 @@ namespace DataService
         {
             base.Awake();
             DontDestroyOnLoad(gameObject);
-            
+
             /// init dictionaries
+            /// 
+            HashSet<Sprite> spritesHash = new(sprites);
             Sprites = new();
-            foreach (Sprite sprite in sprites)
+            foreach (Sprite sprite in spritesHash)
             {
                 Sprites.Add(sprite.name.ToLower().Split('.')[0], sprite);
             }
 
+            HashSet<AudioClip> audioHash = new(audioClips);
             AudioClips = new();
-            foreach (AudioClip audioClip in audioClips)
+            foreach (AudioClip audioClip in audioHash)
             {
                 AudioClips.Add(audioClip.name.ToLower().Split('.')[0], audioClip);
             }

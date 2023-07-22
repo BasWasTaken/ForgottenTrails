@@ -16,7 +16,7 @@ public class SetVolume : MonoBehaviour
     private string ParameterName => audioGroup.ToString()+"Volume";
     void Awake()
     {
-        Debug.Log("Getting volume level from playerprefs: " + PlayerPrefs.GetFloat(ParameterName));
+        //Debug.Log("Getting volume level from playerprefs: " + PlayerPrefs.GetFloat(ParameterName));
         float storedValue = PlayerPrefs.GetFloat(ParameterName, 0.75f);
         float sliderValue;
         if (storedValue <= -80)

@@ -1,0 +1,89 @@
+-> Start // Keep this at top of file.
+
+//BEGIN LIST Unity functionality
+
+EXTERNAL Print(string)
+// send text to unity console as message
+=== function Print(value) 
+<<i>Log: {value}</i>>
+
+EXTERNAL PrintWarning(string)
+// send text to unity console as warning
+=== function PrintWarning(value)
+<<i>LogWarning: {value}</i>>
+
+EXTERNAL Halt(float) 
+// [EXPERIMENTAL] pause text for x seconds 
+=== function Halt(duration) 
+<<i>Halt: {duration}</i>> 
+
+EXTERNAL Clear()
+ // Clears the textbox and moves that text to log
+=== function Clear()
+<<i>Clear Page</i>>
+
+VAR stop = "\{stop\}" // Used in Unity for stopping the continue loop
+
+VAR glue = "\{glue\}" // used to glue next line to this.
+
+VAR aglue = "\{aglue\}" // used to glue this to previous line
+
+VAR spd = 1.0 
+EXTERNAL Spd(float) 
+// [TEMPRAMENTAL] change the text speed 
+=== function Spd(value) //positive number, expressed as multiplier (eg .8 for 80%)
+~spd=value
+
+EXTERNAL Bg(string)
+ // sets background to image (fade WIP)
+=== function Bg(image)
+<<i>Backdrop: {image}</i>> 
+
+EXTERNAL Sprites(string)
+// sets sprites for characters, etc. 
+=== function Sprites(images) //If multiple sprites, separated by comma.
+<<i>Images: {images}</i>> 
+
+EXTERNAL Vox(string, float)
+// plays audio on voice channel, unlooped
+=== function Vox(clip, volume) // use volume between 0.0 and 1.0
+<<i>Vox: {clip}</i>> 
+// note to self: could perhaps also play appropriate sound when someone is speaking via use of inky tags
+
+EXTERNAL Sfx(string, float)
+// plays audio on sfx channel, unlooped
+=== function Sfx(clip, volume) // use volume between 0.0 and 1.0
+<<i>Sfx: {clip}</i>>
+
+EXTERNAL Ambiance(string, float)
+// plays audio on ambiance channel, looping
+=== function Ambiance(clip, volume) //use "" to stop loop.  use volume between 0.0 and 1.0
+<<i>Ambiance: {clip}</i>>
+
+EXTERNAL Music(string, float)
+// plays audio on music channel, looping
+=== function Music(clip, volume) //use "" to stop audio. use volume between 0.0 and 1.0
+<<i>Music: {clip}</i>>
+// END OF LIST Unity Functionality
+
+// This is the list of vars for the gender stuff, but that's also not really well implemented yet of course.
+VAR Name = "PlayerName"
+
+
+VAR players_gender = "Undefined"
+VAR players_eyecolor = "Undefined"
+VAR players_hair = "Undefined"
+VAR players_hair_color = "Undefined"
+VAR players_hair_style = "Undefined"
+
+VAR androgynous = "androgynous"
+VAR they = "they"
+VAR them = "them"
+VAR their = "their"
+VAR theirs = "theirs"
+VAR Mx = "Mx"
+VAR master = "master"
+VAR person = "person"
+VAR kid = "kid"
+VAR lad = "lass"
+VAR guy = "guy"

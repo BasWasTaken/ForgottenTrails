@@ -405,7 +405,7 @@ namespace ForgottenTrails
 
 
                 #region RevealLetters
-                string message = "Wrote:\nChar\t\tDelay\t\tIntended\t\tExtra"; /// prepare console message
+                string message = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra",inkParser.TextSpeedActual, inkParser.TextSpeedBase); /// prepare console message
                 int tagLevel = 0; ///int to remember if we go down any nested tags
                 char letter;///prepare marker             
                 while (CurrentlyVisible < textBox.text.Length) /// while not all characters are visible

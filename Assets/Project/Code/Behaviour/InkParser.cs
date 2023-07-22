@@ -93,19 +93,20 @@ namespace ForgottenTrails
 
         public enum TextSpeed
         {
-            slow = 50,
-            medium = 100,
-            fast = 200
+            slow = 6,
+            medium = 12,
+            fast = 24
         }
-
-        private TextSpeed _textSpeedBase = TextSpeed.medium;
-        private TextSpeed TextSpeedBase 
+        private TextSpeed _textSpeedBase;
+        public TextSpeed TextSpeedBase 
         { get 
             { return _textSpeedBase; } 
             set 
             {
+                Debug.Log(string.Format("Changed from {0} to {1} speed",TextSpeedBase.ToString(),value.ToString()));
                 _textSpeedBase = value;
                 PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
+  
             }
         }
         public float TextSpeedActual => ((float)TextSpeedBase) *  inkData.sceneState.textSpeedMod;
@@ -173,7 +174,7 @@ namespace ForgottenTrails
             {
                 inkData = CreateBlankData(true);
             }
-            TextSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
+            _textSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
         }
         private void Start()
         {

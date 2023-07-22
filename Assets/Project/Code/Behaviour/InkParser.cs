@@ -336,7 +336,7 @@ namespace ForgottenTrails
             story.BindExternalFunction("Spd", (float mod) => Functions.DoFunction(() => Spd(mod / 100)));
             story.BindExternalFunction("Clear", () => Functions.DoFunction(() => textProducer.ClearPage()));
             story.BindExternalFunction("Halt", (float dur) => Functions.DoFunction(() => StartCoroutine(HaltText(dur))));
-            story.BindExternalFunction("Bg", (string fileName) => Functions.DoFunction(() => SetBackdrop(fileName)));
+            story.BindExternalFunction("Bg", (string fileName, float dur) => Functions.DoFunction(() => SetBackdrop(fileName)));
             story.BindExternalFunction("Sprites", (string fileNames) => Functions.DoFunction(() => SetSprites(fileNames)));
             story.BindExternalFunction("Vox", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol)));
             story.BindExternalFunction("Sfx", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol)));

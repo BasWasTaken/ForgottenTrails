@@ -35,9 +35,15 @@ EXTERNAL Spd(float)
 ~spd=value
 
 EXTERNAL Bg(string,duration)
- // sets background to image by fading
+ // sets background to image by fading. 
+ // Note that it is in early stages and yo ucan probably break it quite easily by calling it quickly in a row.
 === function Bg(image, duration) // duration in seconds (e.g. 0.5)
 <<i>Backdrop: {image}</i>> 
+
+EXTERNAL FadeTo(string, duration)
+ // fade to a color
+=== function FadeTo(color, duration) // duration in seconds (e.g. 0.5)
+<<i>Fade to {color}</i>> 
 
 EXTERNAL Sprites(string)
 // sets sprites for characters, etc. 

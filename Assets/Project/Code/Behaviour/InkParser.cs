@@ -52,7 +52,7 @@ namespace ForgottenTrails
         public LayoutElement spacer;
         */
         [BoxGroup("Scene References")]
-        public Image bgImage;
+        public BackGround bgImage;
         [BoxGroup("Scene References")]
         public HorizontalLayoutGroup portraits;
         [BoxGroup("Scene References"), Required]
@@ -93,19 +93,20 @@ namespace ForgottenTrails
 
         public enum TextSpeed
         {
-            slow = 50,
-            medium = 100,
-            fast = 200
+            slow = 6,
+            medium = 12,
+            fast = 24
         }
-
-        private TextSpeed _textSpeedBase = TextSpeed.medium;
-        private TextSpeed TextSpeedBase 
+        private TextSpeed _textSpeedBase;
+        public TextSpeed TextSpeedBase 
         { get 
             { return _textSpeedBase; } 
             set 
             {
+                Debug.Log(string.Format("Changed from {0} to {1} speed",TextSpeedBase.ToString(),value.ToString()));
                 _textSpeedBase = value;
                 PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
+  
             }
         }
         public float TextSpeedActual => ((float)TextSpeedBase) *  inkData.sceneState.textSpeedMod;
@@ -173,7 +174,7 @@ namespace ForgottenTrails
             {
                 inkData = CreateBlankData(true);
             }
-            TextSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
+            _textSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
         }
         private void Start()
         {
@@ -336,7 +337,8 @@ namespace ForgottenTrails
             story.BindExternalFunction("Spd", (float mod) => Functions.DoFunction(() => Spd(mod / 100)));
             story.BindExternalFunction("Clear", () => Functions.DoFunction(() => textProducer.ClearPage()));
             story.BindExternalFunction("Halt", (float dur) => Functions.DoFunction(() => StartCoroutine(HaltText(dur))));
-            story.BindExternalFunction("Bg", (string fileName, float dur) => Functions.DoFunction(() => SetBackdrop(fileName)));
+            story.BindExternalFunction("Bg", (string fileName, float dur) => Functions.DoFunction(() => SetBackdrop(fileName,dur)));
+            story.BindExternalFunction("FadeTo", (string color, float dur) => Functions.DoFunction(() => SetColor(color, dur)));
             story.BindExternalFunction("Sprites", (string fileNames) => Functions.DoFunction(() => SetSprites(fileNames)));
             story.BindExternalFunction("Vox", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol)));
             story.BindExternalFunction("Sfx", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol)));
@@ -388,15 +390,14 @@ namespace ForgottenTrails
             Halted = false;
         }
 
-        private void SetBackdrop(string fileName)
+        private void SetBackdrop(string fileName, float duration = 0)
         {
-            if (peeking) return;
             Sprite sprite = null; /// clear bg if no other value is given
             if (!(fileName == "" | fileName == "null"))
             {
                 try
                 {
-                    if (!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
+                    if (!AssetManager.Instance.Sprites.TryGetValue(fileName.ToLower(), out Sprite sprite1))
                     {
                         throw new FileNotFoundException("File not found: " + fileName);
                     }
@@ -411,11 +412,23 @@ namespace ForgottenTrails
                     // throw it to the parent method.
                     if (e.Source != null)
                         Console.WriteLine("IOException source: {0}", e.Source);
-                    throw;
+                    Debug.LogException(e);
                 }
             }
-            bgImage.sprite = sprite;
             inkData.sceneState.background = fileName;
+            if (duration > 0)
+            {
+                StartCoroutine(bgImage.FadeTo(sprite,duration));
+            }
+            else
+            {
+                bgImage.SnapTo(sprite);
+            }
+        }
+
+        private void SetColor(string color, float duration = 0)
+        {
+            StartCoroutine(bgImage.FadeTo(color, duration));
         }
 
         private void SetSprites(string fileNames)
@@ -438,7 +451,7 @@ namespace ForgottenTrails
                 {
                     try
                     {
-                        if (!AssetManager.Instance.Sprites.TryGetValue(fileName, out Sprite sprite1))
+                        if (!AssetManager.Instance.Sprites.TryGetValue(fileName.ToLower(), out Sprite sprite1))
                         {
                             Debug.LogError(new FileNotFoundException("File not found: " + fileName));
                         }
@@ -453,7 +466,7 @@ namespace ForgottenTrails
                         // throw it to the parent method.
                         if (e.Source != null)
                             Console.WriteLine("IOException source: {0}", e.Source);
-                        throw;
+                        Debug.LogException(e);
                     }
                 }
 
@@ -471,7 +484,7 @@ namespace ForgottenTrails
             {
                 try
                 {
-                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName, out AudioClip audioClip1))
+                    if (!AssetManager.Instance.AudioClips.TryGetValue(fileName.ToLower(), out AudioClip audioClip1))
                     {
                         throw new FileNotFoundException("File not found: " + fileName);
                     }
@@ -486,7 +499,7 @@ namespace ForgottenTrails
                     // throw it to the parent method.
                     if (e.Source != null)
                         Console.WriteLine("IOException source: {0}", e.Source);
-                    throw;
+                    Debug.LogException(e);
                 }
             }
             if (relVol > 1)
@@ -698,9 +711,9 @@ namespace ForgottenTrails
                         
 
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        throw;
+                        throw e;
                     }
                     Debug.Log("Successfully loaded data!");
                     return true;

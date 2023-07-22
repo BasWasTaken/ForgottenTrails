@@ -1,8 +1,20 @@
 INCLUDE CustomFeatures
 === Start ===
-~ Print("Hello world!")// This prints the text to the unity console
-~Bg("whiterun",0)
 ~Spd(1)
+~ Print("Hello world!")// This prints the text to the unity console
+~Bg("Vault2",0)
+You should now see <b>a vault</b>.{stop}
+~Bg("Vault1",1)
+You should now see <b>another vault</b>.{stop}
+~Bg("Vault3",1)
+You should now see <b>another vault</b>.{stop}
+~FadeTo("Black",10)
+You should now see <b>black</b>.{stop}
+~FadeTo("White",0.2)
+You should now see <b>black</b>.{stop}
+~FadeTo("Red",1)
+You should now see <b>black</b>.{stop}
+~Bg("whiterun",0)
 You should now see <b>whiterun</b>.{stop}
 You should now see {Sprites("b34auw3h_0")}one {glue}
 {Sprites("b34auw3h_0, b34auw3h_1")}two, {glue}

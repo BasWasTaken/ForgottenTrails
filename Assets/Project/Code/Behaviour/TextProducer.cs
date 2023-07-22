@@ -11,6 +11,7 @@ using NaughtyAttributes;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
+using System.Linq;
 
 namespace ForgottenTrails 
 { 
@@ -25,7 +26,7 @@ namespace ForgottenTrails
         [BoxGroup("Scene References"), Required, SerializeField]
         [Tooltip("Panel to display current paragraph.")]
         private TextMeshProUGUI textBox;
-        public string CurrentlyWritten
+        public string CurrentText
         { 
             get 
             { 
@@ -36,12 +37,24 @@ namespace ForgottenTrails
                 textBox.text = value;
             }
         }
+        public int CurrentlyVisible
+        {
+            get
+            {
+                return textBox.maxVisibleCharacters;
+            }
+            private set
+            {
+                textBox.maxVisibleCharacters = value;
+            }
+        }
+
+        /*
         public string CurrentlyDisplayed
         {
             get
             {
-                int visibleCharacters = Math.Min(textBox.text.Length, textBox.maxVisibleCharacters);
-                return textBox.text.Substring(0,visibleCharacters); /// show only characters that are visible
+                return textBox.text.Substring(0,textBox.maxVisibleCharacters); /// show only characters that are visible
             }
             private set
             {
@@ -49,7 +62,7 @@ namespace ForgottenTrails
                 textBox.maxVisibleCharacters = value.Length;
                 //Debug.Log("TextBox value set manually!");
             }
-        }
+        }*/
         public bool Skipping { get; private set; }
         [BoxGroup("Scene References"), Required, SerializeField]
         [Tooltip("Panel to collect overflow text.")]
@@ -69,7 +82,7 @@ namespace ForgottenTrails
         };
         [BoxGroup("Settings"), SerializeField]
         [Tooltip("Define tiny timings here for when skipping text.")]
-        private PauseInfo _noPauseInfo = new()
+        private PauseInfo _pauseInfoForSkips = new()
         {
             _dotPause = 0.000000005f,
             _commaPause = 0.000000002f,
@@ -80,7 +93,7 @@ namespace ForgottenTrails
         { 
             get
             {
-                return Skipping ? _noPauseInfo : _pauseInfo;
+                return Skipping ? _pauseInfoForSkips : _pauseInfo;
             } 
         }
         private Story story => inkParser.story;
@@ -113,14 +126,14 @@ namespace ForgottenTrails
             }
         }
 
-        private string prospectedText = "";
+        //private string prospectedText = "";
         public string[] NewWords { get; private set; }
 
 
-        public string CurrentWord = "";
+        //public string CurrentWord = "";
 
-        private int letterIndex;
-        private int wordIndex;
+        //private int letterIndex;
+        //private int wordIndex;
         public enum PState 
         { 
             Booting,
@@ -146,8 +159,8 @@ namespace ForgottenTrails
         #region Methods
         private void Awake()
         {
-            CurrentlyWritten = ""; //clear lorum ipsum
-            textBox.maxVisibleCharacters = 0;
+            CurrentText = ""; //clear lorum ipsum
+            CurrentlyVisible = 0;
             PreviouslyDisplayed = ""; //clear lorum ipsum
             inkParser = GetComponent<InkParser>();
             State = PState.Idle;
@@ -254,7 +267,8 @@ namespace ForgottenTrails
 
         }
 
-        public bool peeking { get { return inkParser.peeking; } set { inkParser.peeking = value; } }
+        public bool peeking;
+
         public void ClearPage()
         {
             if (peeking) return;
@@ -264,9 +278,9 @@ namespace ForgottenTrails
             }
             else
             {
-                historyTextBox.text = CurrentlyWritten; /// move all text to the history log
-                CurrentlyWritten = prospectedText = ""; /// clear current and prospective texts
-                textBox.maxVisibleCharacters = 0;
+                historyTextBox.text = CurrentText; /// move all text to the history log
+                CurrentText = "";//prospectedText = ""; /// clear current and prospective texts
+                CurrentlyVisible = 0;
             }
         }
         public bool AlwaysPause = false;
@@ -276,9 +290,9 @@ namespace ForgottenTrails
             get { return _newText; }
             set
             {
-                NewWords = SplitIntoWords(value);
-                _newText = string.Concat(NewWords);
-                prospectedText = CurrentlyWritten + _newText;
+                //NewWords = SplitIntoWords(value);
+                _newText = value;//string.Concat(NewWords); 
+                //prospectedText = CurrentlyWritten + _newText;
             }
         }
         private string[] SplitIntoWords(string input)
@@ -299,13 +313,17 @@ namespace ForgottenTrails
             */
 
             //string[] split = input.Split(' ');
+            
+            /*
             string message = "Following words:";
             foreach (string word in split)
             {
                 message += "\n\"" + word + "\",";
             }
             Debug.Log(message);
-            return split;
+            */
+
+            return split.SkipLast(1).ToArray();
         }
         #endregion
         bool withinTag = false;
@@ -334,14 +352,14 @@ namespace ForgottenTrails
 
                 /// check size and clear page if needed
 
-                string bufferText = CurrentlyWritten; /// make backup
-                textBox.maxVisibleCharacters = textBox.text.Length;
+                string bufferText = CurrentText; /// make backup
+                CurrentlyVisible = textBox.text.Length;
 
-                CurrentlyWritten += toBeAdded + '\n'; /// test if the text will fit
+                CurrentText += toBeAdded + '\n'; /// test if the text will fit
                 yield return 0;/// wait 1 frame
                 bool overflow = overFlowTextBox.text.Length > 0; /// store result
 
-                CurrentlyWritten = bufferText; /// restore backup
+                CurrentText = bufferText; /// restore backup
                 story.state.LoadJson(storedState); /// return to original state, reverting from peaking
                 peeking = false;
 
@@ -349,11 +367,12 @@ namespace ForgottenTrails
             }
 
             #endregion TryFit
+            #region continueloop
             do
             {
-                // or add ifspace remaining chec khere per line?
+                // or add ifspace remaining check here per line?
 
-                #region Inner
+                #region InnerLoop
                 if (State == PState.Booting) yield return new WaitWhile(() => State == PState.Booting);
 
                 story.ContinueAsync(0); /// advance a bit 
@@ -364,6 +383,75 @@ namespace ForgottenTrails
                 //Debug.Log("Write a line: " + newLine);
                 State = PState.Producing; /// transition to state
 
+
+                /// Hele andere aanpak: gooi alles gewoon meteen visible, dan over de karakters itereren.
+
+                if(CurrentlyVisible < CurrentText.Length) 
+                {
+                    CurrentlyVisible = CurrentText.Length;
+                    Debug.LogWarning("Not all characters were done.");
+                }
+                
+                string backup = CurrentText; /// make backup
+                CurrentText += NewText; ///add the new text, invisibly
+                if(overFlowTextBox.text.Length > 0) /// check for overflow
+                {
+                    CurrentText = backup; /// restore backup
+                    ClearPage(); /// save page and clear it
+                    CurrentText = NewText; /// add new text anyway
+
+                }
+
+
+                #region RevealLetters
+                string message = "Wrote:\nChar\t\tDelay\t\tIntended\t\tExtra"; /// prepare console message
+                int tagLevel = 0; ///int to remember if we go down any nested tags
+                char letter;///prepare marker             
+                while (CurrentlyVisible < textBox.text.Length) /// while not all characters are visible
+                {
+                    letter = textBox.text[CurrentlyVisible]; /// store letter we're typing letter   
+                    CurrentlyVisible++; /// show the character
+                    if (letter == '<')/// if we come across this we've entered a(nother) tag
+                    {
+                        tagLevel++;
+                    }
+                    else if (letter == '>')/// if we come acros this, we've exited one level of tag
+                    {
+                        tagLevel--;
+                        if (tagLevel < 0)
+                        {
+                            throw new("That's more closing than opening tag brackets!");
+                        }
+                    }
+                    else if (tagLevel == 0) /// if we're not in a tag, apply potential delays for the typewriting effect
+                    {
+                        if (inkParser.Halted) yield return new WaitWhile(() => inkParser.Halted); /// don't continue if halted
+                        if (!isActiveAndEnabled) yield return new WaitUntil(() => isActiveAndEnabled); /// only continue if enabled
+                        //Debug.Log("show me " + letter);
+                        float delay = 0; /// initialize delay
+                        if (!Skipping) /// in normal behaviour
+                        {
+                            /// get the delay from the delay info object
+                            delay = _pauseInfo.GetPause(letter) / inkParser.TextSpeedActual;
+                        }
+                        else if (AlwaysPause) /// if this setting is enabled, 
+                        {
+                            ///get pause info while skipping text too
+                            delay = _pauseInfoForSkips.GetPause(letter);
+                        }
+                        if (delay > 0) yield return new WaitForSecondsRealtime(delay); /// apply the delay if any
+                        float delayMs = delay * 1000;
+                        float delayActual = stopwatch.ElapsedMilliseconds;
+                        message += string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letter, delayActual, delayMs, delayActual - delayMs);
+                        stopwatch.Restart();
+                    }
+                }
+
+                Debug.Log(message);
+                #endregion RevealLetters
+
+                #region Depricated
+                /* DEPRICATED FROM HERE
 
                 //TEMP I think I can just pre write all the words?
                 CurrentlyWritten += NewText;
@@ -406,7 +494,7 @@ namespace ForgottenTrails
                             }
                             else if (AlwaysPause)
                             {
-                                delay = _noPauseInfo.GetPause(letter); //do(n't) add time even while skipping
+                                delay = _pauseInfoForSkips.GetPause(letter); //do(n't) add time even while skipping
                             }
                             if (delay > 0) yield return new WaitForSecondsRealtime(delay);
                             float delayMs = delay * 1000;
@@ -427,6 +515,7 @@ namespace ForgottenTrails
 
                 if (CurrentlyWritten != prospectedText) /// check success
                 {
+                    Debug.Log("Is that right..?");
                     if (CurrentlyDisplayed != prospectedText)
                     {
                         string message = "Unable to accurately reproduce line.";
@@ -436,24 +525,27 @@ namespace ForgottenTrails
                     }
                 }
                 //Debug.Log("Done reproducing following text:\n" + string.Concat(NewWords));
+                */
+                #endregion Depricated
+                
                 State = PState.Idle;
-                #endregion inner
+                #endregion InnerLoop
 
                 if (encounteredStop)  /// if we encounter a stop
                 {
+                    encounteredStop = false;
                     /// exit the loop or continue with a small delay
                     if (Skipping)
                     {
-                        yield return new WaitForEndOfFrame();
+                        yield return new WaitForFixedUpdate();
                     }
                     else
                     {
-                        encounteredStop = false;
                         yield break;
                     }
                 }
             } while (story.canContinue); /// while the story can continue without input on choices
-
+            #endregion continueloop
 
             ResetSkipping();
 

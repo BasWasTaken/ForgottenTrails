@@ -64,6 +64,9 @@ namespace ForgottenTrails
         [Tooltip("Here drag the component used for sfx.")]
         private AudioSource audioSourceSfx;
         [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for voice.")]
+        private AudioSource audioSourceVox;
+        [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for music.")]
         private AudioSource audioSourceMusic;
         [SerializeField, BoxGroup("Scene References"), Required]
@@ -87,7 +90,6 @@ namespace ForgottenTrails
         private bool playing = false;
 
 
-        public bool Halted { get; private set; }
 
         public enum TextSpeed
         {
@@ -106,7 +108,7 @@ namespace ForgottenTrails
                 PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
             }
         }
-        public float TextSpeedActual => ((float)TextSpeedBase/100) *  inkData.sceneState.textSpeedMod;
+        public float TextSpeedActual => ((float)TextSpeedBase) *  inkData.sceneState.textSpeedMod;
 
 
         #endregion INSPECTOR VARIABLES
@@ -161,6 +163,7 @@ namespace ForgottenTrails
         override protected void Awake()
         {
             base.Awake();
+            Functions = new(this);
             textProducer = GetComponent<TextProducer>();
 
             //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
@@ -180,18 +183,7 @@ namespace ForgottenTrails
                 PrepStory();
                 StartStory();
             }
-            story.onEvaluateFunction += Story_onEvaluateFunction;
-            story.onCompleteEvaluateFunction += Story_onCompleteEvaluateFunction;
         }
-        private void Story_onEvaluateFunction(string arg1, object[] arg2)
-        {
-            //Halted = true;
-        }
-        private void Story_onCompleteEvaluateFunction(string arg1, object[] arg2, string arg3, object arg4)
-        {
-            //Halted = false;
-        }
-
         /// <summary>
         /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
         /// </summary>
@@ -299,41 +291,98 @@ namespace ForgottenTrails
         }
 
         #endregion LOOP
-        [HideInInspector]
-        public bool peeking;
         #region METHODS
-
+        public bool Halted { get; private set; }
+        public bool peeking => textProducer.peeking;
         #region INKY_EXTERNALS
+        public InkFunctions Functions;
+        public class InkFunctions
+        {
+            private InkParser parser;
+            public InkFunctions() { }
+            public InkFunctions(InkParser parser)
+            {
+                this.parser = parser;
+            }
+            public void StartFunctionMethod()
+            {
+                parser.Halted = true;
+            }
+            public void DoFunction(Action function)
+            {
+                if (parser.peeking) return;
+                StartFunctionMethod();
+                function();
+                EndFunctionMethod();
+            }
+            public void EndFunctionMethod()
+            {
+                parser.Halted = false;
+            }
+
+        }
+
+        
         private void BindAndObserve(Story story)
         {
-            
-            story.BindExternalFunction("Print", (string text) => ConsoleLogInk(text, false));
-            story.BindExternalFunction("PrintWarning", (string text) => ConsoleLogInk(text, true));
 
+            /* this was too slow
             story.ObserveVariable("spd", (variableName, newValue) =>
             {
                 Spd(float.Parse(newValue.ToString()));
-            });
-            story.BindExternalFunction("Spd", (float mod) => Spd(mod));
-            story.BindExternalFunction("Clear", () => textProducer.ClearPage());
-            story.BindExternalFunction("Halt", (float dur) => StartCoroutine(HaltText(dur)));
-            story.BindExternalFunction("Bg", (string fileName) => SetBackdrop(fileName));
-            story.BindExternalFunction("Sprites", (string fileNames) => SetSprites(fileNames));
-            story.BindExternalFunction("Vox", (string fileName, float relVol) => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol));
-            story.BindExternalFunction("Sfx", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol));
-            story.BindExternalFunction("Ambiance", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Ambiance,relVol));
-            story.BindExternalFunction("Music", (string fileName, float relVol) => ParseAudio(fileName, AudioManager.AudioGroup.Music, relVol));
+            });*/
+            story.BindExternalFunction("Print", (string text) => Functions.DoFunction(() => ConsoleLogInk(text, false)));
+            story.BindExternalFunction("PrintWarning", (string text) => Functions.DoFunction(() => ConsoleLogInk(text, true)));
+            story.BindExternalFunction("Spd", (float mod) => Functions.DoFunction(() => Spd(mod / 100)));
+            story.BindExternalFunction("Clear", () => Functions.DoFunction(() => textProducer.ClearPage()));
+            story.BindExternalFunction("Halt", (float dur) => Functions.DoFunction(() => StartCoroutine(HaltText(dur))));
+            story.BindExternalFunction("Bg", (string fileName) => Functions.DoFunction(() => SetBackdrop(fileName)));
+            story.BindExternalFunction("Sprites", (string fileNames) => Functions.DoFunction(() => SetSprites(fileNames)));
+            story.BindExternalFunction("Vox", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol)));
+            story.BindExternalFunction("Sfx", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol)));
+            story.BindExternalFunction("Ambiance", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Ambiance,relVol)));
+            story.BindExternalFunction("Music", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Music, relVol)));
         }
+        /*
+        public static class InkFunctionsStatic
+        {
+            //public delegate void StartFunctionAction();
+            //public static event StartFunctionAction StartFunctionEvent;
+
+            //public delegate void EndFunctionAction();
+            //public static event EndFunctionAction EndFunctionEvent;
+
+            public static void StartFunctionMethod()
+            {
+                InkParser.Halted = true;
+            }
+            public static void DoFunction(Action function)
+            {
+
+                if (peeking) return;
+                //StartFunctionEvent?.Invoke();
+                StartFunctionMethod();
+                function();
+                EndFunctionMethod();
+                //EndFunctionEvent?.Invoke();
+            }
+            public static void EndFunctionMethod()
+            {
+                InkParser.Halted = false;
+            }
+
+        }
+        */
+       
+        //public Action InkFunction;
 
         private void Spd(float speed)
         {
-            if (peeking) return;
-                inkData.sceneState.textSpeedMod = speed;
+            inkData.sceneState.textSpeedMod = speed;
         }
 
         public IEnumerator HaltText(float seconds)
         {
-            if (peeking) yield break;
             Halted = true;
             yield return new WaitForSecondsRealtime(seconds);
             Halted = false;
@@ -468,19 +517,15 @@ namespace ForgottenTrails
         }
         private void PlayAudio(AudioClip audioClip, AudioManager.AudioGroup audioGroup, float relVol = .5f, bool oneShot = false, bool loop = false)
         {
-            /*
             AudioSource audioSource = audioGroup switch
             {
                 AudioManager.AudioGroup.Sfx => audioSourceSfx,
                 AudioManager.AudioGroup.Ambiance => audioSourceAmbiance,
                 AudioManager.AudioGroup.Music => audioSourceMusic,
-                AudioManager.AudioGroup.Voice => AudioManager.Instance.GlobalAudio(AudioManager.AudioGroup.Voice),
+                AudioManager.AudioGroup.Voice => audioSourceVox,
                 AudioManager.AudioGroup.System => audioSourceSystem,
                 _ => audioSourceSystem,
             };
-            */
-            AudioSource audioSource = AudioManager.Instance.GlobalAudio(audioGroup); /// get correct audiosource
-            
             if (audioClip == null)
             {
                 audioSource.clip = null;
@@ -603,7 +648,7 @@ namespace ForgottenTrails
         public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
             /// save all the things 
-            inkData.currentText = textProducer.CurrentlyDisplayed;
+            inkData.currentText = textProducer.CurrentText; // is deze nodig? is dat niet contained in story?
             inkData.historyText = textProducer.PreviouslyDisplayed; 
             inkData.storyStateJson = story.state.ToJson();
             inkData.StashData();

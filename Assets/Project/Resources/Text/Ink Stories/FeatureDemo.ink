@@ -4,7 +4,7 @@
 EXTERNAL Print(string)
 EXTERNAL PrintWarning(string)
 VAR spd = 1.0 //number expressed as multiplier (eg .8 for 80%)
-//EXTERNAL Spd(float)
+EXTERNAL Spd(float)
 EXTERNAL Halt(float)
 //EXTERNAL Stop()
 EXTERNAL Clear()
@@ -91,7 +91,7 @@ VAR guy = "guy"
 ~ Print("Hello world!")// This prints the text to the unity console
 ~Bg("whiterun")
 ~Spd(1)
-You should now see whiterun.{stop}
+You should now see <b>whiterun</b>.{stop}
 You should now see {Sprites("b34auw3h_0")}one {glue}
 {Sprites("b34auw3h_0, b34auw3h_1")}two, {glue}
 {Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}three characters appear.{glue}{stop}
@@ -108,18 +108,19 @@ The chatter should stop {glue}
 ~ Reset()
 Get ready for some sounds.
 Ideally, a soft sound should play when {glue}
-{Sfx("gong", 0.25)}<b>this</b> word appears and a loud sound should play when {glue}
-{Sfx("",0)}{Sfx("gong", 1)}<b>this</b> word appears.
+{Sfx("gong", 0.25)}<b>this</b> word appears, {glue}
+{Sfx("",0)}and a loud sound should play when {glue}
+{Sfx("gong", 1)}<b>this</b> word appears.
     Did that sound right? You can check it again if you want.
     + [Hit it again.] -> sfx
     + [Continue] -> spdtst
 === spdtst ===
-{Spd(2)}<b>This</b> {glue}
-{Spd(1)}is a fast word, {glue} 
-{Spd(0.5)}<b>this</b> {glue}
+{Spd(10)}<b>This</b> {glue}
+{Spd(1)}is a fast word, {glue}{stop}
+{Spd(0.1)}<b>this</b> {glue}
 {Spd(1)}is a slow word.{stop}
-{Spd(100)}<b>This is a fast sentence</b>, {glue}
-{Spd(0.01)}<b>this is a slow sentence</b>.{stop}
+{Spd(10)}<b>This is a fast sentence</b>, {glue}{stop}
+{Spd(0.1)}<b>this is a slow sentence</b>.{stop}
 {Spd(1)}Did you get that? Or do you want to see it again?
     + [Run it again.] -> spdtst
     + [Give me the sounds again.] -> sfx

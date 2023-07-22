@@ -6879,10 +6879,12 @@ MonoBehaviour:
   buttonAnchor: {fileID: 28223511}
   floatingMarker: {fileID: 531542277}
   audioSourceSfx: {fileID: 4636245369445873570}
+  audioSourceVox: {fileID: 4636245370948959648}
   audioSourceMusic: {fileID: 4636245370335439450}
   audioSourceAmbiance: {fileID: 4636245371363056738}
   audioSourceSystem: {fileID: 4636245370548742609}
   advanceDialogueDelay: 0.1
+  skipDelay: 0.2
   peeking: 0
 --- !u!114 &2009679607
 MonoBehaviour:

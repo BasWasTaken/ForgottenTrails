@@ -1,41 +1,56 @@
+using DataService;
+using Ink.Runtime;
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using TMPro;
 using UnityEngine;
-using UnityEditor;
-namespace TEMPLATENAMESPACE 
-{ 
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Bas.Utility;
+
+namespace ForgottenTrails
+{
     /// <summary>
-    /// <para>SUMMARY GOES HERE.</para>
+    /// <para>Works in tandem with <see cref="InkParser"/> to populate scenes with assets and effects as dictated in <see cref="Ink.Runtime.Story"/> assets.</para>
     /// </summary>
     public class SetDresser : MonoBehaviour
     {
-        ///___VARIABLES___///
-        #region INSPECTOR
-        
+        // Inspector Properties
+        #region Inspector Properties
+
         #endregion
-        #region BACKEND_VARIABLES
-        
+        // Public Properties
+        #region Public Properties
+
         #endregion
-        ///___METHODS___///
-        #region LIFESPAN
-        private void Awake()
-        {
-            
-        }
-        private void Start()
-        {
-            
-        }
+        // Private Properties
+        #region Private Properties
+
         #endregion
-        #region LOOP
-        private void Update()
-        {
-            
-        }
+        // MonoBehaviour Events
+        #region MonoBehaviour Events
+
         #endregion
-        #region OTHER_METHODS
-        
+        // Public Methods
+        #region Public Methods
+
         #endregion
+        // Private Methods
+        #region Private Methods
+
+        #endregion
+        // UNRESOLVED
+        // Variables
+        [SerializeField, BoxGroup("Prefabs"), Required]
+        private Image portraitPrefab = null;
+        [SerializeField, BoxGroup("Scene References"), Required]
+        private HorizontalLayoutGroup portraits;
+
+        [SerializeField, BoxGroup("Scene References"), Required]
+        private BackGround bgImage;
+
     }
 }

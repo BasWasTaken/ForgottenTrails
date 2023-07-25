@@ -5,89 +5,78 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Utility;
+using Bas.Utility;
 
-namespace ForgottenTrails
+namespace ForgottenTrails.InkFacilitation
 {
     /// <summary>
-    /// <para>Behaviour for displaying ink text and allowing the player to input choices.</para>
+    /// <para>Behaviour for parsing content from <see cref="Story"/> files and passing it onto the appropriate monobehaviours.</para>
     /// </summary>
-    /// This is a behaviour script based on an example script of how to play and display a ink story in Unity. Further functionality has been canibalised from mso project. 
-    /// Taken from the Inky demo on 2023-03-08, 14:45 and adapted by Bas Vegt.
     [RequireComponent(typeof(TextProducer))]
+    [RequireComponent(typeof(SetDresser))]
+    [RequireComponent(typeof(InkInputHandler))]
+    [RequireComponent(typeof(AudioManager))]
     public class InkParser : MonoSingleton<InkParser>
     {
-        #region INSPECTOR VARIABLES	
+        // Inspector Properties
+        #region Inspector Properties
+        [field:SerializeField, BoxGroup("Assets"), Required]
+        [Tooltip("Here drag the JSON object containing the dialogue behaviour")]
+        private TextAsset InkStoryAsset { get; set; }
 
-        /// ASSETS
-        [SerializeField, BoxGroup("Assets"), Required]
-        [Tooltip("Here drag the INK object containing the dialogue behaviour")]
-        private TextAsset inkJSONAsset = null;
-
-        [SerializeField, BoxGroup("Assets")]
+        [field: SerializeField, BoxGroup("Assets"), ReadOnly]
         [Tooltip("Data object containing INK data.")]
-        private InkData inkData;
+        private InkData InkDataAsset { get; set; }
 
-        [SerializeField, BoxGroup("Assets"), Required]
-        private Button buttonPrefab = null;
-        [SerializeField, BoxGroup("Assets"), Required]
-        private Image portraitPrefab = null;
+        #endregion
+        // Public Properties
+        #region Public Properties
+        private TextSpeed _textSpeedBase;
+        public TextSpeed TextSpeedBase
+        {
+            get
+            { return _textSpeedBase; }
+            set
+            {
+                Debug.Log(string.Format("Changed from {0} to {1} speed", TextSpeedBase.ToString(), value.ToString()));
+                _textSpeedBase = value;
+                PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
 
-        /// SCENE REFERENCES
-        [BoxGroup("Scene References"), Required]
-        [Tooltip("The main canvas used for GUI elements in this scene.")]
-        public Canvas canvas = null;
-
-        /*
-        [BoxGroup("Scene References"), Required]
-        [Tooltip("The scrollbar used for the paper scroll.")]
-        public Scrollbar scrollbar;
-        [BoxGroup("Scene References"), Required]
-        [Tooltip("The spacer used at bottom of the paper scroll.")]
-        public LayoutElement spacer;
-        */
-        [BoxGroup("Scene References")]
-        public BackGround bgImage;
-        [BoxGroup("Scene References")]
-        public HorizontalLayoutGroup portraits;
-        [BoxGroup("Scene References"), Required]
-        public Transform buttonAnchor;
-        [BoxGroup("Scene References")]
-        public Image floatingMarker;
-
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for sfx.")]
-        private AudioSource audioSourceSfx;
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for voice.")]
-        private AudioSource audioSourceVox;
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for music.")]
-        private AudioSource audioSourceMusic;
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for ambiance.")]
-        private AudioSource audioSourceAmbiance;
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for system sounds like ui.")]
-        private AudioSource audioSourceSystem;
-
-        private TextProducer textProducer;
+            }
+        }
+        public float TextSpeedActual => ((float)TextSpeedBase) * InkDataAsset.sceneState.textSpeedMod;
 
 
-        [SerializeField, BoxGroup("Settings")]
-        [Tooltip("Delay after which space button advances dialogue.")]
-        protected float advanceDialogueDelay = .1f;
-        [SerializeField, BoxGroup("Settings")]
-        [Tooltip("Delay after which space button skips new dialogue.")]
-        protected float skipDelay = .2f;
-        public float AdvanceDialogueDelay => advanceDialogueDelay;
 
-        private bool playing = false;
+        #endregion
+        // Private Properties
+        #region Private Properties
+        private AudioManager AudioSources;
+        
+        private TextProducer TextProducer;
+        private SetDresser SetDresser;
+        private InkInputHandler InputHandler;
+
+        private bool Playing { get; set; } = false;
+
+        #endregion
+        // MonoBehaviour Events
+        #region MonoBehaviour Events
+
+        #endregion
+        // Public Methods
+        #region Public Methods
+
+        #endregion
+        // Private Methods
+        #region Private Methods
+
+        #endregion
+        // UNRESOLVED
 
 
 
@@ -97,22 +86,8 @@ namespace ForgottenTrails
             medium = 12,
             fast = 24
         }
-        private TextSpeed _textSpeedBase;
-        public TextSpeed TextSpeedBase 
-        { get 
-            { return _textSpeedBase; } 
-            set 
-            {
-                Debug.Log(string.Format("Changed from {0} to {1} speed",TextSpeedBase.ToString(),value.ToString()));
-                _textSpeedBase = value;
-                PlayerPrefs.SetInt("textSpeed", (int)_textSpeedBase);
-  
-            }
-        }
-        public float TextSpeedActual => ((float)TextSpeedBase) *  inkData.sceneState.textSpeedMod;
 
 
-        #endregion INSPECTOR VARIABLES
 
         #region INSPECTOR_HELPERS
 
@@ -120,7 +95,7 @@ namespace ForgottenTrails
 
 
         [SerializeField, Tooltip("Reset ink data in object. Note: does not remove data from file"), Button("ResetInkData",EButtonEnableMode.Editor)]
-        public void ResetInkDataButton() { inkData = CreateBlankData(); PrepStory(); }
+        public void ResetInkDataButton() { InkDataAsset = CreateBlankData(); PrepStory(); }
         [SerializeField, Button("LoadData")]
         public void LoadDataButton() {
 #if UNITY_EDITOR
@@ -164,22 +139,26 @@ namespace ForgottenTrails
         override protected void Awake()
         {
             base.Awake();
+            AudioSources = GetComponent<AudioManager>();
             Functions = new(this);
-            textProducer = GetComponent<TextProducer>();
+            TextProducer = GetComponent<TextProducer>();
+            InputHandler = GetComponent<InkInputHandler>();
+            SetDresser = GetComponent<SetDresser>();
+
 
             //Debug.Log("This is when the textpanel was set to blank: " + textPanel.text);
             //spacer.minHeight = Camera.main.scaledPixelHeight;
 //            scrollbar.value = 1;
             if (true) // why do i need to make blank data here always? is it just so that i don't get nullerrors later?
             {
-                inkData = CreateBlankData(true);
+                InkDataAsset = CreateBlankData(true);
             }
             _textSpeedBase = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedBase);
         }
         private void Start()
         {
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y);
-            if (inkJSONAsset != null)
+            if (InkStoryAsset != null)
             {
                 PrepStory();
                 StartStory();
@@ -191,7 +170,7 @@ namespace ForgottenTrails
         void PrepStory()
         {
             RemoveOptions();
-            story = new Story(inkJSONAsset.text);
+            story = new Story(InkStoryAsset.text);
             story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
             //Debug.Log(story.state.variablesState["Name"]);
             BindAndObserve(story);
@@ -200,22 +179,22 @@ namespace ForgottenTrails
         /// Creates a new Story object with the compiled story which we can then play!
         void StartStory()
         {
-            if (DataManager.Instance.DataAvailable(inkData.Key))
+            if (DataManager.Instance.DataAvailable(InkDataAsset.Key))
             {
                 Debug.Log("found data! trying to load...");
                 TryLoadData();
             }
             else
             {
-                inkData = CreateBlankData(); // you're making data a second time, there's already blank data made.
+                InkDataAsset = CreateBlankData(); // you're making data a second time, there's already blank data made.
             }
             if (!playing)
             {
                 playing = true;
-                if (inkData.storyStateJson != "")
+                if (InkDataAsset.storyStateJson != "")
                 {
                     Debug.Log("continueing from savepoint!");
-                    story.state.LoadJson(inkData.storyStateJson);
+                    story.state.LoadJson(InkDataAsset.storyStateJson);
                     StartCoroutine(textProducer.FeedText(story.currentText));
                 }
                 else
@@ -340,10 +319,10 @@ namespace ForgottenTrails
             story.BindExternalFunction("Bg", (string fileName, float dur) => Functions.DoFunction(() => SetBackdrop(fileName,dur)));
             story.BindExternalFunction("FadeTo", (string color, float dur) => Functions.DoFunction(() => SetColor(color, dur)));
             story.BindExternalFunction("Sprites", (string fileNames) => Functions.DoFunction(() => SetSprites(fileNames)));
-            story.BindExternalFunction("Vox", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName,AudioManager.AudioGroup.Voice, relVol)));
-            story.BindExternalFunction("Sfx", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Sfx, relVol)));
-            story.BindExternalFunction("Ambiance", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Ambiance,relVol)));
-            story.BindExternalFunction("Music", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, AudioManager.AudioGroup.Music, relVol)));
+            story.BindExternalFunction("Vox", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName,GlobalAudioManager.AudioGroup.Voice, relVol)));
+            story.BindExternalFunction("Sfx", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, GlobalAudioManager.AudioGroup.Sfx, relVol)));
+            story.BindExternalFunction("Ambiance", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, GlobalAudioManager.AudioGroup.Ambiance,relVol)));
+            story.BindExternalFunction("Music", (string fileName, float relVol) => Functions.DoFunction(() => ParseAudio(fileName, GlobalAudioManager.AudioGroup.Music, relVol)));
         }
         /*
         public static class InkFunctionsStatic
@@ -380,7 +359,7 @@ namespace ForgottenTrails
 
         private void Spd(float speed)
         {
-            inkData.sceneState.textSpeedMod = speed;
+            InkDataAsset.sceneState.textSpeedMod = speed;
         }
 
         public IEnumerator HaltText(float seconds)
@@ -415,7 +394,7 @@ namespace ForgottenTrails
                     Debug.LogException(e);
                 }
             }
-            inkData.sceneState.background = fileName;
+            InkDataAsset.sceneState.background = fileName;
             if (duration > 0)
             {
                 StartCoroutine(bgImage.FadeTo(sprite,duration));
@@ -471,12 +450,12 @@ namespace ForgottenTrails
                 }
 
                 Instantiate(portraitPrefab, portraits.transform).sprite=sprite;
-                inkData.sceneState.sprites += ", " + fileName;
+                InkDataAsset.sceneState.sprites += ", " + fileName;
             }
         }
 
         #region AUDIO
-        private void ParseAudio(string fileName, AudioManager.AudioGroup audioGroup, float relVol =.5f)
+        private void ParseAudio(string fileName, GlobalAudioManager.AudioGroup audioGroup, float relVol =.5f)
         {
             if (peeking) return;
             AudioClip audioClip = null; /// clear audio if no other value is given
@@ -514,29 +493,29 @@ namespace ForgottenTrails
             }
             bool oneShot = false;
             bool loop = false;
-            if(audioGroup == AudioManager.AudioGroup.Music)
+            if(audioGroup == GlobalAudioManager.AudioGroup.Music)
             {
                 //oneShot = false;
                 loop = true;
-                inkData.sceneState.activeMusic = fileName;
+                InkDataAsset.sceneState.activeMusic = fileName;
             }
-            else if (audioGroup == AudioManager.AudioGroup.Ambiance)
+            else if (audioGroup == GlobalAudioManager.AudioGroup.Ambiance)
             {
                 //oneShot = false;
                 loop = true;
-                inkData.sceneState.activeAmbiance = fileName;
+                InkDataAsset.sceneState.activeAmbiance = fileName;
             }
             PlayAudio(audioClip, audioGroup, relVol, oneShot: oneShot,loop:loop);
         }
-        private void PlayAudio(AudioClip audioClip, AudioManager.AudioGroup audioGroup, float relVol = .5f, bool oneShot = false, bool loop = false)
+        private void PlayAudio(AudioClip audioClip, GlobalAudioManager.AudioGroup audioGroup, float relVol = .5f, bool oneShot = false, bool loop = false)
         {
             AudioSource audioSource = audioGroup switch
             {
-                AudioManager.AudioGroup.Sfx => audioSourceSfx,
-                AudioManager.AudioGroup.Ambiance => audioSourceAmbiance,
-                AudioManager.AudioGroup.Music => audioSourceMusic,
-                AudioManager.AudioGroup.Voice => audioSourceVox,
-                AudioManager.AudioGroup.System => audioSourceSystem,
+                GlobalAudioManager.AudioGroup.Sfx => audioSourceSfx,
+                GlobalAudioManager.AudioGroup.Ambiance => audioSourceAmbiance,
+                GlobalAudioManager.AudioGroup.Music => audioSourceMusic,
+                GlobalAudioManager.AudioGroup.Voice => audioSourceVox,
+                GlobalAudioManager.AudioGroup.System => audioSourceSystem,
                 _ => audioSourceSystem,
             };
             if (audioClip == null)
@@ -661,10 +640,10 @@ namespace ForgottenTrails
         public void PutDataIntoStash() // this should then be called every so often and whenever the save button is pressed
         {
             /// save all the things 
-            inkData.currentText = textProducer.CurrentText; // is deze nodig? is dat niet contained in story?
-            inkData.historyText = textProducer.PreviouslyDisplayed; 
-            inkData.storyStateJson = story.state.ToJson();
-            inkData.StashData();
+            InkDataAsset.currentText = textProducer.CurrentText; // is deze nodig? is dat niet contained in story?
+            InkDataAsset.historyText = textProducer.PreviouslyDisplayed; 
+            InkDataAsset.storyStateJson = story.state.ToJson();
+            InkDataAsset.StashData();
         }
         public void SaveData()
         {
@@ -684,7 +663,7 @@ namespace ForgottenTrails
             }
             else
             {
-                InkData input = DataManager.Instance.FetchData<InkData>(inkData.Key);
+                InkData input = DataManager.Instance.FetchData<InkData>(InkDataAsset.Key);
                 if (output == input)
                 {
                     Debug.LogError("Error code 11: input data is same as output data; nothing to load.");
@@ -745,13 +724,13 @@ namespace ForgottenTrails
         protected void PopulateSceneFromData(InkData input, ref InkData output) 
         {
             //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
-            ParseAudio(input.sceneState.activeMusic,AudioManager.AudioGroup.Music);
-            ParseAudio(input.sceneState.activeAmbiance,AudioManager.AudioGroup.Ambiance);
+            ParseAudio(input.sceneState.activeMusic,GlobalAudioManager.AudioGroup.Music);
+            ParseAudio(input.sceneState.activeAmbiance,GlobalAudioManager.AudioGroup.Ambiance);
             SetBackdrop(input.sceneState.background);
             SetSprites(input.sceneState.sprites);
             SetSprites(input.sceneState.sprites);
             Spd(input.sceneState.textSpeedMod);
-            StartCoroutine(textProducer.FeedText(inkData.currentText));
+            StartCoroutine(textProducer.FeedText(InkDataAsset.currentText));
             output.currentText = input.currentText;
             output.historyText = input.historyText;
         }
@@ -891,7 +870,7 @@ namespace ForgottenTrails
         void OnClickChoiceButton(Choice choice)
         {
             story.ChooseChoiceIndex(choice.index); /// feed the choice
-            inkData.storyStateJson = story.state.ToJson(); /// record the story state
+            InkDataAsset.storyStateJson = story.state.ToJson(); /// record the story state
             AdvanceStory(); /// next bit
 		}
         #endregion Choices
@@ -902,7 +881,7 @@ namespace ForgottenTrails
         {
             story.RemoveVariableObserver();
             PutDataIntoStash();
-            inkJSONAsset = null;
+            InkStoryAsset = null;
             story = null;
             Debug.Log(new NotImplementedException());
             // evt volgende story feeden

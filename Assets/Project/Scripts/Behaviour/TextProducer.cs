@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Linq;
+using Bas.Utility;
+using UnityEngine.UI;
 
 namespace ForgottenTrails 
 { 
@@ -19,8 +21,38 @@ namespace ForgottenTrails
     /// <para>Produces text onto ui elements for the player.</para>
     /// </summary>
     /// // from https://github.com/Tioboon/LogWritter/blob/main/EventController.cs
-    public class TextProducer : MonoBehaviour
+    public class TextProducer : MonoSingleton<TextProducer>
     {
+        // Inspector Properties
+        #region Inspector Properties
+        [field: SerializeField, BoxGroup("Prefabs"), Required]
+        [Tooltip("Prefab used for ink choices.")]
+        public Button ButtonPrefab { get; private set; }
+
+        [field: SerializeField, BoxGroup("Scene References"), Required]
+        private Transform ButtonAnchor { get; set; }
+        #endregion
+        // Public Properties
+        #region Public Properties
+
+        #endregion
+        // Private Properties
+        #region Private Properties
+
+        #endregion
+        // MonoBehaviour Events
+        #region MonoBehaviour Events
+
+        #endregion
+        // Public Methods
+        #region Public Methods
+
+        #endregion
+        // Private Methods
+        #region Private Methods
+
+        #endregion
+        // UNRESOLVED
         private InkParser inkParser;
 
         [BoxGroup("Scene References"), Required, SerializeField]

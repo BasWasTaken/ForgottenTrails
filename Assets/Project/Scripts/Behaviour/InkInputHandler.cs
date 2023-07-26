@@ -40,7 +40,7 @@ namespace ForgottenTrails.InkFacilitation
         #endregion
         // Private Properties
         #region Private Properties
-        private bool Playing { get; set; } = false;
+
         #endregion
         // MonoBehaviour Events
         #region MonoBehaviour Events

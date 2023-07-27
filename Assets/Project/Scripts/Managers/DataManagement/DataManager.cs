@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using NaughtyAttributes;
-using BasUtility;
+using Bas.Utility;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;

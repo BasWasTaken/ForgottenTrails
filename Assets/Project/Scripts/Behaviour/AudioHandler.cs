@@ -7,7 +7,7 @@ namespace Bas.Utility
     /// <summary>
     /// <para>Simply a container to handle several <see cref="AudioSource"/>s (as child objects) from within one object.</para>
     /// </summary>
-    public class AudioManager : MonoBehaviour
+    public class AudioHandler : MonoBehaviour
     {
         // Inspector Properties
         #region Inspector Properties
@@ -32,8 +32,8 @@ namespace Bas.Utility
         public AudioSource AudioSourceMusic { get; }
 
         #endregion
-        // Public Properties
-        #region Public Properties
+        // Public Methods
+        #region Public Methods
         public AudioSource GetSource(AudioGroup audioGroup)
         {
             return audioGroup switch

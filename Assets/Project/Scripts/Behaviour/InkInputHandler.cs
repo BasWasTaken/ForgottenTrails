@@ -37,13 +37,48 @@ namespace ForgottenTrails.InkFacilitation
         #endregion
         // Public Properties
         #region Public Properties
+        private bool _handleAdvancement = false;
+        public bool HandleAdvancement
+        {
+            get { return _handleAdvancement; }
+            protected set
+            {
+                _handleAdvancement = value;
+                if (_handleAdvancement)
+                {
+                    // Debug.Log("Turning input on.");
+                    if (PresentButtons()) // try to make buttons if any
+                    {
+
+                    }
+                    else
+                    {
+                        FloatingMarker.gameObject.SetActive(true); // else set bouncing triangle at most recent line
+                    }
+                }
+                else
+                {
+                    // Debug.Log("Turning input off.");
+                    RemoveOptions(); // Destroy old choices
+                    floatingMarker.gameObject.SetActive(false); // remove marker 
+                }
+            }
+        }
+
+        public float TimeSinceAdvance { get; private set; } = 0;
+
+
         #endregion
         // Private Properties
         #region Private Properties
 
         #endregion
-        // MonoBehaviour Events
-        #region MonoBehaviour Events
+        // MonoBehaviour LifeCycle Methods
+        #region MonoBehaviour LifeCycle Methods
+        private void Update()
+        {
+            TimeSinceAdvance += Time.unscaledDeltaTime; // TODO: Incorporate into statemachine, only advanving when appropriate
+        }
 
         #endregion
         // Public Methods

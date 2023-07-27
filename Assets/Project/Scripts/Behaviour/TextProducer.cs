@@ -23,6 +23,8 @@ namespace ForgottenTrails
     /// // from https://github.com/Tioboon/LogWritter/blob/main/EventController.cs
     public class TextProducer : MonoSingleton<TextProducer>
     {
+        // 
+
         // Inspector Properties
         #region Inspector Properties
         [field: SerializeField, BoxGroup("Prefabs"), Required]
@@ -31,6 +33,28 @@ namespace ForgottenTrails
 
         [field: SerializeField, BoxGroup("Scene References"), Required]
         private Transform ButtonAnchor { get; set; }
+
+        public enum TextSpeed
+        {
+            slow = 6,
+            medium = 12,
+            fast = 24
+        }
+        [SerializeField, ReadOnly] 
+        private TextSpeed _textSpeedPreset;
+        public TextSpeed TextSpeedPreset
+        {
+            get
+            { return _textSpeedPreset; }
+            set
+            {
+                Debug.Log(string.Format("Changed from {0} to {1} speed", TextSpeedPreset.ToString(), value.ToString()));
+                _textSpeedPreset = value;
+                PlayerPrefs.SetInt("textSpeed", (int)_textSpeedPreset);
+            }
+        }
+        public float TextSpeedActual => ((float)TextSpeedPreset) * TextSpeedMod;
+        public float TextSpeedMod { get; private set; }
         #endregion
         // Public Properties
         #region Public Properties
@@ -40,13 +64,21 @@ namespace ForgottenTrails
         #region Private Properties
 
         #endregion
-        // MonoBehaviour Events
-        #region MonoBehaviour Events
+        // MonoBehaviour LifeCycle Methods
+        #region MonoBehaviour LifeCycle Methods
+        protected override void Awake()
+        {
+            base.Awake();
+            _textSpeedPreset = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedPreset);
+        }
 
         #endregion
         // Public Methods
         #region Public Methods
-
+        public void Spd(float speed)
+        {
+            TextSpeedMod = speed;
+        }
         #endregion
         // Private Methods
         #region Private Methods

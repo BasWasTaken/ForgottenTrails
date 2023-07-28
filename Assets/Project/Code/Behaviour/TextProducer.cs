@@ -272,10 +272,12 @@ namespace ForgottenTrails
         public void ClearPage()
         {
             if (peeking) return;
+            /*
             if (State == PState.Producing)
             {
                 throw new("Text displayer is busy!");
             }
+            */
             else
             {
                 historyTextBox.text = CurrentText; /// move all text to the history log

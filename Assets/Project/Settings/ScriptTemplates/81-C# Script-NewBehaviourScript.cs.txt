@@ -14,27 +14,22 @@ namespace #ProjectName#
         #region Inspector Properties
             #NOTRIM#
         #endregion
-
         // Public Properties
         #region Public Properties
             #NOTRIM#
         #endregion
-
         // Private Properties
         #region Private Properties
             #NOTRIM#
         #endregion
-
         // LifeCycle Methods
         #region LifeCycle Methods
             #NOTRIM#
         #endregion
-
         // Public Methods
         #region Public Methods
             #NOTRIM#
         #endregion
-
         // Private Methods
         #region Private Methods
             #NOTRIM#

@@ -12,7 +12,7 @@ namespace ForgottenTrails.InkFacilitation
     {
         // Inspector Properties
         #region Inspector Properties
-        public string StoryStateJson { get; set; } = ""; /// string indicating most recently saved state of the ink object.
+        public string StoryStateJson { get; set; } = ""; // string indicating most recently saved state of the ink object.
         public SceneState SceneState { get; set; } = new();
         public string CurrentText { get; set; } = "";
         public string HistoryText { get; set; } = "";

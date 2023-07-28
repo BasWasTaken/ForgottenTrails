@@ -150,7 +150,10 @@ namespace DataService
                 Debug.Log(message);
             metaData.written = DateTime.Now.Ticks;
             WriteDataToDisk(metaData);
+            // Call the OnDataSaved event/callback, if there are subscribers
+            OnDataSaved?.Invoke();
         }
+        public event Action OnDataSaved;
 
         private bool WriteDataToDisk<T>(T data, bool encrypted= false) where T : DataClass
         {

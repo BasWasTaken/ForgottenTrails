@@ -15,32 +15,30 @@ using System.Linq;
 using Bas.Utility;
 using UnityEngine.UI;
 
-namespace ForgottenTrails 
-{ 
+namespace ForgottenTrails.InkFacilitation
+{
     /// <summary>
     /// <para>Produces text onto ui elements for the player.</para>
     /// </summary>
-    /// // from https://github.com/Tioboon/LogWritter/blob/main/EventController.cs
+    /// delay effect from https://github.com/Tioboon/LogWritter/blob/main/EventController.cs
     public class TextProducer : MonoSingleton<TextProducer>
     {
-        // 
-
         // Inspector Properties
         #region Inspector Properties
-        [field: SerializeField, BoxGroup("Prefabs"), Required]
-        [Tooltip("Prefab used for ink choices.")]
-        public Button ButtonPrefab { get; private set; }
 
         [field: SerializeField, BoxGroup("Scene References"), Required]
-        private Transform ButtonAnchor { get; set; }
+        [Tooltip("Panel to display current paragraph.")]
+        private TextMeshProUGUI TextBox { get; set; }
 
-        public enum TextSpeed
-        {
-            slow = 6,
-            medium = 12,
-            fast = 24
-        }
-        [SerializeField, ReadOnly] 
+        [field: SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Panel to collect overflow text.")]
+        private TextMeshProUGUI OverFlowTextBox { get; set; }
+
+        [field: SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Panel to display previous text.")]
+        private TextMeshProUGUI HistoryTextBox { get; set; }
+
+        [SerializeField, ReadOnly]
         private TextSpeed _textSpeedPreset;
         public TextSpeed TextSpeedPreset
         {
@@ -53,121 +51,160 @@ namespace ForgottenTrails
                 PlayerPrefs.SetInt("textSpeed", (int)_textSpeedPreset);
             }
         }
-        public float TextSpeedActual => ((float)TextSpeedPreset) * TextSpeedMod;
-        public float TextSpeedMod { get; private set; }
-        #endregion
-        // Public Properties
-        #region Public Properties
-
-        #endregion
-        // Private Properties
-        #region Private Properties
-
-        #endregion
-        // MonoBehaviour LifeCycle Methods
-        #region MonoBehaviour LifeCycle Methods
-        protected override void Awake()
-        {
-            base.Awake();
-            _textSpeedPreset = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedPreset);
-        }
-
-        #endregion
-        // Public Methods
-        #region Public Methods
-        public void Spd(float speed)
-        {
-            TextSpeedMod = speed;
-        }
-        #endregion
-        // Private Methods
-        #region Private Methods
-
-        #endregion
-        // UNRESOLVED
-        private InkParser inkParser;
-
-        [BoxGroup("Scene References"), Required, SerializeField]
-        [Tooltip("Panel to display current paragraph.")]
-        private TextMeshProUGUI textBox;
-        public string CurrentText
-        { 
-            get 
-            { 
-                return textBox.text; 
-            }
-            private set 
-            {
-                textBox.text = value;
-            }
-        }
-        public int CurrentlyVisible
-        {
-            get
-            {
-                return textBox.maxVisibleCharacters;
-            }
-            private set
-            {
-                textBox.maxVisibleCharacters = value;
-            }
-        }
-
-        /*
-        public string CurrentlyDisplayed
-        {
-            get
-            {
-                return textBox.text.Substring(0,textBox.maxVisibleCharacters); /// show only characters that are visible
-            }
-            private set
-            {
-                textBox.text = value;
-                textBox.maxVisibleCharacters = value.Length;
-                //Debug.Log("TextBox value set manually!");
-            }
-        }*/
-        public bool Skipping { get; private set; }
-        [BoxGroup("Scene References"), Required, SerializeField]
-        [Tooltip("Panel to collect overflow text.")]
-        private TextMeshProUGUI overFlowTextBox;
-        [BoxGroup("Scene References"), Required, SerializeField]
-        [Tooltip("Panel to display previous text.")]
-        private TextMeshProUGUI historyTextBox;
-        public string PreviouslyDisplayed { get { return historyTextBox.text; } private set { historyTextBox.text = value; } }
-        [BoxGroup("Settings"), SerializeField]
+        [field: SerializeField, BoxGroup("Settings")]
         [Tooltip("Define pause timings here.")]
-        private PauseInfo _pauseInfo = new() 
+        private PauseInfo _pauseInfo { get; set; } = new()
         {
             _dotPause = .2f,
             _commaPause = .1f,
             _spacePause = .02f,
             _normalPause = .01f
         };
-        [BoxGroup("Settings"), SerializeField]
+        [field: SerializeField, BoxGroup("Settings")]
         [Tooltip("Define tiny timings here for when skipping text.")]
-        private PauseInfo _pauseInfoForSkips = new()
+        private PauseInfo _pauseInfoForSkips { get; set; } = new()
         {
             _dotPause = 0.000000005f,
             _commaPause = 0.000000002f,
             _spacePause = 0.0000000005f,
             _normalPause = 0.0000000001f
         };
-        public PauseInfo PauseInfo 
-        { 
+
+        [field: SerializeField, BoxGroup("Settings")]
+        public bool AutoAdvance { get; private set; } = false;
+        [field: SerializeField, BoxGroup("Settings")]
+        public bool AlwaysPause { get; private set; } = true;
+        [field: SerializeField, BoxGroup("Settings")] 
+        public bool ClearWhenFull { get; private set; } = true;
+
+        #endregion
+        // Public Properties
+        #region Public Properties
+        #region State Machine
+        public StackFiniteStateMachine<TextProducer_State> StateMachine { get; private set; } = new(.entry);
+        public bool Playing => StateMachine.CurrentState.GetType() == typeof(StoryController_State.Active);
+
+        #endregion
+
+        public float TextSpeedMod { get; private set; }
+        public float TextSpeedActual => ((float)TextSpeedPreset) * TextSpeedMod;
+
+
+        private PState _state = PState.Booting;
+        public PState State // TODO: Encorporate into state
+        {
+            get { return _state; }
+            private set
+            {
+                if (_state == value)
+                {
+                    Debug.LogWarning("Redundant state transition");
+                }
+                _state = value;
+            }
+        }
+
+
+        public bool Skipping { get; private set; } // TODO: Encorporate into state machine?
+        public bool EncounteredStop { get; set; } = false; // TODO: Encorporate into statemachine?
+        public bool peeking { get; set; } // TODO: Incorporate into statemachine
+        
+
+        public string CurrentText
+        {
+            get
+            {
+                return TextBox.text;
+            }
+            private set
+            {
+                TextBox.text = value;
+            }
+        }
+        public int VisibleCharacters
+        {
+            get
+            {
+                return TextBox.maxVisibleCharacters;
+            }
+            private set
+            {
+                TextBox.maxVisibleCharacters = value;
+            }
+        }
+        public string PreviousText
+        {
+            get
+            {
+                return HistoryTextBox.text;
+            }
+            private set
+            {
+                HistoryTextBox.text = value;
+            }
+        }
+
+        #endregion
+        // Private Properties
+        #region Private Properties
+        private StoryController StoryController { get; set; }
+
+        private Story Story => StoryController.Story;
+
+        private PauseInfo GetPauseInfo
+        {
             get
             {
                 return Skipping ? _pauseInfoForSkips : _pauseInfo;
-            } 
+            }
         }
-        private Story story => inkParser.story;
 
-        public void SkipLines() 
+        private string NewText
+        {
+            get; set;
+        }
+
+        #endregion
+        // MonoBehaviour LifeCycle Methods
+        #region MonoBehaviour LifeCycle Methods
+        protected override void Awake()
+        {
+            //TODO: Encorporate into statemachine
+            base.Awake();
+            _textSpeedPreset = (TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)_textSpeedPreset);
+            CurrentText = ""; //clear lorum ipsum
+            VisibleCharacters = 0;
+            PreviousText = ""; //clear lorum ipsum
+            StoryController = GetComponent<StoryController>();
+            State = PState.Idle;
+            Skipping = false;
+        }
+
+        #endregion
+        // Public Methods
+        #region Public Methods
+        public IEnumerator FeedText(string newText)
+        {
+            if (State != PState.Idle)
+            {
+                Debug.LogError(string.Format("Text displayer is {0}", State.ToString()));
+
+                yield return null;
+            }
+            else
+            {
+                string parsedText = ParseText(newText);
+
+                NewText = parsedText; /// add new text to target
+            }
+        }
+
+        public void FastForward()
         {
             if (State == PState.Producing & /*CanSkip*/true)
             {
                 if (!Skipping)
-                { 
+                {
                     //Debug.Log("Skip this line!");
                     Skipping = true;
                 }
@@ -190,70 +227,32 @@ namespace ForgottenTrails
             }
         }
 
-        //private string prospectedText = "";
-        public string[] NewWords { get; private set; }
-
-
-        //public string CurrentWord = "";
-
-        //private int letterIndex;
-        //private int wordIndex;
-        public enum PState 
-        { 
-            Booting,
-            Idle,
-            Producing,
-            Stuck
-        }
-        private PState _state = PState.Booting;
-        public PState State
+        public void ClearPage()
         {
-            get { return _state; }
-            private set
+            if (peeking) return;
+            if (State == PState.Producing)
             {
-                if(_state == value)
-                {
-                    Debug.LogWarning("Redundant state transition");
-                }
-                _state = value;
-            }
-        }
-        public bool IsWorking => State == PState.Producing;
-
-        #region Methods
-        private void Awake()
-        {
-            CurrentText = ""; //clear lorum ipsum
-            CurrentlyVisible = 0;
-            PreviouslyDisplayed = ""; //clear lorum ipsum
-            inkParser = GetComponent<InkParser>();
-            State = PState.Idle;
-            Skipping = false;
-        }
-        #region Text Placement
-        public IEnumerator FeedText(string newText)
-        {
-            if (State != PState.Idle)
-            {
-                Debug.LogError(string.Format("Text displayer is {0}", State.ToString()));
-
-                yield return null;
+                throw new("Text displayer is busy!");
             }
             else
             {
-                string parsedText = ParseText(newText);
-
-                NewText = parsedText; /// add new text to target
+                HistoryTextBox.text = CurrentText; // move all text to the history log
+                CurrentText = ""; // clear current and prospective texts
+                VisibleCharacters = 0;
             }
         }
-        public bool encounteredStop = false;
 
-        bool GlueNext = false;
-        string catchAfterStop = "";
+        public void Spd(float speed)
+        {
+            StoryController.InkDataAsset.SceneState.TextSpeedMod = speed;
+            TextSpeedMod = speed;
+        }
+
+        #endregion
+        // Private Methods
+        #region Private Methods
         private string ParseText(string input)
         {
-            
-
             Regex tags = new(@"\{([^>]+)\}");
 
             foreach (Match match in tags.Matches(input))
@@ -263,18 +262,18 @@ namespace ForgottenTrails
                 if (match.Value == "{stop}")
                 {
                     //Debug.Log("recognised stop command");
-                    encounteredStop = true;
+                    EncounteredStop = true;
                     //catchAfterStop = input.Substring(match.Index+match.Value.Length);
 
                     //input = input.Substring(0, match.Index); 
                 }
-                else if(match.Value == "{glue}")
+                else if (match.Value == "{glue}")
                 {
                     input = input.TrimEnd('\n'); /// remove linebreak from this
                 }
                 else if (match.Value == "{aglue}")
                 {
-                    textBox.text = textBox.text.TrimEnd('\n'); /// remove linebreak from previous
+                    TextBox.text = TextBox.text.TrimEnd('\n'); /// remove linebreak from previous
                 }
 
                 input = input.Replace(match.Value, ""); /// remove the command
@@ -291,75 +290,197 @@ namespace ForgottenTrails
                 output = input; /// leave the input unaltered
             }
 
-            #region depricated
-            /* Depricated: no longer using tags
-            /// check for tags:
-            foreach (string tag in story.currentTags)
-            {
-                Debug.Log(tag);
-                DoFunction(tag);
-            }
-            */
-
-
-
-
-            /* from when this code was part of the wordsplitter
-            /// break down the input into words
-            Regex tags = new(@"\<([^>]+)\>");
-            List<string> output = new();
-
-            foreach (string word in split)
-            {
-                if (tags.IsMatch(word))
-                {
-                    Debug.Log("found tag in " + word);
-                    output.Add(tags.Replace(word, ""));
-  
-                    //output.Add(tags.Match(word).Value);
-                }
-                else
-                {
-                    output.Add(word);
-                }
-            }
-            */
-            #endregion depricated
-
             //Debug.Log("Write line as: " + output);
             return output;
-
         }
 
-        public bool peeking;
-
-        public void ClearPage()
+        /// <summary>
+        /// Runs the per line steps required for parsing and showing ink story
+        /// </summary>
+        public IEnumerator ProduceTextOuter()
         {
-            if (peeking) return;
-            if (State == PState.Producing)
+
+            #region TryFit
+            Stopwatch stopwatch = new();
+            if (ClearWhenFull)
             {
-                throw new("Text displayer is busy!");
+                // construct future chcker for all upcoming lines here
+                var storedState = story.state.ToJson(); /// set return point
+                peeking = true; /// begin traversal
+                string toBeAdded = "";
+                while (story.canContinue) /// continue maximally or to stop
+                {
+                    toBeAdded += story.Continue();
+                    if (toBeAdded.Contains("{stop}")) break;
+                }
+
+                /// check size and clear page if needed
+
+                string bufferText = CurrentText; /// make backup
+                VisibleCharacters = TextBox.text.Length;
+
+                CurrentText += toBeAdded + '\n'; /// test if the text will fit
+                yield return 0;/// wait 1 frame
+                bool overflow = OverFlowTextBox.text.Length > 0; /// store result
+
+                CurrentText = bufferText; /// restore backup
+                story.state.LoadJson(storedState); /// return to original state, reverting from peaking
+                peeking = false;
+
+                if (overflow) { ClearPage(); } /// clear page if needed
             }
-            else
+
+            #endregion TryFit
+            #region continueloop
+            do
             {
-                historyTextBox.text = CurrentText; /// move all text to the history log
-                CurrentText = "";//prospectedText = ""; /// clear current and prospective texts
-                CurrentlyVisible = 0;
-            }
+                // or add ifspace remaining check here per line?
+
+                #region InnerLoop
+                if (State == PState.Booting) yield return new WaitWhile(() => State == PState.Booting);
+
+                Story.ContinueAsync(0); /// advance a bit 
+                string newLine = story.currentText; /// get the next line up until there
+                //string newLine = story.Continue();
+
+                yield return FeedText(newLine);   /// Parse the ink story for functions and text: run functions and display text
+                //Debug.Log("Write a line: " + newLine);
+                State = PState.Producing; /// transition to state
+
+
+                /// Hele andere aanpak: gooi alles gewoon meteen visible, dan over de karakters itereren.
+
+                if (VisibleCharacters < CurrentText.Length)
+                {
+                    VisibleCharacters = CurrentText.Length;
+                    Debug.LogWarning("Not all characters were done.");
+                }
+
+                string backup = CurrentText; /// make backup
+                CurrentText += NewText; ///add the new text, invisibly
+                if (OverFlowTextBox.text.Length > 0) /// check for overflow
+                {
+                    CurrentText = backup; /// restore backup
+                    ClearPage(); /// save page and clear it
+                    CurrentText = NewText; /// add new text anyway
+
+                }
+
+
+                #region RevealLetters
+                string message = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra", TextSpeedActual, TextSpeedPreset); // prepare console message
+                int tagLevel = 0; ///int to remember if we go down any nested tags
+                char letter;///prepare marker             
+                while (VisibleCharacters < TextBox.text.Length) /// while not all characters are visible
+                {
+                    letter = TextBox.text[VisibleCharacters]; /// store letter we're typing letter   
+                    VisibleCharacters++; /// show the character
+                    if (letter == '<')/// if we come across this we've entered a(nother) tag
+                    {
+                        tagLevel++;
+                    }
+                    else if (letter == '>')/// if we come acros this, we've exited one level of tag
+                    {
+                        tagLevel--;
+                        if (tagLevel < 0)
+                        {
+                            throw new("That's more closing than opening tag brackets!");
+                        }
+                    }
+                    else if (tagLevel == 0) /// if we're not in a tag, apply potential delays for the typewriting effect
+                    {
+                        if (StoryController.Halted) yield return new WaitWhile(() => StoryController.Halted); /// don't continue if halted
+                        if (!isActiveAndEnabled) yield return new WaitUntil(() => isActiveAndEnabled); /// only continue if enabled
+                        //Debug.Log("show me " + letter);
+                        float delay = 0; /// initialize delay
+                        if (!Skipping) /// in normal behaviour
+                        {
+                            /// get the delay from the delay info object
+                            delay = _pauseInfo.GetPause(letter) / TextSpeedActual;
+                        }
+                        else if (AlwaysPause) /// if this setting is enabled, 
+                        {
+                            ///get pause info while skipping text too
+                            delay = _pauseInfoForSkips.GetPause(letter);
+                        }
+                        if (delay > 0) yield return new WaitForSecondsRealtime(delay); /// apply the delay if any
+                        float delayMs = delay * 1000;
+                        float delayActual = stopwatch.ElapsedMilliseconds;
+                        message += string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letter, delayActual, delayMs, delayActual - delayMs);
+                        stopwatch.Restart();
+                    }
+                }
+
+                Debug.Log(message);
+                #endregion RevealLetters
+
+                State = PState.Idle;
+                #endregion InnerLoop
+
+                if (EncounteredStop)  /// if we encounter a stop
+                {
+                    EncounteredStop = false;
+                    /// exit the loop or continue with a small delay
+                    if (AutoAdvance)
+                    {
+                        yield return new WaitForFixedUpdate();
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
+            } while (story.canContinue); /// while the story can continue without input on choices
+            #endregion continueloop
+
+            ResetSkipping();
+
         }
-        public bool autoAdvance = false;
-        public bool AlwaysPause = false;
-        private string _newText;
-        private string NewText
+
+        #endregion
+        // Peripheral
+        #region Peripheral
+        public enum TextSpeed
         {
-            get { return _newText; }
-            set
+            slow = 6,
+            medium = 12,
+            fast = 24
+        }
+
+        public enum PState //TODO: Encorporate into statemachine
+        {
+            Booting,
+            Idle,
+            Producing,
+            Stuck
+        }
+
+        [Serializable]
+        public class PauseInfo
+        {
+            public float _dotPause = .5f;
+            public float _commaPause = .2f;
+            public float _spacePause = .05f;
+            public float _normalPause = .01f;
+
+            public float GetPause(char letter)
             {
-                //NewWords = SplitIntoWords(value);
-                _newText = value;//string.Concat(NewWords); 
-                //prospectedText = CurrentlyWritten + _newText;
+                float delay = letter switch
+                {
+                    '.' => _dotPause,
+                    ',' => _commaPause,
+                    ' ' => _spacePause,
+                    _ => _normalPause,
+                };
+                return delay;
             }
         }
+
+        #endregion
+        // DEPRICATED
+        bool GlueNext { get; set; } = false; // TODO: Incorporate into statemachine, if it is needed at all
+        string catchAfterStop { get; set; } = ""; // TODO: Incorporate into statemachine, if it is still needed
+
         private string[] SplitIntoWords(string input)
         {
             string[] split = Regex.Split(input, @"(?<=[ \n])");
@@ -378,7 +499,7 @@ namespace ForgottenTrails
             */
 
             //string[] split = input.Split(' ');
-            
+
             /*
             string message = "Following words:";
             foreach (string word in split)
@@ -390,233 +511,12 @@ namespace ForgottenTrails
 
             return split.SkipLast(1).ToArray();
         }
-        #endregion
-        bool withinTag = false;
 
-        bool autoClear = true;
-        #region Typing
-        /// <summary>
-        /// Runs the per line steps required for parsing and showing ink story
-        /// </summary>
-        public IEnumerator ProduceTextOuter()
-        {
-
-            #region TryFit
-            Stopwatch stopwatch = new();
-            if (autoClear)
-            {
-                // construct future chcker for all upcoming lines here
-                var storedState = story.state.ToJson(); /// set return point
-                peeking = true; /// begin traversal
-                string toBeAdded = "";
-                while (story.canContinue) /// continue maximally or to stop
-                {
-                    toBeAdded += story.Continue();
-                    if (toBeAdded.Contains("{stop}")) break;
-                }
-
-                /// check size and clear page if needed
-
-                string bufferText = CurrentText; /// make backup
-                CurrentlyVisible = textBox.text.Length;
-
-                CurrentText += toBeAdded + '\n'; /// test if the text will fit
-                yield return 0;/// wait 1 frame
-                bool overflow = overFlowTextBox.text.Length > 0; /// store result
-
-                CurrentText = bufferText; /// restore backup
-                story.state.LoadJson(storedState); /// return to original state, reverting from peaking
-                peeking = false;
-
-                if (overflow) { ClearPage(); } /// clear page if needed
-            }
-
-            #endregion TryFit
-            #region continueloop
-            do
-            {
-                // or add ifspace remaining check here per line?
-
-                #region InnerLoop
-                if (State == PState.Booting) yield return new WaitWhile(() => State == PState.Booting);
-
-                story.ContinueAsync(0); /// advance a bit 
-                string newLine = story.currentText; /// get the next line up until there
-                //string newLine = story.Continue();
-
-                yield return FeedText(newLine);   /// Parse the ink story for functions and text: run functions and display text
-                //Debug.Log("Write a line: " + newLine);
-                State = PState.Producing; /// transition to state
+        /* 
+        
+        public string[] NewWords { get; private set; }
 
 
-                /// Hele andere aanpak: gooi alles gewoon meteen visible, dan over de karakters itereren.
-
-                if(CurrentlyVisible < CurrentText.Length) 
-                {
-                    CurrentlyVisible = CurrentText.Length;
-                    Debug.LogWarning("Not all characters were done.");
-                }
-                
-                string backup = CurrentText; /// make backup
-                CurrentText += NewText; ///add the new text, invisibly
-                if(overFlowTextBox.text.Length > 0) /// check for overflow
-                {
-                    CurrentText = backup; /// restore backup
-                    ClearPage(); /// save page and clear it
-                    CurrentText = NewText; /// add new text anyway
-
-                }
-
-
-                #region RevealLetters
-                string message = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra",inkParser.TextSpeedActual, inkParser.TextSpeedBase); /// prepare console message
-                int tagLevel = 0; ///int to remember if we go down any nested tags
-                char letter;///prepare marker             
-                while (CurrentlyVisible < textBox.text.Length) /// while not all characters are visible
-                {
-                    letter = textBox.text[CurrentlyVisible]; /// store letter we're typing letter   
-                    CurrentlyVisible++; /// show the character
-                    if (letter == '<')/// if we come across this we've entered a(nother) tag
-                    {
-                        tagLevel++;
-                    }
-                    else if (letter == '>')/// if we come acros this, we've exited one level of tag
-                    {
-                        tagLevel--;
-                        if (tagLevel < 0)
-                        {
-                            throw new("That's more closing than opening tag brackets!");
-                        }
-                    }
-                    else if (tagLevel == 0) /// if we're not in a tag, apply potential delays for the typewriting effect
-                    {
-                        if (inkParser.Halted) yield return new WaitWhile(() => inkParser.Halted); /// don't continue if halted
-                        if (!isActiveAndEnabled) yield return new WaitUntil(() => isActiveAndEnabled); /// only continue if enabled
-                        //Debug.Log("show me " + letter);
-                        float delay = 0; /// initialize delay
-                        if (!Skipping) /// in normal behaviour
-                        {
-                            /// get the delay from the delay info object
-                            delay = _pauseInfo.GetPause(letter) / inkParser.TextSpeedActual;
-                        }
-                        else if (AlwaysPause) /// if this setting is enabled, 
-                        {
-                            ///get pause info while skipping text too
-                            delay = _pauseInfoForSkips.GetPause(letter);
-                        }
-                        if (delay > 0) yield return new WaitForSecondsRealtime(delay); /// apply the delay if any
-                        float delayMs = delay * 1000;
-                        float delayActual = stopwatch.ElapsedMilliseconds;
-                        message += string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letter, delayActual, delayMs, delayActual - delayMs);
-                        stopwatch.Restart();
-                    }
-                }
-                
-                Debug.Log(message);
-                #endregion RevealLetters
-
-                #region Depricated
-                /* DEPRICATED FROM HERE
-
-                //TEMP I think I can just pre write all the words?
-                CurrentlyWritten += NewText;
-
-                wordIndex = 0; /// reset letter index
-                while (wordIndex < NewWords.Length) /// for each word in the list 
-                {
-                    #region ProduceWord
-                    CurrentWord = NewWords[wordIndex];
-
-                    //Debug.Log("Write " + CurrentWord);
-                    //TEMP don't do this, i do it all at once before CurrentlyWritten += CurrentWord;   /// place word 
-
-                    letterIndex = 0; /// reset letter index\
-                    
-                    string message = "Wrote:\nChar\t\tDelay\t\tIntended\t\tExtra";
-                    while (letterIndex < CurrentWord.Length) /// for each letter in that word
-                    {
-                        char letter = CurrentWord[letterIndex]; /// get the letter
-                        textBox.maxVisibleCharacters++; /// actualize on screen //is this questionable?
-                        letterIndex++; /// increment
-                        #region RevealLetter   
-                        if (withinTag) /// if within a tag, just check for the end
-                        {
-                            if (letter == '>') withinTag = false;
-                        }
-                        else if (letter == '<') /// if we entered a tag, mark 
-                        {
-                            withinTag = true;
-                        }
-                        else /// else apply potential delays
-                        {
-                            if (!isActiveAndEnabled) yield return new WaitUntil(() => isActiveAndEnabled);
-                            if (inkParser.Halted) yield return new WaitWhile(() => inkParser.Halted);
-                            //Debug.Log("show me " + letter);
-                            float delay = 0;
-                            if (!Skipping)
-                            {
-                                delay = _pauseInfo.GetPause(letter) * 1f / inkParser.TextSpeedActual; ;
-                            }
-                            else if (AlwaysPause)
-                            {
-                                delay = _pauseInfoForSkips.GetPause(letter); //do(n't) add time even while skipping
-                            }
-                            if (delay > 0) yield return new WaitForSecondsRealtime(delay);
-                            float delayMs = delay * 1000;
-                            float delayActual = stopwatch.ElapsedMilliseconds;
-                            message +=string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letter, delayActual, delayMs, delayActual- delayMs);
-                            stopwatch.Restart();
-                        }
-
-                        #endregion RevealLetter
-
-                    }
-                    Debug.Log(message);
-                    letterIndex = 0; /// reset letter index
-                    wordIndex++; /// increment word
-                    #endregion ProduceWord
-                }
-                wordIndex = 0; /// reset letter index
-
-                if (CurrentlyWritten != prospectedText) /// check success
-                {
-                    Debug.Log("Is that right..?");
-                    if (CurrentlyDisplayed != prospectedText)
-                    {
-                        string message = "Unable to accurately reproduce line.";
-                        message += string.Format("\nExpected:\n{0}\nGot:\n{1}\nTrue:\n{2}", prospectedText, CurrentlyDisplayed, CurrentlyWritten);
-                        State = PState.Stuck;
-                        throw new Exception(message);
-                    }
-                }
-                //Debug.Log("Done reproducing following text:\n" + string.Concat(NewWords));
-                */
-                #endregion Depricated
-                
-                State = PState.Idle;
-                #endregion InnerLoop
-
-                if (encounteredStop)  /// if we encounter a stop
-                {
-                    encounteredStop = false;
-                    /// exit the loop or continue with a small delay
-                    if (autoAdvance)
-                    {
-                        yield return new WaitForFixedUpdate();
-                    }
-                    else
-                    {
-                        yield break;
-                    }
-                }
-            } while (story.canContinue); /// while the story can continue without input on choices
-            #endregion continueloop
-
-            ResetSkipping();
-
-        }
-        #endregion Typing
-        /* DEPRICATED
         private void _ShowNextLetter()
         {
             if(State==PState.Producing | State == PState.Skipping)
@@ -687,30 +587,14 @@ namespace ForgottenTrails
                 throw new Exception("Wrong state");
             }
         }
+        
         */
-        #endregion
+
+        // UNRESOLVED
+
 
 
 
     }
-    [Serializable]
-    public class PauseInfo
-    {
-        public float _dotPause = .5f;
-        public float _commaPause = .2f;
-        public float _spacePause = .05f;
-        public float _normalPause = .01f;
-
-        public float GetPause(char letter)
-        {
-            float delay = letter switch
-                {
-                    '.' => _dotPause,
-                    ',' => _commaPause,
-                    ' ' => _spacePause,
-                    _ => _normalPause,
-                };
-            return delay;
-        }
-    }
+    
 }

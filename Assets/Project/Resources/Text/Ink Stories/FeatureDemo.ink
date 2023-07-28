@@ -11,9 +11,9 @@ You should now see <b>another vault</b>.{stop}
 ~FadeTo("Black",10)
 You should now see <b>black</b>.{stop}
 ~FadeTo("White",0.2)
-You should now see <b>black</b>.{stop}
+You should now see <b>white</b>.{stop}
 ~FadeTo("Red",1)
-You should now see <b>black</b>.{stop}
+You should now see <b>red.{stop}
 ~Bg("whiterun",0)
 You should now see <b>whiterun</b>.{stop}
 You should now see {Sprites("b34auw3h_0")}one {glue}
@@ -53,6 +53,61 @@ This is just another line.{stop}
 And so is this.
 And this as well.
 This working for you?{stop}
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+<br>
+
+test
+
 Text should stop flowing <b>now</b>.{stop} (Any text you type after the stop tag, such as this sentence, is sent anyway, which causes confusing behaviour.)
 This sentence should <b>halt</b> {glue}
 {Halt(3)}for a few seconds before continueing.{stop}

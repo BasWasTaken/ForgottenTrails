@@ -104,7 +104,7 @@ namespace ForgottenTrails
             {
                 if (!Skipping)
                 { 
-                    Debug.Log("Skip this line!");
+                    //Debug.Log("Skip this line!");
                     Skipping = true;
                 }
                 else
@@ -121,7 +121,7 @@ namespace ForgottenTrails
         {
             if (Skipping)
             {
-                Debug.Log("Done Skipping");
+                //Debug.Log("Done Skipping");
                 Skipping = false;
             }
         }

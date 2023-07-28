@@ -53,61 +53,6 @@ This is just another line.{stop}
 And so is this.
 And this as well.
 This working for you?{stop}
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-<br>
-
-test
-
 Text should stop flowing <b>now</b>.{stop} (Any text you type after the stop tag, such as this sentence, is sent anyway, which causes confusing behaviour.)
 This sentence should <b>halt</b> {glue}
 {Halt(3)}for a few seconds before continueing.{stop}

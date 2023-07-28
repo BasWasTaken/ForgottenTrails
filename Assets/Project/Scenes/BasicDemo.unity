@@ -2438,7 +2438,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.15997113
+  m_Size: 0.15921605
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6995,7 +6995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d292120298ea94294ec1fdf21699af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSONAsset: {fileID: 4900000, guid: 9fd4b9aab55923746b39c1b4ec9e0f4e, type: 3}
+  inkJSONAsset: {fileID: 4900000, guid: 5bbdd3ef5e69e7148bb60dbbba09fafa, type: 3}
   inkData:
     storyStateJson: 
     sceneState:

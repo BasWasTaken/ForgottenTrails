@@ -1,33 +1,11 @@
 -> Start // keep this above the external function
+INCLUDE CustomFeatures
 LIST VisitedState = Yes, No
 
 LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
-VAR Name = "PlayerName"
-
-
-VAR players_gender = "Undefined"
-VAR players_eyecolor = "Undefined"
-VAR players_hair = "Undefined"
-VAR players_hair_color = "Undefined"
-VAR players_hair_style = "Undefined"
-
-VAR androgynous = "androgynous"
-VAR they = "they"
-VAR them = "them"
-VAR their = "their"
-VAR theirs = "theirs"
-VAR Mx = "Mx"
-VAR master = "master"
-VAR person = "person"
-VAR kid = "kid"
-VAR lad = "lass"
-VAR guy = "guy"
-
-EXTERNAL Print(string)
-
-=== function Print(a) ===
-    <i>Print to console:</i> {a}
+VAR CurrentLocation = "Undefined"
+VAR PreviousLocation = "Undefined"
 
 === Start ===
 #backdrop:whiterun
@@ -40,16 +18,13 @@ And so ends this tale. Another apprentice that would never return, their finding
 
 === Opening ===
 #backdrop:Vault1
-The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. 
-<stop>
-#backdrop:Vault2
-You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, reading. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
+The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, reading. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
 <br>
-It's a place that in a forgotten past held a different name but you know it by two: The Vault of Forgotten Books and Home. 
+It's a place that in an ancient past held a different name but you know it by two: "The Vault of Forgotten Books" and "Home". 
 <br>
 Home? Didn't you leave home months ago?
 <br>
-You ponder this briefly. A dream perhaps? Maybe. Surely! Maybe... 
+You ponder this briefly. A dream perhaps? Maybe. Surely! Surely? Maybe... 
 The thought has nearly solidified in your mind when an unexpected blow knocks you to the ground. As you look up you see one of the caretakers on the floor, just like you, with books scattered about everywhere. The young man begins to apologize profusely, all the while gathering the dropped books. Before you can even get a word in he has already reformed the towering stack, undoubtedly the thing that obstructed his vision in the first place, and has continued on his way. <br>
 On the floor, a mirror sparkles with light's reflection. Did he drop this?
 *(MirrorY)[Pick it up]
@@ -60,7 +35,7 @@ If he left it behind then that is his problem. But as you stand up you cannot he
 -> Opening.CharCreation0
 = CharCreation0
 You see <>
-+...a young, male figure[], <>
++{aglue}...a young, male figure[], <>
 ~ players_gender = "male"
 -> Opening.CharCreation1
 +...a young, female figure[], <>
@@ -238,8 +213,7 @@ Too bad you can't change your name.
 -> Opening.Master
 
 = Master
-{Opening.MirrorY: As you lower the mirror in your hand}{Opening.MirrorN: As you leave the mirror on the floor} you hear a familiar voice call out to you. You turn to face it and find that the scenery has changed around you.<> #backdrop:VaultOffice
-The comforting smell of books remains but a small open window provides some fresh air. The office is just as you remember it: a small space that forms a stark contrast with the garden outside its window. Its floorboards are barely visible beneath the array of books, knick-knacks and tea cups that should have been returned to the kitchen days ago. You're sitting in a woodback chair. Across from you, behind a hardwooden desk, sits an elderly man. His kind eyes look into yours and you feel a bout of homesickness brewing in your stomach, although cannot fathom why. <br>
+{Opening.MirrorY: As you lower the mirror in your hand}{Opening.MirrorN: As you leave the mirror on the floor} you hear a familiar voice call out to you. You turn to face it and find that the scenery has changed around you. The comforting smell of books remains but a small open window provides some fresh air. The office is just as you remember it: a small space that forms a stark contrast with the garden outside its window. Its floorboards are barely visible beneath the array of books, knick-knacks and tea cups that should have been returned to the kitchen days ago. You're sitting in a woodback chair. Across from you, behind a hardwooden desk, sits an elderly man. His kind eyes look into yours and you feel a bout of homesickness brewing in your stomach, although cannot fathom why. <br>
 He hands you a large, leatherbound tome: your journal. Your most important possession. If you can fill its pages with knowledge not yet held within the Vault, or document where and how you found a tome not yet present on its shelves, you can become like the man in front of you: a keeper. A guaranteed lifetime within these halls, curating knowledge and educating the next generation. If you can't...<br>
 You decide not to think about that. You give your master a <>
 *...firm handshake <>
@@ -306,9 +280,8 @@ You recoil. Its face is a horrible contradiction. Its right half takes the shape
     **(run)...run[].
     {Hills2.run:Perhaps against better judgement, you try to make another break for it. You have barely gotten to your feet before the creature knocks you down once more, a sharp pain shooting through your arm as you fall. Did you break something? |You turn and bolt away at full speed. The creature is much faster. A powerful blow hits you in the back, sending you sprawling to the ground. With what strength you have left, you turn to face it.} <> 
     ->Hills4
-    
 =Hills4
-The wraith simply tilts its head at you, still wearing its grotesque smile, almost as if to mock your {Hills3.fight:bravery}{Hills3.run:speed}{Hills3.scream:terror}. Slowly, it starts to advance toward you. It raises its left arm, presumably to strike you with it. You shield yourself with your arms, although you know it will probably be for naught. You brace yourself, agonizing seconds ticking by as you wait for the end, and then-<stop>
+The wraith simply tilts its head at you, still wearing its grotesque smile, almost as if to mock your {Hills3.fight:bravery}{Hills3.run:speed}{Hills3.scream:terror}. Slowly, it starts to advance toward you. It raises its left arm, presumably to strike you with it. You shield yourself with your arms, although you know it will probably be for naught. You brace yourself, agonizing seconds ticking by as you wait for the end, and then-
         A roar. 
         A bestial growl reverberates through your body. You look up, just in time to see a bear collide forcefully with the creature. The beast tears into the wraith, somehow capable of tearing through metal as if it were cloth. Between the harsh sounds of ripping metal you hear the monster scream. Inhuman, horrible, but scream nonetheless. Then, silence. 
         The bear stands there, panting. Still catching his breath, he turns towards you. He slowly walks over, his mouth dripping with salliva. He sniffs you. His mouth, reeking with a nearly bloodlike metal smell, mere inches from your face. Without a sound, he opens his strong jaws and bites down on you-
@@ -316,14 +289,19 @@ The wraith simply tilts its head at you, still wearing its grotesque smile, almo
 
 =Woodland
 The wood looks more appealing and you set off in its direction at a trot. Before long, you find yourself surrounded by tall oaks, beeches and other greenery. A gentle breeze carries the song of a variety of birds. 
-
 As you press on, your ears pick up another melody. Faintly at first, but with every step you hear it more clearly: a melancholic tune in a woman's voice. You decide to
 *...look for the source[].
-    Thankfully, the tune is not hard to track down. Following your ears quickly leads you to a small, sunlit meadow. In its center you spot the music's source, although it's not quite what you expected: a small bird, draped in bright blue, orange and yellow feathers sits on a small boulder. While her appearance and the sound coming from her beak are a clear mismatch, she's unmistakenbly the one responsible for the song you hear. 
+    Thankfully, the tune is not hard to track down. Your ears quickly lead you to a small, sunlit meadow. In its center you spot the music's source, although it's not quite what you expected: a small bird, draped in bright blue, orange and yellow feathers sits on a small boulder. While her appearance and the sound she produces are a clear mismatch, she's unmistakenbly the one responsible for the song you hear. 
         **[Listen quietly]
-        You stand there quietly, making sure not to disturb the creature as you enjoy her performance. 
+        You stand there quietly, making sure not to disturb the creature as you enjoy her performance.
         **[Softly approach the bird]
+        Ever so gently, you step forward towards the bird. Even though you try to move with utmost stealth, the grass of the meadow concealed a surprise. You hear and feel the snap of a twig under your foot. 
+        The bird stops her song and turns to look at you, slightly tilting her head. Is she taking measure of you? 
+        ...
+        Perhaps you passed her test, for she gently resumes her song. 
         **[Throw something at it]
+        You look for something to hurl at the beast. Why? Who knows. Maybe you mistrust a bird singing with a woman's voice. Maybe you dislike her singing. Or maybe you just want to see if you could. Regardless, you find a nice, chunky stone besides your foot. You pick it up, and with a fluid motion hurl it at the small thing. 
+        With a crack, the stone hits the boulder, you missed. It is however enough to startle the bird, who flies up and out of the meadow. 
 *...follow the path[].
 *...turn back towards the plains[].
 
@@ -331,30 +309,75 @@ As you press on, your ears pick up another melody. Faintly at first, but with ev
 
 === Awakening ===
 ~TimeOfDay = Dawn
+~CurrentLocation = "ScotlandEntranceRoad"
 You awaken with a start. A dream after all. Of course it was, now that you look back on it. 
 You turn on your back, the small canvas tent that shields you from the elements coming into view. You can smell the morning forest and the smouldering remains of your campfire.
 ->Awakening.Tent
 
 =Tent
 You decide to
-*...pack up[].
-*...make some breakfast first[]. 
+*(PackUpEarly)...pack up[].
+Or you would, but the grumbling of your stomach tells you that it's not going to be a fun hike without something to eat.
+
+You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented] 
+->Tent
+*...make some breakfast first[].
+Your stomach rumbles, and what poor sort would head off without a proper meal first anyway? 
+The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
+The next step would be to hang your pot over the fire, but where did you leave the damn thing?
+You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action. [Vugs note: not yet implemented. Until the item system is functional, you can just use the regular prompts. At this point the inventory would show a pot, some rope, a knife, a lantern, travel rations and some foraged mushrooms] 
+    **[Use pot]
+    You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
+        ***[Use foraged mushrooms]
+        You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside fearing poison. 
+        A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve a king, but your stomach is grateful for it nevertheless. 
+        {Tent.PackUpEarly: |You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented]}
+        Fully fed, it's about time to head off if you still want to make some decent progress today. 
+        While outside, you can get a general sense of what time it is by looking at the time indicator in the top right. Most actions and events will cause time to progress. The world will differ depending on the day-night cycle, but do not worry on missing out. A Keeper's quest is as much -if not more so- about the journey than it is about the destination. And if Fate wants certain people to meet, she always finds a way. [Vugs note: not yet implemented, time is currently tracked in Inky but needs a coding addition] 
+            ~TimeOfDay = Morning
+            ****[Pack up]
+            You gather your belongings and make sure the fire is thorougly smothered by a heap of sand. With a few steps you move from the small clearing where you made your camp back to the road. Looking north, it slopes gently upward.
+            ->Awakening.PackUp
+            
 *...sleep in[]. One way to shake a nightmare is with a new dream but sadly, sleep doesn't come.
 ->Tent
-//Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown wood you found yourself in only two days ago.
-//*[Put another foot forward]You take another step. And another. Your legs have carried you all the way from Barralon to here: the far North of the Forgotten Isles. 
-  //  **[Readjust your backpack]You shift the weight of the pack on your shoulders. It's heavy, but that's a small burden to bear for the essentials you carry. No explorer worth their salt would set out without a tent, sleeping bag, flint and steel or a cooking pot. 
+
+=PackUp
+*And you follow it.
+->ScotlandEntranceRoad
++But you decide to head south.
+{Southbound is the way you came. The goal of your journey is the other way.|You came from there only yesterday. It would be such a waste to turn back now.|Your master would be sorely dissappointed if you came back without accomplishing what you set out to do.|Because somehow, you feel compelled to do so. You feel like if you take one step in that direction, you cannot help but walk all the way back home.|And end the story of the north right here, only to begin the long journey home.->END} ->Awakening.PackUp
+
+
+===ScotlandEntranceRoad===
+{ScotlandEntranceRoad.FirstVisit: Ah, a return visit! Too bad this isn't implemented yet.->ReturnVisit|->FirstVisit}
+=ReturnVisit
+*[Go back the way you came]
+->END
+=FirstVisit
+Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown wood you found yourself in only two days ago.
+*[Put another foot forward]You take another step. And another. Your legs have carried you all the way from Barralon to here: the far North of the Forgotten Isles. 
+    **[Readjust your backpack]You shift the weight of the pack on your shoulders. It's heavy, but that's a small burden to bear for the essentials you carry.
         
-    //    Of course, your most important possession is not carried on your back. Chained to your belt is a large, leatherbound book: your journal. You give it a reaffirming tap. A record of all the things you've seen so far and, equally important, plenty of empty pages left to fill with discoveries of the North. 
+        Of course, your most important possession is not carried on your back. Chained to your belt is a large, leatherbound book: your journal. You give it a reaffirming tap. A record of all the things you've seen so far and, equally important, plenty of empty pages left to fill with discoveries of the North. 
         
-      //  No keeper has set foot here in two hundred years, and even those long dead explorers never ventured deeply into the wilds. Without a doubt, you will be able to complete your task here; to find knowledge not yet stored in the Vault of Barralon. From local folklore to a survey of the wildlife, anything will do. But you did not venture all this way to write down the mundane. You came to find something old. Something ancient, from before the sundering. 
+        You can check the contents of your journal by clicking its corresponding icon, on the right. 
         
-        //As you contemplate your quest, you realize your feet have carried you to the top of the hill. 
-    //    ***[Survey the landscape]Beneath a pink morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a sturdy hill. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
+        No keeper has set foot here in two hundred years, and even those long dead explorers never ventured deeply into the wilds. Without a doubt, you will be able to complete your task here; to find knowledge not yet stored in the Vault of Barralon. From local folklore to a survey of the wildlife, anything will do. But you did not venture all this way to write down the mundane. You came to find something old. Something ancient, from before the sundering. 
         
-      //      As your gaze returns to the path before you, you realize you missed something on your first viewing: a person. Still far in the distance, but
+        As you contemplate your quest, you realize your feet have carried you to the top of the hill. 
+        ***[Survey the landscape]Beneath a pink morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a sturdy hill. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
+        
+            //As your gaze returns to the path before you, you realize you missed something on your first viewing: a person. Still far in the distance, but unmistakenbly a fellow traveler. They seem to be approaching at a fair pace, aided by a walking stick.
+           // ****[Continue following the road]
+            //****[Wait for the traveler]
+            //****[Turn back]
+            //****[Set up an ambush]
+            
+            
 
 === CastleEntrance ===
+~ CurrentLocation = "EdinburghCastleEntrance"
     -> CastleEntranceFirst
 
 = CastleEntranceFirst
@@ -394,6 +417,8 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
     The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man stands behind it holding the door open for you with one hand while leaning on a spear with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
     
     As you step inside the man shuts the door behind you, taking great care to put the locks back into place. 
+    ~ PreviousLocation = "EdinburghCastleEntrance"
+    ~ CurrentLocation = "EdinburghCastleGatehouse"
         **Engage the man in some further conversation
         -> EdgarGatehouse
         **(thanked)Thank the man and head into town
@@ -404,13 +429,14 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
 *"Do you often have to kill creatures gently walking up to the door?"
 
 === EdCastleGatehouseWalkway ===
-//{EdCastleGatehouseWalkway: There's a small courtyard behind the gatehouse, behind which the path climbs steeply up the hill. {TimeOfDay == Night: The light of {MetEdgar: Edgar's | the guard's} lamp quickly fades as you make your way up the steps, and in the dark you nearly take a tumble.}{TimeOfDay == Dawn: }Once at the top, you are greeted by what appears to be a town square. {TimeOfDay == Night: It is empty now, but the various stalls suggest the place will be lively in a few hours.}{TimeOfDay == Dawn: Most townspeople are probably still asleep, but you already spot two men setting up what a market stall}{TimeOfDay == Morning: It's a small affair compared to other places you've been, but for this corner of the world it might as well be Grand Market of Barralon. On the opposite end of the square there are several houses{TimeOfDay == Night:, of which all the lights are dimmed}{TimeOfDay == Dawn: On the right}}}
+//{EdCastleGatehouseWalkway: There's a small courtyard behind the gatehouse, behind which the path climbs steeply up the hill. {TimeOfDay == Night: The light of {MetEdgar: Edgar's | the guard's} lamp quickly fades as you make your way up the steps, and in the dark you nearly take a tumble.}{TimeOfDay == Dawn: }Once at the top, you are greeted by what appears to be a town square. {TimeOfDay == Night: It is empty now, but the various stalls suggest the place will be lively in a few hours.}{TimeOfDay == Dawn: Most townspeople are probably still asleep, but you already spot two men setting up what appears to be a market stall}{TimeOfDay == Morning: It's a small affair compared to other places you've been, but for this corner of the world it might as well be Grand Market of Barralon. On the opposite end of the square there are several houses{TimeOfDay == Night:, of which all the lights are dimmed}{TimeOfDay == Dawn: On the right}}}
 ->END
 === EdgarGatehouse ===
 
 -> END
 
 === EdCastlePrison ===
+~ CurrentLocation = "EdinburghCastlePrison"
 VAR MaryUpset = false
 {MaryPrisonGreeting: You find yourself in the damp prison room. {MetMary: Mary | A figure }is huddled against the far wall, a set of iron bars keeping you apart. | You descend the worn uneven steps cautiously. It's cooler here, and slightly damp. The thick stone walls appear to keep out most of the sun's warmth. You arrive in a broad, round room, a torch flickering on your left. The room is divided down the middle by a set of iron bars. Behind them, at the back of the room, you see a figure huddled against the wall. -> MaryPrisonGreeting}
 {MetMary: -> MaryStateChecker | -> MaryPrisonGreeting}

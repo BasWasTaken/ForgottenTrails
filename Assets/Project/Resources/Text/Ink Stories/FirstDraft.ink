@@ -350,23 +350,29 @@ You can find your belongings by clicking on the backpack icon on the right. You 
 
 
 ===ScotlandEntranceRoad===
-{ScotlandEntranceRoad.FirstVisit: Ah, a return visit! Too bad this isn't implemented yet.->ReturnVisit|->FirstVisit}
+~CurrentLocation = "ScotlandEntranceRoad"
+{PreviousLocation = "EdinburghCrossroads": Ah, a return visit! Too bad this isn't implemented yet.->ReturnVisit|->FirstVisit}
 =ReturnVisit
 *[Go back the way you came]
-->END
+~PreviousLocation = "ScotlandEntranceRoad"
+->EdinburghCrossroads
 =FirstVisit
-Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown wood you found yourself in only two days ago.
+Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown woodland you found yourself in only two days ago.
 *[Put another foot forward]You take another step. And another. Your legs have carried you all the way from Barralon to here: the far North of the Forgotten Isles. 
     **[Readjust your backpack]You shift the weight of the pack on your shoulders. It's heavy, but that's a small burden to bear for the essentials you carry.
         
         Of course, your most important possession is not carried on your back. Chained to your belt is a large, leatherbound book: your journal. You give it a reaffirming tap. A record of all the things you've seen so far and, equally important, plenty of empty pages left to fill with discoveries of the North. 
         
-        You can check the contents of your journal by clicking its corresponding icon, on the right. 
+        You can check the contents of your journal by clicking its corresponding icon, on the right. [Vugs note: not yet implemented]
         
         No keeper has set foot here in two hundred years, and even those long dead explorers never ventured deeply into the wilds. Without a doubt, you will be able to complete your task here; to find knowledge not yet stored in the Vault of Barralon. From local folklore to a survey of the wildlife, anything will do. But you did not venture all this way to write down the mundane. You came to find something old. Something ancient, from before the sundering. 
         
         As you contemplate your quest, you realize your feet have carried you to the top of the hill. 
         ***[Survey the landscape]Beneath a pink morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a sturdy hill. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
+            ****[Continue following the road towards the castle]
+            You continue your journey, the earth crunching beneath your feet. Almost at the halfway point between your hilltop outlook and the castle you find yourself at a crossroads. 
+            ~ PreviousLocation = "ScotlandEntranceRoad"
+            ->EdinburghCrossroads
         
             //As your gaze returns to the path before you, you realize you missed something on your first viewing: a person. Still far in the distance, but unmistakenbly a fellow traveler. They seem to be approaching at a fair pace, aided by a walking stick.
            // ****[Continue following the road]
@@ -374,7 +380,31 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             //****[Turn back]
             //****[Set up an ambush]
             
-            
+=== EdinburghCrossroads ===
+~ CurrentLocation = "EdinburghCrossroads"
+The road splits here into four directions. The northbound road leads to the castle on the hill{PreviousLocation = EdinburghCastleEntrance: from which you came|.}; the road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation = ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+At the center of the crossing you spot a decorated boulder: a Waystone. 
+=Crossing
++[Take the North Road]
+You decide to take the North road{Previouslocation = EdinburghCastleEntrance: and go back the way you came.| leading to the Hilltop Castle.}
+->CastleEntrance
++[Take the East Road]
++[Take the South Road]
+You decide to {PreviousLocation = "ScotlandEntranceRoad":go back the way you came and|take the Southern Road.}
+~PreviousLocation = "EdinburghCrossroads"
+->ScotlandEntranceRoad
++[Take the West Road]
++[Inspect the Waystone]
+{You decide to take a closer look at the Waystone in the middle of the crossing. It's decorated in a blocky script, which thankfully matches the sources you were able to study back in Barralon. In the Northern Tongue it reads:|You decide to take another look at the Waystone. It reads:}
+
+"May the blessings of Crìsdaen be upon the honorable traveler
+
+From Edan Castle to this stone, 7 miles Northbound
+From the Sea to this stone, 8 miles Eastbound
+From Thahnford to this stone, 107 miles Southbound"
+
+A fourth line is also there, but the markings are scratched out. Carved beneath it in a more freeform hand someone wrote: "Do not go West, for you will find only demons and suffering"
+->EdinburghCrossroads.Crossing
 
 === CastleEntrance ===
 ~ CurrentLocation = "EdinburghCastleEntrance"

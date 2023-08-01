@@ -92,12 +92,13 @@ namespace ForgottenTrails.InkFacilitation
                     // Debug.Log("Turning input on.");
                     if (InterfaceBroker.Instance.CanPresentChoices()) // try to make buttons if any
                     {
-                        StoryController.Instance.StateMachine.TransitionToState(awaitingChoiceState, false);
+                        StoryController.Instance.StateMachine.TransitionToState(awaitingChoiceState);
                     }
                     else
                     {
-                        StoryController.Instance.StateMachine.TransitionToState(awaitingContinueState, false);
+                        StoryController.Instance.StateMachine.TransitionToState(awaitingContinueState);
                     }
+                    RequestPop = true; // duty fulfilled
                 }
                 public override void Exit()
                 {

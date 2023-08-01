@@ -9,6 +9,7 @@ namespace Bas.Utility
 {
     /// <summary>
     /// <para>State machine for a particular type of <see cref="FSMState"/>, and using stack-based logic such as pop and push.</para>
+    /// A nested stack-based finite state machine. To be honest i strongly suspect this bastard hybrid form of a nested and a stack-based fsm has the copmlications of both and possibly the benefits of neither but it's what i threw together and build the current system on, and it suits my purposes for now.
     /// </summary>
     public class StackFiniteStateMachine<T> where T:FSMState
     {
@@ -40,11 +41,10 @@ namespace Bas.Utility
         // Public Methods
         #region Public Methods
         /// <summary>
-        /// A nested stack-based finite state machine. To be honest i strongly suspect this bastard hybrid form of a nested and a stack-based fsm has the copmlications of both and possibly the benefits of neither but it's what i threw together and build the current system on, and it suits my purposes for now.
-        /// </summary>
+        /// 
+        /// /// </summary>
         /// <param name="newState">The state to transition to</param>
-        /// <param name="retainCurrent">Whether to add this to the stack/memory of state history. Recommended to keep at true for now.</param>
-        public void TransitionToState(T newState, bool retainCurrent=true)
+        public void TransitionToState(T newState)
         {
             if (CurrentState != null)
             {
@@ -59,8 +59,7 @@ namespace Bas.Utility
                         intermediateState = intermediateState.GetParentState(); 
                         levelDifference--;
                     }
-
-                    if (!retainCurrent) Stack.Pop(); // erase this state from history if instructed
+                    
                     Stack.Push(newState); // Go to the new state
                     CurrentState.Enter(); // Perform the enter behaviour
                 }
@@ -68,7 +67,6 @@ namespace Bas.Utility
                 {
                     // Lower to higher level transition
                     CurrentState.Exit();
-                    if (!retainCurrent) Stack.Pop();
                     Stack.Push(newState);
                     IFSMState intermediateState = CurrentState;
                     while (levelDifference < 0)
@@ -82,7 +80,6 @@ namespace Bas.Utility
                 {
                     // Transition between states at the same level
                     CurrentState.Exit();
-                    if (!retainCurrent) Stack.Pop(); // remove this state from history if instructed
                     Stack.Push(newState);
                     CurrentState.Enter();
                 }
@@ -99,7 +96,7 @@ namespace Bas.Utility
         /// </summary>
         public void Update()
         {
-            if (CurrentState.PopCondition)
+            if (CurrentState.RequestPop)
             {
                 DropState(CurrentState);
             }
@@ -119,19 +116,72 @@ namespace Bas.Utility
         /// <param name="caller"> The expected state to pop from</param>
         public void DropState(T caller)
         {
-            if(CurrentState == caller)
+            if (CurrentState == caller)
             {
-                CurrentState.OnExit();
-                Stack.Pop();
-                if (Stack.Count==0) // if empty, 
+                T newState;
+                if (Stack.Count >= 2)
                 {
-                    Stack.Push(DefaultState); // place the default
+                    newState = Stack.ToArray()[^2];
                 }
-                CurrentState.OnEnter();
+                else
+                {
+                    newState = DefaultState;
+                }
+
+                int levelDifference = GetLevelDifference(CurrentState, newState);
+                if (levelDifference > 0)
+                {
+                    // Higher to lower level transition
+                    IFSMState intermediateState = CurrentState;
+                    while (levelDifference > 0)
+                    {
+                        intermediateState.Exit(); // perform all the required exit behaviour
+                        intermediateState = intermediateState.GetParentState();
+                        levelDifference--;
+                    }
+
+                    Stack.Pop(); // remove current state from top
+                    if (Stack.Count == 0)
+                    {
+                        Stack.Push(DefaultState);
+                    }
+                    CurrentState.Enter(); // Perform the enter behaviour
+                }
+                else if (levelDifference < 0)
+                {
+                    // Lower to higher level transition
+                    CurrentState.Exit();
+                    Stack.Pop(); // remove current state from the top
+                    if (Stack.Count == 0)
+                    {
+                        Stack.Push(DefaultState);
+                    }
+                    IFSMState intermediateState = CurrentState;
+                    while (levelDifference < 0)
+                    {
+                        intermediateState = intermediateState.GetParentState();
+                        intermediateState.Enter(); // perform all the required enter behaviour
+                        levelDifference++;
+                    }
+                }
+                else
+                {
+                    // Transition between states at the same level
+                    CurrentState.Exit();
+                    Stack.Pop(); // remove current state from the top
+                    if (Stack.Count == 0)
+                    {
+                        Stack.Push(DefaultState);
+                    }
+                    CurrentState.Enter();
+                }
             }
             else
             {
                 Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
+                // reset system.
+                Stack.Clear();
+                Stack.Push(DefaultState);
             }
         }
 

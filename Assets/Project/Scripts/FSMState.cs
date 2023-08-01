@@ -11,10 +11,20 @@ namespace Bas.Utility
 	/// </summary>
 	public interface IFSMState
 	{
-		public virtual void Enter() { }
+		public virtual void Enter() { Debug.Log("If you see this it means interface methods also get called."); }
 		public virtual void Update() { }
-		public virtual void Exit() { }
-		public virtual bool PopCondition => false;
+		public virtual void Exit() { RequestPop = false; }
+		public virtual bool RequestPop
+		{
+			get
+			{
+				throw new NotSupportedException();
+			}
+			protected set
+			{
+				throw new NotSupportedException();
+			}
+		}
 		public abstract IFSMState GetParentState();
 	}
 	public abstract class FSMState:IFSMState
@@ -31,8 +41,18 @@ namespace Bas.Utility
 		}
 		public virtual void Enter() { }
 		public virtual void Update() { }
-		public virtual void Exit() { }
-		public virtual bool PopCondition => false;
+		public virtual void Exit() { RequestPop = false; }
+		public virtual bool RequestPop
+		{
+			get
+			{
+				throw new NotSupportedException();
+			}
+			protected set
+			{
+				throw new NotSupportedException();
+			}
+		}
 	}
 
 }

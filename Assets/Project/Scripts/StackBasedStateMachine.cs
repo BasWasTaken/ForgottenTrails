@@ -11,44 +11,50 @@ namespace Bas.Utility
     /// <para>State machine for a particular type of <see cref="FSMState"/>, and using stack-based logic such as pop and push.</para>
     /// A nested stack-based finite state machine. To be honest i strongly suspect this bastard hybrid form of a nested and a stack-based fsm has the copmlications of both and possibly the benefits of neither but it's what i threw together and build the current system on, and it suits my purposes for now.
     /// </summary>
-    public class StackFiniteStateMachine<T> where T:FSMState
+    public class StackBasedStateMachine<T>
     {
         // Inspector Properties
         #region Inspector Properties
         [field:SerializeField, ReadOnly]
-        public Stack<T> Stack { get; protected set; }
+        public Stack<BaseState<T>> StateStack { get; private set; }
+
+        [field:SerializeField, Required]
+        public T Controller { get; private set; }
 
         #endregion
         // Public Properties
         #region Public Properties
-        public T CurrentState => Stack.TryPeek(out T result)?result:null;
+        public BaseState<T> CurrentState => StateStack.TryPeek(out BaseState<T> result)?result:null;
 
         #endregion
         // Private Properties
         #region Private Properties
-        protected MonoBehaviour Owner { get; private set; }
-        protected Dictionary<Type, T> KnownStates = new();
-        protected T EntryState { get; private set; }
+        private Dictionary<Type, BaseState<T>> KnownStates = new();
+        private BaseState<T> EntryState { get; set; }
+
         #endregion
         // Constructor
         #region Constructor
-        public StackFiniteStateMachine(MonoBehaviour owner, params T[] states)
+        public StackBasedStateMachine(T controller, params BaseState<T>[] states)
         {
-            Owner = owner;
+            Controller = controller;
             EntryState = states[0];
-            foreach (T state in states)
+            foreach (BaseState<T> state in states)
             {
+                state.Controller = controller;
+                state.Machine = this;
                 KnownStates.Add(state.GetType(), state);
             }
         }
+
         #endregion
         // Public Methods
         #region Public Methods
         /// <summary>
         /// 
-        /// /// </summary>
+        /// </summary>
         /// <param name="newState">The state to transition to</param>
-        public void TransitionToState(T newState)
+        public void TransitionToState(BaseState<T> newState)
         {
             if (CurrentState != null)
             {
@@ -56,43 +62,43 @@ namespace Bas.Utility
                 if (levelDifference > 0)
                 {
                     // Higher to lower level transition
-                    IFSMState intermediateState = CurrentState;
+                    BaseState<T> intermediateState = CurrentState;
                     while (levelDifference > 0)
                     {
-                        intermediateState.Exit(); // perform all the required exit behaviour
+                        intermediateState.OnExit(); // perform all the required exit behaviour
                         intermediateState = GetParent(intermediateState);
                         levelDifference--;
                     }
 
-                    Stack.Push(newState); // Go to the new state
-                    CurrentState.Enter(); // Perform the enter behaviour
+                    StateStack.Push(newState); // Go to the new state
+                    CurrentState.OnEnter(); // Perform the enter behaviour
                 }
                 else if (levelDifference < 0)
                 {
                     // Lower to higher level transition
-                    CurrentState.Exit();
-                    Stack.Push(newState);
-                    IFSMState intermediateState = CurrentState;
+                    CurrentState.OnExit();
+                    StateStack.Push(newState);
+                    BaseState<T> intermediateState = CurrentState;
                     while (levelDifference < 0)
                     {
                         intermediateState = GetParent(intermediateState);
-                        intermediateState.Enter(); // perform all the required enter behaviour
+                        intermediateState.OnEnter(); // perform all the required enter behaviour
                         levelDifference++;
                     }
                 }
                 else 
                 {
                     // Transition between states at the same level
-                    CurrentState.Exit();
-                    Stack.Push(newState);
-                    CurrentState.Enter();
+                    CurrentState.OnExit();
+                    StateStack.Push(newState);
+                    CurrentState.OnEnter();
                 }
             }
             else if(newState == EntryState)
             {
                 // Initial state transition
-                Stack.Push(newState);
-                CurrentState.Enter();
+                StateStack.Push(newState);
+                CurrentState.OnEnter();
             }
             else
             {
@@ -104,13 +110,13 @@ namespace Bas.Utility
         /// </summary>
         public void Update()
         {
-            if (CurrentState.RequestPop)
+            if (false/*CurrentState.PopConditionMet*/)
             {
                 DropState(CurrentState);
             }
             else
             {
-                CurrentState.Update();
+                CurrentState.OnUpdate();
             }
         }
 
@@ -122,14 +128,14 @@ namespace Bas.Utility
         /// 4. Fire appropriate OnEnter()s for the now topmost state.
         /// </summary>
         /// <param name="caller"> The expected state to pop from</param>
-        public void DropState(T caller)
+        public void DropState(BaseState<T> caller)
         {
             if (CurrentState == caller)
             {
-                T newState;
-                if (Stack.Count >= 2)
+                BaseState<T> newState;
+                if (StateStack.Count >= 2)
                 {
-                    newState = Stack.ToArray()[^2];
+                    newState = StateStack.ToArray()[^2];
                 }
                 else
                 {
@@ -140,66 +146,66 @@ namespace Bas.Utility
                 if (levelDifference > 0)
                 {
                     // Higher to lower level transition
-                    IFSMState intermediateState = CurrentState;
+                    BaseState<T> intermediateState = CurrentState;
                     while (levelDifference > 0)
                     {
-                        intermediateState.Exit(); // perform all the required exit behaviour
+                        intermediateState.OnExit(); // perform all the required exit behaviour
                         intermediateState = GetParent(intermediateState);
                         levelDifference--;
                     }
 
-                    Stack.Pop(); // remove current state from top
-                    if (Stack.Count == 0)
+                    StateStack.Pop(); // remove current state from top
+                    if (StateStack.Count == 0)
                     {
-                        Stack.Push(EntryState);
+                        StateStack.Push(EntryState);
                     }
-                    CurrentState.Enter(); // Perform the enter behaviour
+                    CurrentState.OnEnter(); // Perform the enter behaviour
                 }
                 else if (levelDifference < 0)
                 {
                     // Lower to higher level transition
-                    CurrentState.Exit();
-                    Stack.Pop(); // remove current state from the top
-                    if (Stack.Count == 0)
+                    CurrentState.OnExit();
+                    StateStack.Pop(); // remove current state from the top
+                    if (StateStack.Count == 0)
                     {
-                        Stack.Push(EntryState);
+                        StateStack.Push(EntryState);
                     }
-                    IFSMState intermediateState = CurrentState;
+                    BaseState<T> intermediateState = CurrentState;
                     while (levelDifference < 0)
                     {
                         intermediateState = GetParent(intermediateState);
-                        intermediateState.Enter(); // perform all the required enter behaviour
+                        intermediateState.OnEnter(); // perform all the required enter behaviour
                         levelDifference++;
                     }
                 }
                 else
                 {
                     // Transition between states at the same level
-                    CurrentState.Exit();
-                    Stack.Pop(); // remove current state from the top
-                    if (Stack.Count == 0)
+                    CurrentState.OnExit();
+                    StateStack.Pop(); // remove current state from the top
+                    if (StateStack.Count == 0)
                     {
-                        Stack.Push(EntryState);
+                        StateStack.Push(EntryState);
                     }
-                    CurrentState.Enter();
+                    CurrentState.OnEnter();
                 }
             }
             else
             {
                 Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
                 // reset system.
-                Stack.Clear();
-                Stack.Push(EntryState);
+                StateStack.Clear();
+                StateStack.Push(EntryState);
             }
         }
 
         #endregion
         // Private Methods
         #region Private Methods
-        private int GetLevelDifference(T fromState, T toState)
+        private int GetLevelDifference(BaseState<T> fromState, BaseState<T> toState)
         {
             int levelDifference = 0;
-            IFSMState current = fromState;
+            BaseState<T> current = fromState;
 
             // Traverse upward in the hierarchy until the common ancestor is found
             while (current != null && !IsAncestor(current, toState))
@@ -215,7 +221,7 @@ namespace Bas.Utility
             return levelDifference;
         }
 
-        private bool IsAncestor(IFSMState ancestor, IFSMState descendant)
+        private bool IsAncestor(BaseState<T> ancestor, BaseState<T> descendant)
         {
             Type ancestorType = ancestor.GetType();
             Type descendantType = descendant.GetType();
@@ -224,13 +230,16 @@ namespace Bas.Utility
             // which means 'ancestor' is an ancestor of 'descendant'.
             return ancestorType.IsAssignableFrom(descendantType);
         }
-        private T GetParent(IFSMState child)
+        private BaseState<T> GetParent(BaseState<T> child)
         {
-            Type U = child.GetParentState();
-            if (!KnownStates.TryGetValue(U, out T parent))
+            Type U = child.DirectBase;
+            if (!KnownStates.TryGetValue(U, out BaseState<T> parent))
             {
-                parent = (T)Activator.CreateInstance(typeof(T), Owner);
+                throw new KeyNotFoundException();
+                /*
+                parent = (BaseState<T>)Activator.CreateInstance(typeof(T), Controller);
                 KnownStates.Add(U, parent);
+                */
             }
             return parent;
         }

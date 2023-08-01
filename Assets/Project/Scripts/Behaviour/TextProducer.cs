@@ -81,9 +81,6 @@ namespace ForgottenTrails.InkFacilitation
         // Public Properties
         #region Public Properties
         #region State Machine
-        public StackFiniteStateMachine<TextProducer_State> StateMachine { get; private set; } = new(.entry);
-        public bool Playing => StateMachine.CurrentState.GetType() == typeof(StoryController_State.Active);
-
         #endregion
 
         public float TextSpeedMod { get; private set; }
@@ -389,7 +386,7 @@ namespace ForgottenTrails.InkFacilitation
                     }
                     else if (tagLevel == 0) /// if we're not in a tag, apply potential delays for the typewriting effect
                     {
-                        if (StoryController.Halted) yield return new WaitWhile(() => StoryController.Halted); /// don't continue if halted
+                        if (StoryController.StateMachine.CurrentState!=StoryController.writingState) yield return new WaitUntil(() => StoryController.StateMachine.CurrentState != StoryController.writingState); /// don't continue if halted
                         if (!isActiveAndEnabled) yield return new WaitUntil(() => isActiveAndEnabled); /// only continue if enabled
                         //Debug.Log("show me " + letter);
                         float delay = 0; /// initialize delay

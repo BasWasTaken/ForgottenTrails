@@ -48,7 +48,7 @@ namespace ForgottenTrails.InkFacilitation
         // Public Properties
         #region Public Properties
         #region State Machine
-        public StackFiniteStateMachine<StoryController_State> StateMachine { get; private set; }
+        public StackBasedStateMachine<StoryController> StateMachine { get; private set; }
         // unused atm public bool Playing => StateMachine.CurrentState.GetType() == typeof(StoryController_State.Active);
 
         public TextProducer TextProducer { get; private set; }
@@ -75,7 +75,22 @@ namespace ForgottenTrails.InkFacilitation
         #region Private Properties
 
         #region States
-        ControllerState.Entry entryState;
+        SCEntryState entryState = new();
+        SCGameState gameState = new();
+        SCLoadingState loadingState = new();
+        SCProductionState productionState = new();
+        SCWritingState writingState = new();
+        SCPeekingState peekingState = new();
+        SCFastForwardState fastForwardState = new();
+        SCFunctionState functionState = new();
+        SCWaitingForInputState waitingForInputState = new();
+        SCWaitingForChoiceState waitingForChoiceState = new();
+        SCWaitingForContinueState waitingForContinueState = new();
+        SCGameMenuState gameMenuState = new();
+        SCInventoryState inventoryState = new();
+        SCSettingsState settingsState = new();
+        SCSavingState savingState = new();
+        SCExitState exitState = new();
         #endregion
 
         #endregion
@@ -92,8 +107,26 @@ namespace ForgottenTrails.InkFacilitation
             SetDresser = GetComponent<SetDresser>();
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
 
-            entryState = new(this);
-            StateMachine = new(this,entryState);
+            StateMachine = new
+                (
+                this, 
+                entryState,
+                gameState,
+                loadingState,
+                productionState,
+                writingState,
+                peekingState,
+                fastForwardState,
+                functionState,
+                waitingForInputState,
+                waitingForChoiceState,
+                waitingForContinueState,
+                gameMenuState,
+                inventoryState,
+                settingsState,
+                savingState,
+                exitState
+                );
             StateMachine.TransitionToState(entryState);
         }
         private void Update()
@@ -253,35 +286,7 @@ namespace ForgottenTrails.InkFacilitation
         #region Story Setup
 
 
-        /// <summary>
-        /// Creates a new Story object with the compiled story which we can then play!
-        /// </summary>
-        private void StartStory()
-        {
-            StateMachine.TransitionToState(StoryController_State.loadingState);
-            if (DataManager.Instance.DataAvailable(InkDataAsset.Key))
-            {
-                Debug.Log("found data! trying to load...");
-                TryLoadData();
-            }
-            else
-            {
-                InkDataAsset = CreateBlankData(); // NOTE: you're making data a second time, there's already blank data made. why am i doing this again?
-            }
-
-            if (InkDataAsset.StoryStateJson != "")
-            {
-                Debug.Log("continueing from savepoint!");
-                Story.state.LoadJson(InkDataAsset.StoryStateJson);
-                StartCoroutine(TextProducer.FeedText(Story.currentText));
-            }
-            else
-            {
-                Debug.Log("no save point detected, starting from start");
-                Story.state.GoToStart();
-            }
-            AdvanceStory(); // show the first bit of story
-        }
+        
 
         public void BindAndObserve(Story story)
         {

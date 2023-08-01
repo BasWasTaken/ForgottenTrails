@@ -5,6 +5,7 @@ using UnityEditor;
 using Ink.UnityIntegration;
 using Ink.Runtime;
 using NaughtyAttributes.Editor;
+using ForgottenTrails.InkFacilitation;
 
 namespace ForgottenTrails
 {
@@ -12,14 +13,14 @@ namespace ForgottenTrails
     /// An editor custom made to view the basic ink script in unity's editors. 
     /// Taken from the ink demo at 2023-03-08, 14:50.
     /// </summary>
-    [CustomEditor(typeof(InkParser))]
+    [CustomEditor(typeof(StoryController))]
     [InitializeOnLoad]
     public class BasicInkEditor : NaughtyInspector
     {
 
         static BasicInkEditor()
         {
-            InkParser.OnCreateStory += OnCreateStory;
+            StoryController.OnCreateStory += OnCreateStory;
         }
 
         static void OnCreateStory(Story story)
@@ -32,7 +33,7 @@ namespace ForgottenTrails
         {
             Repaint();
             base.OnInspectorGUI();
-            var realTarget = target as InkParser;
+            var realTarget = target as StoryController;
             var story = realTarget.story;
             
             InkPlayerWindow.DrawStoryPropertyField(story, new GUIContent("Story"));

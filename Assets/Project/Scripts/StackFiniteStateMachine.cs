@@ -26,16 +26,20 @@ namespace Bas.Utility
         #endregion
         // Private Properties
         #region Private Properties
-        protected T DefaultState { get; private set; }
+        protected MonoBehaviour Owner { get; private set; }
+        protected Dictionary<Type, T> KnownStates = new();
+        protected T EntryState { get; private set; }
         #endregion
         // Constructor
         #region Constructor
-        public StackFiniteStateMachine(T defaultState)
+        public StackFiniteStateMachine(MonoBehaviour owner, params T[] states)
         {
-            DefaultState = defaultState;
-            Stack.Clear();
-            Stack.Push(DefaultState);
-            CurrentState.Enter();
+            Owner = owner;
+            EntryState = states[0];
+            foreach (T state in states)
+            {
+                KnownStates.Add(state.GetType(), state);
+            }
         }
         #endregion
         // Public Methods
@@ -56,10 +60,10 @@ namespace Bas.Utility
                     while (levelDifference > 0)
                     {
                         intermediateState.Exit(); // perform all the required exit behaviour
-                        intermediateState = intermediateState.GetParentState(); 
+                        intermediateState = GetParent(intermediateState);
                         levelDifference--;
                     }
-                    
+
                     Stack.Push(newState); // Go to the new state
                     CurrentState.Enter(); // Perform the enter behaviour
                 }
@@ -71,12 +75,12 @@ namespace Bas.Utility
                     IFSMState intermediateState = CurrentState;
                     while (levelDifference < 0)
                     {
-                        intermediateState = intermediateState.GetParentState(); 
+                        intermediateState = GetParent(intermediateState);
                         intermediateState.Enter(); // perform all the required enter behaviour
                         levelDifference++;
                     }
                 }
-                else
+                else 
                 {
                     // Transition between states at the same level
                     CurrentState.Exit();
@@ -84,11 +88,15 @@ namespace Bas.Utility
                     CurrentState.Enter();
                 }
             }
-            else
+            else if(newState == EntryState)
             {
                 // Initial state transition
                 Stack.Push(newState);
                 CurrentState.Enter();
+            }
+            else
+            {
+                throw new Exception("Unexpected state");
             }
         }
         /// <summary>
@@ -125,7 +133,7 @@ namespace Bas.Utility
                 }
                 else
                 {
-                    newState = DefaultState;
+                    newState = EntryState;
                 }
 
                 int levelDifference = GetLevelDifference(CurrentState, newState);
@@ -136,14 +144,14 @@ namespace Bas.Utility
                     while (levelDifference > 0)
                     {
                         intermediateState.Exit(); // perform all the required exit behaviour
-                        intermediateState = intermediateState.GetParentState();
+                        intermediateState = GetParent(intermediateState);
                         levelDifference--;
                     }
 
                     Stack.Pop(); // remove current state from top
                     if (Stack.Count == 0)
                     {
-                        Stack.Push(DefaultState);
+                        Stack.Push(EntryState);
                     }
                     CurrentState.Enter(); // Perform the enter behaviour
                 }
@@ -154,12 +162,12 @@ namespace Bas.Utility
                     Stack.Pop(); // remove current state from the top
                     if (Stack.Count == 0)
                     {
-                        Stack.Push(DefaultState);
+                        Stack.Push(EntryState);
                     }
                     IFSMState intermediateState = CurrentState;
                     while (levelDifference < 0)
                     {
-                        intermediateState = intermediateState.GetParentState();
+                        intermediateState = GetParent(intermediateState);
                         intermediateState.Enter(); // perform all the required enter behaviour
                         levelDifference++;
                     }
@@ -171,7 +179,7 @@ namespace Bas.Utility
                     Stack.Pop(); // remove current state from the top
                     if (Stack.Count == 0)
                     {
-                        Stack.Push(DefaultState);
+                        Stack.Push(EntryState);
                     }
                     CurrentState.Enter();
                 }
@@ -181,7 +189,7 @@ namespace Bas.Utility
                 Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
                 // reset system.
                 Stack.Clear();
-                Stack.Push(DefaultState);
+                Stack.Push(EntryState);
             }
         }
 
@@ -196,7 +204,7 @@ namespace Bas.Utility
             // Traverse upward in the hierarchy until the common ancestor is found
             while (current != null && !IsAncestor(current, toState))
             {
-                current = current.GetParentState();
+                current = GetParent(current);
                 levelDifference++;
             }
 
@@ -215,6 +223,16 @@ namespace Bas.Utility
             // Check if the ancestor type is assignable from the descendant type,
             // which means 'ancestor' is an ancestor of 'descendant'.
             return ancestorType.IsAssignableFrom(descendantType);
+        }
+        private T GetParent(IFSMState child)
+        {
+            Type U = child.GetParentState();
+            if (!KnownStates.TryGetValue(U, out T parent))
+            {
+                parent = (T)Activator.CreateInstance(typeof(T), Owner);
+                KnownStates.Add(U, parent);
+            }
+            return parent;
         }
         #endregion
     }

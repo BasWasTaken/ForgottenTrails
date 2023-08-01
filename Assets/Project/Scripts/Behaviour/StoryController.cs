@@ -24,18 +24,18 @@ namespace ForgottenTrails.InkFacilitation
         // Constants
         #region Constants
         private const string dataLabel = "BasicInkScript"; // NOTE:  isn't this ridiculous? if you'll be using this object as ink interface all the time, it should't itelf store particular data, you should have objets etc store data... else all will be under here, won't it? or will it just be settings?
-        #endregion
 
+        #endregion
         // Inspector Properties & Helpers
         #region Inspector Properties & Helpers
         [field:SerializeField, BoxGroup("Assets"), Required]
         [Tooltip("Here drag the JSON object containing the dialogue behaviour")]
-        private TextAsset InkStoryAsset { get; set; }
+        public TextAsset InkStoryAsset { get; private set; }
 
         [SerializeField, BoxGroup("Data"), ReadOnly] 
         [Tooltip("View data object containing INK data.")]
         private InkDataClass _inkDataAsset;
-        public InkDataClass InkDataAsset { get { return _inkDataAsset; } set { _inkDataAsset = value; } }
+        public InkDataClass InkDataAsset { get { if(_inkDataAsset==null) _inkDataAsset=CreateBlankData(); return _inkDataAsset; } set { _inkDataAsset = value; } }
         
 
         [Tooltip("Reset ink data in object. Note: does not remove data from file")]
@@ -48,8 +48,13 @@ namespace ForgottenTrails.InkFacilitation
         // Public Properties
         #region Public Properties
         #region State Machine
-        public StackFiniteStateMachine<StoryController_State> StateMachine { get; private set; } = new(StoryController_State.entryState);
-        public bool Playing => StateMachine.CurrentState.GetType() == typeof(StoryController_State.Active);
+        public StackFiniteStateMachine<StoryController_State> StateMachine { get; private set; }
+        // unused atm public bool Playing => StateMachine.CurrentState.GetType() == typeof(StoryController_State.Active);
+
+        public TextProducer TextProducer { get; private set; }
+        public SetDresser SetDresser { get; private set; }
+        public InterfaceBroker InputBroker { get; private set; }
+
 
         public float TimeSinceAdvance { get; set; } = 0;
 
@@ -63,49 +68,34 @@ namespace ForgottenTrails.InkFacilitation
 
 
 
-        
+
 
         #endregion
         // Private Properties
         #region Private Properties
-        //private AudioHandler AudioHandler;
-        private TextProducer TextProducer;
-        private SetDresser SetDresser;
-        private InterfaceBroker InputBroker;
+
+        #region States
+        ControllerState.Entry entryState;
+        #endregion
 
         #endregion
         // Events
-        #region Events
-        public static event Action<Story> OnCreateStory; // TODO: Check if this is used anywhere.
 
-        #endregion
-        // MonoBehaviour LifeCycle Methods
-        #region MonoBehaviour LifeCycle Methods
+        // LifeCycle Methods
+        #region LifeCycle Methods
         override protected void Awake()
         {
             base.Awake();
-            //AudioHandler = GetComponent<AudioHandler>();
-            Functions = new(this);
+            Functions = new(this); // remove?
             TextProducer = GetComponent<TextProducer>();
             InputBroker = GetComponent<InterfaceBroker>();
             SetDresser = GetComponent<SetDresser>();
-
-            if (true) // NOTE: why do i need to make blank data here always? is it just so that i don't get nullerrors later?
-            {
-                InkDataAsset = CreateBlankData(true);
-            }
-        }
-
-        private void Start()
-        {
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
-            if (InkStoryAsset != null)
-            {
-                PrepStory();
-                StartStory();
-            }
-        }
 
+            entryState = new(this);
+            StateMachine = new(this,entryState);
+            StateMachine.TransitionToState(entryState);
+        }
         private void Update()
         {
             StateMachine.Update();
@@ -261,23 +251,14 @@ namespace ForgottenTrails.InkFacilitation
         #endregion
         // Story Setup
         #region Story Setup
-        /// <summary>
-        /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
-        /// </summary>
-        void PrepStory()
-        {
-            InputBroker.RemoveOptions();
-            Story = new Story(InkStoryAsset.text);
-            OnCreateStory?.Invoke(Story); // NOTE: Is it okay that I moved this to be before instead of after the next few lines?
-            Story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
-            BindAndObserve(Story);
-        }
+
 
         /// <summary>
         /// Creates a new Story object with the compiled story which we can then play!
         /// </summary>
         private void StartStory()
         {
+            StateMachine.TransitionToState(StoryController_State.loadingState);
             if (DataManager.Instance.DataAvailable(InkDataAsset.Key))
             {
                 Debug.Log("found data! trying to load...");
@@ -285,32 +266,24 @@ namespace ForgottenTrails.InkFacilitation
             }
             else
             {
-                InkDataAsset = CreateBlankData(); // NOTE: you're making data a second time, there's already blank data made.
+                InkDataAsset = CreateBlankData(); // NOTE: you're making data a second time, there's already blank data made. why am i doing this again?
             }
-            if (!Playing)
-            {
-                Playing = true;
-                if (InkDataAsset.StoryStateJson != "")
-                {
-                    Debug.Log("continueing from savepoint!");
-                    Story.state.LoadJson(InkDataAsset.StoryStateJson);
-                    StartCoroutine(TextProducer.FeedText(Story.currentText));
-                }
-                else
-                {
-                    Debug.Log("no save point detected, starting from start");
-                    Story.state.GoToStart();
-                }
-                AdvanceStory(); // show the first bit of story
 
+            if (InkDataAsset.StoryStateJson != "")
+            {
+                Debug.Log("continueing from savepoint!");
+                Story.state.LoadJson(InkDataAsset.StoryStateJson);
+                StartCoroutine(TextProducer.FeedText(Story.currentText));
             }
             else
             {
-                Debug.LogError("Still playing according to bool!");
+                Debug.Log("no save point detected, starting from start");
+                Story.state.GoToStart();
             }
+            AdvanceStory(); // show the first bit of story
         }
 
-        private void BindAndObserve(Story story)
+        public void BindAndObserve(Story story)
         {
             story.BindExternalFunction("Print", (string text) => Functions.DoFunction(() => ConsoleLogInk(text, false)));
             story.BindExternalFunction("PrintWarning", (string text) => Functions.DoFunction(() => ConsoleLogInk(text, true)));

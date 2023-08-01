@@ -14,6 +14,7 @@ namespace Bas.Utility
 		public virtual void Enter() { }
 		public virtual void Update() { }
 		public virtual void Exit() { }
+		public virtual bool PopCondition => false;
 		public abstract IFSMState GetParentState();
 	}
 	public abstract class FSMState:IFSMState
@@ -31,7 +32,7 @@ namespace Bas.Utility
 		public virtual void Enter() { }
 		public virtual void Update() { }
 		public virtual void Exit() { }
-
+		public virtual bool PopCondition => false;
 	}
 
 }

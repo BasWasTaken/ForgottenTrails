@@ -39,6 +39,11 @@ namespace Bas.Utility
         #endregion
         // Public Methods
         #region Public Methods
+        /// <summary>
+        /// A nested stack-based finite state machine. To be honest i strongly suspect this bastard hybrid form of a nested and a stack-based fsm has the copmlications of both and possibly the benefits of neither but it's what i threw together and build the current system on, and it suits my purposes for now.
+        /// </summary>
+        /// <param name="newState">The state to transition to</param>
+        /// <param name="retainCurrent">Whether to add this to the stack/memory of state history. Recommended to keep at true for now.</param>
         public void TransitionToState(T newState, bool retainCurrent=true)
         {
             if (CurrentState != null)
@@ -55,7 +60,7 @@ namespace Bas.Utility
                         levelDifference--;
                     }
 
-                    if (!retainCurrent) Stack.Pop();
+                    if (!retainCurrent) Stack.Pop(); // erase this state from history if instructed
                     Stack.Push(newState); // Go to the new state
                     CurrentState.Enter(); // Perform the enter behaviour
                 }
@@ -77,7 +82,7 @@ namespace Bas.Utility
                 {
                     // Transition between states at the same level
                     CurrentState.Exit();
-                    if (!retainCurrent) Stack.Pop();
+                    if (!retainCurrent) Stack.Pop(); // remove this state from history if instructed
                     Stack.Push(newState);
                     CurrentState.Enter();
                 }
@@ -89,30 +94,30 @@ namespace Bas.Utility
                 CurrentState.Enter();
             }
         }
-        public void FinishTask(T identifier)
-        {
-            if(CurrentState == identifier)
-            {
-                TransitionToState(Stack.ToArray()[^2], false);
-            }
-        }
         /// <summary>
         /// Perform the <see cref="CurrentState"/>'s Update method"/>
         /// </summary>
         public void Update()
         {
-            CurrentState.Update();
+            if (CurrentState.PopCondition)
+            {
+                DropState(CurrentState);
+            }
+            else
+            {
+                CurrentState.Update();
+            }
         }
-        /* Depricated
+
         /// <summary>
-        /// Pop current state and revert to the previous. Explicitly, in order: 
-        /// 1. Fire OnExit().
+        /// Pop current state and revert back to the previous. Explicitly, in order: 
+        /// 1. Fire appropriate OnExit()s.
         /// 2. Pop the state from the stack.
         /// 3. If the stack is now empty, push the default one.
-        /// 4. Fire OnEnter() for the now topmost state.
+        /// 4. Fire appropriate OnEnter()s for the now topmost state.
         /// </summary>
         /// <param name="caller"> The expected state to pop from</param>
-        public void PopState(T caller)
+        public void DropState(T caller)
         {
             if(CurrentState == caller)
             {
@@ -129,7 +134,6 @@ namespace Bas.Utility
                 Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
             }
         }
-        */
 
         #endregion
         // Private Methods

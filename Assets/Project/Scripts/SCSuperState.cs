@@ -1,0 +1,241 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using Bas.Utility;
+using DataService;
+using Ink.Runtime;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using System.Text.RegularExpressions;
+using UnityEngine.UI;
+using TMPro;
+using System;
+
+namespace ForgottenTrails.InkFacilitation
+{
+    partial class StoryController : MonoSingleton<StoryController>
+    {
+        // Public Properties
+        #region Public Properties
+        public bool LoadingFromDisk { get; protected set; }
+        public bool SavingToDisk { get; protected set; }
+        public bool InteractingWithDisk => LoadingFromDisk | SavingToDisk;
+
+        #endregion
+
+        // Events
+        #region Events
+        public static event Action<Story> OnCreateStory;
+
+        #endregion
+
+        public class SCSuperState : BaseState<StoryController>
+        {
+            // Private Properties
+            #region Private Properties
+            protected float TimeSinceAdvance { get; set; } = 0;
+            private bool GoForStart
+            {
+                get
+                {
+                    if (_goForStart == true)
+                    {
+                        _goForStart = false; // reset flag
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    };
+                }
+            }
+            private bool _goForStart = false;
+            private void FlagGoForStart()
+            {
+                _goForStart = true;
+            }
+            #endregion
+            // Public Methods
+            #region Public Methods
+            public override void OnEnter()
+            {
+                PrepStory();
+                PrepData();
+                PrepScene();
+                FlagGoForStart();
+            }
+            public override void OnUpdate()
+            {
+                base.OnUpdate();
+                TimeSinceAdvance += Time.unscaledDeltaTime;
+                if (GoForStart)
+                {
+                    StartStory();
+                }
+
+                if (Controller.StateMachine.CurrentState == this)
+                {
+                    Debug.Log("test message a from " + this);
+                }
+                if (Controller.StateMachine.CurrentState.GetType() == this.GetType())
+                {
+                    Debug.Log("test message b from " + this);
+                }
+            }
+            public override void OnExit()
+            {
+                // Do whatever you need to exit playmode and return to main menu or whatever
+            }
+
+            #endregion
+            // Private Methods
+            #region Private Methods
+            /// <summary>
+            /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
+            /// </summary>
+            private void PrepStory()
+            {
+                Controller.Story = new Story(Controller.InkStoryAsset.text);
+                BindAndObserve(Controller.Story);
+            }
+
+            private void BindAndObserve(Story story)
+            {
+                story.BindExternalFunction("Print", (string text) => PerformInkFunction(() => Controller.ConsoleLogInk(text, false)));
+                story.BindExternalFunction("PrintWarning", (string text) => PerformInkFunction(() => Controller.ConsoleLogInk(text, true)));
+                story.BindExternalFunction("Spd", (float mod) => PerformInkFunction(() => Controller.TextProducer.Spd(mod / 100)));
+                story.BindExternalFunction("Clear", () => PerformInkFunction(() => Controller.TextProducer.ClearPage()));
+                story.BindExternalFunction("Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
+                story.BindExternalFunction("Bg", (string fileName, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackdrop(fileName, dur)));
+                story.BindExternalFunction("FadeTo", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
+                story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
+                story.BindExternalFunction("Vox", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Voice, relVol)));
+                story.BindExternalFunction("Sfx", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Sfx, relVol)));
+                story.BindExternalFunction("Ambiance", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Ambiance, relVol)));
+                story.BindExternalFunction("Music", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Music, relVol)));
+            }
+            internal void PerformInkFunction(Action function)
+            {
+                Controller.TextProducer.PendingFunctions.Enqueue(function);
+                Controller.StateMachine.TransitionToState(Controller.functionState);
+            }
+            internal void PauseText(float seconds)
+            {
+                Controller.TextProducer.additionalPause += seconds;
+            }
+
+            private void PrepData()
+            {
+                Controller.LoadingFromDisk = true;
+                if (DataManager.Instance.DataAvailable(Controller.InkDataAsset.Key))
+                {
+                    Debug.Log("found data! trying to load...");
+                    if (TryLoadData(Controller.InkDataAsset.Key, out InkDataClass dummy))
+                    {
+                        Controller.InkDataAsset = dummy;
+                    }
+                    else
+                    {
+                        throw new Exception("Could not load data.");
+                    }
+                }
+                Controller.LoadingFromDisk = false;
+            }
+            private bool TryLoadData(string key, out InkDataClass output)
+            {
+                output = Controller.CreateBlankData();
+                if (!DataManager.Instance.DataAvailable(key))
+                {
+                    Debug.LogError("Error code 404: No data found.");
+                    return false;
+                }
+                else
+                {
+                    InkDataClass input = DataManager.Instance.FetchData<InkDataClass>(Controller.InkDataAsset.Key);
+                    try
+                    {
+                        ReadStoryStateFromData(input);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+                    Debug.Log("Successfully loaded data!");
+                    output = input;
+                    return true;
+                }
+
+            }
+            /// <summary>
+            /// Feed the <paramref name="input"/>'s story state into the story we are currently loading.
+            /// </summary>
+            /// <param name="input">the data loaded from disk</param>
+            private void ReadStoryStateFromData(InkDataClass input)
+            {
+                if (input.StoryStateJson != "")
+                {
+                    Debug.Log("continueing from savepoint!");
+                    Controller.Story.state.LoadJson(input.StoryStateJson); // get storystate from json
+                }
+                else
+                {
+                    Debug.Log("no save point detected, starting from start");
+                    Controller.Story.state.GoToStart();
+                }
+                Controller.Story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
+
+                string message = "InkVars found:";
+                foreach (string item in Controller.Story.state.variablesState)
+                {
+                    message += "\n" + item + ": " + Controller.Story.state.variablesState[item].ToString();
+                }
+                Debug.Log(message);
+            }
+
+            /// <summary>
+            /// Prepares scene to contain story
+            /// </summary>
+            private void PrepScene()
+            {
+                Controller.waitingForChoiceState.RemoveOptions();
+                Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
+                PopulateSceneFromData(Controller.InkDataAsset);
+            }
+
+            private void PopulateSceneFromData(InkDataClass input)
+            {
+                //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
+                Controller.SetDresser.ParseAudio(input.SceneState.ActiveMusic, AudioHandler.AudioGroup.Music);
+                Controller.SetDresser.ParseAudio(input.SceneState.ActiveAmbiance, AudioHandler.AudioGroup.Ambiance);
+                Controller.SetDresser.SetBackdrop(input.SceneState.Background);
+                Controller.SetDresser.SetSprites(input.SceneState.Sprites);
+                Controller.TextProducer.Spd(input.SceneState.TextSpeedMod);
+                Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
+            }
+
+            /// <summary>
+            /// Call creation event and transition to production state for the first time.
+            /// </summary>
+            private void StartStory()
+            {
+                OnCreateStory?.Invoke(Controller.Story);
+                Controller.StateMachine.TransitionToState(Controller.productionState);
+            }
+
+            /// <summary>
+            /// preps data for saving. happens whenever input is giving, i.e. before every production cycle.
+            /// </summary>
+            protected void StashStoryState()
+            {
+                // save all the things 
+                Controller.InkDataAsset.CurrentText = Controller.TextProducer.CurrentText;
+                Controller.InkDataAsset.HistoryText = Controller.TextProducer.PreviousText;
+                Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson();
+                Controller.InkDataAsset.StashData();
+            }
+
+            #endregion
+        }
+    }
+}

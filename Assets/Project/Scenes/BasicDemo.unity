@@ -6956,8 +6956,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2009679605}
-  - component: {fileID: 2009679606}
   - component: {fileID: 2009679607}
+  - component: {fileID: 2009679606}
   m_Layer: 0
   m_Name: Scene Controller
   m_TagString: Untagged
@@ -6992,36 +6992,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2009679603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31d292120298ea94294ec1fdf21699af, type: 3}
+  m_Script: {fileID: 11500000, guid: f3837fd452f5b2040aebfebcc675fef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSONAsset: {fileID: 4900000, guid: 9fd4b9aab55923746b39c1b4ec9e0f4e, type: 3}
-  inkData:
-    storyStateJson: 
-    sceneState:
-      text: null
-      history: null
-      background: null
-      sprites: null
-      activeMusic: null
-      activeAmbiance: null
-      textSpeedMod: 1
-    currentText: 
-    historyText: 
-  buttonPrefab: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
-  portraitPrefab: {fileID: 8404248775511915677, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-  canvas: {fileID: 1908123726}
-  bgImage: {fileID: 1320078387}
-  portraits: {fileID: 1206258461}
-  buttonAnchor: {fileID: 28223511}
-  floatingMarker: {fileID: 531542277}
-  audioSourceSfx: {fileID: 4636245369445873570}
-  audioSourceVox: {fileID: 4636245370948959648}
-  audioSourceMusic: {fileID: 4636245370335439450}
-  audioSourceAmbiance: {fileID: 4636245371363056738}
-  audioSourceSystem: {fileID: 4636245370548742609}
-  advanceDialogueDelay: 0.1
-  skipDelay: 0.2
 --- !u!114 &2009679607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7031,26 +7004,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2009679603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b0c0a51fa6bf8443a274307e36c38b2, type: 3}
+  m_Script: {fileID: 11500000, guid: acf455a13548fed4b88b7edf65ecae71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textBox: {fileID: 348379362}
-  overFlowTextBox: {fileID: 1778654252}
-  historyTextBox: {fileID: 2084113306}
-  _pauseInfo:
-    _dotPause: 0.2
-    _commaPause: 0.1
-    _spacePause: 0.02
-    _normalPause: 0.01
-  _pauseInfoForSkips:
-    _dotPause: 0.000000005
-    _commaPause: 0.000000002
-    _spacePause: 5e-10
-    _normalPause: 1e-10
-  encounteredStop: 0
-  peeking: 0
-  autoAdvance: 0
-  AlwaysPause: 0
+  <StateMachine>k__BackingField:
+    <Controller>k__BackingField: {fileID: 0}
+  <InkStoryAsset>k__BackingField: {fileID: 0}
 --- !u!1 &2051102300
 GameObject:
   m_ObjectHideFlags: 0

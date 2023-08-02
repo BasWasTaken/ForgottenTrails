@@ -12,7 +12,7 @@ using TMPro;
 
 namespace ForgottenTrails.InkFacilitation
 {
-    partial class StoryController : MonoSingleton<StoryController>
+    public partial class StoryController : MonoSingleton<StoryController>
     {
         public class SCInventoryState : SCGameMenuState
         {

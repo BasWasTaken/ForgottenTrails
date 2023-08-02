@@ -14,9 +14,9 @@ using TMPro;
 
 namespace ForgottenTrails.InkFacilitation
 {
-    partial class StoryController : MonoSingleton<StoryController>
+    public partial class StoryController : MonoSingleton<StoryController>
     {
-        partial class InterfaceBroking
+        public partial class InterfaceBroking
         {
             public class SCWaitingForInputState : SCSuperState
             {

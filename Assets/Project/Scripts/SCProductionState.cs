@@ -14,9 +14,9 @@ using TMPro;
 
 namespace ForgottenTrails.InkFacilitation
 {
-    partial class StoryController : MonoSingleton<StoryController>
+    public partial class StoryController : MonoSingleton<StoryController>
     {
-        partial class TextProduction
+        public partial class TextProduction
         {
             // Public Properties
             #region Public Properties

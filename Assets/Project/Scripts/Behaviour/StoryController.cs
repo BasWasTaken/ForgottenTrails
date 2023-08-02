@@ -28,7 +28,7 @@ namespace ForgottenTrails.InkFacilitation
         // Inspector Properties & Helpers
         #region Inspector Properties & Helpers
 
-        [field: SerializeField, ReadOnly]
+        [field: SerializeField, ReadOnly, BoxGroup("State Info")]
         public StackBasedStateMachine<StoryController> StateMachine { get; private set; }
 
         [field:SerializeField, BoxGroup("Assets"), Required]
@@ -46,6 +46,13 @@ namespace ForgottenTrails.InkFacilitation
         [Tooltip("Load data from disk and reset scene.")]
         [Button("ResetScene",EButtonEnableMode.Playmode)] public void ResetSceneButton() => ResetScene();
 
+        [field:SerializeField, BoxGroup("TextProducer")]
+        internal TextProduction TextProducer { get; set; }
+        [field: SerializeField, BoxGroup("SetDresser")]
+        internal SetDressing SetDresser { get; set; }
+        [field: SerializeField, BoxGroup("InterfaceBroker")]
+        internal InterfaceBroking InterfaceBroker { get; set; }
+
         #endregion
         // Public Properties
         #region Public Properties
@@ -55,9 +62,6 @@ namespace ForgottenTrails.InkFacilitation
         #endregion
         // Private Properties
         #region Private Properties
-        internal TextProduction TextProducer { get; set; }
-        internal SetDressing SetDresser { get; set; }
-        internal InterfaceBroking InterfaceBroker { get; set; }
 
         #region States
         SCDummyState dummyState = new(); // TODO: how to avoid having to make this from here?

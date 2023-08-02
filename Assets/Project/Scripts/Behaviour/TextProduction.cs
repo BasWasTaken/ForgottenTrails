@@ -19,7 +19,7 @@ namespace ForgottenTrails.InkFacilitation
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
-
+        [Serializable]
         /// <summary>
         /// <para>Produces text onto ui elements for the player.</para>
         /// </summary>

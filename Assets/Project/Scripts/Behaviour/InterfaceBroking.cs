@@ -14,9 +14,11 @@ using Bas.Utility;
 namespace ForgottenTrails.InkFacilitation
 {
     public partial class StoryController : MonoSingleton<StoryController>
-    {/// <summary>
-     /// <para>Summary not provided.</para>
-     /// </summary>
+    {
+        [Serializable]
+        /// <summary>
+        /// <para>Summary not provided.</para>
+        /// </summary>
         public partial class InterfaceBroking
         {
             // Inspector Properties

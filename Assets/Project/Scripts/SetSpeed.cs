@@ -6,35 +6,33 @@ using UnityEditor;
 using ForgottenTrails;
 using UnityEngine.UI;
 using TMPro;
+using Bas.Utility;
 
-namespace TEMPLATENAMESPACE 
+namespace ForgottenTrails.InkFacilitation
 { 
     /// <summary>
     /// <para>SUMMARY GOES HERE.</para>
     /// </summary>
     public class SetSpeed : MonoBehaviour
     {
-        ///___VARIABLES___///
-        #region INSPECTOR
         private TMP_Dropdown dropdown;
-        #endregion
-        #region BACKEND_VARIABLES
+        private StoryController Controller;
 
-        #endregion
-        ///___METHODS___///
         #region LIFESPAN
-        void Awake()
-        {
+        private void Awake()
+        {/*
+            Controller = FindObjectOfType<StoryController>();
             dropdown = GetComponent<TMP_Dropdown>();
-            InkParser.TextSpeed storedValue = (InkParser.TextSpeed)PlayerPrefs.GetInt("textSpeed");
+            Controller.TextSpeed storedValue = (Controller.TextSpeed)PlayerPrefs.GetInt("textSpeed");
             var value = storedValue switch
             {
-                InkParser.TextSpeed.slow => 0,
-                InkParser.TextSpeed.medium => 1,
-                InkParser.TextSpeed.fast => 2,
+                Controller.TextSpeed.slow => 0,
+                Controller.TextSpeed.medium => 1,
+                Controller.TextSpeed.fast => 2,
                 _ => 1,
             };
             dropdown.value = value;
+            */
         }
         private void Start()
         {
@@ -49,15 +47,15 @@ namespace TEMPLATENAMESPACE
         #endregion
         #region OTHER_METHODS
         public void SetSpeedTo(int value)
-        {
+        {/*
             var speed = value switch
             {
-                0 => InkParser.TextSpeed.slow,
-                1 => InkParser.TextSpeed.medium,
-                2 => InkParser.TextSpeed.fast,
-                _ => InkParser.TextSpeed.medium,
+                0 => Controller.TextSpeed.slow,
+                1 => Controller.TextSpeed.medium,
+                2 => Controller.TextSpeed.fast,
+                _ => Controller.TextSpeed.medium,
             };
-            PlayerPrefs.SetInt("textSpeed", (int)speed);
+            PlayerPrefs.SetInt("textSpeed", (int)speed);*/
         }
         #endregion
     }

@@ -8,7 +8,7 @@ namespace DataService
     /// <summary>
     /// Abstract class for savedata.
     /// </summary>
-    [Serializable]
+    [Serializable] // NOTE: Should this be an interface?
     public abstract class DataClass
     {
         public virtual string Label { get; set; }

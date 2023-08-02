@@ -7,6 +7,7 @@ using NaughtyAttributes;
 
 namespace Bas.Utility
 {
+    [Serializable]
     /// <summary>
     /// <para>State machine for a particular type of <see cref="FSMState"/>, and using stack-based logic such as pop and push.</para>
     /// A nested stack-based finite state machine. To be honest i strongly suspect this bastard hybrid form of a nested and a stack-based fsm has the copmlications of both and possibly the benefits of neither but it's what i threw together and build the current system on, and it suits my purposes for now.
@@ -25,20 +26,20 @@ namespace Bas.Utility
         // Public Properties
         #region Public Properties
         public BaseState<T> CurrentState => StateStack.TryPeek(out BaseState<T> result)?result:null;
+        public Dictionary<Type, BaseState<T>> KnownStates { get; private set; } = new();
 
         #endregion
         // Private Properties
         #region Private Properties
-        private Dictionary<Type, BaseState<T>> KnownStates = new();
-        private BaseState<T> EntryState { get; set; }
+        private BaseState<T> BaseState { get; set; }
 
         #endregion
         // Constructor
         #region Constructor
-        public StackBasedStateMachine(T controller, params BaseState<T>[] states)
+        public StackBasedStateMachine(T controller, BaseState<T> dummyState, params BaseState<T>[] states)
         {
             Controller = controller;
-            EntryState = states[0];
+            BaseState = dummyState;
             foreach (BaseState<T> state in states)
             {
                 state.Controller = controller;
@@ -94,7 +95,7 @@ namespace Bas.Utility
                     CurrentState.OnEnter();
                 }
             }
-            else if(newState == EntryState)
+            else if(newState == BaseState)
             {
                 // Initial state transition
                 StateStack.Push(newState);
@@ -139,7 +140,7 @@ namespace Bas.Utility
                 }
                 else
                 {
-                    newState = EntryState;
+                    newState = BaseState;
                 }
 
                 int levelDifference = GetLevelDifference(CurrentState, newState);
@@ -157,7 +158,7 @@ namespace Bas.Utility
                     StateStack.Pop(); // remove current state from top
                     if (StateStack.Count == 0)
                     {
-                        StateStack.Push(EntryState);
+                        StateStack.Push(BaseState);
                     }
                     CurrentState.OnEnter(); // Perform the enter behaviour
                 }
@@ -168,7 +169,7 @@ namespace Bas.Utility
                     StateStack.Pop(); // remove current state from the top
                     if (StateStack.Count == 0)
                     {
-                        StateStack.Push(EntryState);
+                        StateStack.Push(BaseState);
                     }
                     BaseState<T> intermediateState = CurrentState;
                     while (levelDifference < 0)
@@ -185,7 +186,7 @@ namespace Bas.Utility
                     StateStack.Pop(); // remove current state from the top
                     if (StateStack.Count == 0)
                     {
-                        StateStack.Push(EntryState);
+                        StateStack.Push(BaseState);
                     }
                     CurrentState.OnEnter();
                 }
@@ -195,7 +196,7 @@ namespace Bas.Utility
                 Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
                 // reset system.
                 StateStack.Clear();
-                StateStack.Push(EntryState);
+                StateStack.Push(BaseState);
             }
         }
 

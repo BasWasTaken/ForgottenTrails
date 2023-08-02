@@ -26,7 +26,7 @@ namespace ForgottenTrails
         static void OnCreateStory(Story story)
         {
             /// If you'd like NOT to automatically show the window and attach (your teammates may appreciate it!) then replace "true" with "false" here. 
-            InkPlayerWindow window = InkPlayerWindow.GetWindow(true);
+            InkPlayerWindow window = InkPlayerWindow.GetWindow(false);
             if (window != null) InkPlayerWindow.Attach(story);
         }
         public override void OnInspectorGUI()
@@ -34,7 +34,7 @@ namespace ForgottenTrails
             Repaint();
             base.OnInspectorGUI();
             var realTarget = target as StoryController;
-            var story = realTarget.story;
+            var story = realTarget.Story;
             
             InkPlayerWindow.DrawStoryPropertyField(story, new GUIContent("Story"));
         }

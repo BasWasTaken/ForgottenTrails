@@ -16,8 +16,8 @@ namespace Bas.Utility
     {
         // Inspector Properties
         #region Inspector Properties
-        [field:SerializeField, ReadOnly]
-        public Stack<BaseState<T>> StateStack { get; private set; }
+        [field: SerializeField, ReadOnly]
+        public Stack<BaseState<T>> StateStack { get; private set; } = new();
 
         [field:SerializeField, Required]
         public T Controller { get; private set; }
@@ -95,15 +95,11 @@ namespace Bas.Utility
                     CurrentState.OnEnter();
                 }
             }
-            else if(newState == BaseState)
+            else
             {
                 // Initial state transition
                 StateStack.Push(newState);
                 CurrentState.OnEnter();
-            }
-            else
-            {
-                throw new Exception("Unexpected state");
             }
         }
         /// <summary>

@@ -85,22 +85,24 @@ namespace ForgottenTrails.InkFacilitation
             SetDresser = new(this);
             SetDresser.AudioHandler = GetComponent<AudioHandler>();
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
-
+        }
+        private void Start()
+        {
             StateMachine = new
-                (
-                this, 
-                dummyState,
-                superState,
-                productionState,
-                functionState,
-                waitingForInputState,
-                waitingForChoiceState,
-                waitingForContinueState,
-                gameMenuState,
-                inventoryState,
-                settingsState,
-                savingState
-                );
+            (
+            this,
+            dummyState,
+            superState,
+            productionState,
+            functionState,
+            waitingForInputState,
+            waitingForChoiceState,
+            waitingForContinueState,
+            gameMenuState,
+            inventoryState,
+            settingsState,
+            savingState
+            );
             StateMachine.TransitionToState(superState);
         }
         private void Update()

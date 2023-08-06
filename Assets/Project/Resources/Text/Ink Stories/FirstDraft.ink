@@ -9,19 +9,45 @@ VAR PreviousLocation = "Undefined"
 VAR EdanCastleName = 0
 VAR EdanVisited = 0
 
+//Temporary Item values until full system is implemented:
+VAR ItemKnife = 0
+VAR ItemWornSword = 0
+VAR ItemCookingPot = 0
+VAR ItemForagedMushrooms = 0
+VAR ItemLantern = 0
+
 === Start ===
 #backdrop:whiterun
 ~ TimeOfDay = Dawn
-    -> Opening
+    -> Awakening
     
 === Death ===
 And so ends this tale. Another apprentice that would never return, their findings lost to the wind.
 ->END
 
 === RandomEventsEdanArea ===
-//To do: add an array of events here that can be called for random events in the area surrounding Edan Castle
+//To do: add event content
+{~!->MerchantBrothers|!->Deer|!->Downpour}
+
 =MerchantBrothers
+TestMerchant
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> EdCastleGatehouseWalkway}
+If you're seeing this something went wrong with the random event bit in Inky!
 ->END
+=Deer
+TestDeer
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> EdCastleGatehouseWalkway}
+If you're seeing this something went wrong with the random event bit in Inky!
+->END
+=Downpour
+As you're traveling, you start to notice dark clouds gathering overhead.
+*Press on
+    It's probably nothing. And even so, a little rain can't stop you, right?
+*Seek shelter
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> EdCastleGatehouseWalkway}
+If you're seeing this something went wrong with the random event bit in Inky!
+->END
+
 === Opening ===
 #backdrop:Vault1
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
@@ -316,6 +342,7 @@ As you press on, your ears pick up another melody. Faintly at first, but with ev
 === Awakening ===
 ~TimeOfDay = Dawn
 ~CurrentLocation = "ScotlandEntranceRoad"
+~PreviousLocation = "DreamState"
 You awaken with a start. A dream after all. Of course it was, now that you look back on it. 
 You turn on your back, the small canvas tent that shields you from the elements coming into view. You can smell the morning forest and the smouldering remains of your campfire.
 ->Awakening.Tent
@@ -357,9 +384,11 @@ You can find your belongings by clicking on the backpack icon on the right. You 
 
 ===ScotlandEntranceRoad===
 ~CurrentLocation = "ScotlandEntranceRoad"
-{PreviousLocation = "EdinburghCrossroads": Ah, a return visit! Too bad this isn't implemented yet.->ReturnVisit|->FirstVisit}
+
+{PreviousLocation == "EdinburghCrossroads": Ah, a return visit! Too bad this isn't implemented yet.->ReturnVisit|->FirstVisit}
 =ReturnVisit
 *[Go back the way you came]
+
 ~PreviousLocation = "ScotlandEntranceRoad"
 ->EdinburghCrossroads
 =FirstVisit
@@ -388,17 +417,19 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ CurrentLocation = "EdinburghCrossroads"
-The road splits here into four directions. The northbound road {EdanVisited = 0 and EdanCastleName = 1: presumably |}leads to {EdanCastleName = 1:Edan Castle|the castle on the hill}{PreviousLocation = EdinburghCastleEntrance:, from which you came|.}; the road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation = ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
-At the center of the crossing you spot a decorated boulder: a Waystone. 
+The road splits here into four directions. The northbound road {EdanVisited == 0 and EdanCastleName == 1: presumably |}leads to {EdanCastleName == 1:Edan Castle|the castle on the hill}{PreviousLocation == "EdinburghCastleEntrance":, from which you came|.}; the road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == "ScotlandEntranceRoad":, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+At the center of the crossing you spot a decorated boulder: a Waystone.
+->EdinburghCrossroads.Crossing
 =Crossing
 +[Take the North Road]
-You decide to take the North road{Previouslocation = EdinburghCastleEntrance: and go back the way you came.| leading to {EdanCastleName = 1:Edan Castle |the Hilltop Castle.}}
+You decide to take the North road{PreviousLocation == "EdinburghCastleEntrance": and go and go back the way you came.|  leading to {EdanCastleName == 1:Edan Castle |the Hilltop Castle.}}
+~PreviousLocation = "EdinburghCrossroads"
 ->RoadToEdanCastle
 +[Take the East Road]
 Sorry buddy, no content East yet!
 ->EdinburghCrossroads.Crossing
 +[Take the South Road]
-You decide to {PreviousLocation = "ScotlandEntranceRoad":go back the way you came.|take the Southern Road.}
+You decide to {PreviousLocation == "ScotlandEntranceRoad":go back the way you came.|take the Southern Road.}
 ~PreviousLocation = "EdinburghCrossroads"
 ->ScotlandEntranceRoad
 +[Take the West Road]
@@ -419,6 +450,9 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element
+~CurrentLocation = "RoadToEdanCastle"
+{~->RandomEventsEdanArea|->CastleEntrance}
+
 ->CastleEntrance
 === CastleEntrance ===
 ~ CurrentLocation = "EdinburghCastleEntrance"

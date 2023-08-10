@@ -6,7 +6,17 @@ LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
 VAR CurrentLocation = "Undefined"
 VAR PreviousLocation = "Undefined"
+
+//AffectionValues
+VAR AffEdgar = 50
+VAR AffHenry = 50
+
+//List of known names
 VAR EdanCastleName = 0
+VAR MetEdgar = 0
+VAR MetHenry = 0
+
+//List of locations
 VAR EdanVisited = 0
 
 //Temporary Item values until full system is implemented:
@@ -15,6 +25,12 @@ VAR ItemWornSword = 0
 VAR ItemCookingPot = 0
 VAR ItemForagedMushrooms = 0
 VAR ItemLantern = 0
+
+//Companion values for Alice
+VAR AliceInParty = 0
+
+//Companion values for Robert
+VAR RobertInParty = 0
 
 === Start ===
 #backdrop:whiterun
@@ -31,20 +47,22 @@ And so ends this tale. Another apprentice that would never return, their finding
 
 =MerchantBrothers
 TestMerchant
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> EdCastleGatehouseWalkway}
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Deer
 TestDeer
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> EdCastleGatehouseWalkway}
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Downpour
+//Add companion dependent dialogue
 As you're traveling, you start to notice dark clouds gathering overhead.
 *Press on
     It's probably nothing. And even so, a little rain can't stop you, right?
 *Seek shelter
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> EdCastleGatehouseWalkway}
+    You decide not to risk getting drenched and find some cover. Unfortunately, you don't 
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 
@@ -385,7 +403,7 @@ You can find your belongings by clicking on the backpack icon on the right. You 
 ===ScotlandEntranceRoad===
 ~CurrentLocation = "ScotlandEntranceRoad"
 
-{PreviousLocation == "EdinburghCrossroads": Ah, a return visit! Too bad this isn't implemented yet.->ReturnVisit|->FirstVisit}
+{PreviousLocation == "EdinburghCrossroads": Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
 =ReturnVisit
 *[Go back the way you came]
 
@@ -403,7 +421,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
         No keeper has set foot here in two hundred years, and even those long dead explorers never ventured deeply into the wilds. Without a doubt, you will be able to complete your task here; to find knowledge not yet stored in the Vault of Barralon. From local folklore to a survey of the wildlife, anything will do. But you did not venture all this way to write down the mundane. You came to find something old. Something ancient, from before the sundering. 
         
         As you contemplate your quest, you realize your feet have carried you to the top of the hill. 
-        ***[Survey the landscape]Beneath a pink morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a sturdy hill. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
+        ***[Survey the landscape]Beneath a bright morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a rocky outcrop. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
             ****[Continue following the road towards the castle]
             You continue your journey, the earth crunching beneath your feet. Almost at the halfway point between your hilltop outlook and the castle you find yourself at a crossroads. 
             ~ PreviousLocation = "ScotlandEntranceRoad"
@@ -417,7 +435,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ CurrentLocation = "EdinburghCrossroads"
-The road splits here into four directions. The northbound road {EdanVisited == 0 and EdanCastleName == 1: presumably |}leads to {EdanCastleName == 1:Edan Castle|the castle on the hill}{PreviousLocation == "EdinburghCastleEntrance":, from which you came|.}; the road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == "ScotlandEntranceRoad":, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+The road splits here into four directions. The northbound road {EdanVisited == 0 and EdanCastleName == 1: presumably |}leads to {EdanCastleName == 1:Edan Castle|the castle on the hill}{PreviousLocation == "RoadToEdanCastle":, from which you came|.}; the road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == "ScotlandEntranceRoad":, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
@@ -445,18 +463,18 @@ From this stone to Edan Castle, 7 miles Northbound
 From this stone to the Sea, 8 miles Eastbound
 From this stone to Thahnford, 107 miles Southbound"
 
-A fourth line is also there, but the markings are scratched out. Carved beneath it in a more freeform hand someone wrote: "Don't go West, only daemons there!"
+A fourth line is also there, but the markings are scratched out. Carved beneath it in a freeform script -that barely passes as legible- is written a single word: "daemons".
 ->EdinburghCrossroads.Crossing
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element
 ~CurrentLocation = "RoadToEdanCastle"
-{~->RandomEventsEdanArea|->CastleEntrance}
+{~->RandomEventsEdanArea|{~PreviousLocation = RoadToEdanCastle}->CastleEntrance}
 
 ->CastleEntrance
 === CastleEntrance ===
-~ CurrentLocation = "EdinburghCastleEntrance"
-    -> CastleEntranceFirst
+~ CurrentLocation = "EdanCastleEntrance"
+{EdanVisited == 1: -> CastleEntranceReturnVisit|-> CastleEntranceFirst}
 
 = CastleEntranceFirst
 #backdrop: CastleGate
@@ -495,25 +513,59 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
     The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man stands behind it holding the door open for you with one hand while leaning on a spear with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
     
     As you step inside the man shuts the door behind you, taking great care to put the locks back into place. 
-    ~ PreviousLocation = "EdinburghCastleEntrance"
-    ~ CurrentLocation = "EdinburghCastleGatehouse"
+    ~ PreviousLocation = "EdanCastleEntrance"
+    ~ CurrentLocation = "EdanCastleGatehouse"
         **Engage the man in some further conversation
         -> EdgarGatehouse
         **(thanked)Thank the man and head into town
-        ->EdCastleGatehouseWalkway
+        ->CastleGatehouseWalkway
         **(ignored)Say nothing and keep walking
-        ->EdCastleGatehouseWalkway
+        ->CastleGatehouseWalkway
 *"Wraiths?"
 *"Do you often have to kill creatures gently walking up to the door?"
 
-=== EdCastleGatehouseWalkway ===
-//{EdCastleGatehouseWalkway: There's a small courtyard behind the gatehouse, behind which the path climbs steeply up the hill. {TimeOfDay == Night: The light of {MetEdgar: Edgar's | the guard's} lamp quickly fades as you make your way up the steps, and in the dark you nearly take a tumble.}{TimeOfDay == Dawn: }Once at the top, you are greeted by what appears to be a town square. {TimeOfDay == Night: It is empty now, but the various stalls suggest the place will be lively in a few hours.}{TimeOfDay == Dawn: Most townspeople are probably still asleep, but you already spot two men setting up what appears to be a market stall}{TimeOfDay == Morning: It's a small affair compared to other places you've been, but for this corner of the world it might as well be Grand Market of Barralon. On the opposite end of the square there are several houses{TimeOfDay == Night:, of which all the lights are dimmed}{TimeOfDay == Dawn: On the right}}}
+= CastleEntranceReturnVisit
+As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {ItemLantern == 0:but knowing it's there helps guide your feet.}{ItemLantern == 1:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {MetHenry:Henry|a guard} leaning on his halberd. 
+//{AffHenry < 25: } (to do: make scenario where Henry stops you)
+He looks {AliceInParty == 1 or RobertInParty == 1:you|your party} over and smiles. With his left hand, he gestures that you may pass into the settlement.
++[Continue on]
++[Talk to {MetHenry:Henry|the guard}.]
++[Go back]
+~PreviousLocation = EdanCastleEntrance
+->RoadToEdanCastle
+
+= CastleEntranceReturnVisitNight
+{ItemLantern == 0:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
+{ItemLantern == 1:As you approach, you hear a man's voice ring out from behind the battlements:}
+"Hail traveler{AliceInParty == 1 or RobertInParty == 1:s}, what's your business in Edani at this hour?"
+*{MetEdgar == 1}"It's {AliceInParty == 1 or RobertInParty == 1:us|me} Edgar, {PlayerName}{AliceInParty == 1 and RobertInParty == 0: and Alice}{AliceInParty == 0 and RobertInParty == 1: and Robert}{AliceInParty == 1 and RobertInParty == 1:, Alice and Robert}."
+    {AffEdgar < 25:"{PlayerName} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
+    {AffEdgar < 50 and AffEdgar > 24:Oh, {PlayerName}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseWalkway} 
+    {AffEdgar > 49:Ah, {PlayerName}! What are you{AliceInParty == 1 or RobertInParty == 1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
+*"{AliceInParty == 1 or RobertInParty == 1:We're|I'm} simply looking for some shelter in the night." 
+*[Jokingly say:]"Why, to rob you blind of course! 
+*[Sternly say: ]"Open the gate, 
+
+=CastleEntranceReturnVisitNightNoLantern
+This bit is still being developed! Head on over to behind the gate. 
+->CastleGatehouseWalkway
+=CastleEntranceReturnVisitNightLocked
+You find yourself locked out of Edani.
+*[Leave]
+You decide to leave and take the path back down the hill.
+~PreviousLocation = CastleEntrance
+->RoadToEdanCastle
+*[Knock on the gate]
+*[Wait}
+
+=== CastleGatehouseWalkway ===
+//{CastleGatehouseWalkway: There's a small courtyard behind the gatehouse, behind which the path climbs steeply up the hill. {TimeOfDay == Night: The light of {MetEdgar:Edgar's| the guard's} lamp quickly fades as you make your way up the steps, {ItemLantern == 0:and in the dark you nearly take a tumble.}{ItemLantern == 1: but you have your own light to guide you.}{TimeOfDay == Dawn: } Once at the top, you are greeted by what appears to be a town square. {TimeOfDay == Night: It is empty now, but the various stalls suggest the place will be lively in a few hours.}{TimeOfDay == Dawn: Most townspeople are probably still asleep, but you already spot two men setting up what appears to be a market stall}{TimeOfDay == Morning: A few stalls are set up, with merchants plying their wares. It's a small affair compared to other places you've been, but for this corner of the world it might as well be Grand Market of Barralon. On the opposite end of the square there are several stonework houses{TimeOfDay == Night:, of which all the lights are out}{TimeOfDay == Dawn: On the right}}}
 ->END
 === EdgarGatehouse ===
 
 -> END
 
-=== EdCastlePrison ===
+=== CastlePrison ===
 ~ CurrentLocation = "EdinburghCastlePrison"
 VAR MaryUpset = false
 {MaryPrisonGreeting: You find yourself in the damp prison room. {MetMary: Mary | A figure }is huddled against the far wall, a set of iron bars keeping you apart. | You descend the worn uneven steps cautiously. It's cooler here, and slightly damp. The thick stone walls appear to keep out most of the sun's warmth. You arrive in a broad, round room, a torch flickering on your left. The room is divided down the middle by a set of iron bars. Behind them, at the back of the room, you see a figure huddled against the wall. -> MaryPrisonGreeting}

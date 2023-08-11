@@ -47,12 +47,12 @@ And so ends this tale. Another apprentice that would never return, their finding
 
 =MerchantBrothers
 TestMerchant
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> CastleEntrance}
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads": -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Deer
 TestDeer
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> CastleEntrance}
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads": -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Downpour
@@ -62,7 +62,7 @@ As you're traveling, you start to notice dark clouds gathering overhead.
     It's probably nothing. And even so, a little rain can't stop you, right?
 *Seek shelter
     You decide not to risk getting drenched and find some cover. Unfortunately, you don't 
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads.Crossing": -> CastleEntrance}
+{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads": -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 
@@ -380,8 +380,8 @@ You can find your belongings by clicking on the backpack icon on the right. You 
     **[Use pot]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
         ***[Use foraged mushrooms]
-        You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside fearing poison. 
-        A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve a king, but your stomach is grateful for it nevertheless. 
+        You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison. 
+        A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 
         {Tent.PackUpEarly: |You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented]}
         Fully fed, it's about time to head off if you still want to make some decent progress today. 
         While outside, you can get a general sense of what time it is by looking at the time indicator in the top right. Most actions and events will cause time to progress. The world will differ depending on the day-night cycle, but do not worry on missing out. A Keeper's quest is as much -if not more so- about the journey than it is about the destination. And if Fate wants certain people to meet, she always finds a way. [Vugs note: not yet implemented, time is currently tracked in Inky but needs a coding addition] 
@@ -394,10 +394,10 @@ You can find your belongings by clicking on the backpack icon on the right. You 
 ->Tent
 
 =PackUp
-*And you follow it.
+*So you take the road North.
 ->ScotlandEntranceRoad
 +But you decide to head south.
-{Southbound is the way you came. The goal of your journey is the other way.|You came from there only yesterday. It would be such a waste to turn back now.|Your master would be sorely dissappointed if you came back without accomplishing what you set out to do.|Because somehow, you feel compelled to do so. You feel like if you take one step in that direction, you cannot help but walk all the way back home.|And end the story of the north right here, only to begin the long journey home.->END} ->Awakening.PackUp
+{Southbound is the way you came. The goal of your journey is the other way.|You came from there only yesterday. It would be such a waste to turn back now.|Your master would be sorely dissappointed if you came back without accomplishing what you set out to do.|Because somehow, you feel compelled to do so. You feel like if you take one step in that direction, you cannot help but walk all the way back home.|And end your northern adventures right here, only to begin the long journey home.->END} ->Awakening.PackUp
 
 
 ===ScotlandEntranceRoad===
@@ -435,7 +435,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ CurrentLocation = "EdinburghCrossroads"
-The road splits here into four directions. The northbound road {EdanVisited == 0 and EdanCastleName == 1: presumably |}leads to {EdanCastleName == 1:Edan Castle|the castle on the hill}{PreviousLocation == "RoadToEdanCastle":, from which you came|.}; the road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == "ScotlandEntranceRoad":, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+The road splits here into four directions. The northbound road {EdanVisited == 0 and EdanCastleName == 1: presumably |}leads to {EdanCastleName == 1:Edan Castle|the castle on the hill}{PreviousLocation == "RoadToEdanCastle":, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == "ScotlandEntranceRoad":, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
@@ -469,9 +469,12 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element
 ~CurrentLocation = "RoadToEdanCastle"
-{~->RandomEventsEdanArea|{~PreviousLocation = RoadToEdanCastle}->CastleEntrance}
+{~->RandomEventsEdanArea|->CastleEntranceFromRoad}
 
+=== CastleEntranceFromRoad
+~PreviousLocation = RoadToEdanCastle
 ->CastleEntrance
+
 === CastleEntrance ===
 ~ CurrentLocation = "EdanCastleEntrance"
 {EdanVisited == 1: -> CastleEntranceReturnVisit|-> CastleEntranceFirst}
@@ -531,17 +534,18 @@ He looks {AliceInParty == 1 or RobertInParty == 1:you|your party} over and smile
 +[Continue on]
 +[Talk to {MetHenry:Henry|the guard}.]
 +[Go back]
-~PreviousLocation = EdanCastleEntrance
+~PreviousLocation = "EdanCastleEntrance"
 ->RoadToEdanCastle
 
 = CastleEntranceReturnVisitNight
+//Get Bas to change "Name" to "PlayerName" for clarity
 {ItemLantern == 0:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
 {ItemLantern == 1:As you approach, you hear a man's voice ring out from behind the battlements:}
 "Hail traveler{AliceInParty == 1 or RobertInParty == 1:s}, what's your business in Edani at this hour?"
-*{MetEdgar == 1}"It's {AliceInParty == 1 or RobertInParty == 1:us|me} Edgar, {PlayerName}{AliceInParty == 1 and RobertInParty == 0: and Alice}{AliceInParty == 0 and RobertInParty == 1: and Robert}{AliceInParty == 1 and RobertInParty == 1:, Alice and Robert}."
-    {AffEdgar < 25:"{PlayerName} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
-    {AffEdgar < 50 and AffEdgar > 24:Oh, {PlayerName}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseWalkway} 
-    {AffEdgar > 49:Ah, {PlayerName}! What are you{AliceInParty == 1 or RobertInParty == 1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
+*{MetEdgar == 1}"It's {AliceInParty == 1 or RobertInParty == 1:us|me} Edgar, {Name}{AliceInParty == 1 and RobertInParty == 0: and Alice}{AliceInParty == 0 and RobertInParty == 1: and Robert}{AliceInParty == 1 and RobertInParty == 1:, Alice and Robert}."
+    {AffEdgar < 25:"{Name} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
+    {AffEdgar < 50 and AffEdgar > 24:Oh, {Name}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseWalkway} 
+    {AffEdgar > 49:Ah, {Name}! What are you{AliceInParty == 1 or RobertInParty == 1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
 *"{AliceInParty == 1 or RobertInParty == 1:We're|I'm} simply looking for some shelter in the night." 
 *[Jokingly say:]"Why, to rob you blind of course! 
 *[Sternly say: ]"Open the gate, 
@@ -556,7 +560,7 @@ You decide to leave and take the path back down the hill.
 ~PreviousLocation = CastleEntrance
 ->RoadToEdanCastle
 *[Knock on the gate]
-*[Wait}
+*[Wait]
 
 === CastleGatehouseWalkway ===
 //{CastleGatehouseWalkway: There's a small courtyard behind the gatehouse, behind which the path climbs steeply up the hill. {TimeOfDay == Night: The light of {MetEdgar:Edgar's| the guard's} lamp quickly fades as you make your way up the steps, {ItemLantern == 0:and in the dark you nearly take a tumble.}{ItemLantern == 1: but you have your own light to guide you.}{TimeOfDay == Dawn: } Once at the top, you are greeted by what appears to be a town square. {TimeOfDay == Night: It is empty now, but the various stalls suggest the place will be lively in a few hours.}{TimeOfDay == Dawn: Most townspeople are probably still asleep, but you already spot two men setting up what appears to be a market stall}{TimeOfDay == Morning: A few stalls are set up, with merchants plying their wares. It's a small affair compared to other places you've been, but for this corner of the world it might as well be Grand Market of Barralon. On the opposite end of the square there are several stonework houses{TimeOfDay == Night:, of which all the lights are out}{TimeOfDay == Dawn: On the right}}}
@@ -585,23 +589,23 @@ VAR MaryUpset = false
     **(rude)"What sort of wretch are you that they left you down here?"
     -> MaryPrisonConvo
     ++[On second thought, never mind] You decide not to speak to them. 
-    ->EdCastlePrison
+    ->CastlePrison
     
 = MaryPrisonConvo
 The figure perks up to look at you. Their hood falls back to reveal a young woman's face. Her long auburn hair falls down unkempt, perhaps due to the lack of a comb, but her bright hazel eyes look at you with intrigue.
 
-{EdCastlePrison.MaryPrisonGreeting.neutral:"A visitor? And a new face too, what a pleasant surprise." She smiles at you.}{EdCastlePrison.MaryPrisonGreeting.kind:"I have had better days, but things could be worse I suppose." She smiles faintly. "...Thank you."}{EdCastlePrison.MaryPrisonGreeting.joke:A smile forms on her lips, "Yes, I should have the maid tidy up and bring a new set of pillows." She laughs sadly, "Oh, if only I could return to those halcyon days." She shakes her head as if to drive away her thoughts. }{EdCastlePrison.MaryPrisonGreeting.rude:"I see another one of the brutes has made it down here? Pray, tell me what it is you want so I can return to my misery." | "Pray tell, what brings you down to my part of the castle?"}
+{CastlePrison.MaryPrisonGreeting.neutral:"A visitor? And a new face too, what a pleasant surprise." She smiles at you.}{CastlePrison.MaryPrisonGreeting.kind:"I have had better days, but things could be worse I suppose." She smiles faintly. "...Thank you."}{CastlePrison.MaryPrisonGreeting.joke:A smile forms on her lips, "Yes, I should have the maid tidy up and bring a new set of pillows." She laughs sadly, "Oh, if only I could return to those halcyon days." She shakes her head as if to drive away her thoughts. }{CastlePrison.MaryPrisonGreeting.rude:"I see another one of the brutes has made it down here? Pray, tell me what it is you want so I can return to my misery." | "Pray tell, what brings you down to my part of the castle?"}
 *"I was just exploring, to be honest."
-{EdCastlePrison.MaryPrisonGreeting.rude: "Well go explore somewhere else then." The woman pulls her hood back over her head and turns away from you. | "Oh, is that so? You might want to be careful then, before they suspect you are trying to help me in one way or another."}
+{CastlePrison.MaryPrisonGreeting.rude: "Well go explore somewhere else then." The woman pulls her hood back over her head and turns away from you. | "Oh, is that so? You might want to be careful then, before they suspect you are trying to help me in one way or another."}
 *"I heard about you in town... Are the stories true?"
 Her expression grows solemn. "That depends" she says. "What did you hear?"
     **"That you're a monster, capable of killing with your bare hands"
     **"That you're a former queen that once ruled over the north"
     **"The stories conflict a bit, but all agree that you're dangerous"
-*{EdCastlePrison.MaryPrisonGreeting.rude or EdCastlePrison.MaryPrisonGreeting.neutral}"To mock, what else would one do with a prisoner?"
-{EdCastlePrison.MaryPrisonGreeting.neutral: Her face turns to anger. "I should have known, another one of the brutes. Do you lot have nothing better to do? Just leave me." | "Go find someone who cares, you lout." The woman pulls her hood back over her head and turns away from you.}
+*{CastlePrison.MaryPrisonGreeting.rude or CastlePrison.MaryPrisonGreeting.neutral}"To mock, what else would one do with a prisoner?"
+{CastlePrison.MaryPrisonGreeting.neutral: Her face turns to anger. "I should have known, another one of the brutes. Do you lot have nothing better to do? Just leave me." | "Go find someone who cares, you lout." The woman pulls her hood back over her head and turns away from you.}
 *"Do I need a reason?"
-{EdCastlePrison.MaryPrisonGreeting.rude: "Well if you do not have any business here, leave me be. I have nothing to say to you." The woman pulls her hood back over her head and turns away from you. -> MaryPrisonUpset | "Mhm, I suppose not. Would you like to chat for a bit? It has been a while since anyone came down here that was willing to engage me in conversation. I am called Mary, by the way."}
+{CastlePrison.MaryPrisonGreeting.rude: "Well if you do not have any business here, leave me be. I have nothing to say to you." The woman pulls her hood back over her head and turns away from you. -> MaryPrisonUpset | "Mhm, I suppose not. Would you like to chat for a bit? It has been a while since anyone came down here that was willing to engage me in conversation. I am called Mary, by the way."}
     - (MaryNameLoop) 
     **(MetMary)"A pleasure to meet you Mary, I'm {Name}"
         She smiles warmly at you, "The pleasure is all mine,{Name}."
@@ -613,7 +617,7 @@ Her expression grows solemn. "That depends" she says. "What did you hear?"
     **[Pick a topic yourself]
     ++"Actually, I have to get going"
     She looks crestfallen. "I see..." She gives you a sad smile. "Well, I will be here if you change your mind."
-    ->EdCastlePrison
+    ->CastlePrison
 = MaryPrisonUpset
 Test
 -> END

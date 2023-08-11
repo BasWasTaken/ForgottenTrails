@@ -4,6 +4,15 @@ LIST VisitedState = Yes, No
 
 LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
+VAR TimeOfDayInt = 0
+=== TimeOfDayFunc
+~TimeOfDayInt ++ 
+{
+	- TimeOfDayInt == 7:
+	~TimeOfDayInt = 0
+}
+
+
 VAR CurrentLocation = "Undefined"
 VAR PreviousLocation = "Undefined"
 

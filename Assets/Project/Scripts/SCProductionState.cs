@@ -32,7 +32,7 @@ namespace ForgottenTrails.InkFacilitation
                 Paused,
                 Done
             }
-
+            [HideInInspector]
             public TextProducerStatus TPStatus = TextProducerStatus.Idle;
 
             internal float additionalPause = 0f;

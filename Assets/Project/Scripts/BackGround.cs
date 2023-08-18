@@ -8,6 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// <para>SUMMARY GOES HERE.</para>
 /// </summary>
+[Serializable]
 public class BackGround : MonoBehaviour
 {
     ///___VARIABLES___///

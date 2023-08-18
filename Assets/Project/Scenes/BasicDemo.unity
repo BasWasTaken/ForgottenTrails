@@ -6995,6 +6995,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3837fd452f5b2040aebfebcc675fef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <AudioSourceSystem>k__BackingField: {fileID: 4636245370548742609}
+  <AudioSourceSfx>k__BackingField: {fileID: 4636245369445873570}
+  <AudioSourceVoice>k__BackingField: {fileID: 4636245370948959648}
+  <AudioSourceAmbiance>k__BackingField: {fileID: 4636245371363056738}
+  <AudioSourceMusic>k__BackingField: {fileID: 4636245370335439450}
 --- !u!114 &2009679607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7010,6 +7015,35 @@ MonoBehaviour:
   <StateMachine>k__BackingField:
     <Controller>k__BackingField: {fileID: 0}
   <InkStoryAsset>k__BackingField: {fileID: 4900000, guid: 9fd4b9aab55923746b39c1b4ec9e0f4e, type: 3}
+  <TextProducer>k__BackingField:
+    <TextBox>k__BackingField: {fileID: 348379362}
+    <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
+    <HistoryTextBox>k__BackingField: {fileID: 2084113306}
+    _textSpeedPreset: 0
+    <PauseInfoNormal>k__BackingField:
+      _dotPause: 0.5
+      _commaPause: 0.2
+      _spacePause: 0.05
+      _normalPause: 0.01
+    <PauseInfoSkipping>k__BackingField:
+      _dotPause: 0.5
+      _commaPause: 0.2
+      _spacePause: 0.05
+      _normalPause: 0.01
+    <AutoAdvance>k__BackingField: 0
+    <AlwaysPause>k__BackingField: 0
+    <ClearWhenFull>k__BackingField: 1
+    TPStatus: 0
+  <SetDresser>k__BackingField:
+    portraitPrefab: {fileID: 8404248775511915677, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
+    portraits: {fileID: 1206258461}
+    bgImage: {fileID: 1320078387}
+  <InterfaceBroker>k__BackingField:
+    <ButtonPrefab>k__BackingField: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
+    <ButtonAnchor>k__BackingField: {fileID: 28223511}
+    <FloatingMarker>k__BackingField: {fileID: 531542277}
+    <AdvanceDialogueDelay>k__BackingField: 0.5
+    <SkipDelay>k__BackingField: 0.5
 --- !u!1 &2051102300
 GameObject:
   m_ObjectHideFlags: 0
@@ -7551,11 +7585,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4636245370948959651}
-  - {fileID: 4636245369445873565}
-  - {fileID: 4636245370335439445}
-  - {fileID: 4636245371363056733}
   - {fileID: 4636245370548742608}
+  - {fileID: 4636245369445873565}
+  - {fileID: 4636245370948959651}
+  - {fileID: 4636245371363056733}
+  - {fileID: 4636245370335439445}
   m_Father: {fileID: 2009679605}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7569,7 +7603,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4636245369843228136}
   m_Layer: 0
-  m_Name: AudioManager
+  m_Name: AudioSources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7605,7 +7639,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4636245369843228136}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &4636245370335439450
 AudioSource:
@@ -7716,7 +7750,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4636245369843228136}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &4636245370548742609
 AudioSource:
@@ -7970,7 +8004,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4636245369843228136}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4636245371363056732
 GameObject:

@@ -28,7 +28,7 @@ namespace ForgottenTrails.InkFacilitation
         {
             // Inspector Properties
             #region Inspector Properties
-            [field: SerializeField, BoxGroup("Scene References"), Required]
+            [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             [Tooltip("Panel to display current paragraph.")]
             internal TextMeshProUGUI TextBox { get; set; }
 
@@ -53,7 +53,7 @@ namespace ForgottenTrails.InkFacilitation
                     PlayerPrefs.SetInt("textSpeed", (int)_textSpeedPreset);
                 }
             }
-            [field: SerializeField, BoxGroup("Settings")]
+            [field: SerializeField, Header("Settings"), BoxGroup("Settings")]
             [Tooltip("Define pause timings here.")]
             internal PauseInfo PauseInfoNormal { get; set; } = new()
             {
@@ -124,9 +124,9 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Constructor
             #region Constructor
-            internal TextProduction(StoryController controller)
+            internal void Assign()
             {
-                Controller = controller;
+                Controller = Instance;
             }
             #endregion
             // Public Methods

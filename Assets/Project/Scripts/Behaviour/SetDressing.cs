@@ -13,11 +13,13 @@ using Bas.Utility;
 
 namespace ForgottenTrails.InkFacilitation
 {
+    
     [RequireComponent(typeof(AudioHandler))]
     public partial class StoryController : MonoSingleton<StoryController>
     {/// <summary>
      /// <para>Works in tandem with <see cref="StoryController"/> to populate scenes with assets and effects as dictated in <see cref="Ink.Runtime.Story"/> assets.</para>
      /// </summary>
+        [Serializable]
         public class SetDressing
         {
             // Inspector Properties
@@ -35,9 +37,10 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Constructor
             #region Constructor
-            internal SetDressing(StoryController controller)
+            internal SetDressing()
             {
-                Controller = controller;
+                Controller = Instance;
+                AudioHandler = Controller.GetComponent<AudioHandler>();
             }
             #endregion
             // Public Methods
@@ -49,12 +52,12 @@ namespace ForgottenTrails.InkFacilitation
 
             #endregion
             // UNRESOLVED
-            [SerializeField, BoxGroup("Prefabs"), Required]
+            [SerializeField, Header("Prefabs"), Required]
             private Image portraitPrefab = null;
-            [SerializeField, BoxGroup("Scene References"), Required]
+            [SerializeField, Header("Scene References"), Required]
             private HorizontalLayoutGroup portraits;
 
-            [SerializeField, BoxGroup("Scene References"), Required]
+            [SerializeField, Header("Scene References"), Required]
             public BackGround bgImage;
 
 
@@ -193,40 +196,53 @@ namespace ForgottenTrails.InkFacilitation
                     Controller.InkDataAsset.SceneState.ActiveAmbiance = fileName;
                 }
                 PlayAudio(audioClip, audioGroup, relVol, oneShot: oneShot, loop: loop);
+                Debug.Log("Test");
             }
             private void PlayAudio(AudioClip audioClip, AudioHandler.AudioGroup audioGroup, float relVol = .5f, bool oneShot = false, bool loop = false)
             {
+                Debug.Log("Test");
                 AudioSource audioSource = AudioHandler.GetSource(audioGroup);
+                Debug.Log(AudioHandler);
+                Debug.Log(audioGroup);
+                Debug.Log(audioSource);
                 if (audioClip == null)
                 {
+                    Debug.Log("Test");
                     audioSource.clip = null;
                     audioSource.Stop();
                 }
                 else
                 {
+                    Debug.Log("Test");
                     if (oneShot)
                     {
+                        Debug.Log("Test");
                         audioSource.PlayOneShot(audioClip, relVol);
                     }
                     else
                     {
+                        Debug.Log("Test");
                         if (audioSource.clip != audioClip) /// if it's a different clip than before, start playing at volume
                         {
+                            Debug.Log("Test");
                             audioSource.clip = audioClip;
                             audioSource.volume = relVol;
                             audioSource.Play();
                         }
                         else /// otherwise just apply the volume, but gradually
                         {
+                            Debug.Log("Test");
                             Controller.StartCoroutine(ShiftVolumeGradually(audioSource, audioClip, relVol));
                         }
 
                         if (loop)
                         {
+                            Debug.Log("Test");
                             audioSource.loop = true;
                         }
                         else
                         {
+                            Debug.Log("Test");
                             audioSource.loop = false;
                             Controller.StartCoroutine(RemoveClipWhenFinished(audioSource));
                         }

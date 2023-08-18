@@ -23,17 +23,17 @@ namespace ForgottenTrails.InkFacilitation
         {
             // Inspector Properties
             #region Inspector Properties
-            [field: SerializeField, BoxGroup("Prefabs"), Required]
+            [field: SerializeField, Header("Prefabs"), BoxGroup("Prefabs"), Required]
             [Tooltip("Prefab used for ink choices.")]
             public Button ButtonPrefab { get; internal set; }
 
-            [field: SerializeField, BoxGroup("Scene References"), Required]
+            [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             internal Transform ButtonAnchor { get; set; }
 
             [field: SerializeField, BoxGroup("Scene References"), Required]
             public Image FloatingMarker { get; internal set; }
 
-            [field: SerializeField, BoxGroup("Settings")]
+            [field: SerializeField, Header("Settings"), BoxGroup("Settings")]
             [Tooltip("Delay after which space button advances dialogue.")]
             public float AdvanceDialogueDelay { get; internal set; } = .1f;
 
@@ -53,9 +53,9 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Constructor
             #region Constructor
-            internal InterfaceBroking(StoryController controller)
+            internal void Assign()
             {
-                Controller = controller;
+                Controller = Instance;
             }
             #endregion
             // Public Methods

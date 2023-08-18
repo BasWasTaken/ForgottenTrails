@@ -35,10 +35,28 @@ namespace ForgottenTrails.InkFacilitation
         [Tooltip("Here drag the JSON object containing the dialogue behaviour")]
         public TextAsset InkStoryAsset { get; private set; }
 
-        [SerializeField, BoxGroup("Data"), ReadOnly] 
+        [SerializeField, BoxGroup("Data"), ReadOnly]
         [Tooltip("View data object containing INK data.")]
-        private InkDataClass _inkDataAsset;
-        public InkDataClass InkDataAsset { get { if(_inkDataAsset==null) _inkDataAsset=CreateBlankData(); return _inkDataAsset; } internal set { _inkDataAsset = value; } }
+        private InkDataClass _inkDataAsset = null;
+        public InkDataClass InkDataAsset 
+        { 
+            get 
+            {
+                if (_inkDataAsset == null) 
+                {
+                    _inkDataAsset = CreateBlankData();
+                }
+                else if(_inkDataAsset.SceneState == null)
+                {
+                    _inkDataAsset = CreateBlankData();
+                }
+                return _inkDataAsset;
+            } 
+            internal set 
+            {
+                _inkDataAsset = value; 
+            } 
+        }
         
         [Tooltip("Reset ink data in object. Note: does not remove data from file")]
         [Button("ResetInkData", EButtonEnableMode.Editor)]public void ResetInkDataButton() => ResetData();
@@ -48,10 +66,13 @@ namespace ForgottenTrails.InkFacilitation
 
         [field:SerializeField, BoxGroup("TextProducer")]
         internal TextProduction TextProducer { get; set; }
+
         [field: SerializeField, BoxGroup("SetDresser")]
         internal SetDressing SetDresser { get; set; }
+
         [field: SerializeField, BoxGroup("InterfaceBroker")]
         internal InterfaceBroking InterfaceBroker { get; set; }
+
 
         #endregion
         // Public Properties
@@ -84,9 +105,11 @@ namespace ForgottenTrails.InkFacilitation
         override protected void Awake()
         {
             base.Awake();
-            TextProducer = new(this);
-            InterfaceBroker = new(this);
-            SetDresser = new(this);
+            SetDresser = new();
+            TextProducer.Assign();
+            InterfaceBroker.Assign();
+
+
             SetDresser.AudioHandler = GetComponent<AudioHandler>();
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
         }
@@ -129,9 +152,13 @@ namespace ForgottenTrails.InkFacilitation
         /// </summary>
         /// <returns>The freshly made blank data</returns>
         private InkDataClass CreateBlankData(bool forBootup = false)
-        {// NOTE: Is this the optimal way of doing this?
+        {
+            // NOTE: Is this the optimal way of doing this?
             InkDataClass data = new(dataLabel + "DemoScene");
-            if (!forBootup) Debug.Log("Created new data " + data.Label);
+            if (!forBootup) 
+            { 
+                Debug.Log("Created new data " + data.Label); 
+            }
             return data;
         }
         private void ResetData()

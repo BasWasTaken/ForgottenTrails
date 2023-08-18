@@ -44,6 +44,11 @@ namespace ForgottenTrails.InkFacilitation
 
         public float TextSpeedMod { get; set; } = 1;
         #endregion
+
+        public SceneState()
+        {
+
+        }
     }
     #endregion
 }

@@ -14,23 +14,23 @@ namespace Bas.Utility
         #region Inspector Properties
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for system sounds like ui.")]
-        public AudioSource AudioSourceSystem { get; }
+        public AudioSource AudioSourceSystem { get; private set; }
 
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for sfx.")]
-        public AudioSource AudioSourceSfx { get; }
+        public AudioSource AudioSourceSfx { get; private set; }
 
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for voice.")]
-        public AudioSource AudioSourceVoice { get; }
+        public AudioSource AudioSourceVoice { get; private set; }
         
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for ambiance.")]
-        public AudioSource AudioSourceAmbiance { get; }
+        public AudioSource AudioSourceAmbiance { get; private set; }
         
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for music.")] 
-        public AudioSource AudioSourceMusic { get; }
+        public AudioSource AudioSourceMusic { get; private set; }
 
         #endregion
         // Public Methods
@@ -49,6 +49,8 @@ namespace Bas.Utility
         }
 
         #endregion
+
+
         // Peripheral
         #region Peripheral
         public enum AudioGroup

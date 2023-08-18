@@ -76,11 +76,11 @@ namespace ForgottenTrails.InkFacilitation
 
                 if (Controller.StateMachine.CurrentState == this)
                 {
-                    Debug.Log("test message a from " + this);
+                    //Debug.Log("test message a from " + this);
                 }
                 if (Controller.StateMachine.CurrentState.GetType() == this.GetType())
                 {
-                    Debug.Log("test message b from " + this);
+                    //Debug.Log("test message b from " + this);
                 }
             }
             public override void OnExit()

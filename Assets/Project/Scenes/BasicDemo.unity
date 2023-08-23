@@ -7019,7 +7019,7 @@ MonoBehaviour:
     <TextBox>k__BackingField: {fileID: 348379362}
     <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
     <HistoryTextBox>k__BackingField: {fileID: 2084113306}
-    _textSpeedPreset: 0
+    _textSpeedPreset: 36
     <PauseInfoNormal>k__BackingField:
       _dotPause: 0.5
       _commaPause: 0.2

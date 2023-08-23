@@ -32,7 +32,10 @@ namespace ForgottenTrails.InkFacilitation
                 #region Public Methods
                 public override void OnEnter()
                 {
-                    PresentButtons(); // create new choices
+                    if (!DropCondition)
+                    {
+                        PresentButtons(); // create new choices
+                    }
                 }
                 public override void OnUpdate()
                 {
@@ -106,7 +109,7 @@ namespace ForgottenTrails.InkFacilitation
                 void OnClickChoiceButton(Choice choice)
                 {
                     Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
-                    Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state
+                    Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
                     RegisterInput();
                     Machine.TransitionToState(Controller.savingState);
                 }

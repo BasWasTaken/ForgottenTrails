@@ -107,7 +107,7 @@ namespace Bas.Utility
         /// </summary>
         public void Update()
         {
-            if (false/*CurrentState.PopConditionMet*/)
+            if (CurrentState.DropCondition)
             {
                 DropState(CurrentState);
             }
@@ -125,7 +125,7 @@ namespace Bas.Utility
         /// 4. Fire appropriate OnEnter()s for the now topmost state.
         /// </summary>
         /// <param name="caller"> The expected state to pop from</param>
-        public void DropState(BaseState<T> caller)
+        private void DropState(BaseState<T> caller)
         {
             if (CurrentState == caller)
             {
@@ -186,6 +186,7 @@ namespace Bas.Utility
                     }
                     CurrentState.OnEnter();
                 }
+                caller.DropCondition = false;
             }
             else
             {

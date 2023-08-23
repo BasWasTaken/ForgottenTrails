@@ -33,10 +33,13 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                DataManager.Instance.OnDataSaved += Release;
-                Controller.SavingToDisk = true;
+                if (!DropCondition)
+                {
+                    DataManager.Instance.OnDataSaved += Release;
+                    Controller.SavingToDisk = true;
 
-                DataManager.Instance.WriteStashedDataToDisk();
+                    DataManager.Instance.WriteStashedDataToDisk();
+                }
             }
             public override void OnUpdate()
             {
@@ -52,7 +55,7 @@ namespace ForgottenTrails.InkFacilitation
             private void Release()
             {
                 Controller.SavingToDisk = false;
-                Machine.DropState(this);
+                DropCondition = true;
             }
             #endregion
         }

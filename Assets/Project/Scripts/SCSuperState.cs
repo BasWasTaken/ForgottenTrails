@@ -117,8 +117,11 @@ namespace ForgottenTrails.InkFacilitation
             }
             internal void PerformInkFunction(Action function)
             {
-                Controller.TextProducer.PendingFunctions.Enqueue(function);
-                Controller.StateMachine.TransitionToState(Controller.functionState);
+                if (!Controller.TextProducer.Peeking)
+                {
+                    Controller.TextProducer.PendingFunctions.Enqueue(function);
+                    Controller.StateMachine.TransitionToState(Controller.functionState);
+                }
             }
             internal void PauseText(float seconds)
             {

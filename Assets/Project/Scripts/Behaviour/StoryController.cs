@@ -105,16 +105,13 @@ namespace ForgottenTrails.InkFacilitation
         override protected void Awake()
         {
             base.Awake();
-            SetDresser = new();
-            TextProducer.Assign();
-            InterfaceBroker.Assign();
-
-
-            SetDresser.AudioHandler = GetComponent<AudioHandler>();
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
         }
         private void Start()
         {
+            SetDresser.Assign();
+            TextProducer.Assign();
+            InterfaceBroker.Assign();
             StateMachine = new
             (
             this,

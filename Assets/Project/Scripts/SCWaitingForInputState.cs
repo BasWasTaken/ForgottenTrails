@@ -46,34 +46,22 @@ namespace ForgottenTrails.InkFacilitation
                 protected void RegisterInput()
                 {
                     _inputReceived = true;
+
+                    DropCondition = true;
                 }
                 #endregion
                 // Public Methods
                 #region Public Methods
                 public override void OnEnter()
                 {
-                    // Debug.Log("Turning input on.");
+                    if (!DropCondition)
+                    {
+                        // Debug.Log("Turning input on.");
+                    }
                 }
                 public override void OnUpdate()
                 {
                     base.OnUpdate();
-                    if (InputReceived)
-                    {
-                        BaseState<StoryController> state;
-                        if (Machine.CurrentState == Controller.waitingForChoiceState)
-                        {
-                            state = Controller.waitingForChoiceState;
-                        }
-                        else if (Machine.CurrentState == Controller.waitingForContinueState)
-                        {
-                            state = Controller.waitingForContinueState;
-                        }
-                        else
-                        {
-                            state = this;
-                        }
-                        Machine.DropState(state);
-                    }
                 }
                 public override void OnExit()
                 {

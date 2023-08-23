@@ -51,7 +51,10 @@ namespace ForgottenTrails.InkFacilitation
                 #region Public Methods
                 public override void OnEnter()
                 {
-                    //start advance?
+                    if (!DropCondition)
+                    {
+                        //start advance?
+                    }
                 }
                 public override void OnUpdate()
                 {
@@ -128,7 +131,6 @@ namespace ForgottenTrails.InkFacilitation
 
                         if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
                     }
-
                     #endregion TryFit
                     #region continueloop
                     do
@@ -136,7 +138,6 @@ namespace ForgottenTrails.InkFacilitation
                         if (Controller.StateMachine.CurrentState != this) yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this);
 
                         // NOTE: do i want to add ifspace remaining in textbox check here per line?
-
                         #region InnerLoop
                         Controller.Story.ContinueAsync(0); // advance a bit 
                         string newLine = Controller.Story.currentText; // get the next line up until there
@@ -222,6 +223,7 @@ namespace ForgottenTrails.InkFacilitation
 
                         Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
                         #endregion InnerLoop
+                        Debug.Log("test produce");
 
                         if (Controller.TextProducer.EncounteredStop)  // if we encounter a stop
                         {
@@ -320,7 +322,7 @@ namespace ForgottenTrails.InkFacilitation
                     Controller.Story = null;
                     Debug.Log(new NotImplementedException());
                     // TODO: LATER: evt volgende story feeden
-                    Controller.StateMachine.DropState(this);
+                    DropCondition = true;
                 }
 
                 #endregion

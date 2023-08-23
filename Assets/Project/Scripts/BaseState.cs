@@ -16,6 +16,7 @@ namespace Bas.Utility
 		public StackBasedStateMachine<T> Machine { get; set; }
 		public T Controller { get; set; }
 		public Type DirectBase => GetType().BaseType;
+		public bool DropCondition = false;
 
 		#endregion		
 		// Public Methods

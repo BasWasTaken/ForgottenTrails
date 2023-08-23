@@ -37,7 +37,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Constructor
             #region Constructor
-            internal SetDressing()
+            internal void Assign()
             {
                 Controller = Instance;
                 AudioHandler = Controller.GetComponent<AudioHandler>();
@@ -187,6 +187,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     //oneShot = false;
                     loop = true;
+                    Debug.Log(Controller.InkDataAsset.SceneState.ActiveMusic);
                     Controller.InkDataAsset.SceneState.ActiveMusic = fileName;
                 }
                 else if (audioGroup == AudioHandler.AudioGroup.Ambiance)
@@ -196,53 +197,40 @@ namespace ForgottenTrails.InkFacilitation
                     Controller.InkDataAsset.SceneState.ActiveAmbiance = fileName;
                 }
                 PlayAudio(audioClip, audioGroup, relVol, oneShot: oneShot, loop: loop);
-                Debug.Log("Test");
             }
             private void PlayAudio(AudioClip audioClip, AudioHandler.AudioGroup audioGroup, float relVol = .5f, bool oneShot = false, bool loop = false)
             {
-                Debug.Log("Test");
                 AudioSource audioSource = AudioHandler.GetSource(audioGroup);
-                Debug.Log(AudioHandler);
-                Debug.Log(audioGroup);
-                Debug.Log(audioSource);
                 if (audioClip == null)
                 {
-                    Debug.Log("Test");
                     audioSource.clip = null;
                     audioSource.Stop();
                 }
                 else
                 {
-                    Debug.Log("Test");
                     if (oneShot)
                     {
-                        Debug.Log("Test");
                         audioSource.PlayOneShot(audioClip, relVol);
                     }
                     else
                     {
-                        Debug.Log("Test");
                         if (audioSource.clip != audioClip) /// if it's a different clip than before, start playing at volume
                         {
-                            Debug.Log("Test");
                             audioSource.clip = audioClip;
                             audioSource.volume = relVol;
                             audioSource.Play();
                         }
                         else /// otherwise just apply the volume, but gradually
                         {
-                            Debug.Log("Test");
                             Controller.StartCoroutine(ShiftVolumeGradually(audioSource, audioClip, relVol));
                         }
 
                         if (loop)
                         {
-                            Debug.Log("Test");
                             audioSource.loop = true;
                         }
                         else
                         {
-                            Debug.Log("Test");
                             audioSource.loop = false;
                             Controller.StartCoroutine(RemoveClipWhenFinished(audioSource));
                         }

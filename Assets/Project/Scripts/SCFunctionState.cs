@@ -18,11 +18,15 @@ namespace ForgottenTrails.InkFacilitation
     {
         public partial class TextProduction
         {
-            internal Queue<Action> PendingFunctions;
+            internal Queue<Action> PendingFunctions = new();
             public class SCFunctionState : SCProductionState
             {
                 public override void OnEnter()
                 {
+                    if (!DropCondition)
+                    {
+
+                    }
 
                 }
                 public override void OnUpdate()
@@ -40,7 +44,7 @@ namespace ForgottenTrails.InkFacilitation
                     }
                     if (Controller.TextProducer.PendingFunctions.Count == 0)
                     {
-                        Machine.DropState(this);
+                        DropCondition = true;
                     }
                 }
                 public override void OnExit()

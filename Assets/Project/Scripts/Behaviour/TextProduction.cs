@@ -40,7 +40,7 @@ namespace ForgottenTrails.InkFacilitation
             [Tooltip("Panel to display previous text.")]
             internal TextMeshProUGUI HistoryTextBox { get; set; }
 
-            [SerializeField, ReadOnly]
+            [SerializeField]
             internal TextSpeed _textSpeedPreset;
             public TextSpeed TextSpeedPreset
             {
@@ -160,9 +160,9 @@ namespace ForgottenTrails.InkFacilitation
             #region Peripheral
             public enum TextSpeed
             {
-                slow = 6,
-                medium = 12,
-                fast = 24
+                slow = 24,
+                medium = 36,
+                fast = 48
             }
 
 

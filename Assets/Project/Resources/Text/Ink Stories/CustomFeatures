@@ -70,7 +70,16 @@ EXTERNAL Music(string, float)
 // plays audio on music channel, looping
 === function Music(clip, volume) //use "" to stop audio. use volume between 0.0 and 1.0
 <<i>Music: {clip}</i>>
+
+// Here some tools for supplying hidden choices activated by using items from inventory.
+=== function Use(item)
+"\{Use({item})\}"
+
 // END OF LIST Unity Functionality
+
+
+
+
 
 // This is the list of vars for the gender stuff, but that's also not really well implemented yet of course.
 VAR Name = "PlayerName"
@@ -93,3 +102,17 @@ VAR person = "person"
 VAR kid = "kid"
 VAR lad = "lass"
 VAR guy = "guy"
+
+// TIme of day functions
+LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
+
+// list containing the times of day. You can still set the time of day manually like you have been.
+
+=== function AdvanceTime // used to progress time 1 or loop back around.
+{ TimeOfDay == 7:
+	~ TimeOfDay = 1
+- else:
+	~ TimeOfDay ++ // you could include some sort of text here to announce the new day, if you wnat
+}
+
+

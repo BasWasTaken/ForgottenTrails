@@ -11,9 +11,9 @@ You should now see <b>another vault</b>.{stop}
 ~FadeTo("Black",10)
 You should now see <b>black</b>.{stop}
 ~FadeTo("White",0.2)
-You should now see <b>black</b>.{stop}
+You should now see <b>white</b>.{stop}
 ~FadeTo("Red",1)
-You should now see <b>black</b>.{stop}
+You should now see <b>red</b>.{stop}
 ~Bg("whiterun",0)
 You should now see <b>whiterun</b>.{stop}
 You should now see {Sprites("b34auw3h_0")}one {glue}

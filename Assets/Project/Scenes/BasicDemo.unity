@@ -7021,15 +7021,15 @@ MonoBehaviour:
     <HistoryTextBox>k__BackingField: {fileID: 2084113306}
     _textSpeedPreset: 36
     <PauseInfoNormal>k__BackingField:
-      _dotPause: 0.5
-      _commaPause: 0.2
-      _spacePause: 0.05
-      _normalPause: 0.01
+      _dotPause: 0.1
+      _commaPause: 0.04
+      _spacePause: 0.01
+      _normalPause: 0.002
     <PauseInfoSkipping>k__BackingField:
-      _dotPause: 0.5
-      _commaPause: 0.2
-      _spacePause: 0.05
-      _normalPause: 0.01
+      _dotPause: 0.01
+      _commaPause: 0.004
+      _spacePause: 0.001
+      _normalPause: 0.0002
     <AutoAdvance>k__BackingField: 0
     <AlwaysPause>k__BackingField: 0
     <ClearWhenFull>k__BackingField: 1

@@ -223,7 +223,6 @@ namespace ForgottenTrails.InkFacilitation
 
                         Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
                         #endregion InnerLoop
-                        Debug.Log("test produce");
 
                         if (Controller.TextProducer.EncounteredStop)  // if we encounter a stop
                         {

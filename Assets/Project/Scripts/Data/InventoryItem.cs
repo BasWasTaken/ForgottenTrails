@@ -29,8 +29,12 @@ namespace items
          */
         Weapon,
         Tool,
-        Axe,
-        Sword
+        Cutting,
+        Stabbing,
+
             //vul aan
     }
+
+
+
 }

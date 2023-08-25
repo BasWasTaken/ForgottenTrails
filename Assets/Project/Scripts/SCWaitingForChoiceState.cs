@@ -61,11 +61,26 @@ namespace ForgottenTrails.InkFacilitation
                         {
 
                             Choice choice = Controller.Story.currentChoices[i];
-                            Button button = PresentButton(choice.text.Trim());
-                            /// Tell the button what to do when we press it
-                            button.onClick.AddListener(delegate {
-                                OnClickChoiceButton(choice);
-                            });
+                            string input = choice.text;
+
+                            int startIndex = input.IndexOf("{Use");
+                            int endIndex = input.IndexOf('}', startIndex);
+
+                            if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+                            {
+                                int substringLength = endIndex - startIndex - 1; // Excluding '{' and '}' characters
+                                string result = input.Substring(startIndex + 1, substringLength);
+
+                                Debug.Log("Encountered hidden choise: " + result);
+                            }
+                            else
+                            {
+                                Button button = PresentButton(choice.text.Trim());
+                                /// Tell the button what to do when we press it
+                                button.onClick.AddListener(delegate {
+                                    OnClickChoiceButton(choice);
+                                });
+                            }
                         }
                         //scrollbar.value = 0;
                         return;

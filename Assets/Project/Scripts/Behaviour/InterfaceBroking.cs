@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Bas.Utility;
+using items;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -43,9 +44,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
-
-
-
+            readonly Dictionary<string, Choice> hiddenChoices = new();
             #endregion
             // Private Properties
             #region Private Properties
@@ -74,6 +73,56 @@ namespace ForgottenTrails.InkFacilitation
                 else
                 {
                     return false; // technically, if ending the dialogue is a choise
+                }
+            }
+
+            /// When we click the choice button, tell the story to choose that choice!
+            internal void OnClickChoiceButton(Choice choice)
+            {
+                Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
+                Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
+                Controller.waitingForChoiceState.DropCondition = true;
+                Controller.StateMachine.TransitionToState(Controller.savingState);
+            }
+            public bool TryUseItem(InventoryItem item)
+            {
+                Choice discoveredChoice = null;
+                foreach (KeyValuePair<string, Choice> keyValuePair in hiddenChoices)
+                {
+
+                    string keyPhrase = keyValuePair.Key;
+                    Choice potentialChoice = keyValuePair.Value;
+                    if(item.name == keyPhrase)
+                    {
+                        discoveredChoice = potentialChoice;
+                        break;
+                    }
+                    else
+                    {
+                        foreach (Affordance trait in item.contexts)
+                        {
+                            if (trait.ToString() == keyPhrase)
+                            {
+                                discoveredChoice = potentialChoice;
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+
+                if (discoveredChoice!=null)
+                {
+                    Controller.Story.ChooseChoiceIndex(discoveredChoice.index);
+                    Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
+                    Controller.waitingForChoiceState.DropCondition = true;
+                    Controller.StateMachine.TransitionToState(Controller.savingState);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Nope, that item doesn't work!");
+                    return false;
                 }
             }
             #endregion

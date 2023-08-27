@@ -85,17 +85,17 @@ namespace ForgottenTrails.InkFacilitation
         #region Private Properties
 
         #region States
-        SCDummyState dummyState = new(); // TODO: how to avoid having to make this from here?
-        SCSuperState superState = new();
-        SCProductionState productionState = new();
-        SCFunctionState functionState = new();
-        SCWaitingForInputState waitingForInputState = new();
-        SCWaitingForChoiceState waitingForChoiceState = new();
-        SCWaitingForContinueState waitingForContinueState = new();
-        SCGameMenuState gameMenuState = new();
-        SCInventoryState inventoryState = new();
-        SCSettingsState settingsState = new();
-        SCSavingState savingState = new();
+        internal SCDummyState dummyState = new(); // TODO: how to avoid having to make this from here?
+        internal SCSuperState superState = new();
+        internal SCProductionState productionState = new();
+        internal SCFunctionState functionState = new();
+        internal SCWaitingForInputState waitingForInputState = new();
+        internal SCWaitingForChoiceState waitingForChoiceState = new();
+        internal SCWaitingForContinueState waitingForContinueState = new();
+        internal SCGameMenuState gameMenuState = new();
+        internal SCInventoryState inventoryState = new();
+        internal SCSettingsState settingsState = new();
+        internal SCSavingState savingState = new();
         #endregion
 
         #endregion

@@ -45,7 +45,7 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         if (Controller.Story.canContinue)
                         {
-                            RegisterInput();
+                            DropCondition = true;
                             Machine.TransitionToState(Controller.savingState);
                         }
                     }

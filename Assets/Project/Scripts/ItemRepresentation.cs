@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using items;
+using ForgottenTrails.InkFacilitation;
 
 /// <summary>
 /// <para>Summary not provided.</para>
@@ -12,6 +13,8 @@ public class ItemRepresentation : MonoBehaviour, IMouseOverOption
 {
     public bool IsMouseOver { get; set; }
     public TMPro.TextMeshProUGUI prompt;
+    [SerializeField]
+    public InventoryItem definition;
 
     // Default implementation for the interface methods
     private void OnMouseEnter()
@@ -30,7 +33,10 @@ public class ItemRepresentation : MonoBehaviour, IMouseOverOption
     {
         UpdateWhenMouseOver();
     }
-    
+    public void ActivateFromButton()
+    {
+        StoryController.Instance.InterfaceBroker.TryUseItem(definition);
+    }
     private void UpdateWhenMouseOver()
     {
         prompt.transform.position = Input.mousePosition;

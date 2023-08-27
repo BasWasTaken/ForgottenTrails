@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using items;
 using ForgottenTrails.InkFacilitation;
+using UnityEngine.UI;
 
 /// <summary>
 /// <para>Summary not provided.</para>
@@ -15,6 +16,11 @@ public class ItemRepresentation : MonoBehaviour, IMouseOverOption
     public TMPro.TextMeshProUGUI prompt;
     [SerializeField]
     public InventoryItem definition;
+
+    private void Awake()
+    {
+        GetComponent<Image>().sprite = definition.image;
+    }
 
     // Default implementation for the interface methods
     private void OnMouseEnter()

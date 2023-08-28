@@ -3,9 +3,11 @@ LIST Locations = EdanCastle, RoadToEdanCastleLoc, EdinburghCrossroadsLoc, DreamS
 
 LIST Party = (Player), Alice, Robert
 
-LIST Traits = weapon, tool
+LIST Traits = weapon, tool, stabbing
 
 LIST Items = (none), (knife), (pot), (rope), (lantern), (foragedMushrooms), wornSword
+
+LIST Tools = knife
 
 VAR travelrations = 107
 

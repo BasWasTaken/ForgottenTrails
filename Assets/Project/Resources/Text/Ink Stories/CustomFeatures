@@ -96,14 +96,32 @@ VAR Inventory = ()
 === function Add(Item)
     ~ Inventory += Item
 
+=== function ItemOption(ItemOrTrait)
+\{ItemOption({ItemOrTrait})\}
+// Om mogelijkheden in unity te simuleren zou ik hier de hele lijst items moeten populaten die de speler in inventory heeft
+
 === function Use(Item)
     {Inventory has Item:
         ~ Inventory -= Item
     - else:
-        PrintWarning("Attempted to use item not available")
+        PrintWarning("Attempted to use an item that wasn't there!")
     }
-=== function ItemOption(ItemOrTrait)
-~ return "\{Use({ItemOrTrait})\}"
+
+VAR UsedItem = ()
+
+=== function IndicateUsed(Item)
+    ~UsedItem = Item
+    
+EXTERNAL IndicateUsed(Item)
+
+=== function Remove(Item)
+    {Inventory has Item:
+        ~ Inventory -= Item
+    - else:
+        PrintWarning("Attempted to remove an item that wasn't there!")
+    }
+    
+    
 
     
     

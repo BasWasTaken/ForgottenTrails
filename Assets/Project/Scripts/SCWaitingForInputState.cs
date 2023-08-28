@@ -27,28 +27,6 @@ namespace ForgottenTrails.InkFacilitation
                 // Private Properties
                 #region Private Properties
 
-                protected bool InputReceived
-                {
-                    get
-                    {
-                        if (_inputReceived == true)
-                        {
-                            _inputReceived = false; // reset flag
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        };
-                    }
-                }
-                private bool _inputReceived = false;
-                protected void RegisterInput()
-                {
-                    _inputReceived = true;
-
-                    DropCondition = true;
-                }
                 #endregion
                 // Public Methods
                 #region Public Methods

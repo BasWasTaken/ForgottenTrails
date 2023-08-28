@@ -10,6 +10,8 @@ namespace items
     /// <summary>
     /// <para>Base type object for ingame items.</para>
     /// </summary>
+    [Serializable]
+    [CreateAssetMenu]
     public class InventoryItem : InkableObject
     {
         [Header("Info")]
@@ -18,19 +20,19 @@ namespace items
         [Tooltip("Base Cost of the item")] public int value;
         [Header("Skillchecks")]
         public int modifier;
-        public List<Context> contexts;
+        public List<Affordance> contexts;
     }
 
-    public enum Context
+    public enum Affordance
     {
-        /*
-         * NOT: Trying to predict what scenarios will come up in the game.
-         * More: what trais does an object have, what affordances does this object have?
-         */
         Weapon,
         Tool,
-        Axe,
-        Sword
+        Cutting,
+        Stabbing,
+        Cooking
             //vul aan
     }
+
+
+
 }

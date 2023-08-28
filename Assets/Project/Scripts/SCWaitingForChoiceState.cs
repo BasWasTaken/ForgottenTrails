@@ -11,6 +11,7 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using TMPro;
+using items;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -61,11 +62,34 @@ namespace ForgottenTrails.InkFacilitation
                         {
 
                             Choice choice = Controller.Story.currentChoices[i];
-                            Button button = PresentButton(choice.text.Trim());
-                            /// Tell the button what to do when we press it
-                            button.onClick.AddListener(delegate {
-                                OnClickChoiceButton(choice);
-                            });
+                            string input = choice.text;
+
+                            if (input.Contains("{"))
+                            {
+                                int startIndex = input.IndexOf("{Use");
+                                int endIndex = input.IndexOf('}', startIndex);
+
+                                if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+                                {
+                                    int substringLength = endIndex - startIndex - 6; // Excluding '{' and '}' characters
+                                    string key = input.Substring(startIndex + 5, substringLength);
+
+                                    Debug.Log("Encountered hidden choice: " + key);
+                                    Controller.InterfaceBroker.hiddenChoices.Add(key, choice);
+                                }
+                                else
+                                {
+                                }
+
+                            }
+                            else
+                            {
+                                Button button = PresentButton(choice.text.Trim());
+                                /// Tell the button what to do when we press it
+                                button.onClick.AddListener(delegate {
+                                    Controller.InterfaceBroker.OnClickChoiceButton(choice);
+                                });
+                            }
                         }
                         //scrollbar.value = 0;
                         return;
@@ -78,6 +102,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 internal void RemoveOptions()// Destroys all the buttons from choices
                 {
+                    Controller.InterfaceBroker.hiddenChoices.Clear();
                     foreach (Button child in Controller.InterfaceBroker.ButtonAnchor.GetComponentsInChildren<Button>())
                     {
                         Destroy(child.gameObject);
@@ -104,14 +129,6 @@ namespace ForgottenTrails.InkFacilitation
                     */
 
                     return choice;
-                }
-                /// When we click the choice button, tell the story to choose that choice!
-                void OnClickChoiceButton(Choice choice)
-                {
-                    Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
-                    Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
-                    RegisterInput();
-                    Machine.TransitionToState(Controller.savingState);
                 }
                 #endregion
             }

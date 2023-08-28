@@ -1,4 +1,4 @@
-INCLUDE CustomFeatures
+INCLUDE Includes
 === Start ===
 ~Spd(1)
 ~ Print("Hello world!")// This prints the text to the unity console

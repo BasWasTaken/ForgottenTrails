@@ -108,16 +108,22 @@ VAR Inventory = ()
     
     
 VAR CurrentLocation = ()
+
 ~ CurrentLocation = Locations()
-VAR PreviousLocation = ()
+
+VAR PreviousLocation = () 
+
 ~ PreviousLocation = Locations ()
 
 VAR VisitedEver = ()
+
 ~ VisitedEver = Locations()
 
 === function SetLocation(Location) ===
-~ PreviousLocation = CurrentLocation
-~ CurrentLocation = Location
+~ PreviousLocation = Locations()
+~ PreviousLocation += CurrentLocation
+~ CurrentLocation = Locations()
+~ CurrentLocation += Location
 ~ VisitedEver += Location
 
 === function HasVisited(Location) ===
@@ -165,7 +171,7 @@ VAR knowledgeState = ()
 
 
 // This is the list of vars for the gender stuff, but that's also not really well implemented yet of course.
-VAR Name = "PlayerName"
+VAR PlayerName = "PlayerName"
 
 
 VAR players_gender = "Undefined"

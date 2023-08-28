@@ -9,9 +9,9 @@ VAR AffEdgar = 50
 VAR AffHenry = 50
 
 //Knowledge Chains
-LIST EdanCastleKnowledge = (none), EdanCastleExists, CastleOnHillIsEdanCastle
-LIST EdgarKnowledge = (none), EdgarExists, EdgarName
-LIST HenryKnowledge = (none), HenryExists, HenryName
+LIST EdanCastleKnow = (none), Exists, IsCastleOnHill
+LIST Edgar = (none), Exists, Name
+LIST Henry = (none), Exists, Name
 
 === Start ===
 ~ TimeOfDay = Dawn
@@ -40,6 +40,8 @@ If you're seeing this something went wrong with the random event bit in Inky!
 As you're traveling, you start to notice dark clouds gathering overhead.
 *Press on
     It's probably nothing. And even so, a little rain can't stop you, right?
+    [Bas Note: Something happens with the rain I guess? But anyway I'm diverting to the next bit.]
+    -> CastleEntrance
 *Seek shelter
     You decide not to risk getting drenched and find some cover. Unfortunately, you don't 
 {CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
@@ -231,7 +233,7 @@ You blink and a different face stares back at you.
 ->Opening.CharCreation0
 
 = Recognition
-You consider the name that belongs to this face. A young {person} called {Name}.
+You consider the name that belongs to this face. A young {person} called {PlayerName}.
 + I've always thought it seemed to fit.
 -> Opening.Acceptance
 * It never seemed right somehow. <>
@@ -382,7 +384,7 @@ You can find your belongings by clicking on the backpack icon on the right. You 
 
 ===ScotlandEntranceRoad===
 ~SetLocation(ScotlandEntranceRoadLoc)
-{PreviousLocation == EdinburghCrossroadsLoc: Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
+{PreviousLocation ? EdinburghCrossroadsLoc: Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
 =ReturnVisit
 *[Go back the way you came]
 
@@ -414,26 +416,26 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ SetLocation(EdinburghCrossroadsLoc)
-The road splits here into four directions. The northbound road {!HasVisited(EdanCastle) and Knows(EdanCastleExists): presumably |}leads to {Knows(CastleOnHillIsEdanCastle):Edan Castle|the castle on the hill}{PreviousLocation == RoadToEdanCastleLoc:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == ScotlandEntranceRoadLoc:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+The road splits here into four directions. The northbound road {!HasVisited(EdanCastle) and Knows(edanca.Exists): presumably |}leads to {Knows(EdanCastleKnow.IsCastleOnHill):Edan Castle|the castle on the hill}{PreviousLocation ? RoadToEdanCastleLoc:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? ScotlandEntranceRoadLoc:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
 +[Take the North Road]
-You decide to take the North road{PreviousLocation == EdinburghCastleEntrance: and go and go back the way you came.|  leading to {Knows(EdanCastleExists):Edan Castle |the Hilltop Castle.}}
+You decide to take the North road{PreviousLocation == EdinburghCastleEntrance: and go and go back the way you came.|  leading to {Knows(EdanCastleKnow.Exists):Edan Castle |the Hilltop Castle.}}
 ~PreviousLocation = "EdinburghCrossroads"
 ->RoadToEdanCastle
 +[Take the East Road]
 Sorry buddy, no content East yet!
 ->EdinburghCrossroads.Crossing
 +[Take the South Road]
-You decide to {PreviousLocation == ScotlandEntranceRoad:go back the way you came.|take the Southern Road.}
+You decide to {PreviousLocation ? ScotlandEntranceRoad:go back the way you came.|take the Southern Road.}
 ~PreviousLocation = "EdinburghCrossroads"
 ->ScotlandEntranceRoad
 +[Take the West Road]
 Sorry buddy, no content West yet!
 ->EdinburghCrossroads.Crossing
 +[Inspect the Waystone]
-~ Learn(EdanCastleExists)
+{Learn(EdanCastleKnow.Exists)}
 {You decide to take a closer look at the Waystone in the middle of the crossing. It's decorated in a blocky script, which thankfully matches the sources you were able to study back in Barralon. In the Northern Tongue it reads:|You decide to take another look at the Waystone. It reads:}
 
 "May the blessings of Crìsdaen be upon the honorable traveler
@@ -507,11 +509,11 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
 
 = CastleEntranceReturnVisit
 ~SetLocation(EdanCastleEntrance)
-As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {!Inventory has lantern:but knowing it's there helps guide your feet.}{Inventory has lantern:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {Knows(HenryName):Henry|a guard} leaning on his halberd. 
+As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {!Inventory has lantern:but knowing it's there helps guide your feet.}{Inventory has lantern:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {Knows(Henry.Name):Henry|a guard} leaning on his halberd. 
 //{AffHenry < 25: } (to do: make scenario where Henry stops you)
 He looks {LIST_COUNT(Party)==1: you|your party} over and smiles. With his left hand, he gestures that you may pass into the settlement.
 +[Continue on]
-+[Talk to {Knows(HenryName):Henry|the guard}.]
++[Talk to {Knows(Henry.Name):Henry|the guard}.]
 +[Go back]
 ~PreviousLocation = "EdanCastleEntrance"
 ->RoadToEdanCastle
@@ -521,10 +523,10 @@ He looks {LIST_COUNT(Party)==1: you|your party} over and smiles. With his left h
 {Inventory has lantern:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
 {Inventory has lantern:As you approach, you hear a man's voice ring out from behind the battlements:}
 "Hail traveler{LIST_COUNT(Party):s}, what's your business in Edani at this hour?"
-*{Knows(EdgarName)}"It's {LIST_COUNT(Party):us|me} Edgar, {Name}{Party has Alice and Party !? Robert: and Alice}{Party !? Alice and Party has Robert: and Robert}, {Party has Alice and Party has Robert:Alice and Robert}."
-    {AffEdgar < 25:"{Name} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
-    {AffEdgar < 50 and AffEdgar > 24:Oh, {Name}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseWalkway} 
-    {AffEdgar > 49:Ah, {Name}! What are you{LIST_COUNT(Party)>1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
+*{Knows(Edgar.Name)}"It's {LIST_COUNT(Party):us|me} Edgar, {PlayerName}{Party has Alice and Party !? Robert: and Alice}{Party !? Alice and Party has Robert: and Robert}, {Party has Alice and Party has Robert:Alice and Robert}."
+    {AffEdgar < 25:"{PlayerName} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
+    {AffEdgar < 50 and AffEdgar > 24:Oh, {PlayerName}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseWalkway} 
+    {AffEdgar > 49:Ah, {PlayerName}! What are you{LIST_COUNT(Party)>1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
 *"{LIST_COUNT(Party)>1:We're|I'm} simply looking for some shelter in the night." 
 *[Jokingly say:]"Why, to rob you blind of course! 
 *[Sternly say: ]"Open the gate, 
@@ -586,8 +588,8 @@ Her expression grows solemn. "That depends" she says. "What did you hear?"
 *"Do I need a reason?"
 {CastlePrison.MaryPrisonGreeting.rude: "Well if you do not have any business here, leave me be. I have nothing to say to you." The woman pulls her hood back over her head and turns away from you. -> MaryPrisonUpset | "Mhm, I suppose not. Would you like to chat for a bit? It has been a while since anyone came down here that was willing to engage me in conversation. I am called Mary, by the way."}
     - (MaryNameLoop) 
-    **(MetMary)"A pleasure to meet you Mary, I'm {Name}"
-        She smiles warmly at you, "The pleasure is all mine,{Name}."
+    **(MetMary)"A pleasure to meet you Mary, I'm {PlayerName}"
+        She smiles warmly at you, "The pleasure is all mine, {PlayerName}."
         ->MaryPrisonConvo2
     **"Simply Mary?"
         She smiles sadly, "These days yes, simply Mary. I do not feel quite worthy to use the full name I once bore." -> MaryNameLoop

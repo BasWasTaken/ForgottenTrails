@@ -1,5 +1,4 @@
--> Start // Keep this at top of file.
-
+INCLUDE Lists
 //BEGIN LIST Unity functionality
 
 EXTERNAL Print(string)
@@ -71,13 +70,47 @@ EXTERNAL Music(string, float)
 === function Music(clip, volume) //use "" to stop audio. use volume between 0.0 and 1.0
 <<i>Music: {clip}</i>>
 
-// Here some tools for supplying hidden choices activated by using items from inventory.
-=== function Use(item)
-"\{Use({item})\}"
+
+//
+// System: inventory
+//
+VAR Inventory = ()
+~ Inventory = Items()
+
+=== function Add(Item)
+    ~ Inventory += Item
+
+=== function Use(Item)
+    {Inventory has Item:
+        ~ Inventory -= Item
+        ~ return "\{Use({Item})\}"
+    - else:
+        PrintWarning("Attempted to use item not available")
+    }
+
+=== function Travel(Destination)
+    ~ return "\{Travel({Destination})\}"
+
+
 
 // END OF LIST Unity Functionality
 
 
+//
+LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
+
+=== function AdvanceTime // used to progress time 1 or loop back around.
+{ TimeOfDay == 7:
+	~ TimeOfDay = 1
+- else:
+	~ TimeOfDay ++ 
+}
+
+
+
+
+
+// 
 
 
 
@@ -103,16 +136,5 @@ VAR kid = "kid"
 VAR lad = "lass"
 VAR guy = "guy"
 
-// TIme of day functions
-LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
-
-// list containing the times of day. You can still set the time of day manually like you have been.
-
-=== function AdvanceTime // used to progress time 1 or loop back around.
-{ TimeOfDay == 7:
-	~ TimeOfDay = 1
-- else:
-	~ TimeOfDay ++ // you could include some sort of text here to announce the new day, if you wnat
-}
 
 

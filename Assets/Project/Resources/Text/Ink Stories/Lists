@@ -1,0 +1,10 @@
+LIST Traits = weapon, tool
+
+LIST Items = (none), knife, pot, rope, lantern, foraged_mushrooms
+
+VAR travel_rations = 107
+
+VAR money = 10
+
+
+

@@ -380,7 +380,7 @@ You can check your current hunger level on the right. As time passes, your need 
 Your stomach rumbles, and what poor sort would head off without a proper meal first anyway? 
 The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
-You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action. [Vugs note: not yet implemented. Until the item system is functional, you can just use the regular prompts. At this point the inventory would show a pot, some rope, a knife, a lantern, travel rations and some foraged mushrooms] 
+You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
     **[{Use("Pot")}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
         ***[{Use("Foraged Mushrooms")}]

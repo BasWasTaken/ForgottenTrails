@@ -39,7 +39,7 @@ VAR RobertInParty = 0
 === Start ===
 #backdrop:whiterun
 ~ TimeOfDay = Dawn
-    -> Awakening
+    -> DifferentFile
     
 === Death ===
 And so ends this tale. Another apprentice that would never return, their findings lost to the wind.

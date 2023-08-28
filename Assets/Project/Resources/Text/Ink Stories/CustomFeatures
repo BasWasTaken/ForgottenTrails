@@ -70,7 +70,23 @@ EXTERNAL Music(string, float)
 === function Music(clip, volume) //use "" to stop audio. use volume between 0.0 and 1.0
 <<i>Music: {clip}</i>>
 
+// Helper function: popping elements from lists
+=== function Pop(ref list)
+   ~ temp x = LIST_MIN(list) 
+   ~ list -= x 
+   ~ return x
 
+// System: looping time of day
+
+LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
+
+=== function AdvanceTime // used to progress time 1 or loop back around.
+{ TimeOfDay == 7:
+	~ TimeOfDay = 1
+- else:
+	~ TimeOfDay ++ 
+}   
+ 
 //
 // System: inventory
 //
@@ -83,31 +99,65 @@ VAR Inventory = ()
 === function Use(Item)
     {Inventory has Item:
         ~ Inventory -= Item
-        ~ return "\{Use({Item})\}"
     - else:
         PrintWarning("Attempted to use item not available")
     }
+=== function ItemOption(ItemOrTrait)
+~ return "\{Use({ItemOrTrait})\}"
 
-=== function Travel(Destination)
-    ~ return "\{Travel({Destination})\}"
+    
+    
+VAR CurrentLocation = ()
+~ CurrentLocation = Locations()
+VAR PreviousLocation = ()
+~ PreviousLocation = Locations ()
 
+VAR VisitedEver = ()
+~ VisitedEver = Locations()
 
+=== function SetLocation(Location) ===
+~ PreviousLocation = CurrentLocation
+~ CurrentLocation = Location
+~ VisitedEver += Location
 
-// END OF LIST Unity Functionality
+=== function HasVisited(Location) ===
+~return VisitedEver ? Location
 
+=== function MapOption(Destination)
+~SetLocation(Destination)
+    ~ return "\{TravelTo({Destination})\}"
 
+// System: Incremental knowledge.
+// Each list is a chain of facts. Each fact supersedes the fact before 
 //
-LIST TimeOfDay = Night, Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
-=== function AdvanceTime // used to progress time 1 or loop back around.
-{ TimeOfDay == 7:
-	~ TimeOfDay = 1
-- else:
-	~ TimeOfDay ++ 
-}
+VAR knowledgeState = ()
 
+=== function Knows (x) 
+   ~ return knowledgeState ? x 
 
+=== function KnowledgeStateBetween(x, y) 
+   ~ return knowledgeState? x && not (knowledgeState ^ y)
 
+=== function Learn(statesToSet) 
+   ~ temp x = Pop(statesToSet)
+   {
+   - not x: 
+      ~ return false 
+
+   - not Knows(x):
+      ~ temp chain = LIST_ALL(x)
+      ~ temp statesGained = LIST_RANGE(chain, LIST_MIN(chain), x)
+      ~ knowledgeState += statesGained
+      ~ Learn (statesToSet) 	// set any other states left to set
+      ~ return true  	       // and we set this state, so true
+ 
+    - else:
+      ~ return false || Learn(statesToSet) 
+    }	
+
+=== function isAre(list)
+	{LIST_COUNT(list) == 1:is|are}
 
 
 // 

@@ -1,43 +1,19 @@
-INCLUDE Includes
+INCLUDE CustomFeatures
 INCLUDE Stories
 
 -> Start 
 
-LIST VisitedState = Yes, No
-
-
-
-
-VAR CurrentLocation = "Undefined"
-VAR PreviousLocation = "Undefined"
 
 //AffectionValues
 VAR AffEdgar = 50
 VAR AffHenry = 50
 
-//List of known names
-VAR EdanCastleName = 0
-VAR MetEdgar = 0
-VAR MetHenry = 0
-
-//List of locations
-VAR EdanVisited = 0
-
-//Temporary Item values until full system is implemented:
-VAR ItemKnife = 0
-VAR ItemWornSword = 0
-VAR ItemCookingPot = 0
-VAR ItemForagedMushrooms = 0
-VAR ItemLantern = 0
-
-//Companion values for Alice
-VAR AliceInParty = 0
-
-//Companion values for Robert
-VAR RobertInParty = 0
+//Knowledge Chains
+LIST EdanCastleKnowledge = (none), EdanCastleExists, CastleOnHillIsEdanCastle
+LIST EdgarKnowledge = (none), EdgarExists, EdgarName
+LIST HenryKnowledge = (none), HenryExists, HenryName
 
 === Start ===
-#backdrop:whiterun
 ~ TimeOfDay = Dawn
     -> DifferentFile
     
@@ -51,12 +27,12 @@ And so ends this tale. Another apprentice that would never return, their finding
 
 =MerchantBrothers
 TestMerchant
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads": -> CastleEntrance}
+{CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Deer
 TestDeer
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads": -> CastleEntrance}
+{CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Downpour
@@ -66,12 +42,13 @@ As you're traveling, you start to notice dark clouds gathering overhead.
     It's probably nothing. And even so, a little rain can't stop you, right?
 *Seek shelter
     You decide not to risk getting drenched and find some cover. Unfortunately, you don't 
-{CurrentLocation == "RoadToEdanCastle" and PreviousLocation == "EdinburghCrossroads": -> CastleEntrance}
+{CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 
 === Opening ===
 #backdrop:Vault1
+~ SetLocation(DreamState)
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
 <br>
 It's a place that in an ancient past held a different name but you know it by two: "The Vault of Forgotten Books" and "Home". 
@@ -363,8 +340,7 @@ As you press on, your ears pick up another melody. Faintly at first, but with ev
 
 === Awakening ===
 ~TimeOfDay = Dawn
-~CurrentLocation = "ScotlandEntranceRoad"
-~PreviousLocation = "DreamState"
+~SetLocation(ScotlandEntranceRoadLoc)
 You awaken with a start. A dream after all. Of course it was, now that you look back on it. 
 You turn on your back, the small canvas tent that shields you from the elements coming into view. You can smell the morning forest and the smouldering remains of your campfire.
 ->Awakening.Tent
@@ -381,9 +357,9 @@ Your stomach rumbles, and what poor sort would head off without a proper meal fi
 The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
 You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
-    **[{Use("Pot")}]
+    **[{ItemOption(pot)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
-        ***[{Use("Foraged Mushrooms")}]
+        ***[{ItemOption(foragedMushrooms)}]
         You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison. 
         A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 
         {Tent.PackUpEarly: |You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented]}
@@ -405,13 +381,12 @@ You can find your belongings by clicking on the backpack icon on the right. You 
 
 
 ===ScotlandEntranceRoad===
-~CurrentLocation = "ScotlandEntranceRoad"
-
-{PreviousLocation == "EdinburghCrossroads": Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
+~SetLocation(ScotlandEntranceRoadLoc)
+{PreviousLocation == EdinburghCrossroadsLoc: Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
 =ReturnVisit
 *[Go back the way you came]
 
-~PreviousLocation = "ScotlandEntranceRoad"
+~PreviousLocation = ScotlandEntranceRoadLoc
 ->EdinburghCrossroads
 =FirstVisit
 Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown woodland you found yourself in only two days ago.
@@ -428,7 +403,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
         ***[Survey the landscape]Beneath a bright morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a rocky outcrop. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
             ****[Continue following the road towards the castle]
             You continue your journey, the earth crunching beneath your feet. Almost at the halfway point between your hilltop outlook and the castle you find yourself at a crossroads. 
-            ~ PreviousLocation = "ScotlandEntranceRoad"
+            ~ PreviousLocation = ScotlandEntranceRoadLoc
             ->EdinburghCrossroads
         
             //As your gaze returns to the path before you, you realize you missed something on your first viewing: a person. Still far in the distance, but unmistakenbly a fellow traveler. They seem to be approaching at a fair pace, aided by a walking stick.
@@ -438,27 +413,27 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             //****[Set up an ambush]
             
 === EdinburghCrossroads ===
-~ CurrentLocation = "EdinburghCrossroads"
-The road splits here into four directions. The northbound road {EdanVisited == 0 and EdanCastleName == 1: presumably |}leads to {EdanCastleName == 1:Edan Castle|the castle on the hill}{PreviousLocation == "RoadToEdanCastle":, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == "ScotlandEntranceRoad":, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+~ SetLocation(EdinburghCrossroadsLoc)
+The road splits here into four directions. The northbound road {!HasVisited(EdanCastle) and Knows(EdanCastleExists): presumably |}leads to {Knows(CastleOnHillIsEdanCastle):Edan Castle|the castle on the hill}{PreviousLocation == RoadToEdanCastleLoc:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation == ScotlandEntranceRoadLoc:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
 +[Take the North Road]
-You decide to take the North road{PreviousLocation == "EdinburghCastleEntrance": and go and go back the way you came.|  leading to {EdanCastleName == 1:Edan Castle |the Hilltop Castle.}}
+You decide to take the North road{PreviousLocation == EdinburghCastleEntrance: and go and go back the way you came.|  leading to {Knows(EdanCastleExists):Edan Castle |the Hilltop Castle.}}
 ~PreviousLocation = "EdinburghCrossroads"
 ->RoadToEdanCastle
 +[Take the East Road]
 Sorry buddy, no content East yet!
 ->EdinburghCrossroads.Crossing
 +[Take the South Road]
-You decide to {PreviousLocation == "ScotlandEntranceRoad":go back the way you came.|take the Southern Road.}
+You decide to {PreviousLocation == ScotlandEntranceRoad:go back the way you came.|take the Southern Road.}
 ~PreviousLocation = "EdinburghCrossroads"
 ->ScotlandEntranceRoad
 +[Take the West Road]
 Sorry buddy, no content West yet!
 ->EdinburghCrossroads.Crossing
 +[Inspect the Waystone]
-~ EdanCastleName = 1
+~ Learn(EdanCastleExists)
 {You decide to take a closer look at the Waystone in the middle of the crossing. It's decorated in a blocky script, which thankfully matches the sources you were able to study back in Barralon. In the Northern Tongue it reads:|You decide to take another look at the Waystone. It reads:}
 
 "May the blessings of Crìsdaen be upon the honorable traveler
@@ -472,7 +447,7 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element
-~CurrentLocation = "RoadToEdanCastle"
+~SetLocation(RoadToEdanCastle)
 {~->RandomEventsEdanArea|->CastleEntranceFromRoad}
 
 === CastleEntranceFromRoad
@@ -480,10 +455,10 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 ->CastleEntrance
 
 === CastleEntrance ===
-~ CurrentLocation = "EdanCastleEntrance"
-{EdanVisited == 1: -> CastleEntranceReturnVisit|-> CastleEntranceFirst}
+{HasVisited(EdanCastleEntrance): -> CastleEntranceReturnVisit|-> CastleEntranceFirst}
 
 = CastleEntranceFirst
+~SetLocation(EdanCastleEntrance)
 #backdrop: CastleGate
 #music:
 #ambiance:
@@ -520,8 +495,7 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
     The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man stands behind it holding the door open for you with one hand while leaning on a spear with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
     
     As you step inside the man shuts the door behind you, taking great care to put the locks back into place. 
-    ~ PreviousLocation = "EdanCastleEntrance"
-    ~ CurrentLocation = "EdanCastleGatehouse"
+    ~SetLocation(EdanCastleGatehouse)
         **Engage the man in some further conversation
         -> EdgarGatehouse
         **(thanked)Thank the man and head into town
@@ -532,25 +506,26 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
 *"Do you often have to kill creatures gently walking up to the door?"
 
 = CastleEntranceReturnVisit
-As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {ItemLantern == 0:but knowing it's there helps guide your feet.}{ItemLantern == 1:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {MetHenry:Henry|a guard} leaning on his halberd. 
+~SetLocation(EdanCastleEntrance)
+As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {!Inventory has lantern:but knowing it's there helps guide your feet.}{Inventory has lantern:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {Knows(HenryName):Henry|a guard} leaning on his halberd. 
 //{AffHenry < 25: } (to do: make scenario where Henry stops you)
-He looks {AliceInParty == 1 or RobertInParty == 1:you|your party} over and smiles. With his left hand, he gestures that you may pass into the settlement.
+He looks {LIST_COUNT(Party)==1: you|your party} over and smiles. With his left hand, he gestures that you may pass into the settlement.
 +[Continue on]
-+[Talk to {MetHenry:Henry|the guard}.]
++[Talk to {Knows(HenryName):Henry|the guard}.]
 +[Go back]
 ~PreviousLocation = "EdanCastleEntrance"
 ->RoadToEdanCastle
 
 = CastleEntranceReturnVisitNight
 //Get Bas to change "Name" to "PlayerName" for clarity
-{ItemLantern == 0:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
-{ItemLantern == 1:As you approach, you hear a man's voice ring out from behind the battlements:}
-"Hail traveler{AliceInParty == 1 or RobertInParty == 1:s}, what's your business in Edani at this hour?"
-*{MetEdgar == 1}"It's {AliceInParty == 1 or RobertInParty == 1:us|me} Edgar, {Name}{AliceInParty == 1 and RobertInParty == 0: and Alice}{AliceInParty == 0 and RobertInParty == 1: and Robert}{AliceInParty == 1 and RobertInParty == 1:, Alice and Robert}."
+{Inventory has lantern:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
+{Inventory has lantern:As you approach, you hear a man's voice ring out from behind the battlements:}
+"Hail traveler{LIST_COUNT(Party):s}, what's your business in Edani at this hour?"
+*{Knows(EdgarName)}"It's {LIST_COUNT(Party):us|me} Edgar, {Name}{Party has Alice and Party !? Robert: and Alice}{Party !? Alice and Party has Robert: and Robert}, {Party has Alice and Party has Robert:Alice and Robert}."
     {AffEdgar < 25:"{Name} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
     {AffEdgar < 50 and AffEdgar > 24:Oh, {Name}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseWalkway} 
-    {AffEdgar > 49:Ah, {Name}! What are you{AliceInParty == 1 or RobertInParty == 1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
-*"{AliceInParty == 1 or RobertInParty == 1:We're|I'm} simply looking for some shelter in the night." 
+    {AffEdgar > 49:Ah, {Name}! What are you{LIST_COUNT(Party)>1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseWalkway}
+*"{LIST_COUNT(Party)>1:We're|I'm} simply looking for some shelter in the night." 
 *[Jokingly say:]"Why, to rob you blind of course! 
 *[Sternly say: ]"Open the gate, 
 

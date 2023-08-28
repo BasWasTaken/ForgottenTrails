@@ -1,8 +1,13 @@
+
+LIST Locations = EdanCastle, RoadToEdanCastleLoc, EdinburghCrossroadsLoc, DreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse
+
+LIST Party = (Player), Alice, Robert
+
 LIST Traits = weapon, tool
 
-LIST Items = (none), knife, pot, rope, lantern, foraged_mushrooms
+LIST Items = (none), (knife), (pot), (rope), (lantern), (foragedMushrooms), wornSword
 
-VAR travel_rations = 107
+VAR travelrations = 107
 
 VAR money = 10
 

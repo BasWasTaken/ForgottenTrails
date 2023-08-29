@@ -1,7 +1,6 @@
 INCLUDE CustomFeatures
 INCLUDE Stories
 
--> Start 
 
 
 //AffectionValues
@@ -12,6 +11,11 @@ VAR AffHenry = 50
 LIST EdanCastleKnow = (none), Exists, IsCastleOnHill
 LIST Edgar = (none), Exists, Name
 LIST Henry = (none), Exists, Name
+
+// starting inventory
+~ Inventory = (knife, pot, rope, lantern, foragedMushrooms)
+
+-> Start 
 
 === Start ===
 ~ TimeOfDay = Dawn
@@ -359,9 +363,10 @@ Your stomach rumbles, and what poor sort would head off without a proper meal fi
 The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
 You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
-    **[{ItemOption(pot)}]
+    **[{Use(cooking)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
-        ***[{ItemOption(foragedMushrooms)}]
+        ***[{Use(foragedMushrooms)}]
+        {Remove(UsedItem)}
         You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison. 
         A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 
         {Tent.PackUpEarly: |You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented]}

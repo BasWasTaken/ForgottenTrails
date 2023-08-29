@@ -114,6 +114,9 @@ namespace ForgottenTrails.InkFacilitation
                 story.BindExternalFunction("Sfx", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Sfx, relVol)));
                 story.BindExternalFunction("Ambiance", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Ambiance, relVol)));
                 story.BindExternalFunction("Music", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Music, relVol)));
+                story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.Inventory.FetchItems(newValue)));
+                story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
+                story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
             }
             internal void PerformInkFunction(Action function)
             {

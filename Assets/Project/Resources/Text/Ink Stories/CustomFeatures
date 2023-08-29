@@ -93,30 +93,30 @@ LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
 VAR Inventory = ()
 ~ Inventory = Items()
 
+=== function AddInUnity(Item)
+
+EXTERNAL AddInUnity(Item)
+
 === function Add(Item)
     ~ Inventory += Item
+    ~ AddInUnity(Item)
+    ~ Print("Picked up " + Item)
 
-=== function ItemOption(ItemOrTrait)
-\{ItemOption({ItemOrTrait})\}
-// Om mogelijkheden in unity te simuleren zou ik hier de hele lijst items moeten populaten die de speler in inventory heeft
-
-=== function Use(Item)
-    {Inventory has Item:
-        ~ Inventory -= Item
-    - else:
-        PrintWarning("Attempted to use an item that wasn't there!")
-    }
+=== function Use(ItemOrTrait)
+\{Use({ItemOrTrait})\}
 
 VAR UsedItem = ()
+~ UsedItem = Items()
 
-=== function IndicateUsed(Item)
-    ~UsedItem = Item
-    
-EXTERNAL IndicateUsed(Item)
+=== function RemoveInUnity(Item)
+
+EXTERNAL RemoveInUnity(Item)
 
 === function Remove(Item)
     {Inventory has Item:
         ~ Inventory -= Item
+        ~ RemoveInUnity(Item)
+        //~ Print("Removed " + Item)
     - else:
         PrintWarning("Attempted to remove an item that wasn't there!")
     }
@@ -150,6 +150,13 @@ VAR VisitedEver = ()
 === function MapOption(Destination)
 ~SetLocation(Destination)
     ~ return "\{TravelTo({Destination})\}"
+    
+    
+    
+    
+    
+    
+    
 
 // System: Incremental knowledge.
 // Each list is a chain of facts. Each fact supersedes the fact before 
@@ -182,6 +189,10 @@ VAR knowledgeState = ()
 
 === function isAre(list)
 	{LIST_COUNT(list) == 1:is|are}
+
+
+
+
 
 
 // 

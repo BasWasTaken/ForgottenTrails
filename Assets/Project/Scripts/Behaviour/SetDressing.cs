@@ -60,6 +60,8 @@ namespace ForgottenTrails.InkFacilitation
             [SerializeField, Header("Scene References"), Required]
             public BackGround bgImage;
 
+            [SerializeField, Header("Scene References"), Required]
+            public items.Inventory Inventory;
 
 
             public void SetSprites(string fileNames)
@@ -187,7 +189,6 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     //oneShot = false;
                     loop = true;
-                    Debug.Log(Controller.InkDataAsset.SceneState.ActiveMusic);
                     Controller.InkDataAsset.SceneState.ActiveMusic = fileName;
                 }
                 else if (audioGroup == AudioHandler.AudioGroup.Ambiance)

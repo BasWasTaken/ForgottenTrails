@@ -14,6 +14,9 @@ namespace ForgottenTrails.InkFacilitation
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
+        /// <summary>
+        /// CURRFENTLY UNUSED, CAN BE USED LATER IF UI GETS MORE INVOLVED/COMPLEX
+        /// </summary>
         public class SCInventoryState : SCGameMenuState
         {
             // Inspector Properties

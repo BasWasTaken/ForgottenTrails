@@ -63,7 +63,14 @@ namespace ForgottenTrails.InkFacilitation
                 PrepStory();
                 PrepData();
                 PrepScene();
-                FlagGoForStart();
+                if (Instance.SetDresser.Inventory.AssertSymmetry(Instance.Story.variablesState["Items"] as Ink.Runtime.InkList, Instance.Story.variablesState["Affordances"] as Ink.Runtime.InkList))
+                {
+                    FlagGoForStart();
+                }
+                else
+                {
+                    AppHelper.Quit();
+                }
             }
             public override void OnUpdate()
             {

@@ -3,13 +3,13 @@ INCLUDE Lists
 
 EXTERNAL Print(string)
 // send text to unity console as message
-=== function Print(value) 
-<<i>Log: {value}</i>>
+=== function Print(string) 
+<<i>Log: {string}</i>>
 
 EXTERNAL PrintWarning(string)
 // send text to unity console as warning
-=== function PrintWarning(value)
-<<i>LogWarning: {value}</i>>
+=== function PrintWarning(string)
+<<i>LogWarning: {string}</i>>
 
 EXTERNAL Halt(float) 
 // [EXPERIMENTAL] pause text for x seconds 
@@ -93,29 +93,29 @@ LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
 VAR Inventory = ()
 ~ Inventory = Items()
 
-=== function AddInUnity(Item)
+=== function AddInUnity(item)
 
-EXTERNAL AddInUnity(Item)
+EXTERNAL AddInUnity(item)
 
-=== function Add(Item)
-    ~ Inventory += Item
-    ~ AddInUnity(Item)
-    ~ Print("Picked up " + Item)
+=== function Add(item)
+    ~ Inventory += item
+    ~ AddInUnity(item)
+    ~ Print("Picked up " + item)
 
-=== function Use(ItemOrTrait)
-\{Use({ItemOrTrait})\}
+=== function Use(itemOrTrait)
+\{Use({itemOrTrait})\}
 
 VAR UsedItem = ()
 ~ UsedItem = Items()
 
-=== function RemoveInUnity(Item)
+=== function RemoveInUnity(item)
 
-EXTERNAL RemoveInUnity(Item)
+EXTERNAL RemoveInUnity(item)
 
-=== function Remove(Item)
-    {Inventory has Item:
-        ~ Inventory -= Item
-        ~ RemoveInUnity(Item)
+=== function Remove(item)
+    {Inventory has item:
+        ~ Inventory -= item
+        ~ RemoveInUnity(item)
         //~ Print("Removed " + Item)
     - else:
         PrintWarning("Attempted to remove an item that wasn't there!")
@@ -137,19 +137,19 @@ VAR VisitedEver = ()
 
 ~ VisitedEver = Locations()
 
-=== function SetLocation(Location) ===
+=== function SetLocation(location) ===
 ~ PreviousLocation = Locations()
 ~ PreviousLocation += CurrentLocation
 ~ CurrentLocation = Locations()
-~ CurrentLocation += Location
-~ VisitedEver += Location
+~ CurrentLocation += location
+~ VisitedEver += location
 
-=== function HasVisited(Location) ===
-~return VisitedEver ? Location
+=== function HasVisited(location) ===
+~return VisitedEver ? location
 
-=== function MapOption(Destination)
-~SetLocation(Destination)
-    ~ return "\{TravelTo({Destination})\}"
+=== function MapOption(destination)
+~SetLocation(destination)
+    ~ return "\{TravelTo({destination})\}"
     
     
     

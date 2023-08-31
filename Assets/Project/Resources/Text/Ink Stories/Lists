@@ -5,7 +5,11 @@ LIST Party = (Player), Alice, Robert
 
 LIST Items = knife, pot, rope, lantern, foragedMushrooms, wornSword
 
-LIST Affordances = weapon, tool, cooking
+~ Items = LIST_ALL(Items)
+
+LIST Affordances = weapon, tool, cooking, cutting, stabbing
+
+~ Affordances = LIST_ALL(Affordances)
 
 VAR travelrations = 107
 

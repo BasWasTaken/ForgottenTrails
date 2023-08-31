@@ -1,5 +1,5 @@
 
-LIST Locations = EdanCastle, RoadToEdanCastleLoc, EdinburghCrossroadsLoc, DreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse
+LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse, sampleCave, onTheRoad
 
 LIST Party = (Player), Alice, Robert
 

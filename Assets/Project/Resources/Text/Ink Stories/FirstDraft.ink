@@ -1,8 +1,6 @@
 INCLUDE CustomFeatures
 INCLUDE Stories
 
-
-
 //AffectionValues
 VAR AffEdgar = 50
 VAR AffHenry = 50
@@ -31,12 +29,12 @@ And so ends this tale. Another apprentice that would never return, their finding
 
 =MerchantBrothers
 TestMerchant
-{CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
+{CurrentLocation == roadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Deer
 TestDeer
-{CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
+{CurrentLocation == roadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 =Downpour
@@ -48,13 +46,13 @@ As you're traveling, you start to notice dark clouds gathering overhead.
     -> CastleEntrance
 *Seek shelter
     You decide not to risk getting drenched and find some cover. Unfortunately, you don't 
-{CurrentLocation == RoadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
+{CurrentLocation == roadToEdanCastleLoc and PreviousLocation == EdinburghCrossroadsLoc: -> CastleEntrance}
 If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 
 === Opening ===
 #backdrop:Vault1
-~ SetLocation(DreamState)
+~ SetLocation(dreamState)
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
 <br>
 It's a place that in an ancient past held a different name but you know it by two: "The Vault of Forgotten Books" and "Home". 
@@ -364,9 +362,9 @@ The campfire has yet to go out completely and should be easy to light. With the 
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
 [ADDITION BAS FOR TESTING] Ah, there it is. You pick up the pot and add it to your inventory. {Add(pot)}
 You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
-    **[{Use(cooking)}]
+    **[{ItemOption(cooking)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
-        ***[{Use(foragedMushrooms)}]
+        ***[{ItemOption(foragedMushrooms)}]
         {Remove(UsedItem)}
         You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison. 
         A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 
@@ -422,7 +420,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ SetLocation(EdinburghCrossroadsLoc)
-The road splits here into four directions. The northbound road {!HasVisited(EdanCastle) and Knows(edanca.Exists): presumably |}leads to {Knows(EdanCastleKnow.IsCastleOnHill):Edan Castle|the castle on the hill}{PreviousLocation ? RoadToEdanCastleLoc:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? ScotlandEntranceRoadLoc:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+The road splits here into four directions. The northbound road {!HasVisited(EdanCastle) and Knows(edanca.Exists): presumably |}leads to {Knows(EdanCastleKnow.IsCastleOnHill):Edan Castle|the castle on the hill}{PreviousLocation ? roadToEdanCastleLoc:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? ScotlandEntranceRoadLoc:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
@@ -441,9 +439,9 @@ You decide to {PreviousLocation ? ScotlandEntranceRoad:go back the way you came.
 Sorry buddy, no content West yet!
 ->EdinburghCrossroads.Crossing
 +[Inspect the Waystone]
-{Learn(EdanCastleKnow.Exists)}
-{You decide to take a closer look at the Waystone in the middle of the crossing. It's decorated in a blocky script, which thankfully matches the sources you were able to study back in Barralon. In the Northern Tongue it reads:|You decide to take another look at the Waystone. It reads:}
 
+~ Learn(EdanCastleKnow.Exists)
+{You decide to take a closer look at the Waystone in the middle of the crossing. It's decorated in a blocky script, which thankfully matches the sources you were able to study back in Barralon. In the Northern Tongue it reads:|You decide to take another look at the Waystone. It reads:}
 "May the blessings of Crìsdaen be upon the honorable traveler
 
 From this stone to Edan Castle, 7 miles Northbound
@@ -452,6 +450,8 @@ From this stone to Thahnford, 107 miles Southbound"
 
 A fourth line is also there, but the markings are scratched out. Carved beneath it in a freeform script -that barely passes as legible- is written a single word: "daemons".
 ->EdinburghCrossroads.Crossing
++ [Check your map]
+    -> MapScreen (-> EdinburghCrossroads.Crossing)
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element

@@ -102,7 +102,7 @@ VAR Inventory = ()
     //~ AddInUnity(item)
     //~ Print("Picked up " + item)
 
-=== function Use(itemOrTrait)
+=== function ItemOption(itemOrTrait)
 \{Use({itemOrTrait})\}
 
 VAR UsedItem = ()
@@ -133,6 +133,10 @@ VAR PreviousLocation = ()
 
 ~ PreviousLocation = Locations ()
 
+VAR TargetLocation = ()
+
+~ TargetLocation = Locations() 
+
 VAR VisitedEver = ()
 
 ~ VisitedEver = Locations()
@@ -147,11 +151,12 @@ VAR VisitedEver = ()
 === function HasVisited(location) ===
 ~return VisitedEver ? location
 
-=== function MapOption(destination)
-~SetLocation(destination)
-    ~ return "\{TravelTo({destination})\}"
+=== function MapOption(destination) ===
+~return "\{TravelTo({destination})\}"
     
-    
+=== function TravelTo(location) ===
+~ TargetLocation = location
+
     
     
     
@@ -189,10 +194,6 @@ VAR knowledgeState = ()
 
 === function isAre(list)
 	{LIST_COUNT(list) == 1:is|are}
-
-
-
-
 
 
 // 

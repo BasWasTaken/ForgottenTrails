@@ -118,7 +118,7 @@ namespace items
                 }
                 if (!contains)
                 {
-                    RemoveItem(item.name);
+                    RemoveItem(item.definition.inkEquevalent.itemName);
                 }
             }
 

@@ -93,14 +93,14 @@ LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
 VAR Inventory = ()
 ~ Inventory = Items()
 
-=== function AddInUnity(item)
+//=== function AddInUnity(item)
 
-EXTERNAL AddInUnity(item)
+//EXTERNAL AddInUnity(item)
 
 === function Add(item)
     ~ Inventory += item
-    ~ AddInUnity(item)
-    ~ Print("Picked up " + item)
+    //~ AddInUnity(item)
+    //~ Print("Picked up " + item)
 
 === function Use(itemOrTrait)
 \{Use({itemOrTrait})\}
@@ -108,14 +108,14 @@ EXTERNAL AddInUnity(item)
 VAR UsedItem = ()
 ~ UsedItem = Items()
 
-=== function RemoveInUnity(item)
+//=== function RemoveInUnity(item)
 
-EXTERNAL RemoveInUnity(item)
+//EXTERNAL RemoveInUnity(item)
 
 === function Remove(item)
     {Inventory has item:
         ~ Inventory -= item
-        ~ RemoveInUnity(item)
+        //~ RemoveInUnity(item)
         //~ Print("Removed " + Item)
     - else:
         PrintWarning("Attempted to remove an item that wasn't there!")

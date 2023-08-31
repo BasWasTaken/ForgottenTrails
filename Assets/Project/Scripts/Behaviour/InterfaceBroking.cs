@@ -114,7 +114,7 @@ namespace ForgottenTrails.InkFacilitation
                 if (discoveredChoice!=null)
                 {
                     var newList = new Ink.Runtime.InkList("Items", StoryController.Instance.Story);
-                    newList.AddItem(item.inkEquevalent.itemName);
+                    newList.AddItem(item.inkEquevalent);
                     Controller.Story.variablesState["UsedItem"] = newList;
                     Controller.Story.ChooseChoiceIndex(discoveredChoice.index);
                     Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?

@@ -29,7 +29,7 @@ namespace items
             itemDictionary.Clear();
             foreach (InventoryItem item in possibleItems)
             {
-                itemDictionary.Add(item.name, item);
+                itemDictionary.Add(item.CanonicalName, item);
             }
         }
 
@@ -43,7 +43,7 @@ namespace items
             {
                 if (itemDictionary.TryGetValue(inkListItem.itemName, out InventoryItem item))
                 {
-                    item.inkEquevalent = inkListItem;
+                    item.InkListItem = inkListItem;
                 }
                 else
                 {
@@ -57,9 +57,9 @@ namespace items
             {
                 try
                 {
-                    if (!items.all.ContainsItemNamed(unityItem.inkEquevalent.itemName))
+                    if (!items.all.ContainsItemNamed(unityItem.InkListItem.itemName))
                     {
-                        error += string.Format("\nItem \"{0}\" not present in ink list!", unityItem.inkEquevalent.itemName);
+                        error += string.Format("\nItem \"{0}\" not present in ink list!", unityItem.InkListItem.itemName);
                     }
                 }
                 catch (NullReferenceException e)
@@ -110,7 +110,7 @@ namespace items
                 bool contains = false;
                 foreach (InkListItem item1 in inkInventory.Keys)
                 {
-                    if (item1.itemName == item.definition.inkEquevalent.itemName)
+                    if (item1.itemName == item.definition.InkListItem.itemName)
                     {
                         contains = true;
                         break;
@@ -118,7 +118,7 @@ namespace items
                 }
                 if (!contains)
                 {
-                    RemoveItem(item.definition.inkEquevalent.itemName);
+                    RemoveItem(item.definition.InkListItem.itemName);
                 }
             }
 
@@ -131,25 +131,25 @@ namespace items
                 }
             }
         }
-        public void AddItem(InkListItem itemName)
+        public void AddItem(InkListItem item)
         {
-            if (itemDictionary.TryGetValue(itemName.itemName, out InventoryItem inventoryItem))
+            if (itemDictionary.TryGetValue(item.itemName, out InventoryItem inventoryItem))
             {
                 if (!itemsInInventory.ContainsKey(inventoryItem.name))
                 {
                     ItemRepresentation obj = Instantiate(itemContainerPrefab, transform);
                     obj.Construct(inventoryItem);
-                    inventoryItem.inkEquevalent = itemName;
+                    inventoryItem.InkListItem = item;
                     itemsInInventory.Add(inventoryItem.name, obj);
                 }
                 else
                 {
-                    Debug.LogError("item already in inventory");
+                    Debug.LogErrorFormat("item {0} already in inventory", item.itemName);
                 }
             }
             else
             {
-                Debug.LogError(string.Format("Item \"{0}\" not recognised!", itemName));
+                Debug.LogError(string.Format("Item \"{0}\" not recognised!", item));
             }
         }
         public void RemoveItem(string itemName)

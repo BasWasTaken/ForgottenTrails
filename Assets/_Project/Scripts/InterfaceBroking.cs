@@ -92,14 +92,14 @@ namespace ForgottenTrails.InkFacilitation
 
                     string keyPhrase = keyValuePair.Key;
                     Choice potentialChoice = keyValuePair.Value;
-                    if(item.name == keyPhrase)
+                    if(item.CanonicalName == keyPhrase)
                     {
                         discoveredChoice = potentialChoice;
                         break;
                     }
                     else
                     {
-                        foreach (Affordance trait in item.contexts)
+                        foreach (Affordance trait in item.Affordaces)
                         {
                             if (trait.ToString() == keyPhrase)
                             {
@@ -114,7 +114,7 @@ namespace ForgottenTrails.InkFacilitation
                 if (discoveredChoice!=null)
                 {
                     var newList = new Ink.Runtime.InkList("Items", StoryController.Instance.Story);
-                    newList.AddItem(item.inkEquevalent);
+                    newList.AddItem(item.InkListItem);
                     Controller.Story.variablesState["UsedItem"] = newList;
                     Controller.Story.ChooseChoiceIndex(discoveredChoice.index);
                     Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?

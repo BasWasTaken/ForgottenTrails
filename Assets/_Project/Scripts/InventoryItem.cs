@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NaughtyAttributes;
 using ForgottenTrails;
 
 namespace items
@@ -14,15 +15,17 @@ namespace items
     [CreateAssetMenu]
     public class InventoryItem : InkableObject
     {
-        [Header("Info")]
+        [field:SerializeField, BoxGroup("Info")]
+        public string CanonicalName { get; private set; }
+
+        public Ink.Runtime.InkListItem InkListItem { get; set; }
         public string description = "";
         public Sprite image;
-        [Tooltip("Base Cost of the item")] public int value;
+        [Tooltip("Base Cost of the item")] public int coinValue;
         [Header("Skillchecks")]
         public int modifier;
-        public List<Affordance> contexts;
-
-        public Ink.Runtime.InkListItem inkEquevalent;
+        [field:SerializeField]
+        public List<Affordance> Affordaces { get; private set; }
     }
 
 

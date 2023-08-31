@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8fa3f30abd33b44995a6e57906962f, type: 3}
   m_Name: Rope
   m_EditorClassIdentifier: 
+  <CanonicalName>k__BackingField: rope
   description: 
   image: {fileID: 21300000, guid: adbf78fb5bbb527489da4d07fcb8766d, type: 3}
-  value: 0
+  coinValue: 0
   modifier: 0
-  contexts: 01000000
+  <Affordaces>k__BackingField: 02000000

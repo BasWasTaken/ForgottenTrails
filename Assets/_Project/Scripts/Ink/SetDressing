@@ -54,21 +54,21 @@ EXTERNAL _Vox_Play(listItem, float)
 ~ _Sfx_Play(clip, volume)
 
 === function _Sfx_Play(listItem, float) // plays audio on sfx channel, unlooped
-<<i>Sfx: {clip}</i>>
+<<i>Sfx: {listItem}</i>>
 EXTERNAL _Sfx_Play(listItem, float)
 
 // Ambiance. Handled with external function.
 === function Ambiance_Add(clip, volume) //use volume between 0.0 and 1.0
 ~ Ambiance += clip
-~ _Ambiance_PlayAtVolume(clip, volume)
+~ _Ambiance_Play(clip, volume)
 
-=== function _Ambiance_PlayAtVolume(listItem, float) // adds audio on an ambiance channel, looping
+=== function _Ambiance_Play(listItem, float) // adds audio on an ambiance channel, looping
 <<i>Ambiance: {Ambiance} </i>>
-EXTERNAL _Ambiance_PlayAtVolume(listItem, float)
+EXTERNAL _Ambiance_Play(listItem, float)
 
-=== function Ambiance_Adjust(clip, newVVolume)
+=== function Ambiance_Adjust(clip, newVolume)
 { Ambiance ? clip:
-    ~ _Ambiance_PlayAtVoume(clip, newVolume)
+    ~ _Ambiance_Play(clip, newVolume)
 - else:
     ~ PrintWarning("{clip} Not found")
 }
@@ -83,7 +83,7 @@ EXTERNAL _Ambiance_Remove(listItem)
 
 === function Ambiance_RemoveAll()
 ~ Ambiance = Ambiance.none
-~ _Ambiance_StopAll()
+~ _Ambiance_RemoveAll()
 
 === function _Ambiance_RemoveAll()
 <<i>Removed all ambiance. </i>>

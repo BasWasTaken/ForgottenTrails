@@ -17,7 +17,7 @@
 \{UNITY:TravelTo({destination})\}
 
 === TravelingTo(targetLocation) === // used for traveling from a to b via the map. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
-~ TargetLocation = location
+~ TargetLocation = targetLocation
 ~ SetLocation(onTheRoad)
 ~ travelRations--
 [Here you can put random travel content.]

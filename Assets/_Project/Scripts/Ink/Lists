@@ -13,14 +13,15 @@ LIST Affordances = weapon, tool, cooking, cutting, stabbing
 
 ~ Affordances = LIST_ALL(Affordances)
 
-VAR travelrations = 107
+// rations and money are currently not in inventory sytem:
+VAR travelRations = 107
 
 VAR money = 10
 
 // assets
 LIST Background = (none), vault1, vault2, vault3
 
-LIST Portraits = (none), Alice, Robert
+LIST Portraits = (none), Alice1, Robert1
 
 LIST Music = (none), theStreetsOfWhiteRun
 

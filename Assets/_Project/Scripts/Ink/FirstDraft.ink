@@ -81,46 +81,7 @@ You see <>
 -> Opening.CharCreation1
 
 = CharCreation1
-{
-	- players_gender == "male":
-	    ~ androgynous = "masculine"
-		~ they = "he"
-        ~ them = "him"
-        ~ their = "his"
-        ~ theirs = "his"
-        ~ Mx = "Mr"
-        ~ master = "mister"
-        ~ person = "man"
-        ~ kid = "boy"
-        ~ lad = "lad"
-        ~ guy = "guy"        
-        
-    - players_gender == "female":
-        ~ androgynous = "feminine"
-        ~ they = "she"
-        ~ them = "her"
-        ~ their = "her"
-        ~ theirs = "hers"
-        ~ Mx = "Ms"
-        ~ master = "missus"
-        ~ person = "woman"
-        ~ kid = "girl"
-        ~ lad = "lass"
-        ~ guy = "gal"
-        
-	- else:
-	    ~ androgynous = "androgynous"
-        ~ they = "they"
-        ~ them = "them"
-        ~ their = "their"
-        ~ theirs = "theirs"
-        ~ Mx = "Mx"
-        ~ master = "master"
-        ~ person = "person"
-        ~ kid = "kid"
-        ~ lad = "lad"
-        ~ guy = "guy"
-}
+~ SetPronouns(players_gender)
 
 whose eyes shine a bright <>
 +...blue[]. 

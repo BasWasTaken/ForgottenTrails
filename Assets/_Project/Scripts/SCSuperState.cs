@@ -116,12 +116,14 @@ namespace ForgottenTrails.InkFacilitation
                 story.BindExternalFunction("Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
                 story.BindExternalFunction("Bg", (string fileName, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackdrop(fileName, dur)));
                 story.BindExternalFunction("FadeTo", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
-                story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
+                //story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
+                story.ObserveVariable("Sprites", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
+
                 story.BindExternalFunction("Vox", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Voice, relVol)));
                 story.BindExternalFunction("Sfx", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Sfx, relVol)));
                 story.BindExternalFunction("Ambiance", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Ambiance, relVol)));
                 story.BindExternalFunction("Music", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Music, relVol)));
-                story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.Inventory.FetchItems(newValue)));
+                story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.Inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
             }

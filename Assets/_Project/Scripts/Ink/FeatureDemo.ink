@@ -1,31 +1,42 @@
 INCLUDE CustomFeatures
+-> Start
+
 === Start ===
+asdfasdf
 ~Spd(1)
+asdfa dadsf
 ~ Print("Hello world!")// This prints the text to the unity console
-~Bg("Vault2",0)
+~FadeToImage("Vault2",0)
 You should now see <b>a vault</b>.{stop}
-~Bg("Vault1",1)
+~FadeToImage("Vault1",1)
 You should now see <b>another vault</b>.{stop}
-~Bg("Vault3",1)
+~FadeToImage("Vault3",1)
 You should now see <b>another vault</b>.{stop}
-~FadeTo("Black",10)
+~FadeToColor("Black",10)
 You should now see <b>black</b>.{stop}
-~FadeTo("White",0.2)
+~FadeToColor("White",0.2)
 You should now see <b>white</b>.{stop}
-~FadeTo("Red",1)
+~FadeToColor("Red",1)
 You should now see <b>red</b>.{stop}
-~Bg("whiterun",0)
+~FadeToImage("whiterun",0)
 You should now see <b>whiterun</b>.{stop}
-You should now see {Sprites("b34auw3h_0")}one {glue}
-{Sprites("b34auw3h_0, b34auw3h_1")}two, {glue}
-{Sprites("b34auw3h_0, b34auw3h_1, b34auw3h_2")}three characters appear.{glue}{stop}
-They should {Sprites("")}now be gone.{stop}
-~Music("the streets of whiterun",1.0)
+You should now see {glue}
+{AddPortrait(Sprites.Alice)}
+~ Sprites += Sprites.Alice
+one {glue}
+~ Sprites += Sprites.Robert
+two, {glue}
+
+three characters appear.{glue}{stop}
+They should {glue}
+~ Portraits = ()
+now be gone.{stop}
+~ PlayMusic(TheStreetsOfWhiterun, 1.0)
 You should hear music.{stop}
 You should hear ambiant chatter {glue}
-{Ambiance("chatter", 1)}<b>now</b>.{stop}
+{PlayAmbiance(chatter, 1)}<b>now</b>.{stop}
 The chatter should stop {glue}
-{Ambiance("",1)}now.{stop}
+{PlayAmbiance((),1)}now.{stop}
 -> sfx
 === sfx ===
 Get ready for some sounds.

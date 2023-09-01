@@ -1,86 +1,17 @@
 INCLUDE Lists
-//BEGIN LIST Unity functionality
+INCLUDE Utility
+INCLUDE StoryPresentation
+INCLUDE SetDressing
+INCLUDE VariableLanguage
+INCLUDE Map
 
-EXTERNAL Print(string)
-// send text to unity console as message
-=== function Print(string) 
-<<i>Log: {string}</i>>
-
-EXTERNAL PrintWarning(string)
-// send text to unity console as warning
-=== function PrintWarning(string)
-<<i>LogWarning: {string}</i>>
-
-EXTERNAL Halt(float) 
-// [EXPERIMENTAL] pause text for x seconds 
-=== function Halt(duration) 
-<<i>Halt: {duration}</i>> 
-
-EXTERNAL Clear()
- // Clears the textbox and moves that text to log
-=== function Clear()
-<<i>Clear Page</i>>
-
-VAR stop = "\{stop\}" // Used in Unity for stopping the continue loop
-
-VAR glue = "\{glue\}" // used to glue next line to this.
-
-VAR aglue = "\{aglue\}" // used to glue this to previous line
-
-VAR spd = 1.0 
-EXTERNAL Spd(float) 
-// [TEMPRAMENTAL] change the text speed 
-=== function Spd(value) //positive number, expressed as multiplier (eg .8 for 80%)
-~spd=value
-
-EXTERNAL Bg(string,duration)
- // sets background to image by fading. 
- // Note that it is in early stages and yo ucan probably break it quite easily by calling it quickly in a row.
-=== function Bg(image, duration) // duration in seconds (e.g. 0.5)
-<<i>Backdrop: {image}</i>> 
-
-EXTERNAL FadeTo(string, duration)
- // fade to a color
-=== function FadeTo(color, duration) // duration in seconds (e.g. 0.5)
-<<i>Fade to {color}</i>> 
-
-EXTERNAL Sprites(string)
-// sets sprites for characters, etc. 
-=== function Sprites(images) //If multiple sprites, separated by comma.
-<<i>Images: {images}</i>> 
-
-EXTERNAL Vox(string, float)
-// plays audio on voice channel, unlooped
-=== function Vox(clip, volume) // use volume between 0.0 and 1.0
-<<i>Vox: {clip}</i>> 
-// note to self: could perhaps also play appropriate sound when someone is speaking via use of inky tags
-
-EXTERNAL Sfx(string, float)
-// plays audio on sfx channel, unlooped
-=== function Sfx(clip, volume) // use volume between 0.0 and 1.0
-<<i>Sfx: {clip}</i>>
-
-EXTERNAL Ambiance(string, float)
-// plays audio on ambiance channel, looping
-=== function Ambiance(clip, volume) //use "" to stop loop.  use volume between 0.0 and 1.0
-<<i>Ambiance: {clip}</i>>
-
-EXTERNAL Music(string, float)
-// plays audio on music channel, looping
-=== function Music(clip, volume) //use "" to stop audio. use volume between 0.0 and 1.0
-<<i>Music: {clip}</i>>
-
-// Helper function: popping elements from lists
-=== function Pop(ref list)
-   ~ temp x = LIST_MIN(list) 
-   ~ list -= x 
-   ~ return x
-
-// System: looping time of day
-
+//
+// SYSTEM: looping time of day
+// Unity currently does nothing with this feature.
+//
 LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
 
-=== function AdvanceTime // used to progress time 1 or loop back around.
+=== function AdvanceTime() // used to progress time 1 or loop back around.
 { TimeOfDay == 7:
 	~ TimeOfDay = 1
 - else:
@@ -88,95 +19,42 @@ LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
 }   
  
 //
-// System: inventory
+// SYSTEM: Inventory
+// Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 //
-VAR Inventory = ()
-~ Inventory = Items()
+VAR Inventory = () // list of items the player has.
+~ Inventory = Items() // List of items defined in Lists
 
-//=== function AddInUnity(item)
-
-//EXTERNAL AddInUnity(item)
-
-=== function Add(item)
+=== function Item_Add(item) //Add item to inventory.
     ~ Inventory += item
-    //~ AddInUnity(item)
-    //~ Print("Picked up " + item)
 
-=== function ItemOption(itemOrTrait)
-\{Use({itemOrTrait})\}
+=== function ItemOption(itemOrAffordance) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal)
+\{UNITY:Use({itemOrAffordance})\}
 
-VAR UsedItem = ()
+VAR UsedItem = () // container for unity to tell ink what item it just used
 ~ UsedItem = Items()
 
-//=== function RemoveInUnity(item)
-
-//EXTERNAL RemoveInUnity(item)
-
-=== function Remove(item)
+=== function Item_Remove(item) // used to remove an item from the inventory
     {Inventory has item:
         ~ Inventory -= item
-        //~ RemoveInUnity(item)
-        //~ Print("Removed " + Item)
     - else:
-        PrintWarning("Attempted to remove an item that wasn't there!")
+        ~ PrintWarning("Attempted to remove an item that wasn't there!")
     }
     
-    
-
-    
-    
-VAR CurrentLocation = ()
-
-~ CurrentLocation = Locations()
-
-VAR PreviousLocation = () 
-
-~ PreviousLocation = Locations ()
-
-VAR TargetLocation = ()
-
-~ TargetLocation = Locations() 
-
-VAR VisitedEver = ()
-
-~ VisitedEver = Locations()
-
-=== function SetLocation(location) ===
-~ PreviousLocation = Locations()
-~ PreviousLocation += CurrentLocation
-~ CurrentLocation = Locations()
-~ CurrentLocation += location
-~ VisitedEver += location
-
-=== function HasVisited(location) ===
-~return VisitedEver ? location
-
-=== function MapOption(destination) ===
-~return "\{TravelTo({destination})\}"
-    
-=== function TravelTo(location) ===
-~ TargetLocation = location
-
-    
-    
-    
-    
-    
-
-// System: Incremental knowledge.
-// Each list is a chain of facts. Each fact supersedes the fact before 
 //
-
+// SYSTEM: Incremental knowledge tracking.
+// Allows tracking of what the player has witnessed throughout the game. Used by distinct LISTs. Each LIST is a chain of facts. Each fact supersedes the fact before. 
+//
 VAR knowledgeState = ()
 
-=== function Knows (x) 
-   ~ return knowledgeState ? x 
+=== function Knows (fact) // check if fact is present in knowledge state, e.i. if it is known information
+   ~ return knowledgeState ? fact 
 
-=== function KnowledgeStateBetween(x, y) 
-   ~ return knowledgeState? x && not (knowledgeState ^ y)
+=== function KnowledgeStateBetween(factX, factY) // used to check if knowledge state is between two specific points
+   ~ return knowledgeState? factX && not (knowledgeState ^ factY)
 
-=== function Learn(statesToSet) 
-   ~ temp x = Pop(statesToSet)
+=== function Learn(facts)  // used to "learn" (i.e. add to knowledge state) a fact, and all facts before it (since they are incremental)
+   ~ temp x = Pop(facts)
    {
    - not x: 
       ~ return false 
@@ -185,42 +63,40 @@ VAR knowledgeState = ()
       ~ temp chain = LIST_ALL(x)
       ~ temp statesGained = LIST_RANGE(chain, LIST_MIN(chain), x)
       ~ knowledgeState += statesGained
-      ~ Learn (statesToSet) 	// set any other states left to set
+      ~ Learn (facts) 	// set any other states left to set
       ~ return true  	       // and we set this state, so true
  
     - else:
-      ~ return false || Learn(statesToSet) 
+      ~ return false || Learn(facts) 
     }	
+    
+//
+// SYSTEM: Location tracking
+// Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
+//
+    
+VAR CurrentLocation = ()
+~ CurrentLocation = Locations() // locations defined in Lists
 
-=== function isAre(list)
-	{LIST_COUNT(list) == 1:is|are}
+VAR PreviousLocation = () 
+~ PreviousLocation = Locations ()
 
+VAR TargetLocation = ()
+~ TargetLocation = Locations() 
 
-// 
+VAR VisitedEver = ()
+~ VisitedEver = Locations()
 
+=== function SetLocation(location) === // update current, previous, and all visited locations
+//~ PreviousLocation = Locations()
+//~ PreviousLocation += CurrentLocation
+~ PreviousLocation = CurrentLocation
+//~ CurrentLocation = Locations()
+//~ CurrentLocation += location
+~ CurrentLocation = location
+~ VisitedEver += location
 
+=== function HasVisited(location) === // check list of visited locations
+~return VisitedEver ? location
 
-// This is the list of vars for the gender stuff, but that's also not really well implemented yet of course.
-VAR PlayerName = "PlayerName"
-
-
-VAR players_gender = "Undefined"
-VAR players_eyecolor = "Undefined"
-VAR players_hair = "Undefined"
-VAR players_hair_color = "Undefined"
-VAR players_hair_style = "Undefined"
-
-VAR androgynous = "androgynous"
-VAR they = "they"
-VAR them = "them"
-VAR their = "their"
-VAR theirs = "theirs"
-VAR Mx = "Mx"
-VAR master = "master"
-VAR person = "person"
-VAR kid = "kid"
-VAR lad = "lass"
-VAR guy = "guy"
-
-
-
+// Seealso the map system in Map

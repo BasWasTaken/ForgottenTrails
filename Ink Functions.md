@@ -1,7 +1,3 @@
----
-type: base
-tags: 
----
 # Ink
 - AdvanceTime()
 ## Inventory:

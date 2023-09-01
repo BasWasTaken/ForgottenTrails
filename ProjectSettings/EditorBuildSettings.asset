@@ -15,4 +15,4 @@ EditorBuildSettings:
     path: Assets/_Project/_Scenes/AlwaysOpen.unity
     guid: 1c4ebe195eed76b4c87314ce529c96f8
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: 275e3a4b8ff3cb44db8651627b2fd003, type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: 267828b959c6be44f850a12a14d77d10, type: 2}

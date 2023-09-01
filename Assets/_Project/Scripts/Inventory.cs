@@ -144,7 +144,7 @@ namespace items
                 }
                 else
                 {
-                    Debug.LogErrorFormat("item {0} already in inventory", item.itemName);
+                    //Debug.LogErrorFormat("item {0} already in inventory", item.itemName);
                 }
             }
             else

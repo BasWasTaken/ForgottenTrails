@@ -7,7 +7,7 @@
 + { HasVisited(EdanCastle)} [{MapOption(EdanCastle)}] 
     -> TravelingTo(EdanCastle)
 + { HasVisited(sampleCave)} [{MapOption(sampleCave)}] 
-    -> TravelingTo(SampleCave)
+    -> TravelingTo(sampleCave)
 + [Put the map away]
 
 \{UNITY:CloseMap()\}

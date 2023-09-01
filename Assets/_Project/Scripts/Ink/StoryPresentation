@@ -4,9 +4,8 @@ VAR spd = 1.0
 ~ spd = value
 ~ _Spd(value)
 === function _Spd(float) 
+// nothing
 EXTERNAL _Spd(float) 
-
-~ _Spd(value)
 
 === function Halt(duration)
 ~ _Halt(duration)

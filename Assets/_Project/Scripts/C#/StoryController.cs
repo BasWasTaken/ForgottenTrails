@@ -37,8 +37,8 @@ namespace ForgottenTrails.InkFacilitation
 
         [SerializeField, BoxGroup("Data"), ReadOnly]
         [Tooltip("View data object containing INK data.")]
-        private InkDataClass _inkDataAsset = null;
-        public InkDataClass InkDataAsset 
+        private StoryData _inkDataAsset = null;
+        public StoryData InkDataAsset 
         { 
             get 
             {
@@ -145,13 +145,13 @@ namespace ForgottenTrails.InkFacilitation
         // Private Methods
         #region Private Methods 
         /// <summary>
-        /// Make a new <see cref="InkDataClass"/>object
+        /// Make a new <see cref="StoryData"/>object
         /// </summary>
         /// <returns>The freshly made blank data</returns>
-        private InkDataClass CreateBlankData(bool forBootup = false)
+        private StoryData CreateBlankData(bool forBootup = false)
         {
             // NOTE: Is this the optimal way of doing this?
-            InkDataClass data = new(dataLabel + "DemoScene");
+            StoryData data = new(dataLabel + "DemoScene");
             if (!forBootup) 
             { 
                 Debug.Log("Created new data " + data.Label); 

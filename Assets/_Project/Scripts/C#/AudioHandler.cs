@@ -1,6 +1,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 using ForgottenTrails.InkFacilitation;
+using System.Collections.Generic;
 
 namespace Bas.Utility
 {
@@ -23,10 +24,47 @@ namespace Bas.Utility
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for voice.")]
         public AudioSource AudioSourceVoice { get; private set; }
-        
-        [field: SerializeField, BoxGroup("Scene References"), Required]
+
+        [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for ambiance.")]
-        public AudioSource AudioSourceAmbiance { get; private set; }
+        public AudioSource AudioSourceAmbiance;
+
+        private List<AudioSource> _AudioSourcesAmbiance = new();
+        public List<AudioSource> AudioSourcesAmbiance
+        { 
+            get
+            {
+                if (_AudioSourcesAmbiance.Count == 0)
+                {
+                    NewAmbienceLayer();
+                }
+                return _AudioSourcesAmbiance;
+            }
+            private set 
+            {
+                _AudioSourcesAmbiance = value;                
+            } 
+        }
+        public AudioSource NewAmbienceLayer()
+        {
+            AudioSource source = Instantiate(AudioSourceAmbiance, transform);
+            _AudioSourcesAmbiance.Add(source);
+            return source;
+        }
+
+        public AudioSource FirstAvailableAmbianceLayer()
+        {
+            foreach (AudioSource source in AudioSourcesAmbiance)
+            {
+                if (!source.isPlaying)
+                {
+                    source.clip = null;
+                    source.transform.SetAsLastSibling();
+                    return source;
+                }
+            }
+            return NewAmbienceLayer();
+        }
         
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for music.")] 
@@ -40,7 +78,7 @@ namespace Bas.Utility
             return audioGroup switch
             {
                 AudioGroup.Sfx => AudioSourceSfx,
-                AudioGroup.Ambiance => AudioSourceAmbiance,
+                AudioGroup.Ambiance => AudioSourcesAmbiance[^1],
                 AudioGroup.Music => AudioSourceMusic,
                 AudioGroup.Voice => AudioSourceVoice,
                 AudioGroup.System => AudioSourceSystem,

@@ -111,18 +111,23 @@ namespace ForgottenTrails.InkFacilitation
             {
                 story.BindExternalFunction("Print", (string text) => PerformInkFunction(() => Controller.ConsoleLogInk(text, false)));
                 story.BindExternalFunction("PrintWarning", (string text) => PerformInkFunction(() => Controller.ConsoleLogInk(text, true)));
-                story.BindExternalFunction("Spd", (float mod) => PerformInkFunction(() => Controller.TextProducer.Spd(mod / 100)));
-                story.BindExternalFunction("Clear", () => PerformInkFunction(() => Controller.TextProducer.ClearPage()));
-                story.BindExternalFunction("Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
-                story.BindExternalFunction("Bg", (string fileName, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackdrop(fileName, dur)));
-                story.BindExternalFunction("FadeTo", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
+                story.BindExternalFunction("_Spd", (float mod) => PerformInkFunction(() => Controller.TextProducer.Spd(mod / 100)));
+                story.BindExternalFunction("_Clear", () => PerformInkFunction(() => Controller.TextProducer.ClearPage()));
+                story.BindExternalFunction("_Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
+                story.BindExternalFunction("_FadeToImage", (InkListItem image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(image, dur)));
+                story.BindExternalFunction("_FadeToColor", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
                 //story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
-                story.ObserveVariable("Sprites", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
+                story.ObserveVariable("Portraits", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
 
-                story.BindExternalFunction("Vox", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Voice, relVol)));
-                story.BindExternalFunction("Sfx", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Sfx, relVol)));
-                story.BindExternalFunction("Ambiance", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Ambiance, relVol)));
-                story.BindExternalFunction("Music", (string fileName, float relVol) => PerformInkFunction(() => Controller.SetDresser.ParseAudio(fileName, AudioHandler.AudioGroup.Music, relVol)));
+                story.BindExternalFunction("_Vox_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Voice, relVol)));
+                story.BindExternalFunction("_Sfx_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Sfx, relVol)));
+                story.BindExternalFunction("_Ambiance_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Ambiance, relVol)));
+                story.BindExternalFunction("_Ambiance_Remove", (InkListItem clip) => PerformInkFunction(() => Controller.SetDresser.RemoveAmbiance(clip)));
+                story.BindExternalFunction("_Ambiance_RemoveAll", () => PerformInkFunction(() => Controller.SetDresser.RemoveAmbianceAll()));
+
+                story.BindExternalFunction("_Music_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Music, relVol)));
+                story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
+                
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.Inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
@@ -146,7 +151,7 @@ namespace ForgottenTrails.InkFacilitation
                 if (DataManager.Instance.DataAvailable(Controller.InkDataAsset.Key))
                 {
                     Debug.Log("found data! trying to load...");
-                    if (TryLoadData(Controller.InkDataAsset.Key, out InkDataClass dummy))
+                    if (TryLoadData(Controller.InkDataAsset.Key, out StoryData dummy))
                     {
                         Controller.InkDataAsset = dummy;
                     }
@@ -157,7 +162,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 Controller.LoadingFromDisk = false;
             }
-            private bool TryLoadData(string key, out InkDataClass output)
+            private bool TryLoadData(string key, out StoryData output)
             {
                 output = Controller.CreateBlankData();
                 if (!DataManager.Instance.DataAvailable(key))
@@ -167,7 +172,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 else
                 {
-                    InkDataClass input = DataManager.Instance.FetchData<InkDataClass>(Controller.InkDataAsset.Key);
+                    StoryData input = DataManager.Instance.FetchData<StoryData>(Controller.InkDataAsset.Key);
                     try
                     {
                         ReadStoryStateFromData(input);
@@ -186,7 +191,7 @@ namespace ForgottenTrails.InkFacilitation
             /// Feed the <paramref name="input"/>'s story state into the story we are currently loading.
             /// </summary>
             /// <param name="input">the data loaded from disk</param>
-            private void ReadStoryStateFromData(InkDataClass input)
+            private void ReadStoryStateFromData(StoryData input)
             {
                 if (input.StoryStateJson != "")
                 {
@@ -218,14 +223,13 @@ namespace ForgottenTrails.InkFacilitation
                 PopulateSceneFromData(Controller.InkDataAsset);
             }
 
-            private void PopulateSceneFromData(InkDataClass input)
+            private void PopulateSceneFromData(StoryData input)
             {
                 //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
-                Controller.SetDresser.ParseAudio(input.SceneState.ActiveMusic, AudioHandler.AudioGroup.Music);
-                Controller.SetDresser.ParseAudio(input.SceneState.ActiveAmbiance, AudioHandler.AudioGroup.Ambiance);
-                Controller.SetDresser.SetBackdrop(input.SceneState.Background);
-                Controller.SetDresser.SetSprites(input.SceneState.Sprites);
-                Controller.TextProducer.Spd(input.SceneState.TextSpeedMod);
+                Controller.SetDresser.ParseAudio(Controller.Story.state.variablesState["Music"] as InkList, AudioHandler.AudioGroup.Music);
+                Controller.SetDresser.ParseAudio(Controller.Story.state.variablesState["Ambiance"] as InkList, AudioHandler.AudioGroup.Ambiance);
+                Controller.SetDresser.SetBackdrop(Controller.Story.state.variablesState["Background"] as InkList);
+                Controller.TextProducer.Spd(Controller.Story.state.variablesState["Speed"] as InkList);
                 Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
             }
 

@@ -22,8 +22,7 @@ You should now see <b>red</b>.{stop}
 ~FadeToImage("whiterun",0)
 You should now see <b>whiterun</b>.{stop}
 You should now see {glue}
-{AddPortrait(Sprites.Alice)}
-~ Sprites += Sprites.Alice
+{Portraits_Add(Portraits.Alice1)}
 one {glue}
 ~ Sprites += Sprites.Robert
 two, {glue}
@@ -42,20 +41,20 @@ The chatter should stop {glue}
 === sfx ===
 Get ready for some sounds.
 Ideally, a soft sound should play when {glue}
-{Sfx("gong", 0.25)}<b>this</b> word appears, {glue}
-{Sfx("",0)}and a loud sound should play when {glue}
-{Sfx("gong", 1)}<b>this</b> word appears.
+{Sfx_Play(gong, 0.25)}<b>this</b> word appears, {glue}
+and a loud sound should play when {glue}
+{Sfx_Play(gong, 1)}<b>this</b> word appears.
     Did that sound right? You can check it again if you want.
     + [Hit it again.] -> sfx
     + [Continue] -> spdtst
 === spdtst ===
-{Spd(10)}<b>This</b> {glue}
-{Spd(1)}is a fast word, {glue}{stop}
-{Spd(0.1)}<b>this</b> {glue}
-{Spd(1)}is a slow word.{stop}
-{Spd(10)}<b>This is a fast sentence</b>, {glue}{stop}
-{Spd(0.1)}<b>this is a slow sentence</b>.{stop}
-{Spd(1)}Did you get that? Or do you want to see it again?
+{Spd_Play(10)}<b>This</b> {glue}
+{Spd_Play(1)}is a fast word, {glue}{stop}
+{Spd_Play(0.1)}<b>this</b> {glue}
+{Spd_Play(1)}is a slow word.{stop}
+{Spd_Play(10)}<b>This is a fast sentence</b>, {glue}{stop}
+{Spd_Play(0.1)}<b>this is a slow sentence</b>.{stop}
+{Spd_Play(1)}Did you get that? Or do you want to see it again?
     + [Run it again.] -> spdtst
     + [Give me the sounds again.] -> sfx
     + [Continue] -> next

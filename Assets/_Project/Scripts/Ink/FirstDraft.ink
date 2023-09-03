@@ -51,7 +51,7 @@ If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 
 === Opening ===
-#backdrop:Vault1
+~ FadeToImage(vaultLibrary, 1)
 ~ SetLocation(dreamState)
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark. 
 <br>

@@ -63,11 +63,13 @@ namespace DataService
             DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto
         }
 
+        public TextAsset textAsset;
+
         [Button("CreateAssetLibraries",EButtonEnableMode.Editor)]
         private void CreateAssetLibraries()
         {
             assets.Clear();
-            Story story = new Story(StoryController.Instance.InkStoryAsset.text);
+            Story story = new(textAsset.text);
 
             foreach (string inkListName in InkListNames)
             {
@@ -85,8 +87,7 @@ namespace DataService
                             }
                             catch (Exception)
                             {
-
-                                throw;
+                                Debug.LogAssertionFormat("item {0} not found", item);
                             }
 
                         }

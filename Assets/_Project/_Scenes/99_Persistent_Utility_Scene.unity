@@ -192,8 +192,40 @@ PrefabInstance:
       value: 00_MainMenu_Scene
       objectReference: {fileID: 0}
     - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: textAsset
+      value: 
+      objectReference: {fileID: 4900000, guid: 8882d426ffe91ef4786331665f048139, type: 3}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: newGameScene
       value: 01_Demo_Gameplay_Scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.data[0]
+      value: Vox
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.data[1]
+      value: Sfx
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.data[2]
+      value: Music
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.data[3]
+      value: Ambiance
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.data[4]
+      value: Background
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
+      propertyPath: InkListNames.Array.data[5]
+      value: Portraits
       objectReference: {fileID: 0}
     - target: {fileID: 8663880123288258833, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: m_RootOrder

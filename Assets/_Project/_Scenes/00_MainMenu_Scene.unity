@@ -3403,6 +3403,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5003510824464239664, guid: bc938391644abaf4394d5cbad2ab8057, type: 3}
+      propertyPath: alwaysOpenScene
+      value: 99_Persistent_Utility_Scene
+      objectReference: {fileID: 0}
     - target: {fileID: 5003510824464239678, guid: bc938391644abaf4394d5cbad2ab8057, type: 3}
       propertyPath: m_Name
       value: EssentialsLoader

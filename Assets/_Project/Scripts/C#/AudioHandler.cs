@@ -27,7 +27,7 @@ namespace Bas.Utility
 
         [SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for ambiance.")]
-        public AudioSource AudioSourceAmbiance;
+        public AudioSource AudioSourceAmbiance; // NOTE should actually chagne this name so that not accidentalyl called
 
         private List<AudioSource> _AudioSourcesAmbiance = new();
         public List<AudioSource> AudioSourcesAmbiance
@@ -50,6 +50,28 @@ namespace Bas.Utility
             AudioSource source = Instantiate(AudioSourceAmbiance, transform);
             _AudioSourcesAmbiance.Add(source);
             return source;
+        }
+        public bool TryGetAmbianceSource(AudioClip clip, out AudioSource audioSource)
+        {
+            if (clip == null)
+            {
+                audioSource = FirstAvailableAmbianceLayer();
+                return true;
+            }
+            else
+            {
+                foreach (AudioSource source in AudioSourcesAmbiance)
+                {
+                    if (source.clip == clip)
+                    {
+                        audioSource = source;
+                        return true;
+                    }
+                }
+
+                audioSource = FirstAvailableAmbianceLayer();
+                return false;
+            }
         }
 
         public AudioSource FirstAvailableAmbianceLayer()

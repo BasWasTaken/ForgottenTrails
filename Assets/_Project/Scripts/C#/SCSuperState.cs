@@ -119,13 +119,13 @@ namespace ForgottenTrails.InkFacilitation
                 //story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
                 story.ObserveVariable("Portraits", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
 
-                story.BindExternalFunction("_Vox_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Voice, relVol)));
-                story.BindExternalFunction("_Sfx_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Sfx, relVol)));
-                story.BindExternalFunction("_Ambiance_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Ambiance, relVol)));
+                story.BindExternalFunction("_Vox_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
+                story.BindExternalFunction("_Sfx_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
+                story.BindExternalFunction("_Ambiance_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
                 story.BindExternalFunction("_Ambiance_Remove", (InkListItem clip) => PerformInkFunction(() => Controller.SetDresser.RemoveAmbiance(clip)));
                 story.BindExternalFunction("_Ambiance_RemoveAll", () => PerformInkFunction(() => Controller.SetDresser.RemoveAmbianceAll()));
 
-                story.BindExternalFunction("_Music_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.FindAndPlayAudio(clip, AudioHandler.AudioGroup.Music, relVol)));
+                story.BindExternalFunction("_Music_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
                 story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
                 
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.Inventory.FetchItems(newValue as InkList)));
@@ -226,10 +226,21 @@ namespace ForgottenTrails.InkFacilitation
             private void PopulateSceneFromData(StoryData input)
             {
                 //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
-                Controller.SetDresser.ParseAudio(Controller.Story.state.variablesState["Music"] as InkList, AudioHandler.AudioGroup.Music);
-                Controller.SetDresser.ParseAudio(Controller.Story.state.variablesState["Ambiance"] as InkList, AudioHandler.AudioGroup.Ambiance);
-                Controller.SetDresser.SetBackdrop(Controller.Story.state.variablesState["Background"] as InkList);
-                Controller.TextProducer.Spd(Controller.Story.state.variablesState["Speed"] as InkList);
+                InkList music = Controller.Story.state.variablesState["Music"] as InkList;                
+                Controller.SetDresser.InkRequestAudio(music.maxItem.Key);
+
+                InkList ambiance = Controller.Story.state.variablesState["Ambiance"] as InkList;
+                foreach (InkListItem item in ambiance.Keys)
+                {
+                    Controller.SetDresser.InkRequestAudio(item);
+                }
+
+                InkList background = Controller.Story.state.variablesState["Background"] as InkList;
+                Controller.SetDresser.SetBackground(background.maxItem.Key);
+
+
+                Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
+
                 Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
             }
 

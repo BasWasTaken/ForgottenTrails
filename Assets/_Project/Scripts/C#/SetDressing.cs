@@ -81,9 +81,9 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 else // if any other item beside "none" 
                 {
-                    if(AssetManager.Instance.Sprites.TryGetValue(inkListItem, out sprite))
+                    if(AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                     {
-
+                        sprite = (Sprite)Resources.Load(path);
                     }
                     else
                     {
@@ -125,10 +125,10 @@ namespace ForgottenTrails.InkFacilitation
                         {
                             Destroy(item.gameObject);
                         }
-                        if (AssetManager.Instance.Sprites.TryGetValue(inkListItem, out Sprite sprite))
+                        if (AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                         {
                             //sprites.Add(sprite);
-                            Instantiate(portraitPrefab, portraits.transform).sprite = sprite;
+                            Instantiate(portraitPrefab, portraits.transform).sprite = (Sprite)Resources.Load(path);
                         }
                         else
                         {
@@ -137,7 +137,7 @@ namespace ForgottenTrails.InkFacilitation
                     }
                 }
             }            
-            public void FindAndPlayAudio(InkListItem inkListItem, float relVol = .5f)
+            public void InkRequestAudio(InkListItem inkListItem, float relVol = .5f)
             {
                 AudioClip find = FindAudio(inkListItem);
                 var audioGroup = inkListItem.originName switch // determine audiogroup
@@ -148,7 +148,24 @@ namespace ForgottenTrails.InkFacilitation
                     "Music" => AudioGroup.Music,
                     _ => AudioGroup.System,
                 };
-                PlayAudio(find, audioGroup, relVol);
+                PlayOrStopAudio(find, audioGroup, relVol);
+            }
+            public void StopMusic()
+            {
+                ProcessStopRequest(AudioGroup.Music);
+            }
+            public void RemoveAmbianceAll()
+            {
+                ProcessStopRequest(AudioGroup.Ambiance);
+            }
+            public void RemoveAmbiance(InkListItem inkListItem)
+            {
+                AudioClip clip = FindAudio(inkListItem);
+                ProcessStopRequest(AudioGroup.Ambiance, clip);
+            }
+            public void RemoveAmbiance(AudioClip clip)
+            {
+                ProcessStopRequest(AudioGroup.Ambiance, clip);
             }
             public AudioClip FindAudio(InkListItem inkListItem)
             {
@@ -160,9 +177,9 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 else // if any other item beside "none" 
                 {
-                    if (AssetManager.Instance.AudioClips.TryGetValue(inkListItem, out audioClip))
+                    if (AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                     {
-
+                        audioClip = (AudioClip)Resources.Load(path);
                     }
                     else
                     {
@@ -171,18 +188,67 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 return audioClip;
             }
-            private void PlayAudio(AudioClip audioClip, AudioGroup audioGroup, float relVol = .5f)
-            {
 
+            private void AudioFadeOut(AudioSource audioSource, AudioClip audioClip)
+            {
+                ShiftVolumeGradually(audioSource, audioClip, 0);
+                StopClipWhenVolume0(audioSource);
+                RemoveClipWhenFinished(audioSource);
+            }
+            /// can be made a lot cleaner, I think. perhaps should be split up 
+            public void ProcessStopRequest(AudioGroup audioGroup, AudioClip audioClip = null, bool sudden = false)
+            {
+                AudioSource audioSource;
+                if (audioGroup == AudioGroup.Ambiance)
+                {
+                    if (audioClip != null) // stop specific ambiance
+                    {
+                        if (AudioHandler.TryGetAmbianceSource(audioClip, out audioSource))
+                        {
+                            AudioFadeOut(audioSource, audioClip);
+                        }
+                        else
+                        {
+                            Debug.LogErrorFormat("ambiance with clip not found");
+                        }
+                    }
+                    else // stop all ambiance
+                    {
+                        foreach (AudioSource source in AudioHandler.AudioSourcesAmbiance)
+                        {
+                            if (source.clip != null)
+                            {
+                                AudioFadeOut(source, audioClip);
+                            }
+                            else
+                            {
+                                Destroy(source.gameObject);
+                            }
+                        }
+                    }
+                }
+                else // stop other audio type
+                {
+                    audioSource = AudioHandler.GetSource(audioGroup);
+                    if (sudden)
+                    {
+                        audioSource.Stop();
+                        audioSource.clip = null;
+                    }
+                    else
+                    {
+                        AudioFadeOut(audioSource, audioClip);
+                    }
+                }
+
+            }
+            /// can be made a lot cleaner, I think. perhaps should be split up 
+            private void PlayOrStopAudio(AudioClip audioClip, AudioGroup audioGroup, float relVol = .5f)
+            {
                 AudioSource audioSource = AudioHandler.GetSource(audioGroup);
                 if (audioClip == null)
                 {
-                    // TODO: if ambiance:
-                    // - i need a special method for getting the source 
-                    // - want fadout when removing clip
-                    // - and i wanna remove the children if inactive for a while
-                    audioSource.clip = null;
-                    audioSource.Stop();
+                    ProcessStopRequest(audioGroup, audioClip);
                 }
                 else
                 {
@@ -208,28 +274,14 @@ namespace ForgottenTrails.InkFacilitation
                             audioSource.loop = false;
                             audioSource.PlayOneShot(audioClip, relVol);
                             break;
-                        case AudioGroup.Ambiance:
-                            bool exists = false;
-                            foreach (AudioSource source in AudioHandler.AudioSourcesAmbiance)
-                            {
-                                if(source.clip == audioClip)
-                                {
-                                    exists = true;
-                                    audioSource = source;
-                                    break;
-                                }
-                            }
-
-                            if (exists)
+                        case AudioGroup.Ambiance:                        
+                            if (AudioHandler.TryGetAmbianceSource(audioClip, out audioSource)) // if the clip is already playing
                             {
                                 // apply volume only
                                 Controller.StartCoroutine(ShiftVolumeGradually(audioSource, audioClip, relVol));
                             }
-                            else // if it's a different clip than before,
+                            else // if it's a new clip,
                             {
-                                // get new audio source
-                                audioSource = AudioHandler.FirstAvailableAmbianceLayer();
-
                                 // start playing at volume
                                 audioSource.clip = audioClip;
                                 audioSource.volume = relVol;
@@ -258,7 +310,6 @@ namespace ForgottenTrails.InkFacilitation
                             break;
                     }
                     Controller.StartCoroutine(RemoveClipWhenFinished(audioSource));
-
                 }
             }
             IEnumerator ShiftVolumeGradually(AudioSource audioSource, AudioClip audioClip, float relVol)
@@ -272,6 +323,11 @@ namespace ForgottenTrails.InkFacilitation
                 }
             }
 
+            IEnumerator StopClipWhenVolume0(AudioSource audioSource)
+            {
+                if (audioSource.volume > 0) yield return new WaitWhile(() => audioSource.volume > 0);
+                audioSource.Stop();
+            }
             IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
             {
                 if (audioSource.isPlaying) yield return new WaitWhile(() => audioSource.isPlaying);

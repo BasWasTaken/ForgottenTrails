@@ -2302,7 +2302,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.15997113
+  m_Size: 0.15997115
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7134,7 +7134,7 @@ MonoBehaviour:
   <AudioSourceSystem>k__BackingField: {fileID: 4636245370548742609}
   <AudioSourceSfx>k__BackingField: {fileID: 4636245369445873570}
   <AudioSourceVoice>k__BackingField: {fileID: 4636245370948959648}
-  <AudioSourceAmbiance>k__BackingField: {fileID: 4636245371363056738}
+  AudioSourceAmbiance: {fileID: 4636245371363056738}
   <AudioSourceMusic>k__BackingField: {fileID: 4636245370335439450}
 --- !u!114 &2009679607
 MonoBehaviour:
@@ -7150,8 +7150,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <StateMachine>k__BackingField:
     <Controller>k__BackingField: {fileID: 0}
-  <InkStoryAsset>k__BackingField: {fileID: 4900000, guid: 5bbdd3ef5e69e7148bb60dbbba09fafa, type: 3}
+  <InkStoryAsset>k__BackingField: {fileID: 4900000, guid: 8882d426ffe91ef4786331665f048139, type: 3}
   <TextProducer>k__BackingField:
+    TPStatus: 0
     <TextBox>k__BackingField: {fileID: 348379362}
     <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
     <HistoryTextBox>k__BackingField: {fileID: 2084113306}
@@ -7169,7 +7170,6 @@ MonoBehaviour:
     <AutoAdvance>k__BackingField: 0
     <AlwaysPause>k__BackingField: 0
     <ClearWhenFull>k__BackingField: 1
-    TPStatus: 0
   <SetDresser>k__BackingField:
     portraitPrefab: {fileID: 8404248775511915677, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
     portraits: {fileID: 1206258461}
@@ -8137,6 +8137,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5003510824464239664, guid: bc938391644abaf4394d5cbad2ab8057, type: 3}
+      propertyPath: alwaysOpenScene
+      value: 99_Persistent_Utility_Scene
+      objectReference: {fileID: 0}
     - target: {fileID: 5003510824464239678, guid: bc938391644abaf4394d5cbad2ab8057, type: 3}
       propertyPath: m_Name
       value: EssentialsLoader

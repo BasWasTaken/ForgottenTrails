@@ -150,7 +150,6 @@ namespace ForgottenTrails.InkFacilitation
             }
             internal void Spd(float speed)
             {
-                Controller.InkDataAsset.SceneState.TextSpeedMod = speed;
                 TextSpeedMod = speed;
             }
 

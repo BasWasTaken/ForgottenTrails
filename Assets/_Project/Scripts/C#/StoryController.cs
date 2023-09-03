@@ -46,10 +46,6 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     _inkDataAsset = CreateBlankData();
                 }
-                else if(_inkDataAsset.SceneState == null)
-                {
-                    _inkDataAsset = CreateBlankData();
-                }
                 return _inkDataAsset;
             } 
             internal set 
@@ -78,8 +74,6 @@ namespace ForgottenTrails.InkFacilitation
         // Public Properties
         #region Public Properties
         public Story Story { get; private set; }
-        public Dictionary<VariablesState, object> InkVars { get; private set; } = new();
-
         #endregion
         // Private Properties
         #region Private Properties

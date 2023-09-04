@@ -63,14 +63,8 @@ namespace ForgottenTrails.InkFacilitation
                 PrepStory();
                 PrepData();
                 PrepScene();
-                if (Instance.SetDresser.Inventory.AssertSymmetry(Instance.Story.variablesState["Items"] as Ink.Runtime.InkList, Instance.Story.variablesState["Affordances"] as Ink.Runtime.InkList))
-                {
-                    FlagGoForStart();
-                }
-                else
-                {
-                    AppHelper.Quit();
-                }
+
+                FlagGoForStart();
             }
             public override void OnUpdate()
             {
@@ -128,7 +122,7 @@ namespace ForgottenTrails.InkFacilitation
                 story.BindExternalFunction("_Music_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
                 story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
                 
-                story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.Inventory.FetchItems(newValue as InkList)));
+                story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
             }

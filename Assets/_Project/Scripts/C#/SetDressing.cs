@@ -63,9 +63,6 @@ namespace ForgottenTrails.InkFacilitation
             [SerializeField, Header("Scene References"), Required]
             public BackGround bgImage;
 
-            [SerializeField, Header("Scene References"), Required]
-            public items.Inventory Inventory;
-
             public void SetColor(string color, float duration = 0)
             {
                 Controller.StartCoroutine(bgImage.FadeTo(color, duration));

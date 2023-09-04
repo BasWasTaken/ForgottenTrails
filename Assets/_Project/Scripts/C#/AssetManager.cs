@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using ForgottenTrails.InkFacilitation;
 using Ink.Runtime;
+using items;
 
 namespace DataService
 {
@@ -23,6 +24,9 @@ namespace DataService
         ///___VARIABLES___///
         #region inspector
         public string[] InkListNames;
+        [SerializeField]
+        List<InventoryItem> possibleItems = new();
+        readonly public Dictionary<string, InventoryItem> itemDictionary = new();
         [Scene]
         [Tooltip("The main menu scene")]
         public string menuScene;
@@ -61,43 +65,119 @@ namespace DataService
         {
             base.Awake();
             DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto
+
+            
         }
 
-        public TextAsset textAsset;
+        public bool ItemListsKnown(ListDefinition items, ListDefinition affordances)
+        {
+            itemDictionary.Clear();
+            foreach (InventoryItem item in possibleItems)
+            {
+                itemDictionary.Add(item.CanonicalName, item);
+            }
+
+            string error = "";
+
+            // assert all items from ink exist in unity
+            foreach (InkListItem inkListItem in items.items.Keys)
+            {
+                if (itemDictionary.TryGetValue(inkListItem.itemName, out InventoryItem item))
+                {
+                    item.InkListItem = inkListItem;
+                }
+                else
+                {
+                    error += string.Format("\nItem \"{0}\" not present in unity dictionary!", inkListItem.itemName);
+                }
+            }
+            // assert all afforances are same
+
+            // assert all affordances from ink exist in unity
+            foreach (InkListItem affordance in affordances.items.Keys)
+            {
+                if (!Enum.IsDefined(typeof(Affordance), affordance.itemName))
+                {
+                    error += string.Format("\nAffordance \"{0}\" not present in unity enum definition!", affordance);
+                }
+            }
+
+            // assert all affordances from unity exist in ink
+            foreach (string affordance in Enum.GetNames(typeof(Affordance)))
+            {
+                if (!affordances.ContainsItemWithName(affordance))
+                {
+                    error += string.Format("\nAffordance \"{0}\" not present in ink list!", affordance);
+                }
+            }
+
+            if (error == "")
+            {
+                return true;
+            }
+            else
+            {
+                Debug.LogAssertion("ITEMS OR AFFORDANCES NOT MATCHED UP" + error);
+                return false;
+            }
+        }
+        [field:SerializeField]
+        public TextAsset TextAsset { get; set; }
 
         [Button("CreateAssetLibraries",EButtonEnableMode.Editor)]
         private void CreateAssetLibraries()
         {
+            // NOTE wsl ipv inventory aanroepen, inventory state?
             assets.Clear();
-            Story story = new(textAsset.text);
+            Story story = new(TextAsset.text);
 
+            ListDefinition items=null;
+            ListDefinition affordances = null;
             foreach (string inkListName in InkListNames)
             {
+                Debug.LogFormat("Searching for {0}", inkListName);
                 if (story.listDefinitions.TryListGetDefinition(inkListName, out ListDefinition listDefinition))
                 {
-                    foreach (InkListItem item in listDefinition.items.Keys)
-                    {
-                        string searchFor = item.itemName;
-                        if (searchFor != "none")
-                        {
-                            // try to find asset
-                            try
-                            {                
-                                assets.Add(item, AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(searchFor)[0]));
-                            }
-                            catch (Exception)
-                            {
-                                Debug.LogAssertionFormat("item {0} not found", item);
-                            }
-
-                        }
+                    if(inkListName == "Items")
+                    {   
+                        Debug.Log("Found items list.");
+                        items = listDefinition;
                     }
+                    else if(inkListName == "Affordances")
+                    {
+                        Debug.Log("Found affordances list.");
+                        affordances = listDefinition;
+                    }
+                    else
+                    {
+                        Debug.LogFormat("Found {0}", listDefinition);
+                        foreach (InkListItem item in listDefinition.items.Keys)
+                        {
+                            string searchFor = item.itemName;
+                            if (searchFor != "none")
+                            {
+                                // try to find asset
+                                try
+                                {
+                                    assets.Add(item, AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(searchFor)[0]));
+                                }
+                                catch (Exception)
+                                {
+                                    Debug.LogAssertionFormat("item {0} not found", item);
+                                }
+
+                            }
+                        }
+                    }                    
                 }
                 else
                 {
                     Debug.LogAssertionFormat("ListDefinition {0} not found.", inkListName);
                 }
             }
+            ItemListsKnown(items, affordances);
+
+            Debug.Log("TODO: here print the collected results of the asset parsing.");
         }
 
     }

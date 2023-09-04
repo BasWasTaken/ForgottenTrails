@@ -31,9 +31,8 @@ namespace ForgottenTrails.InkFacilitation
         [field: SerializeField, ReadOnly, BoxGroup("State Info")]
         public StackBasedStateMachine<StoryController> StateMachine { get; private set; }
 
-        [field:SerializeField, BoxGroup("Assets"), Required]
-        [Tooltip("Here drag the JSON object containing the dialogue behaviour")]
-        public TextAsset InkStoryAsset { get; private set; }
+
+        public TextAsset InkStoryAsset { get { return AssetManager.Instance.TextAsset; } set { AssetManager.Instance.TextAsset = value; } }
 
         [SerializeField, BoxGroup("Data"), ReadOnly]
         [Tooltip("View data object containing INK data.")]

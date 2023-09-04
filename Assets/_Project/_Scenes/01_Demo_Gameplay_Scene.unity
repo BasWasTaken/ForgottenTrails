@@ -2420,13 +2420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemContainerPrefab: {fileID: 616837255035053691, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
-  possibleItems:
-  - {fileID: 11400000, guid: 91bc0009517c7c248ac09b279b8aee36, type: 2}
-  - {fileID: 11400000, guid: 2465d9dfdd278b74593cf162ef0a079b, type: 2}
-  - {fileID: 11400000, guid: e8ed6563ee9717447a4696035d3e6547, type: 2}
-  - {fileID: 11400000, guid: b4531b50a08aa704cafeca8a5a5604ab, type: 2}
-  - {fileID: 11400000, guid: 865e52f4ed133bb4dac347d686f281c7, type: 2}
-  - {fileID: 11400000, guid: 4e3f9c270e35e2b4da8582591b3496ae, type: 2}
+  book: {fileID: 0}
 --- !u!1 &531542275
 GameObject:
   m_ObjectHideFlags: 0
@@ -7149,8 +7143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <StateMachine>k__BackingField:
-    <Controller>k__BackingField: {fileID: 0}
-  <InkStoryAsset>k__BackingField: {fileID: 4900000, guid: 8882d426ffe91ef4786331665f048139, type: 3}
+    StatePeeker: 
   <TextProducer>k__BackingField:
     TPStatus: 0
     <TextBox>k__BackingField: {fileID: 348379362}
@@ -7174,13 +7167,13 @@ MonoBehaviour:
     portraitPrefab: {fileID: 8404248775511915677, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
     portraits: {fileID: 1206258461}
     bgImage: {fileID: 1320078387}
-    Inventory: {fileID: 530457801}
   <InterfaceBroker>k__BackingField:
     <ButtonPrefab>k__BackingField: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
     <ButtonAnchor>k__BackingField: {fileID: 28223511}
     <FloatingMarker>k__BackingField: {fileID: 531542277}
     <AdvanceDialogueDelay>k__BackingField: 0.5
     <SkipDelay>k__BackingField: 0.5
+    inventory: {fileID: 530457801}
 --- !u!1 &2084113304
 GameObject:
   m_ObjectHideFlags: 0

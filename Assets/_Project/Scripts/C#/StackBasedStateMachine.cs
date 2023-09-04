@@ -16,10 +16,11 @@ namespace Bas.Utility
     {
         // Inspector Properties
         #region Inspector Properties
+        [ReadOnly]
+        public string StatePeeker = "Not Started";
         [field: SerializeField, ReadOnly]
         public Stack<BaseState<T>> StateStack { get; private set; } = new();
 
-        [field:SerializeField, Required]
         public T Controller { get; private set; }
 
         #endregion
@@ -38,6 +39,7 @@ namespace Bas.Utility
         #region Constructor
         public StackBasedStateMachine(T controller, BaseState<T> dummyState, params BaseState<T>[] states)
         {
+            StatePeeker = "Constructing";
             Controller = controller;
             BaseState = dummyState;
             foreach (BaseState<T> state in states)
@@ -46,6 +48,7 @@ namespace Bas.Utility
                 state.Machine = this;
                 KnownStates.Add(state.GetType(), state);
             }
+            StatePeeker = "Constructed";
         }
 
         #endregion
@@ -57,6 +60,8 @@ namespace Bas.Utility
         /// <param name="newState">The state to transition to</param>
         public void TransitionToState(BaseState<T> newState)
         {
+            StatePeeker += string.Format(", transitioning to: {0}", newState.GetType().ToString());
+            
             if (CurrentState != null)
             {
                 int levelDifference = GetLevelDifference(CurrentState, newState);
@@ -101,18 +106,21 @@ namespace Bas.Utility
                 StateStack.Push(newState);
                 CurrentState.OnEnter();
             }
+            StatePeeker = CurrentState.GetType().ToString();
         }
         /// <summary>
         /// Perform the <see cref="CurrentState"/>'s Update method"/>
         /// </summary>
         public void Update()
         {
+           // StatePeeker = CurrentState.ToString();
             if (CurrentState.DropCondition)
             {
                 DropState(CurrentState);
             }
             else
             {
+                StatePeeker = CurrentState.GetType().ToString();
                 CurrentState.OnUpdate();
             }
         }

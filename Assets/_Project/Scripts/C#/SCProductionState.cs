@@ -119,7 +119,7 @@ namespace ForgottenTrails.InkFacilitation
                         // check size and clear page if needed
 
                         string bufferText = Controller.TextProducer.CurrentText; // make backup
-                        Controller.TextProducer.VisibleCharacters = Controller.TextProducer.TextBox.text.Length;
+                        Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
 
                         Controller.TextProducer.CurrentText += toBeAdded + '\n'; // test if the text will fit
                         yield return 0;// wait 1 frame
@@ -178,11 +178,11 @@ namespace ForgottenTrails.InkFacilitation
                         string message = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra", Controller.TextProducer.TextSpeedActual, Controller.TextProducer.TextSpeedPreset); // prepare console message
                         int tagLevel = 0; ///int to remember if we go down any nested tags
                         char letter;///prepare marker             
-                        while (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.TextBox.text.Length) /// while not all characters are visible
+                        while (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.CurrentText.Length) /// while not all characters are visible
                         {
                             if (!Controller.isActiveAndEnabled) yield return new WaitUntil(() => Controller.isActiveAndEnabled); // only continue if enabled
                             if (Controller.StateMachine.CurrentState != this) yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this); // only continue in right state
-                            letter = Controller.TextProducer.TextBox.text[Controller.TextProducer.VisibleCharacters]; /// store letter we're typing letter   
+                            letter = Controller.TextProducer.CurrentText[Controller.TextProducer.VisibleCharacters]; /// store letter we're typing letter   
                             Controller.TextProducer.VisibleCharacters++; /// show the character
                             if (letter == '<')/// if we come across this we've entered a(nother) tag
                             {
@@ -273,7 +273,7 @@ namespace ForgottenTrails.InkFacilitation
                         }
                         else if (match.Value == "{aglue}")
                         {
-                            Controller.TextProducer.TextBox.text = Controller.TextProducer.TextBox.text.TrimEnd('\n'); /// remove linebreak from previous
+                            Controller.TextProducer.CurrentText = Controller.TextProducer.CurrentText.TrimEnd('\n'); /// remove linebreak from previous
                         }
 
                         input = input.Replace(match.Value, ""); /// remove the command

@@ -58,6 +58,11 @@ namespace ForgottenTrails.InkFacilitation
             }
             #endregion
             // Public Methods
+
+
+            [SerializeField, Header("Scene References"), Required]
+            public items.Inventory inventory;
+
             #region Public Methods
             public bool CanPresentChoices()
             {
@@ -113,6 +118,7 @@ namespace ForgottenTrails.InkFacilitation
 
                 if (discoveredChoice!=null)
                 {
+                    inventory.book.Replace();
                     var newList = new Ink.Runtime.InkList("Items", StoryController.Instance.Story);
                     newList.AddItem(item.InkListItem);
                     Controller.Story.variablesState["UsedItem"] = newList;

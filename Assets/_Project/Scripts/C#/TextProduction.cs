@@ -30,7 +30,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Inspector Properties
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             [Tooltip("Panel to display current paragraph.")]
-            internal TextMeshProUGUI TextBox { get; set; }
+            private TextMeshProUGUI TextBox { get; set; }
 
             [field: SerializeField, BoxGroup("Scene References"), Required]
             [Tooltip("Panel to collect overflow text.")]
@@ -91,6 +91,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 internal set
                 {
+                    if (value == null) value = "";
                     TextBox.text = value;
                 }
             }

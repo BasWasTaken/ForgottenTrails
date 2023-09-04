@@ -83,7 +83,7 @@ namespace DataService
             SaveSlot = slot;
             if (File.Exists(DataPath(metaData.Key)))
             {
-                Debug.LogAssertion("TODO: prompt user. Clearing data in slot " + slot);
+                //Debug.Log("TODO: prompt user. Clearing data in slot " + slot);
                 WipeDataFromSlot(slot);
             }
         }

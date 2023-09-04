@@ -24,38 +24,26 @@ namespace items
 
         
 
-        Dictionary<InkListItem, ItemRepresentation> itemsInInventory = new();
+        Dictionary<InkListItem, ItemRepresentation> UnityInventory = new();
 
-        private void Awake()
+
+        public void FetchItems(InkList inkInventory)
         {
-        }
-
-
-        public void FetchItems(object items)
-        {
-            var inkInventory = items as Ink.Runtime.InkList;
+            List<InkListItem> dummy = new();
+            dummy.AddRange(UnityInventory.Keys);
             //Debug.Log("Populating inventory");
-            foreach (ItemRepresentation item in itemsInInventory.Values)
+            foreach (InkListItem item in dummy)
             {
-                bool contains = false;
-                foreach (InkListItem item1 in inkInventory.Keys)
+                if (!inkInventory.ContainsKey(item))
                 {
-                    if (item1.itemName == item.definition.InkListItem.itemName)
-                    {
-                        contains = true;
-                        break;
-                    }
-                }
-                if (!contains)
-                {
-                    RemoveItem(item.definition.InkListItem);
+                    RemoveItem(item);
                 }
             }
 
             foreach (InkListItem item in inkInventory.Keys)
             {
                 //Debug.Log(item);
-                if (!itemsInInventory.ContainsKey(item))
+                if (!UnityInventory.ContainsKey(item))
                 {
                     AddItem(item);
                 }
@@ -65,12 +53,12 @@ namespace items
         {
             if (AssetManager.Instance.ItemDictionary.TryGetValue(item, out InventoryItem inventoryItem))
             {
-                if (!itemsInInventory.ContainsKey(item))
+                if (!UnityInventory.ContainsKey(item))
                 {
                     ItemRepresentation obj = Instantiate(itemContainerPrefab, transform);
                     obj.Construct(inventoryItem);
                     inventoryItem.InkListItem = item;
-                    itemsInInventory.Add(inventoryItem.InkListItem, obj);
+                    UnityInventory.Add(inventoryItem.InkListItem, obj);
                 }
                 else
                 {
@@ -84,9 +72,10 @@ namespace items
         }
         public void RemoveItem(InkListItem item)
         {
-            if (itemsInInventory.ContainsKey(item))
+            if (UnityInventory.TryGetValue(item, out ItemRepresentation value))
             {
-                itemsInInventory.Remove(item);
+                UnityInventory.Remove(item);
+                Destroy(value.gameObject);
             }
             else
             {

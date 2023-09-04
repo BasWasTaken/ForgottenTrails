@@ -32,7 +32,7 @@ VAR Inventory = () // list of items the player has.
     ~ Inventory += item
 
 === function ItemOption(itemOrAffordance) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal)
-\{UNITY:Use({itemOrAffordance})\}
+\{Unity.UseItem({itemOrAffordance})\}
 
 VAR UsedItem = () // container for unity to tell ink what item it just used
 ~ UsedItem = Items()

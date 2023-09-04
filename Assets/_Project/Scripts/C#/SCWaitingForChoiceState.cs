@@ -49,6 +49,8 @@ namespace ForgottenTrails.InkFacilitation
                 #endregion
                 // Private Methods
                 #region Private Methods
+                const string opener = "{Unity.UseItem(";
+                const string closer = ")}";
                 internal void PresentButtons()
                 {
                     if (Controller.Story.canContinue)
@@ -66,13 +68,13 @@ namespace ForgottenTrails.InkFacilitation
 
                             if (input.Contains("{"))
                             {
-                                int startIndex = input.IndexOf("{Use");
-                                int endIndex = input.IndexOf('}', startIndex);
+                                int startIndex = input.IndexOf(opener);
+                                int endIndex = input.IndexOf(closer, startIndex);
 
                                 if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
                                 {
-                                    int substringLength = endIndex - startIndex - 6; // Excluding '{' and '}' characters
-                                    string key = input.Substring(startIndex + 5, substringLength);
+                                    int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
+                                    string key = input.Substring(startIndex + opener.Length, substringLength);
 
                                     Debug.Log("Encountered hidden choice: " + key);
                                     Controller.InterfaceBroker.hiddenChoices.Add(key, choice);
@@ -112,7 +114,7 @@ namespace ForgottenTrails.InkFacilitation
                 // Creates a button showing the choice text
                 private Button PresentButton(string text)
                 {
-                    Debug.Log("make button for " + text);
+                    //Debug.Log("make button for " + text);
                     /// Creates the button from a prefab
                     Button choice = Instantiate(Controller.InterfaceBroker.ButtonPrefab) as Button;
                     choice.transform.SetParent(Controller.InterfaceBroker.ButtonAnchor, false);

@@ -212,6 +212,7 @@ namespace ForgottenTrails.InkFacilitation
             /// </summary>
             private void PrepScene()
             {
+                AssetManager.Instance.CreateAssetLibraries();
                 Controller.waitingForChoiceState.RemoveOptions();
                 Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
                 PopulateSceneFromData(Controller.InkDataAsset);

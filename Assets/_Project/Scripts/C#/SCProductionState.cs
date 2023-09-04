@@ -218,7 +218,7 @@ namespace ForgottenTrails.InkFacilitation
                             }
                         }
 
-                        Debug.Log(message);
+                        //Debug.Log(message);
                         #endregion RevealLetters
 
                         Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;

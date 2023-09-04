@@ -24,7 +24,7 @@ namespace items
 
         
 
-        Dictionary<string, ItemRepresentation> itemsInInventory = new();
+        Dictionary<InkListItem, ItemRepresentation> itemsInInventory = new();
 
         private void Awake()
         {
@@ -48,14 +48,14 @@ namespace items
                 }
                 if (!contains)
                 {
-                    RemoveItem(item.definition.InkListItem.itemName);
+                    RemoveItem(item.definition.InkListItem);
                 }
             }
 
             foreach (InkListItem item in inkInventory.Keys)
             {
                 //Debug.Log(item);
-                if (!itemsInInventory.ContainsKey(item.itemName))
+                if (!itemsInInventory.ContainsKey(item))
                 {
                     AddItem(item);
                 }
@@ -63,14 +63,14 @@ namespace items
         }
         public void AddItem(InkListItem item)
         {
-            if (AssetManager.Instance.itemDictionary.TryGetValue(item.itemName, out InventoryItem inventoryItem))
+            if (AssetManager.Instance.ItemDictionary.TryGetValue(item, out InventoryItem inventoryItem))
             {
-                if (!itemsInInventory.ContainsKey(inventoryItem.name))
+                if (!itemsInInventory.ContainsKey(item))
                 {
                     ItemRepresentation obj = Instantiate(itemContainerPrefab, transform);
                     obj.Construct(inventoryItem);
                     inventoryItem.InkListItem = item;
-                    itemsInInventory.Add(inventoryItem.name, obj);
+                    itemsInInventory.Add(inventoryItem.InkListItem, obj);
                 }
                 else
                 {
@@ -82,15 +82,15 @@ namespace items
                 Debug.LogError(string.Format("Item \"{0}\" not recognised!", item.itemName));
             }
         }
-        public void RemoveItem(string itemName)
+        public void RemoveItem(InkListItem item)
         {
-            if (itemsInInventory.ContainsKey(itemName))
+            if (itemsInInventory.ContainsKey(item))
             {
-                itemsInInventory.Remove(itemName);
+                itemsInInventory.Remove(item);
             }
             else
             {
-                Debug.LogError(string.Format("Item \"{0}\" not found in inventory!", itemName));
+                Debug.LogError(string.Format("Item \"{0}\" not found in inventory!", item.itemName));
             }
 
         }

@@ -2420,7 +2420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemContainerPrefab: {fileID: 616837255035053691, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
-  book: {fileID: 0}
+  book: {fileID: 275361438}
 --- !u!1 &531542275
 GameObject:
   m_ObjectHideFlags: 0

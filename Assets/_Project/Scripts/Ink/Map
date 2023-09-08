@@ -4,8 +4,10 @@
 //
 === MapScreen (-> returnTo) // the map knot. visit to open the map in unity.
 \{UNITY:OpenMap()\}
++ [{MapOption(EdanCastle)}] // for testing
+    -> TravelingTo(CastleEntrance)
 + { HasVisited(EdanCastle)} [{MapOption(EdanCastle)}] 
-    -> TravelingTo(EdanCastle)
+    -> TravelingTo(CastleEntrance)
 + { HasVisited(sampleCave)} [{MapOption(sampleCave)}] 
     -> TravelingTo(sampleCave)
 + [Put the map away]
@@ -20,5 +22,24 @@
 ~ TargetLocation = targetLocation
 ~ SetLocation(onTheRoad)
 ~ travelRations--
-[Here you can put random travel content.]
--> TargetLocation
+{
+- travelRations == 0:
+    -> Death
+- travelRations < lowRationsLimit:
+    -> InsertComplaint
+- else:
+    You eat yummy rations.
+} 
+{~ -> RandomTravelEvent -> TargetLocation | -> TargetLocation} 
+
+
+VAR lowRationsLimit = 9 
+
+
+=== InsertComplaint ===
+You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
+->->
+
+=== RandomTravelEvent ===
+A wild Pokémon appears!
+->->

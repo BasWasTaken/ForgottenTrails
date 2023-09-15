@@ -103,3 +103,38 @@ VAR VisitedEver = ()
 ~return VisitedEver ? location
 
 // Seealso the map system in Map
+
+
+//
+// SYSTEM: affection tracking
+// Tracking numeric value for relationship between pc and other characters, and using cutoff points to determine friendly, hostile etc.
+// Can be compared simply by asking e.g.: {AFFHenry >= friendly}
+//
+
+LIST Attitudes = devoted = 100, alligned = 75, friendly = 60, ambivalent = 50, begrudging = 40, hostile = 25, spiteful = 0
+
+=== function GetAttitude(value) ===
+{
+-   value >= LIST_VALUE(devoted):
+    ~ return devoted
+-   value >= LIST_VALUE(alligned):
+    ~ return alligned
+-   value >= LIST_VALUE(friendly):
+    ~ return friendly
+-   value >= LIST_VALUE(ambivalent):
+    ~ return ambivalent
+-   value >= LIST_VALUE(begrudging):
+    ~ return begrudging
+-   value >= LIST_VALUE(hostile):
+    ~ return hostile
+-   else:
+    ~ return spiteful
+}
+
+
+
+
+
+
+
+

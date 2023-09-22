@@ -1,5 +1,5 @@
-INCLUDE CustomFeatures
-INCLUDE Stories
+//INCLUDE CustomFeatures
+//INCLUDE Stories
 
 //AffectionValues
 VAR AffEdgar = 50

@@ -1,9 +1,9 @@
-INCLUDE Lists
-INCLUDE Utility
-INCLUDE StoryPresentation
-INCLUDE SetDressing
-INCLUDE VariableLanguage
-INCLUDE Map
+//INCLUDE Lists
+//INCLUDE Utility
+//INCLUDE StoryPresentation
+//INCLUDE SetDressing
+//INCLUDE VariableLanguage
+//INCLUDE Map
 // The formatting is such that all of the "normal" function names can be safely called from ink text. These then call on external functions (or fallbacks) which start with "_". In other words: never directly call functions starting with an underscore from your text!
 // See the Readme for all functions.
 

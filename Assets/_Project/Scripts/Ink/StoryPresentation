@@ -1,0 +1,30 @@
+// Halt
+VAR Speed = 1.0 
+=== function Spd(value) //positive number, expressed as multiplier (eg .8 for 80%)
+~ Speed = value
+~ _Spd(value)
+=== function _Spd(float) 
+// nothing
+EXTERNAL _Spd(float) 
+
+=== function Halt(duration)
+~ _Halt(duration)
+
+=== function _Halt(float) // [EXPERIMENTAL] pause text for x seconds 
+<<i>Unity halts for: {float}</i>> 
+EXTERNAL _Halt(float) 
+
+=== function Clear()  // Clears the textbox and moves that text to log
+~ Clear()
+
+=== function _Clear()
+<<i>Clear Page</i>>
+EXTERNAL _Clear()
+
+VAR stop = "\{stop\}" // Used in Unity for stopping the continue loop
+
+VAR glue = "\{glue\}" // used to glue next line to this.
+
+VAR aglue = "\{aglue\}" // used to glue this to previous line
+
+

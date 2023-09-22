@@ -1,0 +1,33 @@
+// locations
+LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse, sampleCave, onTheRoad
+
+// characters
+LIST Party = (Player), Alice, Robert
+
+// items and such
+LIST Items = knife, pot, rope, lantern, foragedMushrooms, wornSword
+
+~ Items = LIST_ALL(Items)
+
+LIST Affordances = weapon, tool, cooking, cutting, stabbing
+
+~ Affordances = LIST_ALL(Affordances)
+
+// rations and money are currently not in inventory sytem:
+VAR travelRations = 107
+
+VAR money = 10
+
+// assets
+LIST Background = (none), vaultHall, vaultLibrary, vaultHall2, VaultOffice, CastleGate
+
+LIST Portraits = (none), Alice1, Robert1
+
+LIST Music = (none), theStreetsOfWhiteRun
+
+LIST Ambiance = (none), chatter
+
+LIST Sfx = gong
+
+LIST Vox =  NA
+

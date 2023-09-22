@@ -1,0 +1,32 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using NaughtyAttributes;
+using ForgottenTrails;
+
+namespace items
+{
+    /// <summary>
+    /// <para>Base type object for ingame items.</para>
+    /// </summary>
+    [Serializable]
+    [CreateAssetMenu]
+    public class InventoryItem : InkableObject
+    {
+        [field:SerializeField, BoxGroup("Info")]
+        public string CanonicalName { get; private set; }
+
+        public Ink.Runtime.InkListItem InkListItem { get; set; }
+        public string description = "";
+        public Sprite image;
+        [Tooltip("Base Cost of the item")] public int coinValue;
+        [Header("Skillchecks")]
+        public int modifier;
+        [field:SerializeField]
+        public List<Affordance> Affordaces { get; private set; }
+    }
+
+
+}

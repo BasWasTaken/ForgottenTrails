@@ -210,7 +210,7 @@ PrefabInstance:
     - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: <TextAsset>k__BackingField
       value: 
-      objectReference: {fileID: 4900000, guid: 8882d426ffe91ef4786331665f048139, type: 3}
+      objectReference: {fileID: 4900000, guid: d393fd924f9849344ade71dc807dbafa, type: 3}
     - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: InkListNames.Array.data[0]
       value: Vox

@@ -162,7 +162,7 @@ namespace ForgottenTrails.InkFacilitation
         {
             if (UnityEditor.EditorApplication.isPlaying == true)
             {
-                SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
 

@@ -125,6 +125,8 @@ namespace ForgottenTrails.InkFacilitation
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
+
+                story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
             }
             internal void PerformInkFunction(Action function)
             {
@@ -197,7 +199,6 @@ namespace ForgottenTrails.InkFacilitation
                     Debug.Log("no save point detected, starting from start");
                     Controller.Story.state.GoToStart();
                 }
-                Controller.Story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
 
                 string message = "InkVars found:";
                 foreach (string item in Controller.Story.state.variablesState)

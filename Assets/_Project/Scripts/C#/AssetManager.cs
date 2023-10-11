@@ -77,6 +77,7 @@ namespace DataService
         public void CreateAssetLibraries()
         {
             string error = "";
+            string noError = "";
 
             // NOTE wsl ipv inventory aanroepen, inventory state?
             assets.Clear();
@@ -105,18 +106,27 @@ namespace DataService
                         foreach (InkListItem item in listDefinition.items.Keys)
                         {
                             string searchFor = item.itemName;
-                            if (searchFor != "none")
+                            if (searchFor != "none" & searchFor != "NA")
                             {
-                                // try to find asset
-                                try
+                                // search for asset with that name in the database
+                                var asset = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(searchFor)[0]);
+                                if (assets.TryAdd(item, asset))
                                 {
-                                    assets.Add(item, AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(searchFor)[0]));
+                                    if (asset.ToLower().Contains(item.itemName.ToString().ToLower()))
+                                    {
+                                        noError += string.Format("\nFound {0} as {1}", item, asset);
+
+                                    }
+                                    else
+                                    {
+                                        error += String.Format("\nFound wrong item for {0}: {1}", item, asset);
+
+                                    }
                                 }
-                                catch (Exception)
+                                else
                                 {
                                     error += string.Format("\nitem {0} not found", item);
                                 }
-
                             }
                         }
                     }                    
@@ -128,14 +138,23 @@ namespace DataService
             }
             if (error == "")
             {
-
+                Debug.Log("Succesfully fetched InkLists." + noError);
             }
             else
             {
                 Debug.LogAssertion("ERROR IN ATTEMPTING TO LIST ASSETS" + error);
             }
 
-            ItemListsKnown(items, affordances);
+
+
+            if (ItemListsKnown(items, affordances))
+            {
+                Debug.Log("Succesfully checked all items and affordances.");
+            }
+            else
+            {
+                Debug.Log("Could not match up items or affordances");
+            }
 
         }
 

@@ -1,17 +1,11 @@
-﻿using DataService;
+﻿using Bas.Utility;
+using DataService;
 using Ink.Runtime;
 using NaughtyAttributes;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Bas.Utility;
-using static ForgottenTrails.InkFacilitation.StoryController.TextProduction;
 using static ForgottenTrails.InkFacilitation.StoryController.InterfaceBroking;
+using static ForgottenTrails.InkFacilitation.StoryController.TextProduction;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -69,6 +63,10 @@ namespace ForgottenTrails.InkFacilitation
         internal InterfaceBroking InterfaceBroker { get; set; }
 
 
+        [field: SerializeField, BoxGroup("SceneReferences")]
+        internal TMPro.TMP_InputField InputField { get; set; }
+
+
         #endregion
         // Public Properties
         #region Public Properties
@@ -105,6 +103,10 @@ namespace ForgottenTrails.InkFacilitation
             SetDresser.Assign();
             TextProducer.Assign();
             InterfaceBroker.Assign();
+            InitialiseStateMachine();
+        }
+        private void InitialiseStateMachine()
+        {
             StateMachine = new
             (
             this,
@@ -120,7 +122,6 @@ namespace ForgottenTrails.InkFacilitation
             settingsState,
             savingState
             );
-            StateMachine.TransitionToState(superState);
         }
         private void Update()
         {
@@ -162,8 +163,22 @@ namespace ForgottenTrails.InkFacilitation
         {
             if (UnityEditor.EditorApplication.isPlaying == true)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                StateMachine.Reset();
             }
+        }
+
+        private void PromptName()
+        {
+            InputField.gameObject.SetActive(true);
+            InputField.ActivateInputField();
+        
+        }
+        public void AssignName()
+        {
+            Story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName;
+            InputField.DeactivateInputField();
+            InputField.gameObject.SetActive(false);
         }
 
         private void ConsoleLogInk(string text, bool warning = false)

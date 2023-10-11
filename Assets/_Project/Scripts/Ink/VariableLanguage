@@ -6,6 +6,10 @@
 
 VAR PlayerName = "PlayerName"
 
+EXTERNAL PromptName()
+=== function PromptName()
+~PlayerName = "Player"
+
 // This is the list of vars for the gender stuff, but that's also not really well implemented yet of course.
 
 LIST players_gender = (undefined), nonbinary, male, female

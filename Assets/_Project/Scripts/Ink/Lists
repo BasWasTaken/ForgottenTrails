@@ -19,7 +19,7 @@ VAR travelRations = 107
 VAR money = 10
 
 // assets
-LIST Background = (none), vaultHall, vaultLibrary, vaultHall2, VaultOffice, CastleGate
+LIST Background = (none), vaultHall, vaultLibrary, vaultHall2, vaultOffice, CastleGate
 
 LIST Portraits = (none), Alice1, Robert1
 

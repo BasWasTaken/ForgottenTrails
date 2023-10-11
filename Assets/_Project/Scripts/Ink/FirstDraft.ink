@@ -17,7 +17,7 @@ LIST Henry = (none), Exists, Name
 -> Start 
 
 === Start ===
-    -> Opening
+    -> Preamble
     
 === Death ===
 And so ends this tale. Another apprentice that would never return, their findings lost to the wind.

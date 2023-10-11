@@ -108,7 +108,7 @@ namespace ForgottenTrails.InkFacilitation
                 story.BindExternalFunction("_Spd", (float mod) => PerformInkFunction(() => Controller.TextProducer.Spd(mod / 100)));
                 story.BindExternalFunction("_Clear", () => PerformInkFunction(() => Controller.TextProducer.ClearPage()));
                 story.BindExternalFunction("_Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
-                story.BindExternalFunction("_FadeToImage", (InkListItem image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(image, dur)));
+                story.BindExternalFunction("_FadeToImage", (InkList image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(image, dur)));
                 story.BindExternalFunction("_FadeToColor", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
                 //story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
                 story.ObserveVariable("Portraits", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
@@ -232,7 +232,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
 
                 InkList background = Controller.Story.state.variablesState["Background"] as InkList;
-                Controller.SetDresser.SetBackground(background.maxItem.Key);
+                Controller.SetDresser.SetBackground(background);
 
 
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);

@@ -171,8 +171,7 @@ namespace ForgottenTrails.InkFacilitation
         private void PromptName()
         {
             InputField.gameObject.SetActive(true);
-            InputField.ActivateInputField();
-        
+            InputField.ActivateInputField();        
         }
         public void AssignName()
         {

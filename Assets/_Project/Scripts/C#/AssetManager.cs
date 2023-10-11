@@ -47,7 +47,9 @@ namespace DataService
         */
 
         #endregion
-        private string pathToResources => Application.dataPath + "/_Project/Resources";
+        private string pathToResources => Application.dataPath + resourceFolder;
+        private const string resourceFolder = "/_Project/Resources";
+        private string basePath => "Assets" + resourceFolder;
 
         // helper functions
         public bool IsResourcesDirectory(string relativePath)
@@ -72,6 +74,19 @@ namespace DataService
         
         [field:SerializeField]
         public TextAsset TextAsset { get; set; }
+
+        static string GetRelativePath(string fullPath, string basePath)
+        {
+            if (!fullPath.StartsWith(basePath))     
+            {
+                // The fullPath is not within the basePath.
+                // You should handle this case based on your requirements.
+                Debug.LogError(String.Format("{0} is not in {1}", basePath, fullPath));
+            }
+
+            string relativePath = fullPath.Substring(basePath.Length);
+            return relativePath;
+        }
 
         [Button("CreateAssetLibraries",EButtonEnableMode.Editor)]
         public void CreateAssetLibraries()
@@ -109,17 +124,19 @@ namespace DataService
                             if (searchFor != "none" & searchFor != "NA")
                             {
                                 // search for asset with that name in the database
-                                var asset = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(searchFor)[0]);
-                                if (assets.TryAdd(item, asset))
+                                var asset = AssetDatabase.FindAssets(searchFor)[0];
+                                var absolutePath = AssetDatabase.GUIDToAssetPath(asset);
+                                var relativePath = GetRelativePath(absolutePath, basePath);
+                                if (assets.TryAdd(item, relativePath))
                                 {
-                                    if (asset.ToLower().Contains(item.itemName.ToString().ToLower()))
+                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower()))
                                     {
-                                        noError += string.Format("\nFound {0} as {1}", item, asset);
+                                        noError += string.Format("\nFound {0} as {1}", item, absolutePath);
 
                                     }
                                     else
                                     {
-                                        error += String.Format("\nFound wrong item for {0}: {1}", item, asset);
+                                        error += String.Format("\nFound wrong item for {0}: {1}", item, absolutePath);
 
                                     }
                                 }

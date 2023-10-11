@@ -2,10 +2,11 @@
 // FEATURE: Changing (and fading to) backgrounds. Done with external functions.
 //
 === function FadeToImage(image, duration) // name of image and duration in seconds (e.g. 0.5)
-~ (_FadeToImage(image, duration)) // background not assigned here, because it'll be done by unity when it's done.
+    ~ Background = image //update background 
+~ (_FadeToImage(image, duration)) 
 
 === function _FadeToImage(listItem, float)
-    ~ Background = listItem // sets the bg when unity can't
+    
 <<i>Unity background: {listItem}</i>> 
 EXTERNAL _FadeToImage(listItem, float) 
 

@@ -170,14 +170,17 @@ namespace ForgottenTrails.InkFacilitation
 
         private void PromptName()
         {
+            StateMachine.TransitionToState(waitingForInputState);
             InputField.gameObject.SetActive(true);
             InputField.ActivateInputField();        
         }
         public void AssignName()
         {
-            Story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName;
+
+            Story.state.variablesState["PlayerName"] = DataManager.Instance.MetaData.playerName = InputField.text;
             InputField.DeactivateInputField();
             InputField.gameObject.SetActive(false);
+            waitingForInputState.DropCondition = true;
         }
 
         private void ConsoleLogInk(string text, bool warning = false)

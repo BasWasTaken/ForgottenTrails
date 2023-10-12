@@ -28,7 +28,7 @@ public class GameLauncher : MonoBehaviour
     }
     public void ContinueGame(int slot)
     {
-        DataManager.Instance.ContinueFromSaveSlot(slot);
+        DataManager.Instance.SelectDataSubfolder(slot);
         LaunchGame();
     }
     private void LaunchGame()

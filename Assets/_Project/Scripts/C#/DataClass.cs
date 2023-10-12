@@ -8,7 +8,7 @@ namespace DataService
     /// <summary>
     /// Abstract class for savedata.
     /// </summary>
-    [Serializable] // NOTE: Should this be an interface?
+    [Serializable]
     public abstract class DataClass
     {
         public virtual string Label { get; set; }
@@ -18,12 +18,9 @@ namespace DataService
             Label = label;
         }
 
-
-
-        [Button("Manual Stash")]
-        public void StashData()
+        public static explicit operator DataClass(UnityEngine.Object v)
         {
-            DataManager.Instance.StashData(this);
+            throw new NotImplementedException();
         }
     }
 }

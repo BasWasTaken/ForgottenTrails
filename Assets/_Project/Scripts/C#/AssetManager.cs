@@ -48,7 +48,7 @@ namespace DataService
 
         #endregion
         private string pathToResources => Application.dataPath + resourceFolder;
-        private const string resourceFolder = "/_Project/Resources";
+        private const string resourceFolder = "/_Project/Resources/";
         private string basePath => "Assets" + resourceFolder;
 
         // helper functions
@@ -124,23 +124,36 @@ namespace DataService
                             if (searchFor != "none" & searchFor != "NA")
                             {
                                 // search for asset with that name in the database
-                                var asset = AssetDatabase.FindAssets(searchFor)[0];
-                                var absolutePath = AssetDatabase.GUIDToAssetPath(asset);
-                                var relativePath = GetRelativePath(absolutePath, basePath);
-                                if (assets.TryAdd(item, relativePath))
+                                string[] foundAssets = AssetDatabase.FindAssets(searchFor);
+                                int limit = 9;
+                                bool assetLocated = false;
+                                foreach (string asset in foundAssets)
                                 {
-                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower()))
+                                    string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
+                                    absolutePath = absolutePath.Substring(0,absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
+                                    string relativePath = GetRelativePath(absolutePath, basePath);
+                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower()+"_")) // check if whole name plus underscore present in asset
                                     {
-                                        noError += string.Format("\nFound {0} as {1}", item, absolutePath);
-
+                                        noError += string.Format("\nFound {1} for {0}", item, relativePath);
+                                        if (assets.TryAdd(item, relativePath))
+                                        {
+                                            noError += " and succesfully added it.";
+                                            assetLocated = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            error += string.Format("\nFound {1} for {0} but could not add it.", item, relativePath);
+                                        }
+                                        
                                     }
                                     else
                                     {
-                                        error += String.Format("\nFound wrong item for {0}: {1}", item, absolutePath);
-
+                                        noError += String.Format("\nFound wrong asset for {0}: {1}. Trying next asset.", item, relativePath);
                                     }
+                                    limit--;
                                 }
-                                else
+                                if (!assetLocated)
                                 {
                                     error += string.Format("\nitem {0} not found", item);
                                 }

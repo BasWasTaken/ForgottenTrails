@@ -68,12 +68,9 @@ namespace ForgottenTrails.InkFacilitation
                 Controller.StartCoroutine(bgImage.FadeTo(color, duration));
             }
 
-            public void SetBackground(InkList inkList, float duration = 0)
+            public void SetBackground(InkListItem inkListItem, float duration = 0)
             {
                 Sprite sprite = null; // default to no background
-
-                InkListItem inkListItem = inkList.maxItem.Key;
-                Debug.Log(String.Format("Found {0}", inkListItem));
 
                 if (inkListItem.itemName == "none")
                 {   

@@ -108,18 +108,18 @@ namespace ForgottenTrails.InkFacilitation
                 story.BindExternalFunction("_Spd", (float mod) => PerformInkFunction(() => Controller.TextProducer.Spd(mod / 100)));
                 story.BindExternalFunction("_Clear", () => PerformInkFunction(() => Controller.TextProducer.ClearPage()));
                 story.BindExternalFunction("_Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
-                story.BindExternalFunction("_FadeToImage", (InkList image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(image, dur)));
+                story.BindExternalFunction("_FadeToImage", (InkList image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(ConvertListToItem(image), dur)));
                 story.BindExternalFunction("_FadeToColor", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
                 //story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
                 story.ObserveVariable("Portraits", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
 
-                story.BindExternalFunction("_Vox_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
-                story.BindExternalFunction("_Sfx_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
-                story.BindExternalFunction("_Ambiance_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
-                story.BindExternalFunction("_Ambiance_Remove", (InkListItem clip) => PerformInkFunction(() => Controller.SetDresser.RemoveAmbiance(clip)));
+                story.BindExternalFunction("_Vox_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
+                story.BindExternalFunction("_Sfx_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
+                story.BindExternalFunction("_Ambiance_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
+                story.BindExternalFunction("_Ambiance_Remove", (InkList clip) => PerformInkFunction(() => Controller.SetDresser.RemoveAmbiance(ConvertListToItem(clip))));
                 story.BindExternalFunction("_Ambiance_RemoveAll", () => PerformInkFunction(() => Controller.SetDresser.RemoveAmbianceAll()));
 
-                story.BindExternalFunction("_Music_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
+                story.BindExternalFunction("_Music_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
                 story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
                 
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.inventory.FetchItems(newValue as InkList)));
@@ -128,6 +128,21 @@ namespace ForgottenTrails.InkFacilitation
 
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
             }
+
+            private InkListItem ConvertListToItem(InkList inkList)
+            {
+                if (inkList.Count == 1)
+                {
+                    InkListItem inkListItem = inkList.maxItem.Key;
+                    Debug.Log(String.Format("Found {0}", inkListItem));
+                    return inkListItem;
+                }
+                else
+                {
+                    throw new Exception(String.Format("{0} contains more than 1 item!", inkList));
+                }
+            }
+
             internal void PerformInkFunction(Action function)
             {
                 if (!Controller.TextProducer.Peeking)
@@ -232,7 +247,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
 
                 InkList background = Controller.Story.state.variablesState["Background"] as InkList;
-                Controller.SetDresser.SetBackground(background);
+                Controller.SetDresser.SetBackground(ConvertListToItem(background));
 
 
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);

@@ -76,7 +76,7 @@ namespace ForgottenTrails.InkFacilitation
                     else if (Controller.TextProducer.TPStatus == TextProducerStatus.Done)
                     {
                         Controller.TextProducer.TPStatus = TextProducerStatus.Idle;
-                        StashStoryState(); // stash current scene state
+                        UpdateDataAsset(); // stash current scene state
                         DetermineNextTransition();
                     }
                     else if (Controller.TextProducer.TPStatus == TextProducerStatus.Idle)
@@ -315,7 +315,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     // Disengage with current story / dialogue, as we have seen its end or chose a goodbye option.
                     Controller.Story.RemoveVariableObserver();
-                    StashStoryState();
+                    UpdateDataAsset();
                     Controller.InkStoryAsset = null;
                     Controller.Story = null;
                     Debug.Log(new NotImplementedException());

@@ -38,7 +38,7 @@ namespace ForgottenTrails.InkFacilitation
                     DataManager.Instance.OnDataSaved += Release;
                     Controller.SavingToDisk = true;
 
-                    DataManager.Instance.WriteStashedDataToDisk(DataManager.SaveMethod.auto);
+                    DataManager.Instance.SaveDataToFile(DataManager.SaveMethod.auto);
                 }
             }
             public override void OnUpdate()
@@ -47,6 +47,7 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
+                Controller.SavingToDisk = false;
                 DataManager.Instance.OnDataSaved -= Release;
             }
             #endregion

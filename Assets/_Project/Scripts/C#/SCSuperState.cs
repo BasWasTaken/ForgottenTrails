@@ -60,8 +60,8 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                PrepStory();
-                PrepData();
+                InitialiseStory();
+                InitialiseData();
                 PrepScene();
 
                 FlagGoForStart();
@@ -95,7 +95,7 @@ namespace ForgottenTrails.InkFacilitation
             /// <summary>
             /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
             /// </summary>
-            private void PrepStory()
+            private void InitialiseStory() 
             {
                 Controller.Story = new Story(Controller.InkStoryAsset.text);
                 BindAndObserve(Controller.Story);
@@ -156,47 +156,11 @@ namespace ForgottenTrails.InkFacilitation
                 Controller.TextProducer.additionalPause += seconds;
             }
 
-            private void PrepData()
+            private void InitialiseData()
             {
-                Controller.LoadingFromDisk = true;
-                if (DataManager.Instance.DataAvailable(Controller.InkDataAsset.Key))
-                {
-                    Debug.Log("found data! trying to load...");
-                    if (TryLoadData(Controller.InkDataAsset.Key, out StoryData dummy))
-                    {
-                        Controller.InkDataAsset = dummy;
-                    }
-                    else
-                    {
-                        throw new Exception("Could not load data.");
-                    }
-                }
-                Controller.LoadingFromDisk = false;
-            }
-            private bool TryLoadData(string key, out StoryData output)
-            {
-                output = Controller.CreateBlankData();
-                if (!DataManager.Instance.DataAvailable(key))
-                {
-                    Debug.LogError("Error code 404: No data found.");
-                    return false;
-                }
-                else
-                {
-                    StoryData input = DataManager.Instance.FetchData<StoryData>(Controller.InkDataAsset.Key);
-                    try
-                    {
-                        ReadStoryStateFromData(input);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-                    Debug.Log("Successfully loaded data!");
-                    output = input;
-                    return true;
-                }
-
+                // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
+                StoryData input = (StoryData)DataManager.Instance.DataDictionary[typeof(StoryData).ToString()];
+                ReadStoryStateFromData(input);
             }
             /// <summary>
             /// Feed the <paramref name="input"/>'s story state into the story we are currently loading.
@@ -267,13 +231,12 @@ namespace ForgottenTrails.InkFacilitation
             /// <summary>
             /// preps data for saving. happens whenever input is giving, i.e. before every production cycle.
             /// </summary>
-            protected void StashStoryState()
+            protected void UpdateDataAsset()
             {
                 // save all the things 
                 Controller.InkDataAsset.CurrentText = Controller.TextProducer.CurrentText;
                 Controller.InkDataAsset.HistoryText = Controller.TextProducer.PreviousText;
                 Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson();
-                Controller.InkDataAsset.StashData();
             }
 
             #endregion

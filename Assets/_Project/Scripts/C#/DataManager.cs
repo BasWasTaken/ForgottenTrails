@@ -240,7 +240,7 @@ namespace DataService
         #endregion
         #region loading 
 
-        Dictionary<string, DataClass> DataDictionary = new();
+        public Dictionary<string, DataClass> DataDictionary = new();
 
         public void LoadMostRecent()
         {
@@ -323,6 +323,8 @@ namespace DataService
                 DataDictionary.Add(dataClass.ToString(), dataClass);
             }
             metaData.timeSinceLastSave = 0;
+
+            // after this is done the scene ashould be (re)launched.
         }
 
 

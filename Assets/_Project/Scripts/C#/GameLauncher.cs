@@ -9,26 +9,19 @@ using UnityEngine.SceneManagement;
 public class GameLauncher : MonoBehaviour
 {
     [Required]
-    public TMPro.TMP_Dropdown saveSlotSelector;
-    [Required]
-    public TMPro.TMP_InputField nameInput;
+    public TMPro.TMP_InputField profileNamer;
     public void StartNewGame()
     {
-        StartNewGame(saveSlotSelector.value);
+        StartNewGame(profileNamer.text);
     }
-    public void StartNewGame(int slot)
+    public void StartNewGame(string fileName)
     {
-        DataManager.Instance.NewGameOnSaveSlot(slot);
-        DataManager.Instance.MetaData.playerName = nameInput.text; /// set name to metadata from inpoout field //(might do differently later)
+        DataManager.Instance.TryStartNewGame(fileName);
         LaunchGame();
     }
     public void ContinueGame()
     {
-        ContinueGame(saveSlotSelector.value);
-    }
-    public void ContinueGame(int slot)
-    {
-        DataManager.Instance.SelectDataSubfolder(slot);
+        DataManager.Instance.LoadMostRecent();
         LaunchGame();
     }
     private void LaunchGame()

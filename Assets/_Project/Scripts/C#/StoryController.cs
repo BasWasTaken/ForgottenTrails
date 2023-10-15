@@ -176,7 +176,6 @@ namespace ForgottenTrails.InkFacilitation
         }
         public void AssignName()
         {
-
             Story.state.variablesState["PlayerName"] = DataManager.Instance.MetaData.playerName = InputField.text;
             InputField.DeactivateInputField();
             InputField.gameObject.SetActive(false);

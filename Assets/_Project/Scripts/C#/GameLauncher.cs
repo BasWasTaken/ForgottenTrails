@@ -10,6 +10,8 @@ public class GameLauncher : MonoBehaviour
 {
     [Required]
     public TMPro.TMP_InputField profileNamer;
+    [Required]
+    public TMPro.TMP_Dropdown profileSelector;
     public void StartNewGame()
     {
         StartNewGame(profileNamer.text);
@@ -22,6 +24,20 @@ public class GameLauncher : MonoBehaviour
     public void ContinueGame()
     {
         DataManager.Instance.LoadMostRecent();
+        LaunchGame();
+    }
+    public void ShowSaves()
+    {
+        profileSelector.ClearOptions(); 
+        profileSelector.AddOptions(DataManager.Instance.GetFilePaths());
+    }
+    public void LoadGame()
+    {
+        DataManager.Instance.LoadDataFromFile(profileSelector.itemText.text);
+    }
+    public void LoadGame(string file)
+    {
+        DataManager.Instance.LoadDataFromFile(file);
         LaunchGame();
     }
     private void LaunchGame()

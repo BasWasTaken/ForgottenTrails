@@ -23,7 +23,7 @@ namespace DataService
         #region INSPECTOR
 
         [SerializeField]
-        protected MetaData metaData = new("Meta202305142002");
+        protected MetaData metaData;
         public MetaData MetaData => metaData;
         #endregion
         #region backend
@@ -42,6 +42,7 @@ namespace DataService
                 if (!Directory.Exists(path)) // create path if it deosn't exist. could maybe be useful as a static utility function tood
                 {
                     Directory.CreateDirectory(path);
+                    metaData = new("Meta202305142002");
                 }
                 _ActiveDataProfile = value;
             }
@@ -68,6 +69,20 @@ namespace DataService
         /// </summary>
         public string[] DataProfileDirectories => Directory.GetDirectories(MasterDataDirectory);
 
+        public string DataProfile(string directory) => directory.Replace(MasterDataDirectory, "");
+        public List<string> DataProfiles
+        {
+            get
+            {
+                List<string> output = new();
+                foreach (string path in DataProfileDirectories)
+                {
+                    output.Add(DataProfile(path));
+                }
+                return output;
+            }
+        }
+
         /// <summary>
         /// get a specific data profile
         /// </summary>
@@ -93,16 +108,16 @@ namespace DataService
         /// Get savedata by profile
         /// </summary>
         /// <returns></returns>
-        public List<string> GetSaveFiles(string profile) => new(Directory.GetFiles(DataProfileDirectory(profile)));
+        public List<string> GetFilePaths(string profile) => new(Directory.GetFiles(DataProfileDirectory(profile)));
 
         /// <summary>
         /// Get savedata by profile and method
         /// </summary>
         /// <returns></returns>
-        public List<string> GetSaveFiles(string profile, SaveMethod method) // should later do this with metadata (such as savemethod field in the data) but for now doing it from the name is fine)
+        public List<string> GetFilePaths(string profile, SaveMethod method) // should later do this with metadata (such as savemethod field in the data) but for now doing it from the name is fine)
         {
             // get all save files
-            var allFiles = GetSaveFiles(profile);
+            var allFiles = GetFilePaths(profile);
 
             // then filter by method
             List<string> filtered = new();
@@ -117,12 +132,12 @@ namespace DataService
         /// get all savedata across all profiles
         /// </summary>
         /// <returns></returns>
-        public List<string> GetSaveFiles()
+        public List<string> GetFilePaths()
         {
             List<string> files = new();
-            foreach (string profile in DataProfileDirectories)
+            foreach (string profile in DataProfiles)
             {
-                files.AddRange(GetSaveFiles(profile));
+                files.AddRange(GetFilePaths(profile));
             }
             return files;
         }
@@ -133,6 +148,7 @@ namespace DataService
         protected override void Awake()
         {
             base.Awake();
+            DataDictionary.Clear();
             DontDestroyOnLoad(gameObject);
         }
 
@@ -151,7 +167,7 @@ namespace DataService
             }
         }
 
-        public HashSet<DataClass> ActiveData 
+        private HashSet<DataClass> ActiveData 
         {
             get
             {
@@ -239,8 +255,8 @@ namespace DataService
 
         #endregion
         #region loading 
-
-        public Dictionary<string, DataClass> DataDictionary = new();
+        public static Dictionary<string, Dictionary<string, DataClass>> DataMatrix = new();
+        public static Dictionary<string, DataClass> DataDictionary = new();
 
         public void LoadMostRecent()
         {
@@ -257,7 +273,7 @@ namespace DataService
         {
             string mostRecent = "";
             DateTime record = DateTime.MinValue;
-            foreach (string file in GetSaveFiles(profile))
+            foreach (string file in GetFilePaths(profile))
             {
                 DateTime contender = File.GetLastWriteTime(file);
                 if (contender > record)
@@ -276,7 +292,7 @@ namespace DataService
         {
             string mostRecent = "";
             DateTime record = DateTime.MinValue;
-            foreach (string file in GetSaveFiles(profile, method))
+            foreach (string file in GetFilePaths(profile, method))
             {
                 DateTime contender = File.GetLastWriteTime(file);
                 if (contender > record)

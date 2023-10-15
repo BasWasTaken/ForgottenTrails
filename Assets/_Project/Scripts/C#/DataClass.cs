@@ -16,6 +16,14 @@ namespace DataService
         public DataClass(string label)
         {
             Label = label;
+            try
+            {
+                DataManager.DataMatrix[DataManager.Instance.ActiveDataProfile].Add(this.GetType().Name, this);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public static explicit operator DataClass(UnityEngine.Object v)

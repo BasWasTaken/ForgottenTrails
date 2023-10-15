@@ -60,11 +60,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                InitialiseStory();
-                InitialiseData();
-                PrepScene();
-
-                FlagGoForStart();
+                Initialise();
             }
             public override void OnUpdate()
             {
@@ -92,6 +88,15 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Private Methods
             #region Private Methods
+
+            private void Initialise()
+            {
+                InitialiseStory();
+                InitialiseData();
+                PrepScene();
+                FlagGoForStart();
+            }
+
             /// <summary>
             /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
             /// </summary>
@@ -100,6 +105,26 @@ namespace ForgottenTrails.InkFacilitation
                 Controller.Story = new Story(Controller.InkStoryAsset.text);
                 BindAndObserve(Controller.Story);
             }
+
+            private void InitialiseData()
+            {
+                // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
+                StoryData input = (StoryData)DataManager.DataDictionary[typeof(StoryData).Name];
+                ReadStoryStateFromData(input);
+            }
+
+
+            /// <summary>
+            /// Prepares scene to contain story
+            /// </summary>
+            private void PrepScene()
+            {
+                AssetManager.Instance.CreateAssetLibraries();
+                Controller.waitingForChoiceState.RemoveOptions();
+                Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
+                PopulateSceneFromData(Controller.InkDataAsset);
+            }
+
 
             private void BindAndObserve(Story story)
             {
@@ -156,12 +181,6 @@ namespace ForgottenTrails.InkFacilitation
                 Controller.TextProducer.additionalPause += seconds;
             }
 
-            private void InitialiseData()
-            {
-                // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
-                StoryData input = (StoryData)DataManager.Instance.DataDictionary[typeof(StoryData).ToString()];
-                ReadStoryStateFromData(input);
-            }
             /// <summary>
             /// Feed the <paramref name="input"/>'s story state into the story we are currently loading.
             /// </summary>
@@ -185,17 +204,6 @@ namespace ForgottenTrails.InkFacilitation
                     message += "\n" + item + ": " + Controller.Story.state.variablesState[item].ToString();
                 }
                 Debug.Log(message);
-            }
-
-            /// <summary>
-            /// Prepares scene to contain story
-            /// </summary>
-            private void PrepScene()
-            {
-                AssetManager.Instance.CreateAssetLibraries();
-                Controller.waitingForChoiceState.RemoveOptions();
-                Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
-                PopulateSceneFromData(Controller.InkDataAsset);
             }
 
             private void PopulateSceneFromData(StoryData input)

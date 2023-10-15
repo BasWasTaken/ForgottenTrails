@@ -366,7 +366,7 @@ namespace DataService
     [Serializable]
     public class MetaData : DataClass
     {
-        public float currentPlayTime = Time.realtimeSinceStartup;
+        public float currentPlayTime = 0;// Time.realtimeSinceStartup;
         public float totalPlayTime = 0;
         public float timeSinceLastSave = 0;
 

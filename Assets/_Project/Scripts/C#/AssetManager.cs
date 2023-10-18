@@ -47,7 +47,9 @@ namespace DataService
         */
 
         #endregion
-        private string pathToResources => Application.dataPath + "/_Project/Resources";
+        private string pathToResources => Application.dataPath + resourceFolder;
+        private const string resourceFolder = "/_Project/Resources/";
+        private string basePath => "Assets" + resourceFolder;
 
         // helper functions
         public bool IsResourcesDirectory(string relativePath)
@@ -73,10 +75,24 @@ namespace DataService
         [field:SerializeField]
         public TextAsset TextAsset { get; set; }
 
+        static string GetRelativePath(string fullPath, string basePath)
+        {
+            if (!fullPath.StartsWith(basePath))     
+            {
+                // The fullPath is not within the basePath.
+                // You should handle this case based on your requirements.
+                Debug.LogError(String.Format("{0} is not in {1}", basePath, fullPath));
+            }
+
+            string relativePath = fullPath.Substring(basePath.Length);
+            return relativePath;
+        }
+
         [Button("CreateAssetLibraries",EButtonEnableMode.Editor)]
         public void CreateAssetLibraries()
         {
             string error = "";
+            string noError = "";
 
             // NOTE wsl ipv inventory aanroepen, inventory state?
             assets.Clear();
@@ -105,18 +121,42 @@ namespace DataService
                         foreach (InkListItem item in listDefinition.items.Keys)
                         {
                             string searchFor = item.itemName;
-                            if (searchFor != "none")
+                            if (searchFor != "none" & searchFor != "NA")
                             {
-                                // try to find asset
-                                try
+                                // search for asset with that name in the database
+                                string[] foundAssets = AssetDatabase.FindAssets(searchFor);
+                                int limit = 9;
+                                bool assetLocated = false;
+                                foreach (string asset in foundAssets)
                                 {
-                                    assets.Add(item, AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(searchFor)[0]));
+                                    string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
+                                    absolutePath = absolutePath.Substring(0,absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
+                                    string relativePath = GetRelativePath(absolutePath, basePath);
+                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower()+"_")) // check if whole name plus underscore present in asset
+                                    {
+                                        noError += string.Format("\nFound {1} for {0}", item, relativePath);
+                                        if (assets.TryAdd(item, relativePath))
+                                        {
+                                            noError += " and succesfully added it.";
+                                            assetLocated = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            error += string.Format("\nFound {1} for {0} but could not add it.", item, relativePath);
+                                        }
+                                        
+                                    }
+                                    else
+                                    {
+                                        noError += String.Format("\nFound wrong asset for {0}: {1}. Trying next asset.", item, relativePath);
+                                    }
+                                    limit--;
                                 }
-                                catch (Exception)
+                                if (!assetLocated)
                                 {
                                     error += string.Format("\nitem {0} not found", item);
                                 }
-
                             }
                         }
                     }                    
@@ -128,14 +168,23 @@ namespace DataService
             }
             if (error == "")
             {
-
+                Debug.Log("Succesfully fetched InkLists." + noError);
             }
             else
             {
                 Debug.LogAssertion("ERROR IN ATTEMPTING TO LIST ASSETS" + error);
             }
 
-            ItemListsKnown(items, affordances);
+
+
+            if (ItemListsKnown(items, affordances))
+            {
+                Debug.Log("Succesfully checked all items and affordances.");
+            }
+            else
+            {
+                Debug.Log("Could not match up items or affordances");
+            }
 
         }
 

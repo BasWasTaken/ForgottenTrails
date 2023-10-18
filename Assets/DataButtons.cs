@@ -1,0 +1,29 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using BasUtility;
+using DataService;
+using ForgottenTrails.InkFacilitation;
+
+/// <summary>
+/// <para>Summary not provided.</para>
+/// </summary>
+public class DataButtons : MonoBehaviour
+{
+    public void QuickSave()
+    {
+        // ik wil via de state machine of story controller dit callen:
+        //DataManager.Instance.SaveDataQuick(); 
+    }
+    public void QuickLoad()
+    {
+        // ik wil via de state machine of story controller dit callen:
+        //DataManager.Instance.LoadDataQuick();
+        //StoryController.Instance.StateMachine.dropallstatesomehow;
+        //StoryController.Instance.StateMachine.loadscene
+        // then reset story scene
+        // go through exiting then starting up the superstate?
+    }
+}

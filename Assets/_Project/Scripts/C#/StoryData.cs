@@ -18,7 +18,7 @@ namespace ForgottenTrails.InkFacilitation
         #endregion
         // Constructor
         #region Constructor
-        public StoryData(string label) : base(label)
+        public StoryData() : base()
         {
 
         }

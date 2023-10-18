@@ -80,7 +80,11 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     if(AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                     {
-                        sprite = (Sprite)Resources.Load(path);
+                        sprite = (Sprite)Resources.Load(path,typeof(Sprite));
+                        if (sprite == null)
+                        {
+                            Debug.LogError("could not find resource at " + path);
+                        }
                     }
                     else
                     {

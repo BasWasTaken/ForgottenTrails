@@ -76,7 +76,7 @@ namespace ForgottenTrails.InkFacilitation
                     else if (Controller.TextProducer.TPStatus == TextProducerStatus.Done)
                     {
                         Controller.TextProducer.TPStatus = TextProducerStatus.Idle;
-                        StashStoryState(); // stash current scene state
+                        UpdateDataAsset(); // stash current scene state
                         DetermineNextTransition();
                     }
                     else if (Controller.TextProducer.TPStatus == TextProducerStatus.Idle)
@@ -95,7 +95,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     TimeSinceAdvance = 0; // reset timer for skip button
                     Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base; // NOTE OR transitionto writing
-                    Controller.StartCoroutine(ProduceTextOuter()); // TODO perhaps move this method to here too
+                    Controller.StartCoroutine(ProduceTextOuter()); // TODO perhaps move this method to here too 
                 }
                 /// <summary>
                 /// Runs the per line steps required for parsing and showing ink story
@@ -108,27 +108,26 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         // TODO: construct future checker for all upcoming lines here
                         var storedState = Controller.Story.state.ToJson(); // set return point
+
                         Controller.TextProducer.Peeking = true; // begin traversal
                         string toBeAdded = "";
                         while (Controller.Story.canContinue) // continue maximally or to stop
                         {
+                            // issue occurs the very first time the story reaches this point.
                             toBeAdded += Controller.Story.Continue();
                             if (toBeAdded.Contains("{stop}")) break;
                         }
-
                         // check size and clear page if needed
-
                         string bufferText = Controller.TextProducer.CurrentText; // make backup
                         Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
-
                         Controller.TextProducer.CurrentText += toBeAdded + '\n'; // test if the text will fit
                         yield return 0;// wait 1 frame
                         bool overflow = Controller.TextProducer.OverFlowTextBox.text.Length > 0; // store result
-
+                        
                         Controller.TextProducer.CurrentText = bufferText; // restore backup
                         Controller.Story.state.LoadJson(storedState); // return to original state, reverting from peaking
                         Controller.TextProducer.Peeking = false;
-
+                       
                         if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
                     }
                     #endregion TryFit
@@ -316,7 +315,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     // Disengage with current story / dialogue, as we have seen its end or chose a goodbye option.
                     Controller.Story.RemoveVariableObserver();
-                    StashStoryState();
+                    UpdateDataAsset();
                     Controller.InkStoryAsset = null;
                     Controller.Story = null;
                     Debug.Log(new NotImplementedException());

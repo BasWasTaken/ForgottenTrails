@@ -33,6 +33,7 @@ namespace Bas.Utility
         // Private Properties
         #region Private Properties
         private BaseState<T> BaseState { get; set; }
+        private BaseState<T> StartState { get; set; }
 
         #endregion
         // Constructor
@@ -41,14 +42,19 @@ namespace Bas.Utility
         {
             StatePeeker = "Constructing";
             Controller = controller;
-            BaseState = dummyState;
+            BaseState = dummyState; // why do i have a dummy state? oh probably to avoid an error later in the first transition? that doesn't seem very clean...
+
             foreach (BaseState<T> state in states)
             {
                 state.Controller = controller;
                 state.Machine = this;
                 KnownStates.Add(state.GetType(), state);
             }
+            StartState = states[0];
+
             StatePeeker = "Constructed";
+
+            TransitionToState(StartState);
         }
 
         #endregion
@@ -108,6 +114,15 @@ namespace Bas.Utility
             }
             StatePeeker = CurrentState.GetType().ToString();
         }
+
+        public void Reset()
+        {
+            // should use this, but it's not working:
+          StateStack.Clear();
+            TransitionToState(StartState);
+
+        }
+
         /// <summary>
         /// Perform the <see cref="CurrentState"/>'s Update method"/>
         /// </summary>
@@ -200,8 +215,7 @@ namespace Bas.Utility
             {
                 Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
                 // reset system.
-                StateStack.Clear();
-                StateStack.Push(BaseState);
+                Reset();
             }
         }
 

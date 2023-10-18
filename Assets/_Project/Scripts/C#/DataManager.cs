@@ -280,9 +280,9 @@ namespace DataService
                         // when we're inside the right dataprofile
                         foreach (var item in reportedData)
                         {
-                            if (!DataMatrix[ActiveDataProfile].ContainsKey(item.ToString()))
+                            if (!DataMatrix[ActiveDataProfile].ContainsKey(item.GetType().Name))
                             {
-                                DataMatrix[ActiveDataProfile].Add(item.ToString(), item);
+                                DataMatrix[ActiveDataProfile].Add(item.GetType().Name, item);
                             }
                         }
                         return DataMatrix[ActiveDataProfile];

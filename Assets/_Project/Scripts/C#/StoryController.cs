@@ -145,7 +145,7 @@ namespace ForgottenTrails.InkFacilitation
         private StoryData CreateBlankData(bool forBootup = false)
         {
             // NOTE: Is this the optimal way of doing this?
-            StoryData data = new(dataLabel + "DemoScene");
+            StoryData data = new();
             if (!forBootup) 
             { 
                 Debug.Log("Created new data " + data.Label); 

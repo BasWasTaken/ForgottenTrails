@@ -33,21 +33,25 @@ namespace DataService
         [Tooltip("Name of the folder to read from and write to")]
         [SerializeField, ReadOnly]
         private string nameOfMasterDataDirectory = "PlayerData";
-        public string ActiveDataProfile
+        public static string ActiveDataProfile
         {
             get { return _ActiveDataProfile; }
             private set
             {
-                string path = DataProfileDirectory(value);
-                if (!Directory.Exists(path)) // create path if it deosn't exist. could maybe be useful as a static utility function tood
+                if (Instance != null)
                 {
-                    Directory.CreateDirectory(path);
-                    metaData = new("Meta202305142002");
+                    string path = Instance.DataProfileDirectory(value);
+                    if (!Directory.Exists(path)) // create path if it doesn't exist. could maybe be useful as a static utility function tood
+                    {
+                        Directory.CreateDirectory(path);
+                        //metaData = new();
+                    }
+                    _ActiveDataProfile = value;
                 }
-                _ActiveDataProfile = value;
+                else throw new Exception();
             }
         }
-        private string _ActiveDataProfile;
+        private static string _ActiveDataProfile;
         [Tooltip("File extension to use.")]
         [SerializeField, ReadOnly]
         private string fileExtension = ".json";
@@ -148,8 +152,26 @@ namespace DataService
         protected override void Awake()
         {
             base.Awake();
-            DataDictionary.Clear();
+            // TEMPORARY:
+            WipeDataFromAllSlots();
+            //
+            DataMatrix.Clear();
             DontDestroyOnLoad(gameObject);
+        }
+
+        static List<DataClass> reportedData = new();
+
+        public static void ReportDataExists<T>(T data) where T : DataClass
+        {
+            try
+            {
+                Debug.Log("lollipop1");
+                reportedData.Add(data);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         #region saving
@@ -172,9 +194,9 @@ namespace DataService
             get
             {
                 HashSet<DataClass> output = new();
-                foreach (var item in FindObjectsOfType(typeof(DataClass)))
+                foreach (var item in ActiveDataDictionary.Values)
                 {
-                    output.Add((DataClass)item);
+                    output.Add(item);
                 }
                 return output;
             }
@@ -256,7 +278,64 @@ namespace DataService
         #endregion
         #region loading 
         public static Dictionary<string, Dictionary<string, DataClass>> DataMatrix = new();
-        public static Dictionary<string, DataClass> DataDictionary = new();
+        // might be danger for loops here if i use the worng varaible accidentally
+        public Dictionary<string, DataClass> ActiveDataDictionary { get // could be made more efficient if i don't have to do this convoluted pointing every time i access it
+            {
+                if (!DataMatrix.TryGetValue(ActiveDataProfile, out var output))
+                {
+                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                    {
+                        throw new Exception();
+                    }
+                    else
+                    {
+                        // when we're inside the right dataprofile
+                        foreach (var item in reportedData)
+                        {
+                            if (!DataMatrix[ActiveDataProfile].ContainsKey(item.ToString()))
+                            {
+                                DataMatrix[ActiveDataProfile].Add(item.ToString(), item);
+                            }
+                        }
+                        return DataMatrix[ActiveDataProfile];
+                    }
+                }
+                else
+                {
+                    return output;
+                }                    
+            } 
+            set 
+            {
+                if (!DataMatrix.ContainsKey(ActiveDataProfile))
+                {
+                    Debug.Log("data was empty, creating dicitonary");
+
+                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                    {
+                        throw new Exception();
+                    }
+                }
+                DataMatrix[ActiveDataProfile] = value; 
+            }
+        }
+
+        public T GetDataOrMakeNew<T>() where T : DataClass, new()
+        {
+            string key = typeof(T).Name;
+            if (!ActiveDataDictionary.TryGetValue(key, out var output))
+            {
+                if (output == null)
+                {
+                    output = new T();
+                }
+                if (!ActiveDataDictionary.TryAdd(key, output))
+                {
+                    Debug.LogError("still not added");
+                }
+            }
+            return (T)output;
+        }
 
         public void LoadMostRecent()
         {
@@ -333,10 +412,10 @@ namespace DataService
             }
 
             // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
-            DataDictionary.Clear();
+            ActiveDataDictionary.Clear();
             foreach (DataClass dataClass in loaded_data.DataClasses)
             {
-                DataDictionary.Add(dataClass.ToString(), dataClass);
+                ActiveDataDictionary.Add(dataClass.ToString(), dataClass);
             }
             metaData.timeSinceLastSave = 0;
 
@@ -389,7 +468,7 @@ namespace DataService
         public string testText = "nulled";
         public const string textConst = "const";
         public string playerName = "Sam";
-        public MetaData(string label) : base(label) {}
+        public MetaData() : base() {}
 
 
     }

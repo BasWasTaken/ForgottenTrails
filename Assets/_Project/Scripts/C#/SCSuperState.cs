@@ -109,7 +109,7 @@ namespace ForgottenTrails.InkFacilitation
             private void InitialiseData()
             {
                 // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
-                StoryData input = (StoryData)DataManager.DataDictionary[typeof(StoryData).Name];
+                StoryData input = DataManager.Instance.GetDataOrMakeNew<StoryData>();
                 ReadStoryStateFromData(input);
             }
 
@@ -187,6 +187,8 @@ namespace ForgottenTrails.InkFacilitation
             /// <param name="input">the data loaded from disk</param>
             private void ReadStoryStateFromData(StoryData input)
             {
+                Debug.Log(input);
+                Debug.Log(input.StoryStateJson);
                 if (input.StoryStateJson != "")
                 {
                     Debug.Log("continueing from savepoint!");

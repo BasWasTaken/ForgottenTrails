@@ -12,18 +12,11 @@ namespace DataService
     public abstract class DataClass
     {
         public virtual string Label { get; set; }
-        public string Key => Label + GetType().ToString();
-        public DataClass(string label)
+        public string Key => Label + GetType().Name;
+        public DataClass()
         {
-            Label = label;
-            try
-            {
-                DataManager.DataMatrix[DataManager.Instance.ActiveDataProfile].Add(this.GetType().Name, this);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            Label = DataManager.ActiveDataProfile??"Master" + GetType().Name;
+            DataManager.ReportDataExists(this);
         }
 
         public static explicit operator DataClass(UnityEngine.Object v)

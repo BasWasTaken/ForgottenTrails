@@ -566,6 +566,7 @@ GameObject:
   - component: {fileID: 115222155}
   - component: {fileID: 115222154}
   - component: {fileID: 115222153}
+  - component: {fileID: 115222156}
   m_Layer: 5
   m_Name: Load Button
   m_TagString: Untagged
@@ -638,10 +639,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2009679607}
-        m_TargetAssemblyTypeName: ForgottenTrails.InkFacilitation.StoryController,
-          Assembly-CSharp
-        m_MethodName: ResetSceneButton
+      - m_Target: {fileID: 4636245370548742609}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 366da4ba4dfd48443a602bafab25af6d, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 115222156}
+        m_TargetAssemblyTypeName: DataButtons, Assembly-CSharp
+        m_MethodName: QuickLoad
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -651,13 +663,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 4636245370548742609}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
+      - m_Target: {fileID: 2009679607}
+        m_TargetAssemblyTypeName: ForgottenTrails.InkFacilitation.StoryController,
+          Assembly-CSharp
+        m_MethodName: ResetSceneButton
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 366da4ba4dfd48443a602bafab25af6d, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -701,6 +714,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115222151}
   m_CullTransparentMesh: 1
+--- !u!114 &115222156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115222151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 470467f2be5f7414b81432bb90072f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &189748202
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,30 +1200,6 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 261469453}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: e0e26e7c2fac35249ac93826d0a28d22, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 366da4ba4dfd48443a602bafab25af6d, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3158,18 +3159,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 751184677}
-        m_TargetAssemblyTypeName: SavaDataButton, Assembly-CSharp
-        m_MethodName: OnClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 4636245370548742609}
         m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
         m_MethodName: PlayOneShot
@@ -3182,9 +3171,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Core.BasicInkScript, Assembly-CSharp
-        m_MethodName: SaveData
+      - m_Target: {fileID: 751184677}
+        m_TargetAssemblyTypeName: DataButtons, Assembly-CSharp
+        m_MethodName: QuickSave
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 275361438}
+        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
+        m_MethodName: Replace
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3241,7 +3242,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 751184672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43c2c7bebc196634fa77b29fa979eaa2, type: 3}
+  m_Script: {fileID: 11500000, guid: 470467f2be5f7414b81432bb90072f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &802116967

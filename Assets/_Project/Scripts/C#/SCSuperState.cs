@@ -187,8 +187,6 @@ namespace ForgottenTrails.InkFacilitation
             /// <param name="input">the data loaded from disk</param>
             private void ReadStoryStateFromData(StoryData input)
             {
-                Debug.Log(input);
-                Debug.Log(input.StoryStateJson);
                 if (input.StoryStateJson != "")
                 {
                     Debug.Log("continueing from savepoint!");

@@ -152,9 +152,6 @@ namespace DataService
         protected override void Awake()
         {
             base.Awake();
-            // TEMPORARY:
-            WipeDataFromAllSlots();
-            //
             DataMatrix.Clear();
             DontDestroyOnLoad(gameObject);
         }
@@ -165,7 +162,6 @@ namespace DataService
         {
             try
             {
-                Debug.Log("lollipop1");
                 reportedData.Add(data);
             }
             catch (Exception e)

@@ -33,7 +33,7 @@ public class GameLauncher : MonoBehaviour
     }
     public void LoadGame()
     {
-        DataManager.Instance.LoadDataFromFile(profileSelector.itemText.text);
+        DataManager.Instance.LoadDataFromFile(profileSelector.captionText.text);
     }
     public void LoadGame(string file)
     {

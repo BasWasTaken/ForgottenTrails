@@ -31,11 +31,11 @@ namespace DataService
         #region Paths
 
         [Tooltip("Name of the folder to read from and write to")]
-        [SerializeField, ReadOnly]
+        [SerializeField]
         private string nameOfMasterDataDirectory = "PlayerData";
         public static string ActiveDataProfile
         {
-            get { return _ActiveDataProfile; }
+            get { return Instance?_ActiveDataProfile:null; }
             private set
             {
                 if (Instance != null)
@@ -73,7 +73,7 @@ namespace DataService
         /// </summary>
         public string[] DataProfileDirectories => Directory.GetDirectories(MasterDataDirectory);
 
-        public string DataProfile(string directory) => directory.Replace(MasterDataDirectory, "");
+        public string DataProfile(string directory) => directory.Replace(MasterDataDirectory, "").Split('/')[0];
         public List<string> DataProfiles
         {
             get
@@ -184,19 +184,6 @@ namespace DataService
                 return true;
             }
         }
-
-        private HashSet<DataClass> ActiveData 
-        {
-            get
-            {
-                HashSet<DataClass> output = new();
-                foreach (var item in ActiveDataDictionary.Values)
-                {
-                    output.Add(item);
-                }
-                return output;
-            }
-        }
         //this is our save data structure.
         [Serializable] //needs to be marked as serializable
         struct MetaDataStruct
@@ -204,7 +191,8 @@ namespace DataService
             public string playerName;
             public float totalPlayTime;
             public float timeOnSave;
-            public DataClass[] DataClasses;
+            public HashSet<Type> dataTypes;
+            public HashSet<DataClass> DataClasses;
         }
         public enum SaveMethod
         {
@@ -227,14 +215,14 @@ namespace DataService
             // determine path
             string path = GetPathForSaving(method);
             // prepare debug message
-            string message = string.Format("{0} sets of data to {1}:", ActiveData.Count, path);
+            string message = string.Format("{0} sets of data to {1}:", ActiveDataDictionary.Keys.Count, path);
 
-            List<DataClass> datas = new();
+            HashSet<DataClass> datas = new();
             // collect all the dataclasses in queue
-            foreach (DataClass dataClass in ActiveData)
+            foreach (KeyValuePair<string, DataClass> dataClass in ActiveDataDictionary)
             {
                 message += "\n" + dataClass.Key;
-                datas.Add(dataClass);
+                datas.Add(dataClass.Value);
             }
 
             // form file content
@@ -243,7 +231,7 @@ namespace DataService
                 playerName = metaData.playerName,
                 totalPlayTime = metaData.totalPlayTime,
                 timeOnSave = Time.time,
-                DataClasses = datas.ToArray()
+                DataClasses = datas
             };
 
             //open a filestream to save on
@@ -277,6 +265,10 @@ namespace DataService
         // might be danger for loops here if i use the worng varaible accidentally
         public Dictionary<string, DataClass> ActiveDataDictionary { get // could be made more efficient if i don't have to do this convoluted pointing every time i access it
             {
+                if (ActiveDataProfile == null)
+                {
+                    return null;
+                }
                 if (!DataMatrix.TryGetValue(ActiveDataProfile, out var output))
                 {
                     if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
@@ -388,8 +380,11 @@ namespace DataService
         /// </summary>
         public void LoadDataFromFile(string path)
         {
+            Debug.Log("attempting to load " + path);
             //check if file available
-            if (!File.Exists(path)) throw new Exception();
+            if (!File.Exists(path)) throw new Exception("No file detected for path: " +path);
+
+            string profile = DataProfile(path);
 
             //this is the formatter, you can also use an System.Xml.Serialization.XmlSerializer;
             var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
@@ -401,17 +396,28 @@ namespace DataService
             MetaDataStruct loaded_data;       
 
             //again we open a filestream but now with fileMode.Open
-            using (Stream filestream = File.Open("filename.dat", FileMode.Open))
+            using (Stream filestream = File.Open(path, FileMode.Open)) 
             {
                 //deserialize directly from that stream.
                 loaded_data = (MetaDataStruct)formatter.Deserialize(filestream);
             }
 
             // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
-            ActiveDataDictionary.Clear();
+            if (DataMatrix.ContainsKey(profile))
+            {
+                DataMatrix[profile].Clear();
+            }
+            else
+            {
+                DataMatrix.Add(profile, new());
+            }
+
             foreach (DataClass dataClass in loaded_data.DataClasses)
             {
-                ActiveDataDictionary.Add(dataClass.ToString(), dataClass);
+                DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+
+                // hoe kan er hier al data in zijn??
+                // oh er zijn meerdere van hetzelfde type, want een hashset voorkomt dat helemaal niet of wel?
             }
             metaData.timeSinceLastSave = 0;
 

@@ -152,8 +152,9 @@ namespace DataService
         protected override void Awake()
         {
             base.Awake();
-            DataMatrix.Clear();
-            DontDestroyOnLoad(gameObject);
+            DataMatrix = new();
+            reportedData = new();
+            DontDestroyOnLoad(gameObject); // move this to parent persistantmonosingleton? or 
         }
 
         static List<DataClass> reportedData = new();
@@ -181,6 +182,7 @@ namespace DataService
             else
             {
                 ActiveDataProfile = profileName;
+                metaData = new();
                 return true;
             }
         }
@@ -276,35 +278,80 @@ namespace DataService
             {
                 return false;
             }
-            if (!DataMatrix.TryGetValue(ActiveDataProfile, out dataDictionary))
+            else
             {
-                try
+                if (dataDictionary == null)
                 {
-                    // try adding if it isn't there
-                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
-                    {
-                        return false;
-                    }
-                    //else
-                    //{
-                    //    AddReportedData(ref dataDictionary);
-                    //}
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
                     return false;
                 }
-            }
-            AddReportedData(ref dataDictionary);
-            return true;
-        }
+                else
+                {
+                    if (!DataMatrix.ContainsKey(profile))
+                    {
+                        // need to create dicitonary
+                        if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                        {
+                            Debug.LogError("could not create and add dictionary");
+                            return false;
+                        }
+                        else
+                        {
+                            Debug.Log("created dictionary!");
+                            // at the end return true;
+                        }
+                    }
+                    else
+                    {
+                        // need to get dictionary
+                        if (!DataMatrix.TryGetValue(ActiveDataProfile, out dataDictionary))
+                        {
+                            Debug.LogError("could not get dictionary");
+                            return false;
+                        }
+                        else
+                        {
+                            if (dataDictionary == null)
+                            {
+                                Debug.LogError("null dictionary");
+                                return false;
+                            }
+                            else
+                            {
+                                Debug.Log("found dictionary!");
+                                // at the end return true;
+                            }
+                        }
+                    }
+                }
+                // hier beland je als je de dictionary hebt gemaakt of gevonden
 
+                // whether created or retreived, we should now have the dataprofile
+                if (dataDictionary == null)
+                {
+                    Debug.LogError("wtf man");
+                    return false;
+                }
+                else
+                {
+                    if (!AddReportedData(ref dataDictionary))
+                    {
+                        Debug.LogError("fout in de reported data toevoegen");
+                        return false;
+                    }
+                    else
+                    {
+                        Debug.Log("jaaaaa!");
+                        return true;
+                    }
+                } 
+            }
+        }
         public bool AddReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
         {
             int i = 0;
             foreach (var item in reportedData)
             {
+                Debug.Log(item);
                 if (!dictionaryToAddTo.ContainsKey(item.GetType().Name))
                 {
                     i++;

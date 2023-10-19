@@ -203,7 +203,7 @@ namespace DataService
             quick
         }
         public event Action OnDataSaved;
-        public void SaveDataToFile(SaveMethod method)
+        public void SaveDataToFile(SaveMethod method) // for manuals hier ergens een override van profile naam? hm nee niet echt i guess
         {
             // exit if manual since i haven't done that yet
             if (method == SaveMethod.manual)
@@ -217,12 +217,11 @@ namespace DataService
             // determine path
             string path = GetPathForSaving(method);
             // prepare debug message
-            TryGetActiveDataDictionary(out var dic);
-            string message = string.Format("{0} sets of data to {1}:", dic.Keys.Count, path);
+            string message = string.Format("{0} sets of data to {1}:", ActiveDataDictionary.Keys.Count, path);
 
             HashSet<DataClass> datas = new();
             // collect all the dataclasses in queue
-            foreach (KeyValuePair<string, DataClass> dataClass in dic)
+            foreach (KeyValuePair<string, DataClass> dataClass in ActiveDataDictionary)
             {
                 message += "\n" + dataClass.Key;
                 datas.Add(dataClass.Value);
@@ -267,83 +266,82 @@ namespace DataService
         // the container for various data profiles in accessable form (i.e. read from disk)
         private static Dictionary<string, Dictionary<string, DataClass>> DataMatrix { get; set; } = new();
         // the methods for accessing them:
-        public bool TryGetActiveDataDictionary(out Dictionary<string, DataClass> dataDictionary)
+        public Dictionary<string, DataClass> ActiveDataDictionary
         {
-            return TryGetDataDictionary(ActiveDataProfile,out dataDictionary);
-        }
-        public bool TryGetDataDictionary(string profile, out Dictionary<string, DataClass> dataDictionary)
-        {
-            dataDictionary = new();
-            if (ActiveDataProfile == null)
+            get
             {
-                return false;
+                if (ActiveDataProfile == null)
+                {
+                    return null;
+                }
+                else                return GetDataDictionary(ActiveDataProfile);
+            }
+        }
+        public Dictionary<string, DataClass> GetDataDictionary(string profile)
+        {
+            Dictionary<string, DataClass> output = new();
+            if (!DataMatrix.ContainsKey(profile))
+            {
+                // need to create dicitonary
+                if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                {
+                    Debug.LogError("could not create and add dictionary");
+                    return null;
+                }
+                else
+                {
+                    Debug.Log("created dictionary!");
+                    // at the end return true;
+                }
             }
             else
             {
-                if (dataDictionary == null)
+                // need to get dictionary
+                try
                 {
-                    return false;
+                    output = DataMatrix[ActiveDataProfile];
+                }
+                catch (Exception)
+                {
+                    Debug.LogError("could not get dictionary");
+                    throw;
+                }
+                if (output == null)
+                {
+                    Debug.LogError("null dictionary");
+                    return null;
                 }
                 else
                 {
-                    if (!DataMatrix.ContainsKey(profile))
-                    {
-                        // need to create dicitonary
-                        if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
-                        {
-                            Debug.LogError("could not create and add dictionary");
-                            return false;
-                        }
-                        else
-                        {
-                            Debug.Log("created dictionary!");
-                            // at the end return true;
-                        }
-                    }
-                    else
-                    {
-                        // need to get dictionary
-                        if (!DataMatrix.TryGetValue(ActiveDataProfile, out dataDictionary))
-                        {
-                            Debug.LogError("could not get dictionary");
-                            return false;
-                        }
-                        else
-                        {
-                            if (dataDictionary == null)
-                            {
-                                Debug.LogError("null dictionary");
-                                return false;
-                            }
-                            else
-                            {
-                                Debug.Log("found dictionary for " + ActiveDataProfile) ;
-                                // at the end return true;
-                            }
-                        }
-                    }
+                    Debug.Log("found dictionary for " + ActiveDataProfile);
+                    // at the end return true;
                 }
-                // hier beland je als je de dictionary hebt gemaakt of gevonden
+            }
+            // hier beland je als je de dictionary hebt gemaakt of gevonden
 
-                // whether created or retreived, we should now have the dataprofile
-                if (dataDictionary == null)
+            // whether created or retreived, we should now have the dataprofile
+            if (output == null)
+            {
+                Debug.LogError("wtf man");
+                return null;
+            }
+            else
+            {
+                if (!CheckForReportedData(ref output))
                 {
-                    Debug.LogError("wtf man");
-                    return false;
+                    Debug.LogError("fout in de reported data toevoegen");
+                    return output;
                 }
                 else
                 {
-                    if (!CheckForReportedData(ref dataDictionary))
+                    string test = "test dic in getter:";
+                    foreach (var item in output)
                     {
-                        Debug.LogError("fout in de reported data toevoegen");
-                        return false;
+                        test += "\n" + item;
                     }
-                    else
-                    {
-                        Debug.Log("jaaaaa!");
-                        return true;
-                    }
-                } 
+                    Debug.Log(test);
+                    return output;
+                }
             }
         }
         public bool CheckForReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
@@ -365,30 +363,58 @@ namespace DataService
                 }
                 else                    message += String.Format("\n {0} is already contained? wait isn't that weird?", name);
             }
-            reportedData.Clear();
-            if (anyNew & added == 0)
+            if (anyNew)
             {
-                Debug.Log("failed " + message);
-                return false;
+                string test = "dic:";
+                foreach (var item in dictionaryToAddTo)
+                {
+                    test += "\n" + item;
+                }
+                Debug.Log(test);
+
+                test = "dic:";
+                foreach (var item in reportedData)
+                {
+                    test += "\n" + item;
+                }
+                Debug.Log(test);
+
             }
-            else { Debug.Log("succeeded in " + message); return true; }
+            reportedData.Clear();
+            if (anyNew)
+            {
+                if (added > 0)
+                {
+                    Debug.Log("succeeded in " + message); return true;
+                }
+                else
+                {
+                    Debug.Log("failed " + message); return false;
+                }
+            }
+            else { Debug.Log("no new data things to add"); return true; }
         }
 
         public T GetDataOrMakeNew<T>() where T : DataClass, new()
         {
             string key = typeof(T).Name;
-            TryGetActiveDataDictionary(out var dic);
-            if (!dic.TryGetValue(key, out var output))
+            if (!ActiveDataDictionary.TryGetValue(key, out var output))
             {
                 if (output == null)
                 {
                     output = new T();
                 }
-                if (!dic.TryAdd(key, output))
+                if (!ActiveDataDictionary.TryAdd(key, output))
                 {
                     Debug.LogError("still not added");
                 }
             }
+            string test = "dic:";
+            foreach (var item in ActiveDataDictionary)
+            {
+                test += "\n"+item;
+            }
+            Debug.Log(test);
             return (T)output;
         }
 
@@ -524,6 +550,17 @@ namespace DataService
         {
             metaData.totalPlayTime += Time.fixedDeltaTime;
             metaData.timeSinceLastSave += Time.fixedDeltaTime;
+
+            if (ActiveDataDictionary != null)
+            {
+                string test = "updateTestDic:";
+
+                foreach (var item in ActiveDataDictionary)
+                {
+                    test += "\n" + item;
+                }
+                Debug.Log(test);
+            }
         }
         #endregion
     }

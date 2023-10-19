@@ -12,6 +12,8 @@ public class GameLauncher : MonoBehaviour
     public TMPro.TMP_InputField profileNamer;
     [Required]
     public TMPro.TMP_Dropdown profileSelector;
+    [Required]
+    public TMPro.TMP_Dropdown saveSelector;
     public void StartNewGame()
     {
         StartNewGame(profileNamer.text);
@@ -26,10 +28,26 @@ public class GameLauncher : MonoBehaviour
         DataManager.Instance.LoadMostRecent();
         LaunchGame();
     }
+    public void SelectLoadMenu()
+    {
+        ShowProfiles();
+        ShowSaves();
+    }
+
+    // how single purpose should scripts be?
+    // for instance, should these two methods be in a profileselector and saveselector component? it does make linking to them in the scene a bit more intuitive,
+    // but i can't help but think that'd be a bit overkill...
+    // well yeah i guess i should eb cause if i want them on any other buttons i don't want another whole gamelauncher!
+    // soo i guess TODO: make these into separate components (low priority)
+    public void ShowProfiles()
+    {
+        profileSelector.ClearOptions();
+        profileSelector.AddOptions(DataManager.Instance.DataProfiles);
+    }
     public void ShowSaves()
     {
-        profileSelector.ClearOptions(); 
-        profileSelector.AddOptions(DataManager.Instance.GetFilePaths());
+        saveSelector.ClearOptions();
+        saveSelector.AddOptions(DataManager.Instance.GetFilePaths());
     }
     public void LoadGame()
     {

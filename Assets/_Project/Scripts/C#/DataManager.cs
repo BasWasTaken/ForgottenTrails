@@ -265,7 +265,7 @@ namespace DataService
         #endregion
         #region loading 
         // the container for various data profiles in accessable form (i.e. read from disk)
-        private static Dictionary<string, Dictionary<string, DataClass>> DataMatrix = new();
+        private static Dictionary<string, Dictionary<string, DataClass>> DataMatrix { get; set; } = new();
         // the methods for accessing them:
         public bool TryGetActiveDataDictionary(out Dictionary<string, DataClass> dataDictionary)
         {
@@ -317,7 +317,7 @@ namespace DataService
                             }
                             else
                             {
-                                Debug.Log("found dictionary!");
+                                Debug.Log("found dictionary for " + ActiveDataProfile) ;
                                 // at the end return true;
                             }
                         }
@@ -333,7 +333,7 @@ namespace DataService
                 }
                 else
                 {
-                    if (!AddReportedData(ref dataDictionary))
+                    if (!CheckForReportedData(ref dataDictionary))
                     {
                         Debug.LogError("fout in de reported data toevoegen");
                         return false;
@@ -346,20 +346,32 @@ namespace DataService
                 } 
             }
         }
-        public bool AddReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
+        public bool CheckForReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
         {
-            int i = 0;
+            int added = 0;
+            bool anyNew = false;
+            string message = "attempt to fetch newly presented dataclasses:";
             foreach (var item in reportedData)
             {
-                Debug.Log(item);
-                if (!dictionaryToAddTo.ContainsKey(item.GetType().Name))
+                anyNew = true;
+
+                string name = item.GetType().Name;
+
+                if (!dictionaryToAddTo.ContainsKey(name))
                 {
-                    i++;
-                    dictionaryToAddTo.Add(item.GetType().Name, item);
+                    added++;
+                    dictionaryToAddTo.Add(name, item);
+                    message += String.Format("\n {0} was added", name);
                 }
+                else                    message += String.Format("\n {0} is already contained? wait isn't that weird?", name);
             }
             reportedData.Clear();
-            return i>0;
+            if (anyNew & added == 0)
+            {
+                Debug.Log("failed " + message);
+                return false;
+            }
+            else { Debug.Log("succeeded in " + message); return true; }
         }
 
         public T GetDataOrMakeNew<T>() where T : DataClass, new()

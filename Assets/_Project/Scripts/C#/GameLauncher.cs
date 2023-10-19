@@ -38,7 +38,7 @@ public class GameLauncher : MonoBehaviour
     // for instance, should these two methods be in a profileselector and saveselector component? it does make linking to them in the scene a bit more intuitive,
     // but i can't help but think that'd be a bit overkill...
     // well yeah i guess i should eb cause if i want them on any other buttons i don't want another whole gamelauncher!
-    // soo i guess TODO: make these into separate components (low priority)
+    // soo i guess TODO: make these into separate components (low priority) 
     public void ShowProfiles()
     {
         profileSelector.ClearOptions();
@@ -47,11 +47,11 @@ public class GameLauncher : MonoBehaviour
     public void ShowSaves()
     {
         saveSelector.ClearOptions();
-        saveSelector.AddOptions(DataManager.Instance.GetFilePaths());
+        saveSelector.AddOptions(DataManager.Instance.GetFilePaths(profileSelector.captionText.text));
     }
     public void LoadGame()
     {
-        LoadGame(profileSelector.captionText.text);
+        LoadGame(saveSelector.captionText.text);
     }
     public void LoadGame(string file)
     {

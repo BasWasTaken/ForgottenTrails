@@ -215,11 +215,12 @@ namespace DataService
             // determine path
             string path = GetPathForSaving(method);
             // prepare debug message
-            string message = string.Format("{0} sets of data to {1}:", ActiveDataDictionary.Keys.Count, path);
+            TryGetActiveDataDictionary(out var dic);
+            string message = string.Format("{0} sets of data to {1}:", dic.Keys.Count, path);
 
             HashSet<DataClass> datas = new();
             // collect all the dataclasses in queue
-            foreach (KeyValuePair<string, DataClass> dataClass in ActiveDataDictionary)
+            foreach (KeyValuePair<string, DataClass> dataClass in dic)
             {
                 message += "\n" + dataClass.Key;
                 datas.Add(dataClass.Value);
@@ -261,63 +262,70 @@ namespace DataService
 
         #endregion
         #region loading 
-        public static Dictionary<string, Dictionary<string, DataClass>> DataMatrix = new();
-        // might be danger for loops here if i use the worng varaible accidentally
-        public Dictionary<string, DataClass> ActiveDataDictionary { get // could be made more efficient if i don't have to do this convoluted pointing every time i access it
+        // the container for various data profiles in accessable form (i.e. read from disk)
+        private static Dictionary<string, Dictionary<string, DataClass>> DataMatrix = new();
+        // the methods for accessing them:
+        public bool TryGetActiveDataDictionary(out Dictionary<string, DataClass> dataDictionary)
+        {
+            return TryGetDataDictionary(ActiveDataProfile,out dataDictionary);
+        }
+        public bool TryGetDataDictionary(string profile, out Dictionary<string, DataClass> dataDictionary)
+        {
+            dataDictionary = new();
+            if (ActiveDataProfile == null)
             {
-                if (ActiveDataProfile == null)
-                {
-                    return null;
-                }
-                if (!DataMatrix.TryGetValue(ActiveDataProfile, out var output))
-                {
-                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
-                    {
-                        throw new Exception();
-                    }
-                    else
-                    {
-                        // when we're inside the right dataprofile
-                        foreach (var item in reportedData)
-                        {
-                            if (!DataMatrix[ActiveDataProfile].ContainsKey(item.GetType().Name))
-                            {
-                                DataMatrix[ActiveDataProfile].Add(item.GetType().Name, item);
-                            }
-                        }
-                        return DataMatrix[ActiveDataProfile];
-                    }
-                }
-                else
-                {
-                    return output;
-                }                    
-            } 
-            set 
-            {
-                if (!DataMatrix.ContainsKey(ActiveDataProfile))
-                {
-                    Debug.Log("data was empty, creating dicitonary");
-
-                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
-                    {
-                        throw new Exception();
-                    }
-                }
-                DataMatrix[ActiveDataProfile] = value; 
+                return false;
             }
+            if (!DataMatrix.TryGetValue(ActiveDataProfile, out dataDictionary))
+            {
+                try
+                {
+                    // try adding if it isn't there
+                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                    {
+                        return false;
+                    }
+                    //else
+                    //{
+                    //    AddReportedData(ref dataDictionary);
+                    //}
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                    return false;
+                }
+            }
+            AddReportedData(ref dataDictionary);
+            return true;
+        }
+
+        public bool AddReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
+        {
+            int i = 0;
+            foreach (var item in reportedData)
+            {
+                if (!dictionaryToAddTo.ContainsKey(item.GetType().Name))
+                {
+                    i++;
+                    dictionaryToAddTo.Add(item.GetType().Name, item);
+                }
+            }
+            reportedData.Clear();
+            return i>0;
         }
 
         public T GetDataOrMakeNew<T>() where T : DataClass, new()
         {
             string key = typeof(T).Name;
-            if (!ActiveDataDictionary.TryGetValue(key, out var output))
+            TryGetActiveDataDictionary(out var dic);
+            if (!dic.TryGetValue(key, out var output))
             {
                 if (output == null)
                 {
                     output = new T();
                 }
-                if (!ActiveDataDictionary.TryAdd(key, output))
+                if (!dic.TryAdd(key, output))
                 {
                     Debug.LogError("still not added");
                 }

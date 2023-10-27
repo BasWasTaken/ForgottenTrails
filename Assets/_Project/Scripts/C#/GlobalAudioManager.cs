@@ -11,5 +11,10 @@ namespace ForgottenTrails
         #region Public Properties
         public AudioHandler Global { get; private set; }
         #endregion
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(this.gameObject);
+        }
     }
 }

@@ -56,7 +56,7 @@ public class BackGround : MonoBehaviour
     #region Fades
     public IEnumerator FadeTo(Sprite sprite, Color color, float duration)
     {
-        Debug.Log(String.Format("Started fading to a {0}-shaded image of {1}.", color, sprite));
+        //Debug.Log(String.Format("Started fading to a {0}-shaded image of {1}.", color, sprite));
         ToBack();
         if (duration <= 0)
         {
@@ -73,7 +73,7 @@ public class BackGround : MonoBehaviour
             }
             ToBack();
         }
-        Debug.Log(String.Format("Done fading! Should now see a {0}-shaded image of {1}.", color, sprite));
+        //Debug.Log(String.Format("Done fading! Should now see a {0}-shaded image of {1}.", color, sprite));
     }
     public IEnumerator FadeTo(Sprite sprite, float duration)
     {

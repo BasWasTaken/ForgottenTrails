@@ -20,8 +20,7 @@ public class GameLauncher : MonoBehaviour
     }
     public void StartNewGame(string fileName)
     {
-        DataManager.Instance.TryStartNewGame(fileName);
-        LaunchGame();
+        if (DataManager.Instance.TryStartNewGame(fileName))         LaunchGame();
     }
     public void ContinueGame()
     {

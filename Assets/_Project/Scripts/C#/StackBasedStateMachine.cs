@@ -77,23 +77,26 @@ namespace Bas.Utility
                     BaseState<T> intermediateState = CurrentState;
                     while (levelDifference > 0)
                     {
+                        Debug.Log("Exiting " + intermediateState);
                         intermediateState.OnExit(); // perform all the required exit behaviour
                         intermediateState = GetParent(intermediateState);
                         levelDifference--;
                     }
-
                     StateStack.Push(newState); // Go to the new state
+                    Debug.Log("Entering " + CurrentState);
                     CurrentState.OnEnter(); // Perform the enter behaviour
                 }
                 else if (levelDifference < 0)
                 {
                     // Lower to higher level transition
+                    Debug.Log("Exiting " + CurrentState);
                     CurrentState.OnExit();
                     StateStack.Push(newState);
                     BaseState<T> intermediateState = CurrentState;
                     while (levelDifference < 0)
                     {
                         intermediateState = GetParent(intermediateState);
+                        Debug.Log("Entering " + intermediateState);
                         intermediateState.OnEnter(); // perform all the required enter behaviour
                         levelDifference++;
                     }
@@ -101,8 +104,10 @@ namespace Bas.Utility
                 else 
                 {
                     // Transition between states at the same level
+                    Debug.Log("Exiting " + CurrentState);
                     CurrentState.OnExit();
                     StateStack.Push(newState);
+                    Debug.Log("Entering " + CurrentState);
                     CurrentState.OnEnter();
                 }
             }
@@ -110,6 +115,7 @@ namespace Bas.Utility
             {
                 // Initial state transition
                 StateStack.Push(newState);
+                Debug.Log("Entering " + CurrentState);
                 CurrentState.OnEnter();
             }
             StatePeeker = CurrentState.GetType().ToString();
@@ -117,9 +123,13 @@ namespace Bas.Utility
 
         public void Reset()
         {
+
             // should use this, but it's not working:
           StateStack.Clear();
             TransitionToState(StartState);
+
+            // shoul i iterative exit out of all states??
+            // isn't that just going to the super state?
 
         }
 
@@ -169,6 +179,7 @@ namespace Bas.Utility
                     BaseState<T> intermediateState = CurrentState;
                     while (levelDifference > 0)
                     {
+                        Debug.Log("Exiting " + intermediateState);
                         intermediateState.OnExit(); // perform all the required exit behaviour
                         intermediateState = GetParent(intermediateState);
                         levelDifference--;
@@ -179,11 +190,14 @@ namespace Bas.Utility
                     {
                         StateStack.Push(BaseState);
                     }
+                    Debug.Log("Entering " + CurrentState);
                     CurrentState.OnEnter(); // Perform the enter behaviour
                 }
                 else if (levelDifference < 0)
                 {
                     // Lower to higher level transition
+
+                    Debug.Log("Exiting " + CurrentState);
                     CurrentState.OnExit();
                     StateStack.Pop(); // remove current state from the top
                     if (StateStack.Count == 0)
@@ -201,12 +215,15 @@ namespace Bas.Utility
                 else
                 {
                     // Transition between states at the same level
+
+                    Debug.Log("Exiting " + CurrentState);
                     CurrentState.OnExit();
                     StateStack.Pop(); // remove current state from the top
                     if (StateStack.Count == 0)
                     {
                         StateStack.Push(BaseState);
                     }
+                    Debug.Log("Entering " + CurrentState);
                     CurrentState.OnEnter();
                 }
                 caller.DropCondition = false;

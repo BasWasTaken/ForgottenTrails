@@ -103,14 +103,14 @@ namespace ForgottenTrails.InkFacilitation
             private void InitialiseStory() 
             {
                 Controller.Story = new Story(Controller.InkStoryAsset.text);
-                BindAndObserve(Controller.Story);
+                BindAndObserve(Controller.Story); // this only needs to happen the first time!
             }
 
             private void InitialiseData()
             {
                 // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
-                StoryData input = DataManager.Instance.GetDataOrMakeNew<StoryData>();
-                ReadStoryStateFromData(input);
+                Controller.InkDataAsset = DataManager.Instance.GetDataOrMakeNew<StoryData>();
+                ReadStoryStateFromData(Controller.InkDataAsset);
             }
 
 
@@ -159,7 +159,7 @@ namespace ForgottenTrails.InkFacilitation
                 if (inkList.Count == 1)
                 {
                     InkListItem inkListItem = inkList.maxItem.Key;
-                    Debug.Log(String.Format("Found {0}", inkListItem));
+                    //Debug.Log(String.Format("Found {0}", inkListItem));
                     return inkListItem;
                 }
                 else
@@ -187,6 +187,7 @@ namespace ForgottenTrails.InkFacilitation
             /// <param name="input">the data loaded from disk</param>
             private void ReadStoryStateFromData(StoryData input)
             {
+                Debug.Log(input.StoryStateJson);
                 if (input.StoryStateJson != "")
                 {
                     Debug.Log("continueing from savepoint!");

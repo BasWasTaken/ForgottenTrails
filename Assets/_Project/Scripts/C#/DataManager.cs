@@ -10,6 +10,7 @@ using Bas.Utility;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
+using ForgottenTrails.InkFacilitation;
 
 namespace DataService 
 {
@@ -152,7 +153,8 @@ namespace DataService
         protected override void Awake()
         {
             base.Awake();
-            DataMatrix = new();
+            //DataMatrix = new();
+            ActiveDataDictionary.Clear();
             reportedData = new();
             DontDestroyOnLoad(gameObject); // move this to parent persistantmonosingleton? or 
         }
@@ -174,9 +176,9 @@ namespace DataService
         #region saving
         public bool TryStartNewGame(string profileName)
         {
-            if (File.Exists(GetPathForSaving(profileName, SaveMethod.auto)))
+            if (DataProfiles.Contains(profileName))
             {
-                Debug.LogWarning("Profile already exists. Choose different profile name or delete existing.");
+                Debug.LogWarning("Profile " +profileName+" already exists. Choose different profile name or delete existing.");
                 return false;
             }
             else
@@ -263,6 +265,8 @@ namespace DataService
 
         #endregion
         #region loading 
+
+        /*
         // the container for various data profiles in accessable form (i.e. read from disk)
         private static Dictionary<string, Dictionary<string, DataClass>> DataMatrix { get; set; } = new();
         // the methods for accessing them:
@@ -274,76 +278,109 @@ namespace DataService
                 {
                     return null;
                 }
-                else                return GetDataDictionary(ActiveDataProfile);
+                else
+                {
+                    var output = GetDataDictionary(ActiveDataProfile);
+                    
+                    string test4 = "test4 dic in ActiveDataDictionary:";
+                    foreach (var item in output)
+                    {
+                        test4 += "\n" + item;
+                    }
+                    Debug.Log(test4);
+                    // deze lijkt ook soms goed
+                    TestNextFrame = true;
+                    return output;
+                }
             }
         }
         public Dictionary<string, DataClass> GetDataDictionary(string profile)
         {
-            Dictionary<string, DataClass> output = new();
-            if (!DataMatrix.ContainsKey(profile))
-            {
-                // need to create dicitonary
-                if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                Dictionary<string, DataClass> output = new();
+                if (!DataMatrix.ContainsKey(profile))
                 {
-                    Debug.LogError("could not create and add dictionary");
-                    return null;
+                    // need to create dicitonary
+                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                    {
+                        Debug.LogError("could not create and add dictionary");
+                        return null;
+                    }
+                    else
+                    {
+                        Debug.Log("created dictionary!");
+                        // at the end return true;
+                    }
                 }
                 else
                 {
-                    Debug.Log("created dictionary!");
-                    // at the end return true;
+                    // need to get dictionary
+                    try
+                    {
+                        output = DataMatrix[ActiveDataProfile];
+                    }
+                    catch (Exception)
+                    {
+                        Debug.LogError("could not get dictionary");
+                        throw;
+                    }
+                    if (output == null)
+                    {
+                        Debug.LogError("null dictionary");
+                        return null;
+                    }
+                    else
+                    {
+                        Debug.Log("found dictionary for " + ActiveDataProfile);
+                        // test datamatrix for this profile
+                        string test3 = "test3 dic in GetDataDictionary:";
+                        foreach (var item in output)
+                        {
+                            test3 += "\n" + item;
+                        }
+                        Debug.Log(test3);
+                        // at the end return true;
+                    }
                 }
-            }
-            else
-            {
-                // need to get dictionary
-                try
-                {
-                    output = DataMatrix[ActiveDataProfile];
-                }
-                catch (Exception)
-                {
-                    Debug.LogError("could not get dictionary");
-                    throw;
-                }
+                // hier beland je als je de dictionary hebt gemaakt of gevonden
+
+                // whether created or retreived, we should now have the dataprofile
                 if (output == null)
                 {
-                    Debug.LogError("null dictionary");
+                    Debug.LogError("wtf man");
                     return null;
                 }
                 else
                 {
-                    Debug.Log("found dictionary for " + ActiveDataProfile);
-                    // at the end return true;
-                }
-            }
-            // hier beland je als je de dictionary hebt gemaakt of gevonden
 
-            // whether created or retreived, we should now have the dataprofile
-            if (output == null)
-            {
-                Debug.LogError("wtf man");
-                return null;
-            }
-            else
-            {
-                if (!CheckForReportedData(ref output))
-                {
-                    Debug.LogError("fout in de reported data toevoegen");
-                    return output;
-                }
-                else
-                {
-                    string test = "test dic in getter:";
+                    string test1 = "test1 dic in GetDataDictionary, before CheckForReportedData:";
                     foreach (var item in output)
                     {
-                        test += "\n" + item;
+                        test1 += "\n" + item;
                     }
-                    Debug.Log(test);
-                    return output;
+                    Debug.Log(test1);
+
+                    if (!CheckForReportedData(ref output))
+                    {
+                        Debug.LogError("fout in de reported data toevoegen");
+                        return output;
+                    }
+                    else
+                    {
+
+                        string test2 = "test2 dic in GetDataDictionary, after CheckForReportedData:";
+                        foreach (var item in output)
+                        {
+                            test2 += "\n" + item;
+                        }
+                        Debug.Log(test2);
+
+                        // DEZE IS MEESTAL WEL GOED
+                        return output;
+                    }
                 }
-            }
         }
+        */
+        public Dictionary<string, DataClass> ActiveDataDictionary { get; } = new();
         public bool CheckForReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
         {
             int added = 0;
@@ -365,19 +402,12 @@ namespace DataService
             }
             if (anyNew)
             {
-                string test = "dic:";
-                foreach (var item in dictionaryToAddTo)
-                {
-                    test += "\n" + item;
-                }
-                Debug.Log(test);
-
-                test = "dic:";
+                string test0 = "test0 dic from reporteddata:";
                 foreach (var item in reportedData)
                 {
-                    test += "\n" + item;
+                    test0 += "\n" + item;
                 }
-                Debug.Log(test);
+                Debug.Log(test0);
 
             }
             reportedData.Clear();
@@ -402,19 +432,22 @@ namespace DataService
             {
                 if (output == null)
                 {
+                    Debug.Log("Creating new data of type " + key);
                     output = new T();
                 }
-                if (!ActiveDataDictionary.TryAdd(key, output))
+                if (!ActiveDataDictionary.TryAdd(key, output)) // doersn't this mean the adding from reporteed data is superfluous?
                 {
                     Debug.LogError("still not added");
                 }
             }
-            string test = "dic:";
+            /*
+            string test = "test dic from getdataormakenew:";
             foreach (var item in ActiveDataDictionary)
             {
                 test += "\n"+item;
             }
-            Debug.Log(test);
+            Debug.Log(test); 
+            */
             return (T)output;
         }
 
@@ -496,18 +529,24 @@ namespace DataService
             }
 
             // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
+
+            /*
             if (DataMatrix.ContainsKey(profile))
             {
-                DataMatrix[profile].Clear();
+                DataMatrix[profile].Clear(); 
             }
             else
             {
-                DataMatrix.Add(profile, new());
-            }
-
+                DataMatrix.Add(profile, new()); // if we haven't yet prepped the data for that porofile this session, that's fine, just create the dictionary
+            }*/
+            ActiveDataDictionary.Clear();
             foreach (DataClass dataClass in loaded_data.DataClasses)
             {
-                DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+                if(ActiveDataProfile == profile)
+                {
+                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
+                }
 
                 // hoe kan er hier al data in zijn??
                 // oh er zijn meerdere van hetzelfde type, want een hashset voorkomt dat helemaal niet of wel?
@@ -515,6 +554,9 @@ namespace DataService
             metaData.timeSinceLastSave = 0;
 
             // after this is done the scene ashould be (re)launched.
+
+            StoryController.Instance.ResetSceneButton();
+        
         }
 
 
@@ -529,13 +571,13 @@ namespace DataService
             Debug.Log("Deleted data for profile " + profile);
         }
 
-        [Button("Clear Data from this Profile", EButtonEnableMode.Editor)]
+        [Button("Clear Data from this Profile")]
         public void WipeDataFromSlot()
         {
             WipeDataFromSlot(ActiveDataProfile);
         }
 
-        [Button("Clear data from all profiles", EButtonEnableMode.Editor)]
+        [Button("Clear data from all profiles")]
         public void WipeDataFromAllSlots()
         {
             DirectoryInfo dir = new(MasterDataDirectory);
@@ -546,20 +588,26 @@ namespace DataService
         #endregion
 
         #region loop
+        bool TestNextFrame = false;
         private void FixedUpdate()
         {
             metaData.totalPlayTime += Time.fixedDeltaTime;
             metaData.timeSinceLastSave += Time.fixedDeltaTime;
 
-            if (ActiveDataDictionary != null)
+            if (TestNextFrame)
             {
-                string test = "updateTestDic:";
 
-                foreach (var item in ActiveDataDictionary)
+                if (ActiveDataDictionary != null)
                 {
-                    test += "\n" + item;
+                    string test5 = "test5 dic from update:";
+
+                    foreach (var item in ActiveDataDictionary)
+                    {
+                        test5 += "\n" + item;
+                    }
+                    Debug.Log(test5);
                 }
-                Debug.Log(test);
+                TestNextFrame = false;
             }
         }
         #endregion

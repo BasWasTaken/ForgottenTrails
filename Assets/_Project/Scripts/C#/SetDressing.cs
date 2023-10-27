@@ -217,13 +217,16 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         foreach (AudioSource source in AudioHandler.AudioSourcesAmbiance)
                         {
-                            if (source.clip != null)
+                            if (source != null)
                             {
-                                AudioFadeOut(source, audioClip);
-                            }
-                            else
-                            {
-                                Destroy(source.gameObject);
+                                if (source.clip != null)
+                                {
+                                    AudioFadeOut(source, audioClip);
+                                }
+                                else
+                                {
+                                    Destroy(source.gameObject);
+                                }
                             }
                         }
                     }

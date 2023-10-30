@@ -60,6 +60,35 @@ namespace Bas.Utility
         #endregion
         // Public Methods
         #region Public Methods
+        #region new methods temp region
+        public void NewTransitionMethod(BaseState<T> endState)
+        {
+            /*
+             * let startState = from global;
+             * let common = determine first common ancestor;
+             * until currentstate = common: (so could be 0) NOTE NEED TO INCLUDE SELF
+             *  - exit current state
+             *  - current state = one parentage level up
+             * until currenstate = endstate:
+             *  - current state = one parentage lvl down towards endstate
+             *  - enter currentstate
+             */
+        }
+        private BaseState<T> GetCommonAncestorIncluding(BaseState<T> fromState, BaseState<T> toState)
+        {
+            int levelDifference = 0;
+            BaseState<T> current = fromState;
+            
+            while (current != null && !IsAncestor(current, toState)) //if this is not an ancestor
+            {
+                // go up a level
+                current = GetParent(current);
+                levelDifference++;
+            }
+            return current;
+            // de fromstate kan hier uitkomen, als het goed is. ik denk de tostate ook, maar daar ben ik minder zeker van. check dit morgen met frisse ogen nog even.
+        }
+        #endregion new methods temp region
         /// <summary>
         /// 
         /// </summary>
@@ -86,7 +115,7 @@ namespace Bas.Utility
                     Debug.Log("Entering " + CurrentState);
                     CurrentState.OnEnter(); // Perform the enter behaviour
                 }
-                else if (levelDifference < 0)
+                else if (levelDifference < 0) // maar dat is toch nooit zo??? huh?
                 {
                     // Lower to higher level transition
                     Debug.Log("Exiting " + CurrentState);
@@ -238,8 +267,8 @@ namespace Bas.Utility
 
         #endregion
         // Private Methods
-        #region Private Methods
-        private int GetLevelDifference(BaseState<T> fromState, BaseState<T> toState)
+        #region Private Methods 
+        private int GetLevelDifference(BaseState<T> fromState, BaseState<T> toState) // wait when will this ever return a negative number???
         {
             int levelDifference = 0;
             BaseState<T> current = fromState;

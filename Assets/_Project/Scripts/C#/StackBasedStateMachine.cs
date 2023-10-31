@@ -51,7 +51,7 @@ namespace Bas.Utility
                 KnownStates.Add(state.GetType(), state);
             }
             StartState = states[0];
-
+            StateStack.Push(BaseState);
             StatePeeker = "Constructed";
 
             TransitionToState(StartState);
@@ -60,26 +60,89 @@ namespace Bas.Utility
         #endregion
         // Public Methods
         #region Public Methods
-        #region new methods temp region
-        public void NewTransitionMethod(BaseState<T> endState)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="goalState"></param>
+        public void TransitionToState(BaseState<T> goalState)
         {
-            /*
-             * let startState = from global;
-             * let common = determine first common ancestor;
-             * until currentstate = common: (so could be 0) NOTE NEED TO INCLUDE SELF
-             *  - exit current state
-             *  - current state = one parentage level up
-             * until currenstate = endstate:
-             *  - current state = one parentage lvl down towards endstate
-             *  - enter currentstate
-             */
+            StatePeeker += string.Format(", transitioning to: {0}", goalState.GetType().ToString());
+
+            if (CurrentState != null)
+            {
+                PerformTransitionMethods(goalState);
+                StateStack.Push(goalState); // Set the new state
+            }
+            else
+            {
+                Debug.LogException(new NullReferenceException());
+            }
+            StatePeeker = CurrentState.GetType().ToString();
+        }
+        /// <summary>
+        /// Pop current state and revert back to the previous. Explicitly, in order: 
+        /// 1. Fire appropriate OnExit()s.
+        /// 2. Pop the state from the stack.
+        /// 3. If the stack is now empty, push the default one.
+        /// 4. Fire appropriate OnEnter()s for the now topmost state.
+        /// </summary>
+        /// <param name="caller"> The expected state to pop from</param>
+        private void DropState(BaseState<T> caller)
+        {
+            if (CurrentState != caller)
+            {
+                Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
+                // reset system.
+                Reset();
+                return;
+            }
+            if(StateStack.Count < 2)
+            {
+                Debug.LogWarning("Can't drop from the basestate with nothing to drop to.");
+                return;
+            }
+
+            BaseState<T> goalState = StateStack.ToArray()[^2];
+            
+            PerformTransitionMethods(goalState);
+            StateStack.Pop(); // remove current state from top
+            CurrentState.OnEnter(); // Perform the enter behaviour
+
+            caller.DropCondition = false;
+
+            /* this should not be necessary
+            if (StateStack.Count == 0)
+            {
+                //StateStack.Push(BaseState);
+                TransitionToState(BaseState);
+            }
+            */
+        }
+        private void PerformTransitionMethods(BaseState<T> goalState)
+        {
+
+            BaseState<T> intermediateState = CurrentState;
+
+            BaseState<T> commonState = GetCommonAncestorIncluding(intermediateState, goalState);
+            // transitions upwards:
+            while (intermediateState != commonState) // loops. always fires first onexit, except in cases where the to state is a decendent from the currentstate. (because the current is also the common ancestor)
+            {
+                intermediateState.OnExit();
+                intermediateState = GetParent(intermediateState);
+            }
+            // transition downwards:
+            while (intermediateState != goalState)
+            {
+                intermediateState = GetChildTowards(intermediateState, goalState);
+                intermediateState.OnEnter();
+            }
         }
         private BaseState<T> GetCommonAncestorIncluding(BaseState<T> fromState, BaseState<T> toState)
         {
             int levelDifference = 0;
             BaseState<T> current = fromState;
             
-            while (current != null && !IsAncestor(current, toState)) //if this is not an ancestor
+            while (current != null && !IsXAncestorToY(current, toState)) //if this is not an ancestor
             {
                 // go up a level
                 current = GetParent(current);
@@ -88,78 +151,18 @@ namespace Bas.Utility
             return current;
             // de fromstate kan hier uitkomen, als het goed is. ik denk de tostate ook, maar daar ben ik minder zeker van. check dit morgen met frisse ogen nog even.
         }
-        #endregion new methods temp region
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="newState">The state to transition to</param>
-        public void TransitionToState(BaseState<T> newState)
+        public void Reset(bool hard = false)
         {
-            StatePeeker += string.Format(", transitioning to: {0}", newState.GetType().ToString());
-            
-            if (CurrentState != null)
-            {
-                int levelDifference = GetLevelDifference(CurrentState, newState);
-                if (levelDifference > 0)
-                {
-                    // Higher to lower level transition
-                    BaseState<T> intermediateState = CurrentState;
-                    while (levelDifference > 0)
-                    {
-                        Debug.Log("Exiting " + intermediateState);
-                        intermediateState.OnExit(); // perform all the required exit behaviour
-                        intermediateState = GetParent(intermediateState);
-                        levelDifference--;
-                    }
-                    StateStack.Push(newState); // Go to the new state
-                    Debug.Log("Entering " + CurrentState);
-                    CurrentState.OnEnter(); // Perform the enter behaviour
-                }
-                else if (levelDifference < 0) // maar dat is toch nooit zo??? huh?
-                {
-                    // Lower to higher level transition
-                    Debug.Log("Exiting " + CurrentState);
-                    CurrentState.OnExit();
-                    StateStack.Push(newState);
-                    BaseState<T> intermediateState = CurrentState;
-                    while (levelDifference < 0)
-                    {
-                        intermediateState = GetParent(intermediateState);
-                        Debug.Log("Entering " + intermediateState);
-                        intermediateState.OnEnter(); // perform all the required enter behaviour
-                        levelDifference++;
-                    }
-                }
-                else 
-                {
-                    // Transition between states at the same level
-                    Debug.Log("Exiting " + CurrentState);
-                    CurrentState.OnExit();
-                    StateStack.Push(newState);
-                    Debug.Log("Entering " + CurrentState);
-                    CurrentState.OnEnter();
-                }
-            }
-            else
-            {
-                // Initial state transition
-                StateStack.Push(newState);
-                Debug.Log("Entering " + CurrentState);
-                CurrentState.OnEnter();
-            }
-            StatePeeker = CurrentState.GetType().ToString();
-        }
-
-        public void Reset()
-        {
-
             // should use this, but it's not working:
-          StateStack.Clear();
+            if (hard)
+            {
+                StateStack.Clear();
+                StateStack.Push(BaseState);
+            }
             TransitionToState(StartState);
-
-            // shoul i iterative exit out of all states??
-            // isn't that just going to the super state?
-
+            StateStack.Clear();
+            StateStack.Push(BaseState);
+            StateStack.Push(StartState);
         }
 
         /// <summary>
@@ -167,7 +170,6 @@ namespace Bas.Utility
         /// </summary>
         public void Update()
         {
-           // StatePeeker = CurrentState.ToString();
             if (CurrentState.DropCondition)
             {
                 DropState(CurrentState);
@@ -179,121 +181,22 @@ namespace Bas.Utility
             }
         }
 
-        /// <summary>
-        /// Pop current state and revert back to the previous. Explicitly, in order: 
-        /// 1. Fire appropriate OnExit()s.
-        /// 2. Pop the state from the stack.
-        /// 3. If the stack is now empty, push the default one.
-        /// 4. Fire appropriate OnEnter()s for the now topmost state.
-        /// </summary>
-        /// <param name="caller"> The expected state to pop from</param>
-        private void DropState(BaseState<T> caller)
-        {
-            if (CurrentState == caller)
-            {
-                BaseState<T> newState;
-                if (StateStack.Count >= 2)
-                {
-                    newState = StateStack.ToArray()[^2];
-                }
-                else
-                {
-                    newState = BaseState;
-                }
-
-                int levelDifference = GetLevelDifference(CurrentState, newState);
-                if (levelDifference > 0)
-                {
-                    // Higher to lower level transition
-                    BaseState<T> intermediateState = CurrentState;
-                    while (levelDifference > 0)
-                    {
-                        Debug.Log("Exiting " + intermediateState);
-                        intermediateState.OnExit(); // perform all the required exit behaviour
-                        intermediateState = GetParent(intermediateState);
-                        levelDifference--;
-                    }
-
-                    StateStack.Pop(); // remove current state from top
-                    if (StateStack.Count == 0)
-                    {
-                        StateStack.Push(BaseState);
-                    }
-                    Debug.Log("Entering " + CurrentState);
-                    CurrentState.OnEnter(); // Perform the enter behaviour
-                }
-                else if (levelDifference < 0)
-                {
-                    // Lower to higher level transition
-
-                    Debug.Log("Exiting " + CurrentState);
-                    CurrentState.OnExit();
-                    StateStack.Pop(); // remove current state from the top
-                    if (StateStack.Count == 0)
-                    {
-                        StateStack.Push(BaseState);
-                    }
-                    BaseState<T> intermediateState = CurrentState;
-                    while (levelDifference < 0)
-                    {
-                        intermediateState = GetParent(intermediateState);
-                        intermediateState.OnEnter(); // perform all the required enter behaviour
-                        levelDifference++;
-                    }
-                }
-                else
-                {
-                    // Transition between states at the same level
-
-                    Debug.Log("Exiting " + CurrentState);
-                    CurrentState.OnExit();
-                    StateStack.Pop(); // remove current state from the top
-                    if (StateStack.Count == 0)
-                    {
-                        StateStack.Push(BaseState);
-                    }
-                    Debug.Log("Entering " + CurrentState);
-                    CurrentState.OnEnter();
-                }
-                caller.DropCondition = false;
-            }
-            else
-            {
-                Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
-                // reset system.
-                Reset();
-            }
-        }
-
         #endregion
         // Private Methods
         #region Private Methods 
-        private int GetLevelDifference(BaseState<T> fromState, BaseState<T> toState) // wait when will this ever return a negative number???
+        private bool IsXAncestorToY(BaseState<T> X, BaseState<T> Y)
         {
-            int levelDifference = 0;
-            BaseState<T> current = fromState;
-
-            // Traverse upward in the hierarchy until the common ancestor is found
-            while (current != null && !IsAncestor(current, toState))
-            {
-                current = GetParent(current);
-                levelDifference++;
-            }
-
-            // If 'current' is null, it means we reached the top of the hierarchy without finding 'toState'
-            // This may happen if 'fromState' and 'toState' are not in the same hierarchy.
-            // You can handle this scenario according to your requirements.
-
-            return levelDifference;
+            // simply get the doesdescent function but flipping x and y.
+            return DoesXDescentFromY(Y, X);
         }
-
-        private bool IsAncestor(BaseState<T> ancestor, BaseState<T> descendant)
+        private bool DoesXDescentFromY(BaseState<T> X, BaseState<T> Y)
         {
-            Type ancestorType = ancestor.GetType();
-            Type descendantType = descendant.GetType();
+            Type descendantType = X.GetType();
+            Type ancestorType = Y.GetType();
 
-            // Check if the ancestor type is assignable from the descendant type,
-            // which means 'ancestor' is an ancestor of 'descendant'.
+            // Check if the X type is assignable from the Y type,
+            // which means 'Y' is an ancestor of 'X'.
+            // which means 'X' descents from 'Y'
             return ancestorType.IsAssignableFrom(descendantType);
         }
         private BaseState<T> GetParent(BaseState<T> child)
@@ -308,6 +211,22 @@ namespace Bas.Utility
                 */
             }
             return parent;
+        }
+        private BaseState<T> GetChildTowards(BaseState<T> fromState, BaseState<T> toState)
+        {
+            if(!IsXAncestorToY(fromState, toState))
+            {
+                Debug.LogError(string.Format("{0} does not descent from {1}.", toState, fromState));
+                return null;
+            }
+
+            // go up the ancestry tree until we get the direct descendant of the fromstate:
+            BaseState<T> intermediate = GetParent(toState); 
+            while (fromState != GetParent(intermediate))
+            {
+                intermediate = GetParent(intermediate);
+            }
+            return intermediate;
         }
         #endregion
     }

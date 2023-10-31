@@ -38,11 +38,10 @@ namespace Bas.Utility
         #endregion
         // Constructor
         #region Constructor
-        public StackBasedStateMachine(T controller, BaseState<T> dummyState, params BaseState<T>[] states)
+        public StackBasedStateMachine(T controller, params BaseState<T>[] states)
         {
             StatePeeker = "Constructing";
             Controller = controller;
-            BaseState = dummyState; // why do i have a dummy state? oh probably to avoid an error later in the first transition? that doesn't seem very clean...
 
             foreach (BaseState<T> state in states)
             {
@@ -50,7 +49,8 @@ namespace Bas.Utility
                 state.Machine = this;
                 KnownStates.Add(state.GetType(), state);
             }
-            StartState = states[0];
+            BaseState = states[0];
+            StartState = states[1];
             StateStack.Push(BaseState);
             StatePeeker = "Constructed";
 
@@ -87,7 +87,7 @@ namespace Bas.Utility
         /// 4. Fire appropriate OnEnter()s for the now topmost state.
         /// </summary>
         /// <param name="caller"> The expected state to pop from</param>
-        private void DropState(BaseState<T> caller)
+        public void DropState(BaseState<T> caller)
         {
             if (CurrentState != caller)
             {
@@ -125,13 +125,13 @@ namespace Bas.Utility
 
             BaseState<T> commonState = GetCommonAncestorIncluding(intermediateState, goalState);
             // transitions upwards:
-            while (intermediateState != commonState) // loops. always fires first onexit, except in cases where the to state is a decendent from the currentstate. (because the current is also the common ancestor)
+            while (intermediateState != commonState & intermediateState!=BaseState) // loops. always fires first onexit, except in cases where the to state is a decendent from the currentstate. (because the current is also the common ancestor)
             {
                 intermediateState.OnExit();
                 intermediateState = GetParent(intermediateState);
             }
             // transition downwards:
-            while (intermediateState != goalState)
+            while (intermediateState != goalState &goalState != BaseState)
             {
                 intermediateState = GetChildTowards(intermediateState, goalState);
                 intermediateState.OnEnter();
@@ -184,12 +184,12 @@ namespace Bas.Utility
         #endregion
         // Private Methods
         #region Private Methods 
-        private bool IsXAncestorToY(BaseState<T> X, BaseState<T> Y)
+        public static bool IsXAncestorToY(BaseState<T> X, BaseState<T> Y)
         {
             // simply get the doesdescent function but flipping x and y.
             return DoesXDescentFromY(Y, X);
         }
-        private bool DoesXDescentFromY(BaseState<T> X, BaseState<T> Y)
+        public static bool DoesXDescentFromY(BaseState<T> X, BaseState<T> Y)
         {
             Type descendantType = X.GetType();
             Type ancestorType = Y.GetType();
@@ -202,13 +202,13 @@ namespace Bas.Utility
         private BaseState<T> GetParent(BaseState<T> child)
         {
             Type U = child.DirectBase;
+            /*if(child == BaseState)
+            {
+                return (BaseState<T>)Activator.CreateInstance(typeof(T), Controller);
+            }*/
             if (!KnownStates.TryGetValue(U, out BaseState<T> parent))
             {
-                throw new KeyNotFoundException();
-                /*
-                parent = (BaseState<T>)Activator.CreateInstance(typeof(T), Controller);
-                KnownStates.Add(U, parent);
-                */
+                throw new KeyNotFoundException(string.Format("Instance for type {0}, (parent of {1}), not found", U, child));
             }
             return parent;
         }
@@ -221,7 +221,7 @@ namespace Bas.Utility
             }
 
             // go up the ancestry tree until we get the direct descendant of the fromstate:
-            BaseState<T> intermediate = GetParent(toState); 
+            BaseState<T> intermediate = toState; 
             while (fromState != GetParent(intermediate))
             {
                 intermediate = GetParent(intermediate);

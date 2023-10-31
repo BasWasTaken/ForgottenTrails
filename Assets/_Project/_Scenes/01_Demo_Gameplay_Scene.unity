@@ -663,18 +663,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Replace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &115222154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,18 +1168,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Replace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -1199,6 +1175,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 261469453}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: DropMenuState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1576,31 +1564,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 325692072}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Core.BasicInkScript, Assembly-CSharp
-        m_MethodName: ResetInkDataButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 366da4ba4dfd48443a602bafab25af6d, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &325692072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2046,18 +2010,6 @@ MonoBehaviour:
       - m_Target: {fileID: 268175080}
         m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
         m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3195,9 +3147,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Replace
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: DropMenuState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3381,18 +3333,6 @@ MonoBehaviour:
       - m_Target: {fileID: 189748203}
         m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
         m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6305,7 +6245,7 @@ GameObject:
   - component: {fileID: 1621936445}
   - component: {fileID: 1621936444}
   m_Layer: 5
-  m_Name: Bookmark_00
+  m_Name: Settings State
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -5,8 +5,9 @@ using NaughtyAttributes;
 using BasUtility;
 using DataService;
 using UnityEngine.SceneManagement;
+using Bas.Utility;
 
-public class GameLauncher : MonoBehaviour
+public class GameLauncher : MonoSingleton<GameLauncher>
 {
     [Required]
     public TMPro.TMP_InputField profileNamer;
@@ -27,12 +28,6 @@ public class GameLauncher : MonoBehaviour
         DataManager.Instance.LoadMostRecent();
         LaunchGame();
     }
-    public void SelectLoadMenu()
-    {
-        ShowProfiles();
-        ShowSaves();
-    }
-
     // how single purpose should scripts be?
     // for instance, should these two methods be in a profileselector and saveselector component? it does make linking to them in the scene a bit more intuitive,
     // but i can't help but think that'd be a bit overkill...
@@ -42,6 +37,7 @@ public class GameLauncher : MonoBehaviour
     {
         profileSelector.ClearOptions();
         profileSelector.AddOptions(DataManager.Instance.DataProfiles);
+        ShowSaves();
     }
     public void ShowSaves()
     {
@@ -57,7 +53,7 @@ public class GameLauncher : MonoBehaviour
         DataManager.Instance.LoadDataFromFile(file);
         LaunchGame();
     }
-    private void LaunchGame()
+    public void LaunchGame()
     {
         SceneManager.LoadScene(AssetManager.Instance.newGameScene, LoadSceneMode.Additive);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;

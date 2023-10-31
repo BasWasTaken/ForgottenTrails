@@ -42,9 +42,7 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
-
                 Controller.InterfaceBroker.inventory.book.Replace();
-
             }
             #endregion
             // Private Methods

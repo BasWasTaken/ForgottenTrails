@@ -54,8 +54,7 @@ namespace DataService
         }
         private static string _ActiveDataProfile;
         [Tooltip("File extension to use.")]
-        [SerializeField, ReadOnly]
-        private string fileExtension = ".json";
+        private string fileExtension = ".bin";
         /// <summary>
         /// get folder containing all data (in subfolders)
         /// </summary>
@@ -451,7 +450,7 @@ namespace DataService
             return (T)output;
         }
 
-        public void LoadMostRecent()
+        public void LoadMostRecent()//from any profile
         {
             LoadDataFromFile(GetMostRecentFile());
         }
@@ -459,12 +458,29 @@ namespace DataService
         [Button("QuickLoad")]
         public void QuickLoad()
         {
-            LoadDataFromFile(GetMostRecentFile(SaveMethod.quick));
+            LoadDataFromFile(GetMostRecentFile(ActiveDataProfile, SaveMethod.quick));
         }
-
+        public string GetMostRecentFile() // like the below but iterating over multiple profiles
+        {
+            string mostRecent = "PLACEHOLDER";
+            DateTime record = DateTime.MinValue;
+            foreach (string profile in DataProfiles)
+            {
+                foreach (string file in GetFilePaths(profile))
+                {
+                    DateTime contender = File.GetLastWriteTime(file);
+                    if (contender > record)
+                    {
+                        record = contender;
+                        mostRecent = file;
+                    }
+                }
+            }
+            return mostRecent;
+        }
         public string GetMostRecentFile(string profile)
         {
-            string mostRecent = "";
+            string mostRecent = "PLACEHOLDER";
             DateTime record = DateTime.MinValue;
             foreach (string file in GetFilePaths(profile))
             {
@@ -477,13 +493,9 @@ namespace DataService
             }
             return mostRecent;
         }
-        public string GetMostRecentFile()
-        {
-            return GetMostRecentFile(ActiveDataProfile);
-        }
         public string GetMostRecentFile(string profile, SaveMethod method)
         {
-            string mostRecent = "";
+            string mostRecent = "PLACEHOLDER";
             DateTime record = DateTime.MinValue;
             foreach (string file in GetFilePaths(profile, method))
             {
@@ -504,7 +516,7 @@ namespace DataService
         /// <summary>
         /// used when loading save file (during reload or startup)
         /// </summary>
-        public void LoadDataFromFile(string path)
+        public void LoadDataFromFile(string path, bool relaunchScene =true)
         {
             Debug.Log("attempting to load " + path);
             //check if file available
@@ -553,9 +565,18 @@ namespace DataService
             }
             metaData.timeSinceLastSave = 0;
 
-            // after this is done the scene ashould be (re)launched.
-
-            StoryController.Instance.ResetSceneButton();
+            if (relaunchScene)
+            {
+                // after this is done the scene ashould be (re)launched.
+                if (StoryController.Instance != null)
+                {
+                    StoryController.Instance.ResetSceneButton();
+                }
+                else
+                {
+                    //GameLauncher.Instance.LaunchGame(); done from gamelauncher already
+                }
+            }
         
         }
 

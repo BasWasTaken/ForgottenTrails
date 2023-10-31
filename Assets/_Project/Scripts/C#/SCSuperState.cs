@@ -30,7 +30,7 @@ namespace ForgottenTrails.InkFacilitation
 
         #endregion
 
-        public class SCSuperState : BaseState<StoryController>
+        public class SCSuperState : SCDummyState
         {
             // Private Properties
             #region Private Properties
@@ -120,7 +120,7 @@ namespace ForgottenTrails.InkFacilitation
             private void PrepScene()
             {
                 AssetManager.Instance.CreateAssetLibraries();
-                Controller.waitingForChoiceState.RemoveOptions();
+                Controller.InterfaceBroker.RemoveOptions();
                 Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
                 PopulateSceneFromData(Controller.InkDataAsset);
             }

@@ -34,7 +34,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-
+                Controller.InterfaceBroker.inventory.book.Displace();
             }
             public override void OnUpdate()
             {
@@ -42,7 +42,7 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
-
+                Controller.InterfaceBroker.inventory.book.Replace();
             }
             #endregion
             // Private Methods

@@ -44,7 +44,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 public override void OnExit()
                 {
-                    RemoveOptions(); // Destroy old choices
+                    //this not done here anymore, but elsewhere- when a choise is made. RemoveOptions(); // Destroy old choices
                 }
                 #endregion
                 // Private Methods
@@ -59,6 +59,7 @@ namespace ForgottenTrails.InkFacilitation
                     }
                     else if (Controller.Story.currentChoices.Count > 0) /// Display all the choices, if there are any!
                     {
+                        Controller.InterfaceBroker.RemoveOptions();
                         //Debug.Log("Choices detected!");
                         for (int i = 0; i < Controller.Story.currentChoices.Count; i++)
                         {
@@ -100,14 +101,6 @@ namespace ForgottenTrails.InkFacilitation
                     else
                     {
                         throw new NotImplementedException("No choices possible");
-                    }
-                }
-                internal void RemoveOptions()// Destroys all the buttons from choices
-                {
-                    Controller.InterfaceBroker.hiddenChoices.Clear();
-                    foreach (Button child in Controller.InterfaceBroker.ButtonAnchor.GetComponentsInChildren<Button>())
-                    {
-                        Destroy(child.gameObject);
                     }
                 }
 

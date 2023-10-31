@@ -663,19 +663,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2009679607}
-        m_TargetAssemblyTypeName: ForgottenTrails.InkFacilitation.StoryController,
-          Assembly-CSharp
-        m_MethodName: ResetSceneButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &115222154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1181,18 +1168,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Replace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -1200,6 +1175,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 261469453}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: DropMenuState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1348,6 +1335,7 @@ GameObject:
   - component: {fileID: 275361436}
   - component: {fileID: 275361438}
   - component: {fileID: 275361439}
+  - component: {fileID: 275361440}
   m_Layer: 5
   m_Name: Book
   m_TagString: Untagged
@@ -1444,6 +1432,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 1.5803076
+--- !u!114 &275361440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275361434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e75586859f0c9b49ac98db763178933, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &317314507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1564,31 +1564,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 325692072}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Core.BasicInkScript, Assembly-CSharp
-        m_MethodName: ResetInkDataButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 366da4ba4dfd48443a602bafab25af6d, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &325692072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2043,18 +2019,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -2439,7 +2403,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.15997115
+  m_Size: 0.15997113
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3183,9 +3147,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Replace
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: DropMenuState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3369,18 +3333,6 @@ MonoBehaviour:
       - m_Target: {fileID: 189748203}
         m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
         m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4584,7 +4536,7 @@ GameObject:
   - component: {fileID: 1181689802}
   - component: {fileID: 1181689801}
   m_Layer: 5
-  m_Name: Bookmark_02
+  m_Name: Inventory Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4667,18 +4619,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -4691,21 +4631,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: da5a1072f9f75a64b9eeff878e4ade92, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 530457801}
-        m_TargetAssemblyTypeName: Inventory, Assembly-CSharp
-        m_MethodName: FetchItems
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: EnterInventoryState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6317,7 +6245,7 @@ GameObject:
   - component: {fileID: 1621936445}
   - component: {fileID: 1621936444}
   m_Layer: 5
-  m_Name: Bookmark_00
+  m_Name: Settings State
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6400,18 +6328,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -6424,13 +6340,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: EnterSettingsState
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: da5a1072f9f75a64b9eeff878e4ade92, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6660,7 +6576,7 @@ GameObject:
   - component: {fileID: 1716337885}
   - component: {fileID: 1716337884}
   m_Layer: 5
-  m_Name: Bookmark_01
+  m_Name: Save Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6743,18 +6659,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 275361438}
-        m_TargetAssemblyTypeName: MyGUI.GUISlideIn, Assembly-CSharp
-        m_MethodName: Displace
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -6767,13 +6671,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: EnterSettingsState
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: da5a1072f9f75a64b9eeff878e4ade92, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

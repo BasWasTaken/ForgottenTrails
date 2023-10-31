@@ -15,15 +15,16 @@ public class DataButtons : MonoBehaviour
     public void QuickSave()
     {
         // ik wil via de state machine of story controller dit callen:
-        //DataManager.Instance.SaveDataQuick(); 
+        DataManager.Instance.QuickSave(); 
     }
     public void QuickLoad()
     {
         // ik wil via de state machine of story controller dit callen:
-        //DataManager.Instance.LoadDataQuick();
+        DataManager.Instance.QuickLoad();
         //StoryController.Instance.StateMachine.dropallstatesomehow;
         //StoryController.Instance.StateMachine.loadscene
         // then reset story scene
         // go through exiting then starting up the superstate?
     }
+    
 }

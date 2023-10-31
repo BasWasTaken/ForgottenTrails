@@ -3,6 +3,7 @@ using DataService;
 using Ink.Runtime;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static ForgottenTrails.InkFacilitation.StoryController.InterfaceBroking;
 using static ForgottenTrails.InkFacilitation.StoryController.TextProduction;
@@ -163,11 +164,19 @@ namespace ForgottenTrails.InkFacilitation
         {
             if (UnityEditor.EditorApplication.isPlaying == true)
             {
-                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                StateMachine.Reset();
+                StopScene(); // should this be done from the statemachine???
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //StateMachine.Reset();
+                //StateMachine.TransitionToState(StoryController.Instance.superState);
             }
         }
-
+        private void StopScene()
+        {
+            foreach (GameObject obj in FindObjectsOfType<GameObject>())
+            {
+                StopAllCoroutines();
+            }
+        }
         private void PromptName()
         {
             StateMachine.TransitionToState(waitingForInputState);

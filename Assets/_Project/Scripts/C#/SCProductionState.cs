@@ -121,6 +121,10 @@ namespace ForgottenTrails.InkFacilitation
                         string bufferText = Controller.TextProducer.CurrentText; // make backup
                         Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
                         Controller.TextProducer.CurrentText += toBeAdded + '\n'; // test if the text will fit
+                        foreach (var choice in Controller.Story.currentChoices)
+                        {
+                            Controller.TextProducer.CurrentText += '\n' + choice.text;
+                        }
                         yield return 0;// wait 1 frame
                         bool overflow = Controller.TextProducer.OverFlowTextBox.text.Length > 0; // store result
                         

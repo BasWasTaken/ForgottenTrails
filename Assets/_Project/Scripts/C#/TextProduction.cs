@@ -55,23 +55,7 @@ namespace ForgottenTrails.InkFacilitation
             }
             [field: SerializeField, Header("Settings"), BoxGroup("Settings")]
             [Tooltip("Define pause timings here.")]
-            internal PauseInfo PauseInfoNormal { get; set; } = new()
-            {
-                _dotPause = .2f,
-                _commaPause = .1f,
-                _spacePause = .02f,
-                _normalPause = .01f
-            };
-            [field: SerializeField, BoxGroup("Settings")]
-            [Tooltip("Define tiny timings here for when skipping text.")]
-            internal PauseInfo PauseInfoSkipping { get; set; } = new()
-            {
-                _dotPause = 0.000000005f,
-                _commaPause = 0.000000002f,
-                _spacePause = 0.0000000005f,
-                _normalPause = 0.0000000001f
-            };
-
+            internal PauseInfo Pauses { get; set; } = new();
             [field: SerializeField, BoxGroup("Settings")]
             public bool AutoAdvance { get; internal set; } = false;
             [field: SerializeField, BoxGroup("Settings")]
@@ -158,21 +142,26 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Peripheral
             #region Peripheral
+            /// <summary>
+            /// base text speed in characters per second
+            /// </summary>
             public enum TextSpeed
             {
-                slow = 24,
-                medium = 36,
-                fast = 48
+                slow = 240,
+                medium = 360,
+                fast = 480
             }
 
 
             [Serializable]
             public class PauseInfo
             {
-                public float _dotPause = .5f;
-                public float _commaPause = .2f;
-                public float _spacePause = .05f;
-                public float _normalPause = .01f;
+                // relatvie delays
+                public float _dotPause = 2.5f;
+                public float _commaPause = 2f;
+                public float _spacePause = 1.5f;
+                [ReadOnly]
+                public const float _normalPause = 1f;
 
                 public float GetPause(char letter)
                 {

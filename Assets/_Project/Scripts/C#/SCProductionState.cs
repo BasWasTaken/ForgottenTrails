@@ -36,6 +36,7 @@ namespace ForgottenTrails.InkFacilitation
             public TextProducerStatus TPStatus = TextProducerStatus.Idle;
 
             internal float additionalPause = 0f;
+            internal float skipAccelerant = 1000f;
             #endregion
             public class SCProductionState : SCSuperState
             {
@@ -59,7 +60,6 @@ namespace ForgottenTrails.InkFacilitation
                 public override void OnUpdate()
                 {
                     base.OnUpdate();
-
                     if (Controller.TextProducer.TPStatus == TextProducerStatus.Working_Typing)
                     {
                         if (!Controller.TextProducer.Skipping)
@@ -202,16 +202,15 @@ namespace ForgottenTrails.InkFacilitation
                             else if (tagLevel == 0) /// if we're not in a tag, apply potential delays for the typewriting effect
                             {
                                 //Debug.Log("show me " + letter);
-                                float delay = 0; /// initialize delay
-                                if (!Controller.TextProducer.Skipping) /// in normal behaviour
-                                {
-                                    /// get the delay from the delay info object
-                                    delay = Controller.TextProducer.PauseInfoNormal.GetPause(letter) / Controller.TextProducer.TextSpeedActual;
+                                float delay = 0; // initialise delay
+                                if (Controller.TextProducer.Skipping & !Controller.TextProducer.AlwaysPause)
+                                { 
+                                    // keep at zero
                                 }
-                                else if (Controller.TextProducer.AlwaysPause) /// if this setting is enabled, 
+                                else
                                 {
-                                    ///get pause info while skipping text too
-                                    delay = Controller.TextProducer.PauseInfoSkipping.GetPause(letter);
+                                    delay = Controller.TextProducer.Pauses.GetPause(letter) / Controller.TextProducer.TextSpeedActual; // get pause info
+                                    if (Controller.TextProducer.Skipping) delay /= Controller.TextProducer.skipAccelerant; // accelerate if skipping
                                 }
                                 if (delay > 0) yield return new WaitForSecondsRealtime(delay); /// apply the delay if any
                                 float delayMs = delay * 1000 + Controller.TextProducer.additionalPause;

@@ -59,9 +59,7 @@ namespace ForgottenTrails.InkFacilitation
             [field: SerializeField, BoxGroup("Settings")]
             public bool AutoAdvance { get; internal set; } = false;
             [field: SerializeField, BoxGroup("Settings")]
-            public bool AlwaysPause { get; internal set; } = true;
-            [field: SerializeField, BoxGroup("Settings")]
-            public bool ClearWhenFull { get; internal set; } = true;
+            public bool StillPauseWhileSkipping { get; internal set; } = true;
             #endregion
             // Public Properties
             #region Public Properties
@@ -147,9 +145,13 @@ namespace ForgottenTrails.InkFacilitation
             /// </summary>
             public enum TextSpeed
             {
-                slow = 240,
-                medium = 360,
-                fast = 480
+                sluggish = 1,
+                extraSlow = 12,
+                slow = 24,
+                medium = 48,
+                fast = 96,
+                extraFast = 480,
+                bonkers = 12000000
             }
 
 

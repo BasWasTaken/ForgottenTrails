@@ -121,7 +121,7 @@ namespace ForgottenTrails.InkFacilitation
             {
                 AssetManager.Instance.CreateAssetLibraries();
                 Controller.InterfaceBroker.RemoveOptions();
-                Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
+                Controller.TextProducer.TextSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)TextProduction.TextSpeed.medium);
                 PopulateSceneFromData(Controller.InkDataAsset);
             }
 
@@ -178,7 +178,7 @@ namespace ForgottenTrails.InkFacilitation
             }
             internal void PauseText(float seconds)
             {
-                Controller.TextProducer.additionalPause += seconds;
+                Controller.TextProducer.scriptedPause += seconds;
             }
 
             /// <summary>

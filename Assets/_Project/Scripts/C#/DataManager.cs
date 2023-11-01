@@ -10,6 +10,7 @@ using Bas.Utility;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
+using ForgottenTrails.InkFacilitation;
 
 namespace DataService 
 {
@@ -17,324 +18,590 @@ namespace DataService
     /// <summary>
     /// Allows other gameobjects to save and load data through use of <see cref="IDataService"/>.
     /// </summary>
-    public class DataManager: MonoSingleton<DataManager>, IDataService
+    public class DataManager : MonoSingleton<DataManager>
     {
         ///___VARIABLES___///
         #region INSPECTOR
-        [Tooltip("Name of the folder to read from and write to")]
-        [SerializeField, ReadOnly]
-        private string masterFolder = "PlayerData";
-        public int SaveSlot { get; private set; }
-        [Tooltip("File extension to use.")]
-        [SerializeField, ReadOnly]
-        private string fileExtension = ".json";
 
         [SerializeField]
-        protected MetaData metaData = new("Meta202305142002");
+        protected MetaData metaData;
         public MetaData MetaData => metaData;
         #endregion
         #region backend
-        private readonly Dictionary<string, DataClass> dataQueue = new(); // data changed since last save and marked to be commited on the next save
-        private readonly Dictionary<string, DataClass> dataCache = new(); // easy storage for accessed data (to re-access without having to read from disk again) 
-                                                                                                  //  but do i need a seperate cache? anything both in the queue and cashe should nnot be gotten from cache.
-                                                                                                  // perhaps i should make it so that on fetch, it first attempts to get it from queue, then cache, then disk.
-                                                                                                  // nee, dit klopt niet helemaal, want ookal zit er stuff in de queue wil je het misschien juist terughalen van cache of disk!
-        private const string key = "ggdPhkeOoiv6YMiPWa34kIuOdDUL7NwQFg6l1DVdwN8=";
-        private const string iv = "JZuM0HQsWSBVpRHTeRZMYQ==";
 
+        #region Paths
 
-        private string MasterFolderPath()
+        [Tooltip("Name of the folder to read from and write to")]
+        [SerializeField]
+        private string nameOfMasterDataDirectory = "PlayerData";
+        public static string ActiveDataProfile
         {
-            string masterFolderPath = Application.persistentDataPath + "/" + masterFolder;
-            if (!Directory.Exists(masterFolderPath))
+            get { return Instance?_ActiveDataProfile:null; }
+            private set
             {
-                Directory.CreateDirectory(masterFolderPath);
+                if (Instance != null)
+                {
+                    string path = Instance.DataProfileDirectory(value);
+                    if (!Directory.Exists(path)) // create path if it doesn't exist. could maybe be useful as a static utility function tood
+                    {
+                        Directory.CreateDirectory(path);
+                        //metaData = new();
+                    }
+                    _ActiveDataProfile = value;
+                }
+                else throw new Exception();
             }
-            return masterFolderPath;
         }
-        private string FolderPath()
+        private static string _ActiveDataProfile;
+        [Tooltip("File extension to use.")]
+        private string fileExtension = ".bin";
+        /// <summary>
+        /// get folder containing all data (in subfolders)
+        /// </summary>
+        public string MasterDataDirectory
         {
-            return FolderPath(SaveSlot);
-        }
-        private string FolderPath(int saveSlot)
-        {
-            string subFolderPath = MasterFolderPath() + "/" + "Slot" + saveSlot;
-            if (!Directory.Exists(subFolderPath))
+            get
             {
-                Directory.CreateDirectory(subFolderPath);
+                string masterFolderPath = Application.persistentDataPath + "/" + nameOfMasterDataDirectory + "/"; // note creates incompatability with macos thorugh slashes
+                if (!Directory.Exists(masterFolderPath)) Directory.CreateDirectory(masterFolderPath);
+                return masterFolderPath;
             }
-            return subFolderPath;
         }
-        private string DataPath(string dataKey) 
+
+        /// <summary>
+        /// get all existing data profiles
+        /// </summary>
+        public string[] DataProfileDirectories => Directory.GetDirectories(MasterDataDirectory);
+
+        public string DataProfile(string directory) => directory.Replace(MasterDataDirectory, "").Split('/')[0];
+        public List<string> DataProfiles
         {
-            return FolderPath() + "/" + dataKey + fileExtension; 
+            get
+            {
+                List<string> output = new();
+                foreach (string path in DataProfileDirectories)
+                {
+                    output.Add(DataProfile(path));
+                }
+                return output;
+            }
         }
+
+        /// <summary>
+        /// get a specific data profile
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public string DataProfileDirectory(string profile) => MasterDataDirectory + profile + "/";
+
+        /// <summary>
+        /// get the active save profile
+        /// </summary>
+        public string ActiveDataProfileDirectory => DataProfileDirectory(ActiveDataProfile);
+
+        private string GetPathForSaving(SaveMethod method)
+        {
+            return GetPathForSaving(ActiveDataProfile, method);
+        }
+        private string GetPathForSaving(string profile, SaveMethod method)
+        {
+            return DataProfileDirectory(profile) + method.ToString() + "save at " + Time.time + fileExtension;
+        }
+
+        /// <summary>
+        /// Get savedata by profile
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetFilePaths(string profile) => new(Directory.GetFiles(DataProfileDirectory(profile)));
+
+        /// <summary>
+        /// Get savedata by profile and method
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetFilePaths(string profile, SaveMethod method) // should later do this with metadata (such as savemethod field in the data) but for now doing it from the name is fine)
+        {
+            // get all save files
+            var allFiles = GetFilePaths(profile);
+
+            // then filter by method
+            List<string> filtered = new();
+            foreach (string file in allFiles)
+            {
+                if (file.Contains(method.ToString())) filtered.Add(file);
+            }
+            return filtered;
+        }
+
+        /// <summary>
+        /// get all savedata across all profiles
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetFilePaths()
+        {
+            List<string> files = new();
+            foreach (string profile in DataProfiles)
+            {
+                files.AddRange(GetFilePaths(profile));
+            }
+            return files;
+        }
+        #endregion 
 
         #endregion
         ///___METHODS___///
         protected override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(gameObject);
-        }
-        #region saving
-        public void NewGameOnSaveSlot(int slot)
-        {
-            SaveSlot = slot;
-            if (File.Exists(DataPath(metaData.Key)))
-            {
-                //Debug.Log("TODO: prompt user. Clearing data in slot " + slot);
-                WipeDataFromSlot(slot);
-            }
-        }
-        public void ContinueFromSaveSlot(int slot)
-        {
-            SaveSlot = slot;
-            if (!Directory.Exists(DataPath(metaData.Key)))
-            {
-                Debug.LogWarning("No data detected in slot " + slot+"\n Heads up! This message can sometimes fire incorrectly!");
-            }
+            //DataMatrix = new();
+            ActiveDataDictionary.Clear();
+            reportedData = new();
+            DontDestroyOnLoad(gameObject); // move this to parent persistantmonosingleton? or 
         }
 
-        public bool StashData<T>(T data, bool encrypted = false) where T : DataClass
+        static List<DataClass> reportedData = new();
+
+        public static void ReportDataExists<T>(T data) where T : DataClass
         {
-            metaData.stashed = DateTime.Now.Ticks;
-            // NOTE: not doing anything with the encrypted bool, and it's problematic to employ here
             try
             {
-                if (dataQueue.TryAdd(data.Key, data))
-                { /// if we added the data to queue...
-
-                    if (!dataCache.TryAdd(data.Key, data))
-                    {/// if  the data was already in cashe, update it
-                        dataCache[data.Key] = data;
-                    }
-                }
-                else
-                { /// if the data was already in queue (and thus cache) update both
-
-                    dataQueue[data.Key] = data;
-                    dataCache[data.Key] = data;
-                }
-                return true;
+                reportedData.Add(data);
             }
             catch (Exception e)
             {
-                Debug.LogError($"Unable to stash data due to: {e.Message} {e.StackTrace}");
-                return false;
-            }
-
-            /// at the end of this, both queue and cache should contain this data and it is primed for saving to disk
-
-// i have to stash quite often with this.
-        }
-        [Button("SaveData")]
-        public void WriteStashedDataToDisk(bool encrypted = false)
-        {
-            string message = string.Format("Saved following data to {0}:", FolderPath());
-            int i = 0;
-            foreach (DataClass data in dataQueue.Values)
-            {
-                i++;
-                WriteDataToDisk(data, encrypted);
-                //TODO: metadata.onsaved
-                message += "\n"+data.Key;
-            }
-            // Clear both que of to-be-saved data as well as the cache of recently viewed data (to avoid conflict with the data we just saved)
-            dataQueue.Clear();
-            dataCache.Clear();
-            if (i==0)
-            {
-                message = "Dit not save anything.";
-            }
-                Debug.Log(message);
-            metaData.written = DateTime.Now.Ticks;
-            WriteDataToDisk(metaData);
-            // Call the OnDataSaved event/callback, if there are subscribers
-            OnDataSaved?.Invoke();
-        }
-        public event Action OnDataSaved;
-
-        private bool WriteDataToDisk<T>(T data, bool encrypted= false) where T : DataClass
-        {
-            string path = DataPath(data.Key);
-
-            try
-            {
-                if (File.Exists(path))
-                {
-//                    Debug.Log("Data exists. Deleting old file and writing a new one!");
-                    //File.Delete(path); onnodig; .creat kan gewoon overwriten
-                }
-                else
-                {
-//                    Debug.Log("Writing file for the first time!");
-                }
-                using FileStream stream = File.Create(path);
-                if (encrypted)
-                {
-                    WriteEncryptedDataToDisk(data, stream); // waarom wordt hieronder de stream niet geclosed? ook niet meer in de enclused functie
-                }
-                else
-                {
-                    stream.Close();
-                    File.WriteAllText(path, JsonConvert.SerializeObject(data));
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Unable to save data due to: {e.Message} {e.StackTrace}");
-                return false;
-            }
-        }
-        /// <summary>
-        /// from https://github.com/llamacademy/persistent-data/
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Data"></param>
-        /// <param name="Stream"></param>
-        private void WriteEncryptedDataToDisk<T>(T Data, FileStream Stream)
-        {
-            Debug.LogWarning("This method is untested and may not be fully integrated!");
-            using Aes aesProvider = Aes.Create();
-            aesProvider.Key = Convert.FromBase64String(key);
-            aesProvider.IV = Convert.FromBase64String(iv);
-            using ICryptoTransform cryptoTransform = aesProvider.CreateEncryptor();
-            using CryptoStream cryptoStream = new(
-                Stream,
-                cryptoTransform,
-                CryptoStreamMode.Write
-            );
-
-            // You can uncomment the below to see a generated value for the IV & key.
-            // You can also generate your own if you wish
-            //Debug.Log($"Initialization Vector: {Convert.ToBase64String(aesProvider.IV)}");
-            //Debug.Log($"Key: {Convert.ToBase64String(aesProvider.Key)}");
-            cryptoStream.Write(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(Data)));
-        }
-        #endregion
-        #region loading
-        public bool DataAvailable(string key)
-        {
-            return File.Exists(DataPath(key));
-        }
-        public T FetchData<T>(string key, bool encrypted=false) where T:DataClass
-        {
-            metaData.fetched = DateTime.Now.Ticks;
-            if (dataCache.TryGetValue(key, out DataClass dataOut))
-            {/// if it's available in cache, return it from there.
-         //       Debug.Log("Data succesfully fetched from cache");
-                return (T)dataOut;
-            }
-            else
-            {///otherwise read it from disk
-
-                return ReadDataFromDisk<T>(key, encrypted);
-            }
-        }
-
-        [Button("LoadData")]
-        public void LoadAllDataFromDisk()
-        {
-            throw new NotImplementedException();
-            // iets van foreach file found en dan in de stash gooien? maar tbh kan ik dit beter gewoon niet gebruiken denk ik, en data loaden as needed
-            // tbh wsl een selectiescherm op de andere pagina showen met welke savefile je wil laden en dan daarmee de scene reloaden
-        }
-        
-        public T ReadDataFromDisk<T>(string key, bool encrypted=false) where T : DataClass
-        {
-            metaData.read = DateTime.Now.Ticks;
-            string path = DataPath(key);
-
-            if (!File.Exists(path))
-            {/// if file does not exist, throw and exit
-                Debug.LogError($"Cannot load file at {path}. File does not exist!");
-                throw new FileNotFoundException($"{path} does not exist!");
-            }
-            try
-            {
-                T data;
-                if (encrypted)
-                {
-                    data = ReadEncryptedDataFromDisk<T>(path);
-                }
-                else
-                {
-                    data = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
-                }
-
-                if (!dataCache.TryAdd(data.Key, data))
-                {/// if since the last time we checked, the data is already in cache... (then this was probably put there from the savemethod)
-                    Debug.LogWarning("Data got added to cache while loading from disk. Likely there is now a conflict between queue and cache. Overwriting cache with data from queue. (queue->cache)");
-                    ///maintain the data in queue.
-                    data = (T)dataCache[data.Key];
-                }
-                return data;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Failed to load data due to: {e.Message} {e.StackTrace}");
                 throw e;
             }
         }
 
-        private T ReadEncryptedDataFromDisk<T>(string Path)
+        #region saving
+        public bool TryStartNewGame(string profileName)
         {
-            Debug.LogWarning("This method is untested and may not be fully integrated!");
-            byte[] fileBytes = File.ReadAllBytes(Path);
-            using Aes aesProvider = Aes.Create();
-
-            aesProvider.Key = Convert.FromBase64String(key);
-            aesProvider.IV = Convert.FromBase64String(iv);
-
-            using ICryptoTransform cryptoTransform = aesProvider.CreateDecryptor(
-                aesProvider.Key,
-                aesProvider.IV
-            );
-            using MemoryStream decryptionStream = new(fileBytes);
-            using CryptoStream cryptoStream = new(
-                decryptionStream,
-                cryptoTransform,
-                CryptoStreamMode.Read
-            );
-            using StreamReader reader = new(cryptoStream);
-
-            string result = reader.ReadToEnd();
-
-            Debug.Log($"Decrypted result (if the following is not legible, probably wrong key or iv): {result}");
-            return JsonConvert.DeserializeObject<T>(result);
-        }
-        #endregion
-        #region resetting data
-        public void RemoveFromCache<T>(string key) where T: DataClass
-        {
-            if (dataCache.ContainsKey(key))
+            if (DataProfiles.Contains(profileName))
             {
-                dataCache.Remove(key);
+                Debug.LogWarning("Profile " +profileName+" already exists. Choose different profile name or delete existing.");
+                return false;
             }
             else
             {
-                Debug.LogWarning("attempted to remove data that didn't exist in cache.");
+                ActiveDataProfile = profileName;
+                metaData = new();
+                return true;
+            }
+        }
+        //this is our save data structure.
+        [Serializable] //needs to be marked as serializable
+        struct MetaDataStruct
+        {
+            public string playerName;
+            public float totalPlayTime;
+            public float timeOnSave;
+            public HashSet<Type> dataTypes;
+            public HashSet<DataClass> DataClasses;
+        }
+        public enum SaveMethod
+        {
+            manual,
+            auto,
+            quick
+        }
+        public event Action OnDataSaved;
+        public void SaveDataToFile(SaveMethod method) // for manuals hier ergens een override van profile naam? hm nee niet echt i guess
+        {
+            // exit if manual since i haven't done that yet
+            if (method == SaveMethod.manual)
+            {
+                throw new NotImplementedException();
+            }
+
+            //this is the formatter, you can also use an System.Xml.Serialization.XmlSerializer;
+            var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+            // determine path
+            string path = GetPathForSaving(method);
+            // prepare debug message
+            string message = string.Format("{0} sets of data to {1}:", ActiveDataDictionary.Keys.Count, path);
+
+            HashSet<DataClass> datas = new();
+            // collect all the dataclasses in queue
+            foreach (KeyValuePair<string, DataClass> dataClass in ActiveDataDictionary)
+            {
+                message += "\n" + dataClass.Key;
+                datas.Add(dataClass.Value);
+            }
+
+            // form file content
+            var data = new MetaDataStruct()
+            {
+                playerName = metaData.playerName,
+                totalPlayTime = metaData.totalPlayTime,
+                timeOnSave = Time.time,
+                DataClasses = datas
+            };
+
+            //open a filestream to save on
+            //notice there is no need to close or flush the stream as it will do it before disposing at the end of the using block.
+            using (Stream filestream = File.Open(path, FileMode.Create))
+            {
+                //serialize directly into that stream.
+                formatter.Serialize(filestream, data);
+            }
+
+            metaData.timeSinceLastSave = 0;
+            // Call the OnDataSaved event/callback, if there are subscribers
+            OnDataSaved?.Invoke();
+            if (datas.Count == 0)
+            {
+                Debug.LogError("Failed to save " + message);
+            }
+            else
+            {
+                Debug.Log("Sucessfully saved " + message);
             }
         }
 
-        [Button("Clear Data From Slot", EButtonEnableMode.Editor)]
-        public void WipeDataFromSlot()
+
+        [Button("QuickSave", EButtonEnableMode.Playmode)]
+        public void QuickSave() => SaveDataToFile(SaveMethod.quick);
+
+        #endregion
+        #region loading 
+
+        /*
+        // the container for various data profiles in accessable form (i.e. read from disk)
+        private static Dictionary<string, Dictionary<string, DataClass>> DataMatrix { get; set; } = new();
+        // the methods for accessing them:
+        public Dictionary<string, DataClass> ActiveDataDictionary
         {
-            WipeDataFromSlot(SaveSlot);
+            get
+            {
+                if (ActiveDataProfile == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    var output = GetDataDictionary(ActiveDataProfile);
+                    
+                    string test4 = "test4 dic in ActiveDataDictionary:";
+                    foreach (var item in output)
+                    {
+                        test4 += "\n" + item;
+                    }
+                    Debug.Log(test4);
+                    // deze lijkt ook soms goed
+                    TestNextFrame = true;
+                    return output;
+                }
+            }
         }
-        public void WipeDataFromSlot(int i)
+        public Dictionary<string, DataClass> GetDataDictionary(string profile)
         {
-            DirectoryInfo dir = new(FolderPath(i));
-            dir.Delete(true);
-            Debug.Log("Deleted data in slot " + i);
+                Dictionary<string, DataClass> output = new();
+                if (!DataMatrix.ContainsKey(profile))
+                {
+                    // need to create dicitonary
+                    if (!DataMatrix.TryAdd(ActiveDataProfile, new()))
+                    {
+                        Debug.LogError("could not create and add dictionary");
+                        return null;
+                    }
+                    else
+                    {
+                        Debug.Log("created dictionary!");
+                        // at the end return true;
+                    }
+                }
+                else
+                {
+                    // need to get dictionary
+                    try
+                    {
+                        output = DataMatrix[ActiveDataProfile];
+                    }
+                    catch (Exception)
+                    {
+                        Debug.LogError("could not get dictionary");
+                        throw;
+                    }
+                    if (output == null)
+                    {
+                        Debug.LogError("null dictionary");
+                        return null;
+                    }
+                    else
+                    {
+                        Debug.Log("found dictionary for " + ActiveDataProfile);
+                        // test datamatrix for this profile
+                        string test3 = "test3 dic in GetDataDictionary:";
+                        foreach (var item in output)
+                        {
+                            test3 += "\n" + item;
+                        }
+                        Debug.Log(test3);
+                        // at the end return true;
+                    }
+                }
+                // hier beland je als je de dictionary hebt gemaakt of gevonden
+
+                // whether created or retreived, we should now have the dataprofile
+                if (output == null)
+                {
+                    Debug.LogError("wtf man");
+                    return null;
+                }
+                else
+                {
+
+                    string test1 = "test1 dic in GetDataDictionary, before CheckForReportedData:";
+                    foreach (var item in output)
+                    {
+                        test1 += "\n" + item;
+                    }
+                    Debug.Log(test1);
+
+                    if (!CheckForReportedData(ref output))
+                    {
+                        Debug.LogError("fout in de reported data toevoegen");
+                        return output;
+                    }
+                    else
+                    {
+
+                        string test2 = "test2 dic in GetDataDictionary, after CheckForReportedData:";
+                        foreach (var item in output)
+                        {
+                            test2 += "\n" + item;
+                        }
+                        Debug.Log(test2);
+
+                        // DEZE IS MEESTAL WEL GOED
+                        return output;
+                    }
+                }
+        }
+        */
+        public Dictionary<string, DataClass> ActiveDataDictionary { get; } = new();
+        public bool CheckForReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
+        {
+            int added = 0;
+            bool anyNew = false;
+            string message = "attempt to fetch newly presented dataclasses:";
+            foreach (var item in reportedData)
+            {
+                anyNew = true;
+
+                string name = item.GetType().Name;
+
+                if (!dictionaryToAddTo.ContainsKey(name))
+                {
+                    added++;
+                    dictionaryToAddTo.Add(name, item);
+                    message += String.Format("\n {0} was added", name);
+                }
+                else                    message += String.Format("\n {0} is already contained? wait isn't that weird?", name);
+            }
+            if (anyNew)
+            {
+                string test0 = "test0 dic from reporteddata:";
+                foreach (var item in reportedData)
+                {
+                    test0 += "\n" + item;
+                }
+                Debug.Log(test0);
+
+            }
+            reportedData.Clear();
+            if (anyNew)
+            {
+                if (added > 0)
+                {
+                    Debug.Log("succeeded in " + message); return true;
+                }
+                else
+                {
+                    Debug.Log("failed " + message); return false;
+                }
+            }
+            else { Debug.Log("no new data things to add"); return true; }
         }
 
-        [Button("Clear Data From Disk", EButtonEnableMode.Editor)]
+        public T GetDataOrMakeNew<T>() where T : DataClass, new()
+        {
+            string key = typeof(T).Name;
+            if (!ActiveDataDictionary.TryGetValue(key, out var output))
+            {
+                if (output == null)
+                {
+                    Debug.Log("Creating new data of type " + key);
+                    output = new T();
+                }
+                if (!ActiveDataDictionary.TryAdd(key, output)) // doersn't this mean the adding from reporteed data is superfluous?
+                {
+                    Debug.LogError("still not added");
+                }
+            }
+            /*
+            string test = "test dic from getdataormakenew:";
+            foreach (var item in ActiveDataDictionary)
+            {
+                test += "\n"+item;
+            }
+            Debug.Log(test); 
+            */
+            return (T)output;
+        }
+
+        public void LoadMostRecent()//from any profile
+        {
+            LoadDataFromFile(GetMostRecentFile());
+        }
+
+        [Button("QuickLoad")]
+        public void QuickLoad()
+        {
+            LoadDataFromFile(GetMostRecentFile(ActiveDataProfile, SaveMethod.quick));
+        }
+        public string GetMostRecentFile() // like the below but iterating over multiple profiles
+        {
+            string mostRecent = "PLACEHOLDER";
+            DateTime record = DateTime.MinValue;
+            foreach (string profile in DataProfiles)
+            {
+                foreach (string file in GetFilePaths(profile))
+                {
+                    DateTime contender = File.GetLastWriteTime(file);
+                    if (contender > record)
+                    {
+                        record = contender;
+                        mostRecent = file;
+                    }
+                }
+            }
+            return mostRecent;
+        }
+        public string GetMostRecentFile(string profile)
+        {
+            string mostRecent = "PLACEHOLDER";
+            DateTime record = DateTime.MinValue;
+            foreach (string file in GetFilePaths(profile))
+            {
+                DateTime contender = File.GetLastWriteTime(file);
+                if (contender > record)
+                {
+                    record = contender;
+                    mostRecent = file;
+                }
+            }
+            return mostRecent;
+        }
+        public string GetMostRecentFile(string profile, SaveMethod method)
+        {
+            string mostRecent = "PLACEHOLDER";
+            DateTime record = DateTime.MinValue;
+            foreach (string file in GetFilePaths(profile, method))
+            {
+                DateTime contender = File.GetLastWriteTime(file);
+                if (contender > record)
+                {
+                    record = contender;
+                    mostRecent = file;
+                }
+            }
+            return mostRecent;
+        }
+        public string GetMostRecentFile(SaveMethod method)
+        {
+            return GetMostRecentFile(ActiveDataProfile, method);
+        }
+
+        /// <summary>
+        /// used when loading save file (during reload or startup)
+        /// </summary>
+        public void LoadDataFromFile(string path, bool relaunchScene =true)
+        {
+            Debug.Log("attempting to load " + path);
+            //check if file available
+            if (!File.Exists(path)) throw new Exception("No file detected for path: " +path);
+
+            string profile = DataProfile(path);
+
+            //this is the formatter, you can also use an System.Xml.Serialization.XmlSerializer;
+            var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+            // json formatting and deformatting apperantly unused
+            //data = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+
+            // declare data var
+            MetaDataStruct loaded_data;       
+
+            //again we open a filestream but now with fileMode.Open
+            using (Stream filestream = File.Open(path, FileMode.Open)) 
+            {
+                //deserialize directly from that stream.
+                loaded_data = (MetaDataStruct)formatter.Deserialize(filestream);
+            }
+
+            // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
+
+            /*
+            if (DataMatrix.ContainsKey(profile))
+            {
+                DataMatrix[profile].Clear(); 
+            }
+            else
+            {
+                DataMatrix.Add(profile, new()); // if we haven't yet prepped the data for that porofile this session, that's fine, just create the dictionary
+            }*/
+            ActiveDataDictionary.Clear();
+            foreach (DataClass dataClass in loaded_data.DataClasses)
+            {
+                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+                if(ActiveDataProfile == profile)
+                {
+                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
+                }
+
+                // hoe kan er hier al data in zijn??
+                // oh er zijn meerdere van hetzelfde type, want een hashset voorkomt dat helemaal niet of wel?
+            }
+            metaData.timeSinceLastSave = 0;
+
+            if (relaunchScene)
+            {
+                // after this is done the scene ashould be (re)launched.
+                if (StoryController.Instance != null)
+                {
+                    StoryController.Instance.ResetSceneButton();
+                }
+                else
+                {
+                    //GameLauncher.Instance.LaunchGame(); done from gamelauncher already
+                }
+            }
+        
+        }
+
+
+        #endregion
+        #region resetting data
+
+
+        public void WipeDataFromSlot(string profile)
+        {
+            DirectoryInfo dir = new(DataProfileDirectory(profile));
+            dir.Delete(true);
+            Debug.Log("Deleted data for profile " + profile);
+        }
+
+        [Button("Clear Data from this Profile")]
+        public void WipeDataFromSlot()
+        {
+            WipeDataFromSlot(ActiveDataProfile);
+        }
+
+        [Button("Clear data from all profiles")]
         public void WipeDataFromAllSlots()
         {
-            DirectoryInfo dir = new(MasterFolderPath());
+            DirectoryInfo dir = new(MasterDataDirectory);
             dir.Delete(true);
             Debug.Log("Deleted data in all saveslots");
         }
@@ -342,22 +609,26 @@ namespace DataService
         #endregion
 
         #region loop
-        private void Update()
+        bool TestNextFrame = false;
+        private void FixedUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.T))
+            metaData.totalPlayTime += Time.fixedDeltaTime;
+            metaData.timeSinceLastSave += Time.fixedDeltaTime;
+
+            if (TestNextFrame)
             {
-                Debug.Log(MetaData.Report);
-            }
-            else if (Input.GetKeyDown(KeyCode.N))
-            {
-                Debug.Log(FetchData<MetaData>(MetaData.Key).Report);
-            }
-            else if (Input.GetKey(KeyCode.C))
-            {
-                if (Input.GetKeyDown(KeyCode.S))
+
+                if (ActiveDataDictionary != null)
                 {
-                    WriteStashedDataToDisk();
+                    string test5 = "test5 dic from update:";
+
+                    foreach (var item in ActiveDataDictionary)
+                    {
+                        test5 += "\n" + item;
+                    }
+                    Debug.Log(test5);
                 }
+                TestNextFrame = false;
             }
         }
         #endregion
@@ -365,27 +636,14 @@ namespace DataService
     [Serializable]
     public class MetaData : DataClass
     {
-        public long created, fetched, read, stashed, written = DateTime.Now.Ticks;
+        public float currentPlayTime = 0;// Time.realtimeSinceStartup;
+        public float totalPlayTime = 0;
+        public float timeSinceLastSave = 0;
 
         public string testText = "nulled";
         public const string textConst = "const";
         public string playerName = "Sam";
-
-        public string Report
-        {
-            get 
-            {
-                return 
-                    "Timestamps Below." +
-                    "\nCreated:\t" + created + 
-                    ".\nStashed:\t" + stashed +
-                    ".\nWritten:\t" + written +
-                    ".\nFetched:\t" + fetched +
-                    ".\nRead:\t" + read + ".";
-            }
-        }
-
-        public MetaData(string label) : base(label) {}
+        public MetaData() : base() {}
 
 
     }

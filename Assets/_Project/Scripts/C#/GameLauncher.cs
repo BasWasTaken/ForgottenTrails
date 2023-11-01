@@ -5,33 +5,55 @@ using NaughtyAttributes;
 using BasUtility;
 using DataService;
 using UnityEngine.SceneManagement;
+using Bas.Utility;
 
-public class GameLauncher : MonoBehaviour
+public class GameLauncher : MonoSingleton<GameLauncher>
 {
     [Required]
-    public TMPro.TMP_Dropdown saveSlotSelector;
+    public TMPro.TMP_InputField profileNamer;
     [Required]
-    public TMPro.TMP_InputField nameInput;
+    public TMPro.TMP_Dropdown profileSelector;
+    [Required]
+    public TMPro.TMP_Dropdown saveSelector;
     public void StartNewGame()
     {
-        StartNewGame(saveSlotSelector.value);
+        StartNewGame(profileNamer.text);
     }
-    public void StartNewGame(int slot)
+    public void StartNewGame(string fileName)
     {
-        DataManager.Instance.NewGameOnSaveSlot(slot);
-        DataManager.Instance.MetaData.playerName = nameInput.text; /// set name to metadata from inpoout field //(might do differently later)
-        LaunchGame();
+        if (DataManager.Instance.TryStartNewGame(fileName))         LaunchGame();
     }
     public void ContinueGame()
     {
-        ContinueGame(saveSlotSelector.value);
-    }
-    public void ContinueGame(int slot)
-    {
-        DataManager.Instance.ContinueFromSaveSlot(slot);
+        DataManager.Instance.LoadMostRecent();
         LaunchGame();
     }
-    private void LaunchGame()
+    // how single purpose should scripts be?
+    // for instance, should these two methods be in a profileselector and saveselector component? it does make linking to them in the scene a bit more intuitive,
+    // but i can't help but think that'd be a bit overkill...
+    // well yeah i guess i should eb cause if i want them on any other buttons i don't want another whole gamelauncher!
+    // soo i guess TODO: make these into separate components (low priority) 
+    public void ShowProfiles()
+    {
+        profileSelector.ClearOptions();
+        profileSelector.AddOptions(DataManager.Instance.DataProfiles);
+        ShowSaves();
+    }
+    public void ShowSaves()
+    {
+        saveSelector.ClearOptions();
+        saveSelector.AddOptions(DataManager.Instance.GetFilePaths(profileSelector.captionText.text));
+    }
+    public void LoadGame()
+    {
+        LoadGame(saveSelector.captionText.text);
+    }
+    public void LoadGame(string file)
+    {
+        DataManager.Instance.LoadDataFromFile(file);
+        LaunchGame();
+    }
+    public void LaunchGame()
     {
         SceneManager.LoadScene(AssetManager.Instance.newGameScene, LoadSceneMode.Additive);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;

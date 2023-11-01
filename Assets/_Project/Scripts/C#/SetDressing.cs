@@ -80,7 +80,11 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     if(AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                     {
-                        sprite = (Sprite)Resources.Load(path);
+                        sprite = (Sprite)Resources.Load(path,typeof(Sprite));
+                        if (sprite == null)
+                        {
+                            Debug.LogError("could not find resource at " + path);
+                        }
                     }
                     else
                     {
@@ -213,13 +217,16 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         foreach (AudioSource source in AudioHandler.AudioSourcesAmbiance)
                         {
-                            if (source.clip != null)
+                            if (source != null)
                             {
-                                AudioFadeOut(source, audioClip);
-                            }
-                            else
-                            {
-                                Destroy(source.gameObject);
+                                if (source.clip != null)
+                                {
+                                    AudioFadeOut(source, audioClip);
+                                }
+                                else
+                                {
+                                    Destroy(source.gameObject);
+                                }
                             }
                         }
                     }

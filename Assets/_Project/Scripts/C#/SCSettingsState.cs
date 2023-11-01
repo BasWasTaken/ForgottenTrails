@@ -34,7 +34,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-
+                Debug.Log("Todo: set the relevant page active from here");
             }
             public override void OnUpdate()
             {

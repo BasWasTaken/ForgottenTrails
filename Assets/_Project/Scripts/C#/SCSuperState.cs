@@ -30,7 +30,7 @@ namespace ForgottenTrails.InkFacilitation
 
         #endregion
 
-        public class SCSuperState : BaseState<StoryController>
+        public class SCSuperState : SCDummyState
         {
             // Private Properties
             #region Private Properties
@@ -60,11 +60,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                PrepStory();
-                PrepData();
-                PrepScene();
-
-                FlagGoForStart();
+                Initialise();
             }
             public override void OnUpdate()
             {
@@ -92,14 +88,43 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Private Methods
             #region Private Methods
+
+            private void Initialise()
+            {
+                InitialiseStory();
+                InitialiseData();
+                PrepScene();
+                FlagGoForStart();
+            }
+
             /// <summary>
             /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
             /// </summary>
-            private void PrepStory()
+            private void InitialiseStory() 
             {
                 Controller.Story = new Story(Controller.InkStoryAsset.text);
-                BindAndObserve(Controller.Story);
+                BindAndObserve(Controller.Story); // this only needs to happen the first time!
             }
+
+            private void InitialiseData()
+            {
+                // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
+                Controller.InkDataAsset = DataManager.Instance.GetDataOrMakeNew<StoryData>();
+                ReadStoryStateFromData(Controller.InkDataAsset);
+            }
+
+
+            /// <summary>
+            /// Prepares scene to contain story
+            /// </summary>
+            private void PrepScene()
+            {
+                AssetManager.Instance.CreateAssetLibraries();
+                Controller.InterfaceBroker.RemoveOptions();
+                Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
+                PopulateSceneFromData(Controller.InkDataAsset);
+            }
+
 
             private void BindAndObserve(Story story)
             {
@@ -108,24 +133,41 @@ namespace ForgottenTrails.InkFacilitation
                 story.BindExternalFunction("_Spd", (float mod) => PerformInkFunction(() => Controller.TextProducer.Spd(mod / 100)));
                 story.BindExternalFunction("_Clear", () => PerformInkFunction(() => Controller.TextProducer.ClearPage()));
                 story.BindExternalFunction("_Halt", (float dur) => PerformInkFunction(() => PauseText(dur)));
-                story.BindExternalFunction("_FadeToImage", (InkListItem image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(image, dur)));
+                story.BindExternalFunction("_FadeToImage", (InkList image, float dur) => PerformInkFunction(() => Controller.SetDresser.SetBackground(ConvertListToItem(image), dur)));
                 story.BindExternalFunction("_FadeToColor", (string color, float dur) => PerformInkFunction(() => Controller.SetDresser.SetColor(color, dur)));
                 //story.BindExternalFunction("Sprites", (string fileNames) => PerformInkFunction(() => Controller.SetDresser.SetSprites(fileNames)));
                 story.ObserveVariable("Portraits", (string varName, object newValue) => PerformInkFunction(() => Controller.SetDresser.SetSprites(newValue as InkList)));
 
-                story.BindExternalFunction("_Vox_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
-                story.BindExternalFunction("_Sfx_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
-                story.BindExternalFunction("_Ambiance_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
-                story.BindExternalFunction("_Ambiance_Remove", (InkListItem clip) => PerformInkFunction(() => Controller.SetDresser.RemoveAmbiance(clip)));
+                story.BindExternalFunction("_Vox_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
+                story.BindExternalFunction("_Sfx_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
+                story.BindExternalFunction("_Ambiance_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
+                story.BindExternalFunction("_Ambiance_Remove", (InkList clip) => PerformInkFunction(() => Controller.SetDresser.RemoveAmbiance(ConvertListToItem(clip))));
                 story.BindExternalFunction("_Ambiance_RemoveAll", () => PerformInkFunction(() => Controller.SetDresser.RemoveAmbianceAll()));
 
-                story.BindExternalFunction("_Music_Play", (InkListItem clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(clip, relVol)));
+                story.BindExternalFunction("_Music_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
                 story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
                 
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
+
+                story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
             }
+
+            private InkListItem ConvertListToItem(InkList inkList)
+            {
+                if (inkList.Count == 1)
+                {
+                    InkListItem inkListItem = inkList.maxItem.Key;
+                    //Debug.Log(String.Format("Found {0}", inkListItem));
+                    return inkListItem;
+                }
+                else
+                {
+                    throw new Exception(String.Format("{0} contains more than 1 item!", inkList));
+                }
+            }
+
             internal void PerformInkFunction(Action function)
             {
                 if (!Controller.TextProducer.Peeking)
@@ -139,54 +181,13 @@ namespace ForgottenTrails.InkFacilitation
                 Controller.TextProducer.additionalPause += seconds;
             }
 
-            private void PrepData()
-            {
-                Controller.LoadingFromDisk = true;
-                if (DataManager.Instance.DataAvailable(Controller.InkDataAsset.Key))
-                {
-                    Debug.Log("found data! trying to load...");
-                    if (TryLoadData(Controller.InkDataAsset.Key, out StoryData dummy))
-                    {
-                        Controller.InkDataAsset = dummy;
-                    }
-                    else
-                    {
-                        throw new Exception("Could not load data.");
-                    }
-                }
-                Controller.LoadingFromDisk = false;
-            }
-            private bool TryLoadData(string key, out StoryData output)
-            {
-                output = Controller.CreateBlankData();
-                if (!DataManager.Instance.DataAvailable(key))
-                {
-                    Debug.LogError("Error code 404: No data found.");
-                    return false;
-                }
-                else
-                {
-                    StoryData input = DataManager.Instance.FetchData<StoryData>(Controller.InkDataAsset.Key);
-                    try
-                    {
-                        ReadStoryStateFromData(input);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-                    Debug.Log("Successfully loaded data!");
-                    output = input;
-                    return true;
-                }
-
-            }
             /// <summary>
             /// Feed the <paramref name="input"/>'s story state into the story we are currently loading.
             /// </summary>
             /// <param name="input">the data loaded from disk</param>
             private void ReadStoryStateFromData(StoryData input)
             {
+                Debug.Log(input.StoryStateJson);
                 if (input.StoryStateJson != "")
                 {
                     Debug.Log("continueing from savepoint!");
@@ -197,7 +198,6 @@ namespace ForgottenTrails.InkFacilitation
                     Debug.Log("no save point detected, starting from start");
                     Controller.Story.state.GoToStart();
                 }
-                Controller.Story.state.variablesState["Name"] = DataManager.Instance.MetaData.playerName; // get name from metadata
 
                 string message = "InkVars found:";
                 foreach (string item in Controller.Story.state.variablesState)
@@ -205,17 +205,6 @@ namespace ForgottenTrails.InkFacilitation
                     message += "\n" + item + ": " + Controller.Story.state.variablesState[item].ToString();
                 }
                 Debug.Log(message);
-            }
-
-            /// <summary>
-            /// Prepares scene to contain story
-            /// </summary>
-            private void PrepScene()
-            {
-                AssetManager.Instance.CreateAssetLibraries();
-                Controller.waitingForChoiceState.RemoveOptions();
-                Controller.TextProducer._textSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)Controller.TextProducer._textSpeedPreset);
-                PopulateSceneFromData(Controller.InkDataAsset);
             }
 
             private void PopulateSceneFromData(StoryData input)
@@ -231,7 +220,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
 
                 InkList background = Controller.Story.state.variablesState["Background"] as InkList;
-                Controller.SetDresser.SetBackground(background.maxItem.Key);
+                Controller.SetDresser.SetBackground(ConvertListToItem(background));
 
 
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
@@ -251,13 +240,12 @@ namespace ForgottenTrails.InkFacilitation
             /// <summary>
             /// preps data for saving. happens whenever input is giving, i.e. before every production cycle.
             /// </summary>
-            protected void StashStoryState()
+            protected void UpdateDataAsset()
             {
                 // save all the things 
                 Controller.InkDataAsset.CurrentText = Controller.TextProducer.CurrentText;
                 Controller.InkDataAsset.HistoryText = Controller.TextProducer.PreviousText;
                 Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson();
-                Controller.InkDataAsset.StashData();
             }
 
             #endregion

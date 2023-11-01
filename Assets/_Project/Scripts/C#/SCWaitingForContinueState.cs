@@ -36,7 +36,7 @@ namespace ForgottenTrails.InkFacilitation
                 #region Public Methods
                 public override void OnEnter()
                 {
-                    Controller.InterfaceBroker.FloatingMarker.gameObject.SetActive(true); // else set bouncing triangle at most recent line
+                    Controller.InterfaceBroker.FloatingMarker.gameObject.SetActive(true); // set bouncing triangle at most recent line
                 }
                 public override void OnUpdate()
                 {

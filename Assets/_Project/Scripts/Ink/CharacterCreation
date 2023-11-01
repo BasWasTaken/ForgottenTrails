@@ -22,7 +22,8 @@ As you reach to pick it up, a reflection stares back at you.
 If he left it behind then that is his problem. But as you stand up you cannot help but notice your reflection in the glass.
 -> Opening.CharCreation0
 *[I'm a developer, skip me past the creation.]
--> Recognition
+~ PlayerName = "Developer"
+-> Awakening
 
 = CharCreation0
 You see <>

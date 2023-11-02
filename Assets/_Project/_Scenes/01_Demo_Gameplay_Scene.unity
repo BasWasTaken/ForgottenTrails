@@ -2046,7 +2046,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.2
+  m_fontSize: 18
   m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2064,8 +2064,8 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 6
-  m_linkedTextComponent: {fileID: 1778654252}
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
   m_enableExtraPadding: 0
@@ -7137,56 +7137,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis
-    condimentum nunc iaculis pulvinar. Curabitur sollicitudin dolor vitae maximus
-    consectetur. Integer ornare ligula ut leo dictum, in rutrum lacus facilisis.
-    Suspendisse nec libero a lectus pretium pellentesque. Nunc facilisis orci interdum
-    neque lobortis blandit. Suspendisse porta dictum cursus. Sed tincidunt feugiat
-    arcu, vestibulum mattis justo luctus a.
-
-
-
-    Morbi in efficitur lorem. Nullam
-    rutrum lacus at ex placerat porttitor. Praesent congue nulla sit amet congue
-    cursus. Sed placerat, lectus a volutpat ullamcorper, dolor ante efficitur orci,
-    non consequat sem risus vitae dui. Aenean pretium, enim at vehicula iaculis,
-    est elit vestibulum erat, sit amet suscipit odio elit nec nisl. Quisque ac viverra
-    mi, eget tincidunt quam. Fusce gravida arcu tempor, laoreet libero ut, hendrerit
-    nibh. Morbi posuere interdum mi non hendrerit. Proin ultrices porta augue, at
-    tincidunt diam vulputate non. Vivamus in velit et ligula aliquet mollis at sed
-    leo. Nunc finibus, arcu sed sodales mollis, dolor leo maximus elit, id iaculis
-    sem diam at mauris. Etiam tincidunt neque quis aliquam eleifend. Curabitur et
-    vulputate nisi. In dolor ligula, aliquam non eros sit amet, tempus vulputate
-    mauris.
-
-
-
-    Vivamus placerat nunc et leo fermentum cursus. Sed id consectetur
-    massa. Fusce vehicula sem ut sapien efficitur fermentum. Cras vel pellentesque
-    turpis, at lobortis lacus. Nunc id interdum enim, ut dapibus quam. Nulla nec
-    pharetra eros, a congue orci. Duis vel tortor tortor. Fusce quis velit libero.
-    Sed sed dui turpis. Cras ultricies molestie enim ac porttitor. Vestibulum lorem
-    lacus, mattis a enim at, aliquet aliquam tortor. Aenean consequat justo elit,
-    eget luctus justo porta aliquam. Donec arcu leo, fringilla vel lorem ut, blandit
-    tristique quam.
-
-
-
-    Sed at interdum justo, ut sagittis magna. Aliquam non
-    mi maximus, elementum ante nec, aliquam risus. Vivamus vel semper elit. Nunc
-    luctus nec quam eu euismod. Sed euismod, orci non tincidunt dignissim, augue
-    odio mollis nisl, ut gravida ex ex nec ligula. Nunc vitae vestibulum ipsum. Curabitur
-    at mattis massa, id mollis purus.
-
-
-
-    Mauris vulputate massa eu efficitur
-    euismod. Suspendisse et urna erat. In ac odio laoreet urna sodales blandit at
-    mollis nisi. Nunc interdum, dui at accumsan congue, libero tortor viverra magna,
-    vel sagittis sapien nibh sed nibh. Etiam vitae efficitur velit. Sed lacinia nulla
-    massa, quis efficitur nibh hendrerit quis. Curabitur interdum, neque sed tincidunt
-    egestas, quam enim tempus tellus, a feugiat sapien justo quis diam. Aliquam erat
-    volutpat. Ut nec nibh ut libero posuere maximus. Cras id suscipit leo. '
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 975ac60ce9333754da89a67e8aeaf275, type: 2}
   m_sharedMaterial: {fileID: -2803204394490697467, guid: 975ac60ce9333754da89a67e8aeaf275, type: 2}
@@ -7233,7 +7184,7 @@ MonoBehaviour:
   m_wordWrappingRatios: 0.4
   m_overflowMode: 3
   m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 348379362}
+  parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0

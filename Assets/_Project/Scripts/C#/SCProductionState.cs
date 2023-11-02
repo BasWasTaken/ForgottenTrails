@@ -165,13 +165,13 @@ namespace ForgottenTrails.InkFacilitation
                     Controller.Story.state.LoadJson(storedState); // return to original state, reverting from peaking
                     Controller.TextProducer.Peeking = false;
 
-                    if (overflow & false) { Controller.TextProducer.ClearPage(); } // clear page if needed
+                    if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
                 }
                 void ForceFitText(string text)
                 {
-                    Debug.Log("trying to fit " + text);
-                    if (text!="" & !DoesTextFit(text))
+                    if (!DoesTextFit(text))
                     {
+                        //Debug.Log("trying to fit " + text);
                         Controller.TextProducer.ClearPage(); // save page and clear it
                     }
                     Controller.TextProducer.CurrentText += text; //add the new text, invisibly
@@ -185,17 +185,18 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     string backup = Controller.TextProducer.CurrentText; // make backup
                     Controller.TextProducer.CurrentText += text + '\n';
-                    if(Controller.Story.currentText.EndsWith(Controller.TextProducer.CurrentText[^2]))
-                    {
+                    //if (Controller.Story.currentText.EndsWith((Controller.TextProducer.CurrentText[^2]))) // rudementary check if at choice
+                    //    {
+
                         foreach (var choice in Controller.Story.currentChoices)
                         {
-                            Controller.TextProducer.CurrentText += '\n' + choice.text;
+                            //                        Debug.Log("testing choices fit...");
+                            Controller.TextProducer.CurrentText += choice.text + '\n' + '\n';
                         }
-                    }
-                    bool overflow = Controller.TextProducer.OverFlowTextBox.text.Length > 0; // store result
-
+                  //  }
+                    bool overflow = Controller.TextProducer.TextBox.isTextOverflowing; // store result
                     Controller.TextProducer.CurrentText = backup; // restore backup
-                    return overflow;
+                    return !overflow;
                 }
                 float typeWriterPause = 0;
 
@@ -210,7 +211,19 @@ namespace ForgottenTrails.InkFacilitation
                         letters = "";
                         delayExpec = 0;
                     }
-                    if (timeSinceLastCharacter >= typeWriterPause)
+                    float timeLeft = typeWriterPause - timeSinceLastCharacter;
+                    if (timeLeft>0)
+                    {
+                        // wait
+                        if (timeLeft > .1f)
+                        {
+//                            Debug.Log("pause");
+                            Controller.TextProducer.typingSound.Pause();
+
+                        }
+                        
+                    }
+                    else
                     {
                         if (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.CurrentText.Length)
                         {
@@ -222,10 +235,6 @@ namespace ForgottenTrails.InkFacilitation
                             // else indicate done
                             IndicateLineDone();
                         }
-                    }
-                    else
-                    {
-                        // wait
                     }
                 }
                 Stopwatch Stopwatch = new();
@@ -371,7 +380,11 @@ namespace ForgottenTrails.InkFacilitation
                                     float additionalPause = Controller.TextProducer.Pauses.GetPause(letter) / speed; // get pause info, offset it by higher speeds.
                                     typeWriterPause += additionalPause;
 
-                                    Controller.TextProducer.typingSound.pitch = ((speed / additionalPause)/1000)/2;
+                                    //float soundSpeed = ((((speed / 10) + 100) / additionalPause) / 1000) / 2 - 1;
+                                    float modifier = Mathf.InverseLerp((int)TextSpeed.slow, (int)TextSpeed.fast, speed) * 2; // doubling this sets the average on 1.
+                                    float baseSpeed = 1.75f;
+                                    Controller.TextProducer.typingSound.pitch = Mathf.Clamp(modifier * baseSpeed, .5f, 2f);
+                                    //if (letter == '.') Controller.TextProducer.typingSound.pitch = 0;
                                 }
                             }
                         }

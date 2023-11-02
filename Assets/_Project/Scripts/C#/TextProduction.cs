@@ -118,7 +118,7 @@ namespace ForgottenTrails.InkFacilitation
             public void ClearPage()
             {
                 if (Controller.TextProducer.Peeking) return;
-                Debug.Log("Clearing " +CurrentText);
+                //Debug.Log("Clearing " +CurrentText);
                 HistoryTextBox.text += CurrentText; // move all text to the history log
                 CurrentText = ""; // clear current and prospective texts
                 VisibleCharacters = 0;

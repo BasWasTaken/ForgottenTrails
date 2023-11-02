@@ -36,7 +36,6 @@ namespace ForgottenTrails.InkFacilitation
             public TextProducerStatus TPStatus = TextProducerStatus.Idle;
 
             internal float scriptedPause = 0f;
-            internal float skipAccelerant = 1000f;
             #endregion
             public class SCProductionState : SCSuperState
             {
@@ -123,6 +122,7 @@ namespace ForgottenTrails.InkFacilitation
                         Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
                         Debug.LogWarning("Not all characters were done.");
                     }
+                    Controller.TextProducer.typingSound.Play();
 
                     // Test the fit of the new text, clearing page if needed.
                     ClearPageIfNeeded();
@@ -136,22 +136,14 @@ namespace ForgottenTrails.InkFacilitation
                     // get next line using cotninue async, and parse it using our custom code
                     NewText = ParseText(Controller.Story.Continue());
 
-                    string backup = Controller.TextProducer.CurrentText; // make backup
-                    Controller.TextProducer.CurrentText += NewText; //add the new text, invisibly
-
-                    if (Controller.TextProducer.OverFlowTextBox.text.Length > 0) // check for overflow
-                    {
-                        Controller.TextProducer.CurrentText = backup; // restore backup
-                        Controller.TextProducer.ClearPage(); // save page and clear it
-                        Controller.TextProducer.CurrentText = NewText; // add new text anyway
-                    }
+                    ForceFitText(NewText);
 
                     // further state and function checks should not be necessary: i've got my statemachine for that and i should trust it. if it doesn't work, i want to discover that so i can fix it.
 
 
                     // set state to typing (by lack of better option)
-                    report = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra", Controller.TextProducer.TextSpeedActual, Controller.TextProducer.TextSpeedPreset); // prepare console report
-                    letter = ' ';
+                    report = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tIntended\t\tActual\t\tExtra\n", Controller.TextProducer.TextSpeedActual, Controller.TextProducer.TextSpeedPreset); // prepare console report
+                    letter = new();
                     Controller.TextProducer.TPStatus = TextProducerStatus.Working_Typing; // indicate we are typing, and let the method in update() do the rest
                 }
                 void ClearPageIfNeeded()
@@ -166,20 +158,44 @@ namespace ForgottenTrails.InkFacilitation
                         if (toBeAdded.Contains("{stop}")) break;
                     }
                     // check size and clear page if needed
-                    string bufferText = Controller.TextProducer.CurrentText; // make backup
-                    Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
-                    Controller.TextProducer.CurrentText += toBeAdded + '\n'; // test if the text will fit
-                    foreach (var choice in Controller.Story.currentChoices)
-                    {
-                        Controller.TextProducer.CurrentText += '\n' + choice.text;
-                    }
-                    bool overflow = Controller.TextProducer.OverFlowTextBox.text.Length > 0; // store result
 
-                    Controller.TextProducer.CurrentText = bufferText; // restore backup
+                    bool overflow = !DoesTextFit(toBeAdded);
+
+
                     Controller.Story.state.LoadJson(storedState); // return to original state, reverting from peaking
                     Controller.TextProducer.Peeking = false;
 
-                    if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
+                    if (overflow & false) { Controller.TextProducer.ClearPage(); } // clear page if needed
+                }
+                void ForceFitText(string text)
+                {
+                    Debug.Log("trying to fit " + text);
+                    if (text!="" & !DoesTextFit(text))
+                    {
+                        Controller.TextProducer.ClearPage(); // save page and clear it
+                    }
+                    Controller.TextProducer.CurrentText += text; //add the new text, invisibly
+                }
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="text"></param>
+                /// <returns></returns>
+                bool DoesTextFit(string text)
+                {
+                    string backup = Controller.TextProducer.CurrentText; // make backup
+                    Controller.TextProducer.CurrentText += text + '\n';
+                    if(Controller.Story.currentText.EndsWith(Controller.TextProducer.CurrentText[^2]))
+                    {
+                        foreach (var choice in Controller.Story.currentChoices)
+                        {
+                            Controller.TextProducer.CurrentText += '\n' + choice.text;
+                        }
+                    }
+                    bool overflow = Controller.TextProducer.OverFlowTextBox.text.Length > 0; // store result
+
+                    Controller.TextProducer.CurrentText = backup; // restore backup
+                    return overflow;
                 }
                 float typeWriterPause = 0;
 
@@ -188,9 +204,9 @@ namespace ForgottenTrails.InkFacilitation
                     if (Stopwatch.IsRunning)
                     {
                         float delayActual = MathF.Round(Stopwatch.ElapsedMilliseconds);
+                        Stopwatch.Stop();
 
-
-                        report += string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letters, delayActual, delayExpec, delayActual - delayExpec);
+                        report += string.Format(" ms\t\t{0} ms\t\t {1} ms\n", delayActual, delayActual - delayExpec);
                         letters = "";
                         delayExpec = 0;
                     }
@@ -216,6 +232,7 @@ namespace ForgottenTrails.InkFacilitation
                 private void IndicateLineDone()
                 {
 
+                    Controller.TextProducer.typingSound.Pause();
                     Debug.Log(report);
                     // if done, indicate so (ideally i guess iw ould use an event, but for now it's fine to call an encounterstop method)
 
@@ -226,27 +243,36 @@ namespace ForgottenTrails.InkFacilitation
 
                     Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
 
-
-                    // ifelse logic could be better here
-                    if (!Controller.Story.canContinue)
+                    if(Controller.TextProducer.TPStatus == TextProducerStatus.Working_Base)
                     {
-                        IndicateTextDone();
-                    }
-                    else
-                    {
-                        if (Controller.TextProducer.EncounteredStop)// if we encounter a stop
+                        //Debug.Log("checking next");
+                        // ifelse logic could be better here
+                        if (!Controller.Story.canContinue)
                         {
-                            Controller.TextProducer.EncounteredStop = false;
-                            // exit the loop or continue with a small delay
-                            if (Controller.TextProducer.AutoAdvance)
+                            //Debug.Log("this cannot continue starts playing");
+                            IndicateTextDone();
+                        }
+                        else
+                        {
+                            if (Controller.TextProducer.EncounteredStop)// if we encounter a stop
                             {
-                                // note maybe endofline pause? from settings or pause info?
-                                TextLoop();
-                                return;
+                                Controller.TextProducer.EncounteredStop = false;
+                                // exit the loop or continue with a small delay
+                                if (Controller.TextProducer.AutoAdvance)
+                                {
+                                    // note maybe endofline pause? from settings or pause info?
+                                    TextLoop();
+                                    return;
+                                }
+                                else
+                                {
+                                    IndicateTextDone();
+                                    return;
+                                }
                             }
                             else
                             {
-                                IndicateTextDone();
+                                TextLoop();
                                 return;
                             }
                         }
@@ -262,8 +288,20 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     Stopwatch.Stop();
                     typeWriterPause = 0;
-
-                    float cps = PauseInfo._normalPause / Controller.TextProducer.TextSpeedActual;
+                    float speed = Controller.TextProducer.TextSpeedActual;
+                    if (Controller.TextProducer.Skipping)
+                    {
+                        if (Controller.TextProducer.StillPauseWhileSkipping)
+                        {
+                            speed *= (float)TextSpeed.bonkers;
+                        }
+                        else
+                        {
+                            speed = Mathf.Infinity;
+                        }
+                    }
+                    Controller.TextProducer.typingSound.UnPause();
+                    float cps = speed / Controller.TextProducer.Pauses._normalPause;
                     float fps = Application.targetFrameRate;
                     if (cps > fps) // if tasked to draw characters more frequently than once per frame
                     {
@@ -290,12 +328,13 @@ namespace ForgottenTrails.InkFacilitation
 
 
                     delayExpec = MathF.Round(typeWriterPause * 1000 + Controller.TextProducer.scriptedPause);
+                    report += string.Format("\'{0}\'\t\t{1}", letters, delayExpec);
                     Stopwatch.Restart(); //start measurement from this moment to the capture
 
                 }
                 float delayExpec=0;
                 string letters;
-                private void TypeSingleCharacter(bool checkPageAgain = false)
+                private void TypeSingleCharacter()
                 {
                     // reveal next
                     if (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.CurrentText.Length)
@@ -304,7 +343,6 @@ namespace ForgottenTrails.InkFacilitation
                         letters+= letter = Controller.TextProducer.CurrentText[Controller.TextProducer.VisibleCharacters]; // get new letter
                         Controller.TextProducer.VisibleCharacters++;  //show it
                         timeSinceLastCharacter = 0;
-
                         if (letter == '<')/// if we come across this we've entered a(nother) tag
                         {
                             tagLevel++;
@@ -328,9 +366,12 @@ namespace ForgottenTrails.InkFacilitation
                                 }
                                 else
                                 {
-                                    float additionalPause = Controller.TextProducer.Pauses.GetPause(letter) / Controller.TextProducer.TextSpeedActual; // get pause info
+                                    float speed = Controller.TextProducer.TextSpeedActual;
+                                    if (Controller.TextProducer.Skipping) speed *= (float)TextSpeed.bonkers; // accelerate if skipping
+                                    float additionalPause = Controller.TextProducer.Pauses.GetPause(letter) / speed; // get pause info, offset it by higher speeds.
                                     typeWriterPause += additionalPause;
-                                    if (Controller.TextProducer.Skipping) typeWriterPause /= Controller.TextProducer.skipAccelerant; // accelerate if skipping
+
+                                    Controller.TextProducer.typingSound.pitch = ((speed / additionalPause)/1000)/2;
                                 }
                             }
                         }
@@ -339,7 +380,7 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         throw new Exception();
                     }
-                }               
+                }   /*            
                 public IEnumerator ProduceTextOuter()
                 {
                     #region TryFit
@@ -450,7 +491,7 @@ namespace ForgottenTrails.InkFacilitation
                                 else
                                 {
                                     delay = Controller.TextProducer.Pauses.GetPause(letter) / Controller.TextProducer.TextSpeedActual; // get pause info
-                                    if (Controller.TextProducer.Skipping) delay /= Controller.TextProducer.skipAccelerant; // accelerate if skipping
+                                    //if (Controller.TextProducer.Skipping) delay /= Controller.TextProducer.skipAccelerant; // accelerate if skipping
                                 }
                                 if (delay > 0)/// apply the delay if any
                                 {
@@ -488,14 +529,7 @@ namespace ForgottenTrails.InkFacilitation
                     Controller.TextProducer.Skipping = false; // turn of skipping if it was on
 
                     Controller.TextProducer.TPStatus = TextProducerStatus.Done;
-                }
-                internal void ClearPage()
-                {
-                    if (Controller.TextProducer.Peeking) return;
-                    Controller.TextProducer.HistoryTextBox.text = Controller.TextProducer.CurrentText; // move all text to the history log
-                    Controller.TextProducer.CurrentText = ""; // clear current and prospective texts
-                    Controller.TextProducer.VisibleCharacters = 0;
-                }
+                }*/
 
                 internal string ParseText(string input)
                 {

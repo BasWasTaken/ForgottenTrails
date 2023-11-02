@@ -39,7 +39,8 @@ namespace ForgottenTrails.InkFacilitation
             [field: SerializeField, BoxGroup("Scene References"), Required]
             [Tooltip("Panel to display previous text.")]
             internal TextMeshProUGUI HistoryTextBox { get; set; }
-
+            [field: SerializeField]
+            AudioSource typingSound { get; set; } =            new();
             [SerializeField]
             internal TextSpeed _textSpeedPreset;
             public TextSpeed TextSpeedPreset
@@ -117,7 +118,8 @@ namespace ForgottenTrails.InkFacilitation
             public void ClearPage()
             {
                 if (Controller.TextProducer.Peeking) return;
-                HistoryTextBox.text = CurrentText; // move all text to the history log
+                Debug.Log("Clearing " +CurrentText);
+                HistoryTextBox.text += CurrentText; // move all text to the history log
                 CurrentText = ""; // clear current and prospective texts
                 VisibleCharacters = 0;
             }
@@ -158,20 +160,24 @@ namespace ForgottenTrails.InkFacilitation
             [Serializable]
             public class PauseInfo
             {
-                // relatvie delays
-                public float _dotPause = 2.5f;
-                public float _commaPause = 2f;
-                public float _spacePause = 1.5f;
-                [ReadOnly]
-                public const float _normalPause = 1f;
+                // relatie delays
+                public float _dotPause;// = 2.5f;
+                public float _commaPause;// = 2f;
+                public float _spacePause;// = 1.5f;
+                [ReadOnly,MinValue(1), MaxValue(1)]
+                public float _normalPause = 1f; // should stay at 1
 
-                public float GetPause(char letter)
+                public float GetPause(char letter) // TODO: make this a scriptable object so that chagnes persist? and the nyou can also make the settings hotswapapble
                 {
                     float delay = letter switch
                     {
                         '.' => _dotPause,
+                        ':' => _dotPause,
                         ',' => _commaPause,
+                        ';' => _commaPause,
                         ' ' => _spacePause,
+                        '\t' => _spacePause,
+                        '\n' => _spacePause,
                         _ => _normalPause,
                     };
                     return delay;

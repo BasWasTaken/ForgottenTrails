@@ -608,7 +608,7 @@ GameObject:
   - component: {fileID: 189748207}
   - component: {fileID: 189748208}
   m_Layer: 5
-  m_Name: Page_03
+  m_Name: PartyPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -628,7 +628,7 @@ RectTransform:
   m_Children:
   - {fileID: 1431292872}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -720,7 +720,7 @@ RectTransform:
   m_Children:
   - {fileID: 5633965167979026436}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -946,7 +946,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6493054081276443274, guid: 06951b279d780324a899d3ea077d4b1c, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6493054081276443274, guid: 06951b279d780324a899d3ea077d4b1c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1327,7 +1327,7 @@ RectTransform:
   m_Children:
   - {fileID: 1156056205}
   m_Father: {fileID: 275361435}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1453,7 +1453,7 @@ GameObject:
   - component: {fileID: 268175084}
   - component: {fileID: 268175085}
   m_Layer: 5
-  m_Name: Page_04
+  m_Name: MapPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1473,7 +1473,7 @@ RectTransform:
   m_Children:
   - {fileID: 1052515417}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1565,6 +1565,7 @@ RectTransform:
   m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1702260506}
   - {fileID: 1458519075}
   - {fileID: 261469452}
   m_Father: {fileID: 497693523}
@@ -1654,6 +1655,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e75586859f0c9b49ac98db763178933, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <pages>k__BackingField:
+    settingPage: {fileID: 192848685}
+    dataPage: {fileID: 1773213213}
+    inventoryPage: {fileID: 1375451937}
+    partyPage: {fileID: 189748203}
+    mapPage: {fileID: 268175080}
 --- !u!1 &325692069
 GameObject:
   m_ObjectHideFlags: 0
@@ -2046,10 +2053,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 28
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 28
   m_fontStyle: 0
@@ -2109,7 +2116,7 @@ GameObject:
   - component: {fileID: 376688487}
   - component: {fileID: 376688486}
   m_Layer: 5
-  m_Name: Bookmark_04
+  m_Name: Party Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2180,18 +2187,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 268175080}
-        m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
-        m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -2204,13 +2199,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: EnterPartyState
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: da5a1072f9f75a64b9eeff878e4ade92, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3432,7 +3427,7 @@ GameObject:
   - component: {fileID: 915649941}
   - component: {fileID: 915649940}
   m_Layer: 5
-  m_Name: Bookmark_03
+  m_Name: Map Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3503,18 +3498,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 189748203}
-        m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
-        m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -3527,13 +3510,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FeedAudio, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 2
+      - m_Target: {fileID: 275361440}
+        m_TargetAssemblyTypeName: Book, Assembly-CSharp
+        m_MethodName: EnterMapState
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: da5a1072f9f75a64b9eeff878e4ade92, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4146,15 +4129,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Donec vel consequat est. Integer sit amet mi nulla. Pellentesque quis
-    aliquam leo, sed tempus enim. Morbi in diam efficitur, condimentum odio nec,
-    faucibus metus. Praesent ut ante odio. Curabitur quis diam non magna luctus ultricies
-    non a nisl. Vestibulum convallis ex id tempor malesuada. Donec sodales nibh at
-    ligula efficitur, vel faucibus sapien hendrerit. Sed interdum sollicitudin condimentum.
-    Morbi aliquet aliquet augue. Aenean elementum ipsum ipsum, eu porttitor augue
-    semper ac. Maecenas aliquet malesuada lectus et commodo. Cras vulputate nec eros
-    quis efficitur. Quisque varius leo sit amet nulla posuere, et bibendum massa
-    vehicula. '
+  m_text: Here there will be a map
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4780,18 +4755,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1375451937}
-        m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
-        m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -5412,7 +5375,7 @@ RectTransform:
   m_Children:
   - {fileID: 1178258167}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5529,11 +5492,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "In in arcu quam. Nam id tortor dignissim, molestie velit et, vestibulum
-    dui. Morbi et elit lobortis, tincidunt quam sit amet, viverra libero. Donec dapibus
-    ligula justo, vehicula aliquet urna pellentesque ac. Morbi ut fermentum sapien,
-    sed semper nisl. Nullam porta, mi sit amet egestas finibus, elit risus dictum
-    diam, ut condimentum nulla augue et ipsum. Vivamus sed pharetra libero.\r"
+  m_text: Here there will be a party manager
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5638,14 +5597,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1702260506}
-  - {fileID: 189748203}
-  - {fileID: 268175080}
   - {fileID: 1773213213}
   - {fileID: 1375451937}
   - {fileID: 192848685}
+  - {fileID: 268175080}
+  - {fileID: 189748203}
   m_Father: {fileID: 275361435}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.07, y: 0.05563385}
   m_AnchorMax: {x: 0.48333335, y: 0.9456339}
@@ -6376,18 +6334,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 192848685}
-        m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
-        m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -6577,13 +6523,13 @@ RectTransform:
   - {fileID: 1181689800}
   - {fileID: 915649939}
   - {fileID: 376688485}
-  m_Father: {fileID: 1458519075}
+  m_Father: {fileID: 275361435}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -134.59041, y: 0.24072269}
+  m_SizeDelta: {x: -349.38367, y: -35.920685}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1702260507
 MonoBehaviour:
@@ -6707,18 +6653,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1773213213}
-        m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
-        m_MethodName: SetAsLastSibling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1702260508}
         m_TargetAssemblyTypeName: BookMarkClicked, Assembly-CSharp
         m_MethodName: OnClick
@@ -6733,7 +6667,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 275361440}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
-        m_MethodName: EnterSettingsState
+        m_MethodName: EnterDataState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7020,7 +6954,7 @@ RectTransform:
   - {fileID: 511175568}
   - {fileID: 325692070}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -7594,6 +7528,7 @@ MonoBehaviour:
     <SkipDelay>k__BackingField: 0.2
     inventory: {fileID: 530457801}
   <InputField>k__BackingField: {fileID: 1522983011}
+  <book>k__BackingField: {fileID: 275361440}
 --- !u!1 &2084113304
 GameObject:
   m_ObjectHideFlags: 0

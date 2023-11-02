@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -16,7 +14,10 @@ namespace ForgottenTrails.InkFacilitation
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
-        public class SCGameMenuState : SCSuperState
+        /// <summary>
+        ///
+        /// </summary>
+        public class SCPartyState : SCBookMenuState
         {
             // Inspector Properties
             #region Inspector Properties
@@ -34,7 +35,8 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.inventory.book.Displace();
+
+                Controller.book.pages.partyPage.SetAsLastSibling();
             }
             public override void OnUpdate()
             {
@@ -42,7 +44,7 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
-                Controller.InterfaceBroker.inventory.book.Replace();
+
             }
             #endregion
             // Private Methods

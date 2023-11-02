@@ -59,12 +59,12 @@ You turn on your back, the small canvas tent that shields you from the elements 
 
 =Tent
 You decide to
-*(PackUpEarly)...pack up[].
+*(PackUpEarly)[...pack up]{aglue} pack up.
 Or you would, but the grumbling of your stomach tells you that it's not going to be a fun hike without something to eat.
 
 You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented] 
 ->Tent
-*...make some breakfast first[].
+*[...make some breakfast first]{aglue} make some breakfast first.
 Your stomach rumbles, and what poor sort would head off without a proper meal first anyway? 
 The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?

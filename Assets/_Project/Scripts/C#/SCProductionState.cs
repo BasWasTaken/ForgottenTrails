@@ -191,7 +191,7 @@ namespace ForgottenTrails.InkFacilitation
                         foreach (var choice in Controller.Story.currentChoices)
                         {
                             //                        Debug.Log("testing choices fit...");
-                            Controller.TextProducer.CurrentText += choice.text + '\n' + '\n';
+                            Controller.TextProducer.CurrentText += choice.text + '\n' + '\n'+'\n';
                         }
                   //  }
                     bool overflow = Controller.TextProducer.TextBox.isTextOverflowing; // store result

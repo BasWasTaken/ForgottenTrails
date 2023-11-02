@@ -26,5 +26,8 @@ public class DataButtons : MonoBehaviour
         // then reset story scene
         // go through exiting then starting up the superstate?
     }
-    
+    public void DeleteAllData()
+    {
+        DataManager.Instance.WipeDataFromAllSlots();
+    }
 }

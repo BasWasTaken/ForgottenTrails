@@ -254,7 +254,7 @@ namespace DataService
             }
             else
             {
-                Debug.Log("Sucessfully saved " + message);
+                //Debug.Log("Sucessfully saved " + message);
             }
         }
 

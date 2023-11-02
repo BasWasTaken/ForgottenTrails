@@ -15,6 +15,11 @@ public class GameLauncher : MonoSingleton<GameLauncher>
     public TMPro.TMP_Dropdown profileSelector;
     [Required]
     public TMPro.TMP_Dropdown saveSelector;
+    protected override void Awake()
+    {
+        base.Awake();
+        Application.targetFrameRate = 60;
+    }
     public void StartNewGame()
     {
         StartNewGame(profileNamer.text);

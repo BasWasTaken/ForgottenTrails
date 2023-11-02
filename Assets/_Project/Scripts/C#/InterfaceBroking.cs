@@ -39,7 +39,7 @@ namespace ForgottenTrails.InkFacilitation
             public float AdvanceDialogueDelay { get; internal set; } = .1f;
 
             [field: SerializeField, BoxGroup("Settings")]
-            [Tooltip("Delay after which space button skips new dialogue.")]
+            [Tooltip("Delay after which space button skips new dialogue after advancing.")]
             public float SkipDelay { get; internal set; } = .2f;
             #endregion
             // Public Properties

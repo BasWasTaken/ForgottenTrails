@@ -7,6 +7,7 @@ using BasUtility;
 using Bas.Utility;
 using ForgottenTrails.InkFacilitation;
 using static ForgottenTrails.InkFacilitation.StoryController;
+using UnityEngine.UI;
 
 /// <summary>
 /// <para>Summary not provided.</para>
@@ -54,5 +55,16 @@ public class Book : MonoBehaviour
         public RectTransform inventoryPage;
         public RectTransform partyPage;
         public RectTransform mapPage;
+    }
+    [field: SerializeField]
+    public Bookmarks markers { get; set; }
+    [Serializable]
+    public class Bookmarks
+    {
+        public Image settingMark;
+        public Image dataMark;
+        public Image inventoryMark;
+        public Image partyMark;
+        public Image mapMark;
     }
 }

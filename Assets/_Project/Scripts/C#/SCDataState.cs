@@ -35,11 +35,9 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                Debug.Log(Controller);
-                Debug.Log(Controller.book);
-                Debug.Log(Controller.book.pages);
-                Debug.Log(Controller.book.pages.dataPage);
+
                 Controller.book.pages.dataPage.SetAsLastSibling();
+                Controller.book.markers.dataMark.color = Color.clear;
             }
             public override void OnUpdate()
             {
@@ -48,6 +46,7 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
+                Controller.book.markers.dataMark.color = Color.white;
             }
             #endregion
             // Private Methods

@@ -37,7 +37,7 @@ namespace ForgottenTrails.InkFacilitation
             {
 
                 Controller.book.pages.mapPage.SetAsLastSibling();
-                Controller.book.markers.mapPage.color = Color.clear;
+                Controller.book.markers.mapMark.color = Color.clear;
             }
             public override void OnUpdate()
             {
@@ -46,7 +46,7 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
-                Controller.book.markers.mapPage.color = Color.white;
+                Controller.book.markers.mapMark.color = Color.white;
             }
             #endregion
             // Private Methods

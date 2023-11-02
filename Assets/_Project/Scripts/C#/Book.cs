@@ -13,6 +13,16 @@ using static ForgottenTrails.InkFacilitation.StoryController;
 /// </summary>
 public class Book : MonoBehaviour
 {
+    public void DropMenuState()
+    {
+        Type menuType = typeof(SCBookMenuState);
+        var current = StoryController.Instance.StateMachine.CurrentState;
+        Type currentType = current.GetType();
+        if (menuType.IsAssignableFrom(currentType))
+        {
+            StoryController.Instance.StateMachine.DropState(current);
+        }
+    }
     public void EnterSettingsState()
     {
         StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.settingsState);
@@ -21,15 +31,28 @@ public class Book : MonoBehaviour
     {
         StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.inventoryState);
     }
-    public void DropMenuState()
+    public void EnterDataState()
     {
-        Type menuType = typeof(SCGameMenuState);
-        var current = StoryController.Instance.StateMachine.CurrentState;
-        Type currentType = current.GetType();
-        if (menuType.IsAssignableFrom(currentType))
-        {
-            StoryController.Instance.StateMachine.DropState(current);
-        }
+        StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.dataState);
+    }
+    public void EnterMapState()
+    {
+        StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.mapState);
+    }
+    public void EnterPartyState()
+    {
+        StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.partyState);
     }
 
+    [field:SerializeField]
+    public Pages pages { get; set; }
+    [Serializable]
+    public class Pages
+    {
+        public RectTransform settingPage;
+        public RectTransform dataPage;
+        public RectTransform inventoryPage;
+        public RectTransform partyPage;
+        public RectTransform mapPage;
+    }
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -11,12 +9,15 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using TMPro;
+
 namespace ForgottenTrails.InkFacilitation
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
-
-        public class SCSettingsState : SCBookMenuState
+        /// <summary>
+        /// 
+        /// </summary>
+        public class SCDataState : SCBookMenuState
         {
             // Inspector Properties
             #region Inspector Properties
@@ -24,6 +25,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
+
             #endregion
             // Private Properties
             #region Private Properties
@@ -33,7 +35,11 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-                Controller.book.pages.settingPage.SetAsLastSibling();
+                Debug.Log(Controller);
+                Debug.Log(Controller.book);
+                Debug.Log(Controller.book.pages);
+                Debug.Log(Controller.book.pages.dataPage);
+                Controller.book.pages.dataPage.SetAsLastSibling();
             }
             public override void OnUpdate()
             {

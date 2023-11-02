@@ -21,8 +21,9 @@ namespace ForgottenTrails.InkFacilitation
         {
             // Inspector Properties
             #region Inspector Properties
-
+            public MapItem[] mapButtons;
             #endregion
+
             // Public Properties
             #region Public Properties
 
@@ -38,6 +39,7 @@ namespace ForgottenTrails.InkFacilitation
 
                 Controller.book.pages.mapPage.SetAsLastSibling();
                 Controller.book.markers.mapMark.color = Color.clear;
+                ShowTravelOptions();
             }
             public override void OnUpdate()
             {
@@ -51,7 +53,25 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Private Methods
             #region Private Methods
+            void ShowTravelOptions()
+            {
+                foreach (MapItem button in mapButtons)
+                {
+                    foreach (var location in Controller.Story.currentChoices)//note this will allow player to travel away  bit earlier than they should be able to
+                    {
 
+                        string found = location.text;
+                        if (found.Contains(button.location))
+                        {
+                            button.gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            button.gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
             #endregion
         }
     }

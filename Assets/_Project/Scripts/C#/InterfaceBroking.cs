@@ -44,7 +44,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
-            readonly Dictionary<string, Choice> hiddenChoices = new();
+            Dictionary<string, Choice> hiddenChoices { get; set; } = new();
             #endregion
             // Private Properties
             #region Private Properties
@@ -141,10 +141,15 @@ namespace ForgottenTrails.InkFacilitation
                     return false;
                 }
             }
+            public bool TryTravelTo(MapItem location)
+            {
+                // try to find the option matching the locatio (string or ink item) and activate the choice.
+                return false;
+            }
             #endregion
             // Private Methods
             #region Private Methods
-            
+
             #endregion
         }
     }    

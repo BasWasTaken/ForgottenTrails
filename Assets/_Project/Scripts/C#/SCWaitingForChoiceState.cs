@@ -67,7 +67,7 @@ namespace ForgottenTrails.InkFacilitation
                             Choice choice = Controller.Story.currentChoices[i];
                             string input = choice.text;
 
-                            if (input.Contains("{"))
+                            if (input.Contains("{")) // automatically gets itemchoices, mapchoices, etc
                             {
                                 int startIndex = input.IndexOf(opener);
                                 int endIndex = input.IndexOf(closer, startIndex);

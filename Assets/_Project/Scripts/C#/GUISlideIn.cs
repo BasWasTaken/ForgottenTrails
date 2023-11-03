@@ -25,15 +25,22 @@ namespace MyGUI
         [SerializeField] private RectTransform rectTransform;
 
         [MinValue(-1), MaxValue(1)]
+        [OnValueChanged("CalculateDisplacement")]
         public Vector2Int direction;
 
-        Vector3 displacement => 2 * direction * new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+        [ReadOnly]
+        [SerializeField] Vector3 displacement;
+
 
         #endregion
         #region backend
         private bool displaced = false;
         #endregion
         ///___METHODS___///
+        public void CalculateDisplacement()
+        {
+            displacement = direction * new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+        }
         public void Toggle()
         {
             if (displaced)

@@ -16,7 +16,7 @@ namespace ForgottenTrails.InkFacilitation
     public partial class StoryController : MonoSingleton<StoryController>
     {
 
-        public class SCSettingsState : SCBookMenuState
+        public class SCSettingsState : SCGameMenuState
         {
             // Inspector Properties
             #region Inspector Properties
@@ -24,6 +24,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
+
             #endregion
             // Private Properties
             #region Private Properties
@@ -33,9 +34,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public override void OnEnter()
             {
-
-                Controller.book.pages.settingPage.SetAsLastSibling();
-                Controller.book.markers.settingMark.color = Color.clear;
+                Debug.Log("Todo: set the relevant page active from here");
             }
             public override void OnUpdate()
             {
@@ -44,7 +43,6 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
-                Controller.book.markers.settingMark.color = Color.white;
             }
             #endregion
             // Private Methods

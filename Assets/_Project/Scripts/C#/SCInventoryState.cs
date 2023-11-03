@@ -17,7 +17,7 @@ namespace ForgottenTrails.InkFacilitation
         /// <summary>
         /// CURRFENTLY UNUSED, CAN BE USED LATER IF UI GETS MORE INVOLVED/COMPLEX
         /// </summary>
-        public class SCInventoryState : SCBookMenuState
+        public class SCInventoryState : SCGameMenuState
         {
             // Inspector Properties
             #region Inspector Properties
@@ -36,8 +36,7 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnEnter()
             {
 
-                Controller.book.pages.inventoryPage.SetAsLastSibling();
-                Controller.book.markers.inventoryMark.color = Color.clear;
+                Debug.Log("Todo: set the relevant page active from here");
             }
             public override void OnUpdate()
             {
@@ -46,7 +45,6 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
-                Controller.book.markers.inventoryMark.color = Color.white;
             }
             #endregion
             // Private Methods

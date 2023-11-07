@@ -1,10 +1,10 @@
 # ForgottenTrails
 Our little project.
-Branches as of 2023-08-28:
-Bas-Experimental: Main branch where Bas works on large changes that may leave the project unusable in this branch. When changes are deemed stable, Bas should merge them into Bas-Stable.
-Bas-Stable: Contains the furthest-developed features from Bas' side. Receives merges from Bas-Experimental and Vugs-Stable.
-Vugs-Experimental: Branch where Vugs can test and make large changes to UI etc. It is on Vugs to keep this branch up to date before he starts this work, by mergin from main, Vugs-Stable, or Bas-Stable.
-Vugs-Stable: Branch where Vugs does his writing. Usually will be at least stable enough to launch Unity and frequently merged into Bas-Stable by Bas.
-Main: Should only contain stable versions. No changes should be made on this directedly. Instead, receives merges or pulls from Bas-Stable and Vugs-Stable. Handled by Bas.
+Branch flow as of 2023-11-07:
+/main: Should only contain stable versions. No changes should be made on this directedly.
+/release/\*: Will be used as soon as we exit the prototyping phase. Will contain merged packets ready for deployment to /main at set points of time or progress. Multiple can be active at once (e.g. doing final bugfixes on 1.1 while making new features for 1.2). After being pushed to mnain, a release branch should be tagged and closed.
+/meeting/yyyymmdd: Made as branches of the /develop or /meeting branches. Used for preserving the state of the project as tested before a meeting. After the meeting these are transferred to tags and preserved for prosterity. 
+/develop: Will contain changes from all feature/ branches as well as changes made by bas on the fly.
+/feature/\*: Individual branches on which we can work on separate features, isolated from other changes. When done, they can be merged to develop and closed. If active for a long time (such as in the case of /feature/story) should also receive merges from /develop occasionally (e.g. when pulling there) to prevent large discrepancies between versions.
 
 For an overview of the functions relevant for Vugs see the [Documentaion](<Ink Functions.md>)

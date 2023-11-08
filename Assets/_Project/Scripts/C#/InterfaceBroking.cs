@@ -143,8 +143,8 @@ namespace ForgottenTrails.InkFacilitation
             }
             public bool TryTravelTo(MapItem location)
             {
-                // try to find the option matching the locatio (string or ink item) and activate the choice.
                 return false;
+                // here copy from above
             }
             #endregion
             // Private Methods

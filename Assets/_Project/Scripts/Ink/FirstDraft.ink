@@ -70,9 +70,9 @@ The campfire has yet to go out completely and should be easy to light. With the 
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
 [ADDITION BAS FOR TESTING] Ah, there it is. You pick up the pot and add it to your inventory. {Item_Add(pot)}
 You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
-    **[{ItemOption(cooking)}]
+    **[{ItemChoice(cooking)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
-        ***[{ItemOption(foragedMushrooms)}]
+        ***[{ItemChoice(foragedMushrooms)}]
         {Item_Remove(UsedItem)}
         You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison. 
         A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 

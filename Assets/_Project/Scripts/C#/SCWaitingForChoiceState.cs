@@ -69,6 +69,8 @@ namespace ForgottenTrails.InkFacilitation
 
                             if (input.Contains("{")) // automatically gets itemchoices, mapchoices, etc
                             {
+                                // switch on the keyword to parse different types of choices: item, map, etc. then measure from the "(" automatically.
+
                                 int startIndex = input.IndexOf(opener);
                                 int endIndex = input.IndexOf(closer, startIndex);
 

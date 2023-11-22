@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Bas.Utility;
 using items;
+using static ForgottenTrails.InkFacilitation.StoryController.InterfaceBroking.SCWaitingForChoiceState;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -44,7 +45,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
-            Dictionary<string, Choice> hiddenChoices { get; set; } = new();
+            Dictionary<string, HiddenChoice> hiddenChoices { get; set; } = new();
             #endregion
             // Private Properties
             #region Private Properties
@@ -102,27 +103,30 @@ namespace ForgottenTrails.InkFacilitation
             public bool TryUseItem(InventoryItem item)
             {
                 Choice discoveredChoice = null;
-                foreach (KeyValuePair<string, Choice> keyValuePair in hiddenChoices)
+                foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)
                 {
-
-                    string keyPhrase = keyValuePair.Key;
-                    Choice potentialChoice = keyValuePair.Value;
-                    if(item.CanonicalName == keyPhrase)
+                    if (keyValuePair.Value.Type == ChoiceType.Item)
                     {
-                        discoveredChoice = potentialChoice;
-                        break;
-                    }
-                    else
-                    {
-                        foreach (Affordance trait in item.Affordaces)
+                        string keyPhrase = keyValuePair.Key;
+                        Choice potentialChoice = keyValuePair.Value.Choice;
+                        if (item.CanonicalName == keyPhrase)
                         {
-                            if (trait.ToString() == keyPhrase)
+                            discoveredChoice = potentialChoice;
+                            break;
+                        }
+                        else
+                        {
+                            foreach (Affordance trait in item.Affordaces)
                             {
-                                discoveredChoice = potentialChoice;
-                                break;
+                                if (trait.ToString() == keyPhrase)
+                                {
+                                    discoveredChoice = potentialChoice;
+                                    break;
+                                }
                             }
                         }
                     }
+                    // else not item, so need not be considered.
                     
                 }
 

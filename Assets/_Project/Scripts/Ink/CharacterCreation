@@ -226,13 +226,13 @@ You recoil. Its face is a horrible contradiction. Its right half takes the shape
     Wraith. 
     
     Panic sets in. You
-    **(fight)...fight[]. 
+    **(fight){aglue}fight[]. 
     With all your might you throw yourself at the horrid creature. As you collide with it, it feels as if you smack into a wall. You bounce of it and fall down to the ground{Hills2.run: once more}. <> 
     ->Hills4
-    **(scream)...scream<>
+    **(scream){aglue}scream<>
     , but no sound comes from your lips. <>
     ->Hills4
-    **(run)...run[].
+    **(run){aglue}run[].
     {Hills2.run:Perhaps against better judgement, you try to make another break for it. You have barely gotten to your feet before the creature knocks you down once more, a sharp pain shooting through your arm as you fall. Did you break something? |You turn and bolt away at full speed. The creature is much faster. A powerful blow hits you in the back, sending you sprawling to the ground. With what strength you have left, you turn to face it.} <> 
     ->Hills4
 =Hills4

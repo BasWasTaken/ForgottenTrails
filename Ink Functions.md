@@ -3,7 +3,9 @@
 ## Inventory:
 - Item_Add(item) 
 - Item_Remove(item)
-- ItemOption(itemOrAffordance)
+- ItemChoice(itemOrAffordance)
+## Party:
+- To be added in future...
 ## Knowledge:
 - Knows(fact)
 	- Returns: boolean
@@ -14,6 +16,8 @@
 - SetLocation(location)
 - HasVisited(location)
 	- Returns: boolean
+- OpenMap()
+- MapChoice(location)
 # StoryPresentation:
 - Clear()
 - Spd(float)

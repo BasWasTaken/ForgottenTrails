@@ -49,8 +49,24 @@ namespace ForgottenTrails.InkFacilitation
                 #endregion
                 // Private Methods
                 #region Private Methods
-                const string opener = "{Unity.UseItem(";
-                const string closer = ")}";
+
+                public enum ChoiceType
+                {
+                    Item,
+                    Map,
+                    Party
+                }
+                public class HiddenChoice
+                {
+                    public ChoiceType Type;
+                    public Choice Choice;
+                    public HiddenChoice(ChoiceType Type, Choice Choice)
+                    {
+                        this.Type = Type;
+                        this.Choice = Choice;
+                    }
+                }
+
                 internal void PresentButtons()
                 {
                     if (Controller.Story.canContinue)
@@ -67,8 +83,17 @@ namespace ForgottenTrails.InkFacilitation
                             Choice choice = Controller.Story.currentChoices[i];
                             string input = choice.text;
 
-                            if (input.Contains("{"))
+                            if (Regex.IsMatch(input,"^{.+Choice\\(")) // automatically gets itemchoices, mapchoices, etc
                             {
+
+                                string kind = input.Substring(1, input.IndexOf('C'));
+                                Debug.Log(kind);
+                                Enum.TryParse(kind,true, out ChoiceType choiceType);
+                                
+                                string opener = input.Substring(0, input.IndexOf('(')+1);
+                                string closer = input.Substring(input.IndexOf(')'));
+                                Debug.Log(opener);  
+                                Debug.Log(closer);
                                 int startIndex = input.IndexOf(opener);
                                 int endIndex = input.IndexOf(closer, startIndex);
 
@@ -78,10 +103,14 @@ namespace ForgottenTrails.InkFacilitation
                                     string key = input.Substring(startIndex + opener.Length, substringLength);
 
                                     Debug.Log("Encountered hidden choice: " + key);
-                                    Controller.InterfaceBroker.hiddenChoices.Add(key, choice);
+
+                                    // I now have the kind as wel as the value of the choice.
+                                    HiddenChoice newHidden = new(choiceType, choice);
+                                    Controller.InterfaceBroker.hiddenChoices.Add(key, newHidden);
                                 }
                                 else
                                 {
+                                    Debug.LogError("could not identify hidden choice");
                                 }
 
                             }
@@ -97,9 +126,10 @@ namespace ForgottenTrails.InkFacilitation
                         //scrollbar.value = 0;
                         return;
                     }
-                    /// If we've read all the content and there's no choices, the story is finished!
-                    else
+                    else// if(Controller.InterfaceBroker.hiddenChoices.Count==0)
                     {
+                        // If we've read all the content and there's no choices, the story is finished!
+                    
                         throw new NotImplementedException("No choices possible");
                     }
                 }

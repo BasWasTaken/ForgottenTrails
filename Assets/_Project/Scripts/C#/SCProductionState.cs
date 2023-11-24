@@ -150,27 +150,29 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     var storedState = Controller.Story.state.ToJson(); // set return point
                     Controller.TextProducer.Peeking = true; // begin traversal
-                    string toBeAdded = "";
+                    string paragraphToBeAdded = "";
                     while (Controller.Story.canContinue) // continue maximally or to stop
                     {
-                        // issue occurs the very first time the story reaches this point.
-                        toBeAdded += Controller.Story.Continue();
-                        if (toBeAdded.Contains("{stop}")) break;
+                        string lineToBeAdded = Controller.Story.Continue();
+                        if (lineToBeAdded.Contains("{stop}")) break;
+                        paragraphToBeAdded += lineToBeAdded;
                     }
                     // check size and clear page if needed
 
-                    bool overflow = !DoesTextFit(toBeAdded);
+                    bool overflow = !DoesTextFit(paragraphToBeAdded);
 
 
                     Controller.Story.state.LoadJson(storedState); // return to original state, reverting from peaking
                     Controller.TextProducer.Peeking = false;
 
                     if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
+                    
                 }
                 void ForceFitText(string text)
                 {
                     if (!DoesTextFit(text))
                     {
+                        Debug.LogWarning("Clearing page forcibly- I've not yet configured the code to clear the page preemptively without requiring a coroutine and waited frames.");
                         //Debug.Log("trying to fit " + text);
                         Controller.TextProducer.ClearPage(); // save page and clear it
                     }
@@ -184,17 +186,26 @@ namespace ForgottenTrails.InkFacilitation
                 bool DoesTextFit(string text)
                 {
                     string backup = Controller.TextProducer.CurrentText; // make backup
-                    Controller.TextProducer.CurrentText += text + '\n';
+                    //Debug.Log(Controller.TextProducer.TextBox.textInfo.lineCount);
+                    Controller.TextProducer.CurrentText += text; // this is not spotted until after a frame...
+                    // can i do this manually somehow? by counting the chars and/or linebreaks? that seems very fallible...
+
+                   // Debug.Log(Controller.TextProducer.TextBox.textInfo.lineCount);
                     //if (Controller.Story.currentText.EndsWith((Controller.TextProducer.CurrentText[^2]))) // rudementary check if at choice
                     //    {
+                    /*
+                                            foreach (var choice in Controller.Story.currentChoices)
+                                            {
 
-                        foreach (var choice in Controller.Story.currentChoices)
-                        {
-                            //                        Debug.Log("testing choices fit...");
-                            Controller.TextProducer.CurrentText += choice.text + '\n' + '\n'+'\n';
-                        }
-                  //  }
-                    bool overflow = Controller.TextProducer.TextBox.isTextOverflowing; // store result
+                                                //                        Debug.Log("testing choices fit...");
+                                                Controller.TextProducer.CurrentText += choice.text + '\n' + '\n'+'\n';
+                                            }
+                                        //  }
+
+                                        */
+
+
+                    bool overflow = Controller.TextProducer.TextBox.textInfo.lineCount > Controller.TextProducer.maxVis; // store result
                     Controller.TextProducer.CurrentText = backup; // restore backup
                     return !overflow;
                 }
@@ -242,7 +253,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
 
                     Controller.TextProducer.typingSound.Pause();
-                    Debug.Log(report);
+                    //Debug.Log(report);
                     // if done, indicate so (ideally i guess iw ould use an event, but for now it's fine to call an encounterstop method)
 
 

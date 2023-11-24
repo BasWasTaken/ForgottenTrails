@@ -85,6 +85,7 @@ namespace ForgottenTrails.InkFacilitation
             /// When we click the choice button, tell the story to choose that choice!
             internal void OnClickChoiceButton(Choice choice)
             {
+                Debug.Log("chose " + choice.text);
                 Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
                 Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
                 RemoveOptions();

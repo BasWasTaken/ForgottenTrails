@@ -120,6 +120,8 @@ namespace ForgottenTrails.InkFacilitation
             private void PrepScene()
             {
                 AssetManager.Instance.CreateAssetLibraries();
+                //Controller.TextProducer.SetMaxLines();
+                Controller.TextProducer.maxVis = 20;
                 Controller.InterfaceBroker.RemoveOptions();
                 Controller.TextProducer.TextSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)TextProduction.TextSpeed.medium);
                 PopulateSceneFromData(Controller.InkDataAsset);

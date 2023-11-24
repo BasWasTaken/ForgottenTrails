@@ -130,7 +130,7 @@ namespace ForgottenTrails.InkFacilitation
             internal void Init(string cur, string his)
             {
                 CurrentText = cur;
-                VisibleCharacters = 0;
+                VisibleCharacters = cur.Length;
                 PreviousText = his;
             }
             internal void Spd(float speed)

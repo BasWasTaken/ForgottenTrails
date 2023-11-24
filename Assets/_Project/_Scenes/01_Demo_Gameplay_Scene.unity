@@ -186,7 +186,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 3
-  m_Spacing: 10
+  m_Spacing: 30
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -948,6 +948,10 @@ PrefabInstance:
     - target: {fileID: 1779832906849486559, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_VerticalFit
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3522122762264550733, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
+      propertyPath: m_MinHeight
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 4930173444649596139, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_Enabled
@@ -3111,6 +3115,10 @@ PrefabInstance:
       propertyPath: m_VerticalFit
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3522122762264550733, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
+      propertyPath: m_MinHeight
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 4930173444649596139, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -3236,6 +3244,10 @@ PrefabInstance:
     - target: {fileID: 1779832906849486559, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_VerticalFit
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3522122762264550733, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
+      propertyPath: m_MinHeight
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 4930173444649596139, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_Enabled
@@ -3363,6 +3375,10 @@ PrefabInstance:
       propertyPath: m_VerticalFit
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3522122762264550733, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
+      propertyPath: m_MinHeight
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 4930173444649596139, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -3488,6 +3504,10 @@ PrefabInstance:
     - target: {fileID: 1779832906849486559, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_VerticalFit
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3522122762264550733, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
+      propertyPath: m_MinHeight
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 4930173444649596139, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_Enabled

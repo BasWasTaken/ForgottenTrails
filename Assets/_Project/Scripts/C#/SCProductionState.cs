@@ -91,7 +91,14 @@ namespace ForgottenTrails.InkFacilitation
                     }
                     else if (Controller.TextProducer.TPStatus == TextProducerStatus.Idle)
                     {
-                        AdvanceStory();
+                        if (Controller.Story.canContinue)
+                        {
+                            AdvanceStory();
+                        }
+                        else
+                        {
+                            DetermineNextTransition();
+                        }
                     }
                 }
                 public override void OnExit()
@@ -104,7 +111,7 @@ namespace ForgottenTrails.InkFacilitation
                 private void AdvanceStory()
                 {
                     TimeSinceAdvance = 0; // reset timer for skip button
-                    Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base; // NOTE OR transitionto writing
+                    Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base; // NOTE OR transitionto writing. i know sort oif have a statemachine inside statemachine, not very neat, but also feels insane to make multiple for states for this.
                     InitiateTextProduction();
                 }
                 // make into class?? nah..

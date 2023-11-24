@@ -117,7 +117,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public void ClearPage()
             {
-                if (Controller.TextProducer.Peeking) return;
+                if (Controller.TextProducer.Peeking) return; // not if we're just peeking
                 //Debug.Log("Clearing " +CurrentText);
                 HistoryTextBox.text += CurrentText; // move all text to the history log
                 CurrentText = ""; // clear current and prospective texts
@@ -193,7 +193,23 @@ namespace ForgottenTrails.InkFacilitation
 
                 return split.SkipLast(1).ToArray();
             }
+            internal int maxVis = 20;
 
+            internal int SetMaxLines()
+            {
+                string backup = Controller.TextProducer.CurrentText;
+                Controller.TextProducer.CurrentText = "";
+                maxVis = 0;
+                while (!Controller.TextProducer.TextBox.isTextOverflowing)
+                {
+                    maxVis++;
+                    Controller.TextProducer.CurrentText += '\n';
+                    if (maxVis > 1000) break;
+                }
+                Controller.TextProducer.CurrentText = backup;
+                Debug.Log(string.Format("fitted {0} lines in the text box!", maxVis));
+                return maxVis;
+            }
         }
     }
     

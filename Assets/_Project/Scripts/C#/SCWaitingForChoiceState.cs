@@ -37,6 +37,7 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         PresentButtons(); // create new choices
                     }
+                    EnableButtons(true);
                 }
                 public override void OnUpdate()
                 {
@@ -44,6 +45,7 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 public override void OnExit()
                 {
+                    EnableButtons(false);
                     //this not done here anymore, but elsewhere- when a choise is made. RemoveOptions(); // Destroy old choices
                 }
                 #endregion
@@ -66,6 +68,14 @@ namespace ForgottenTrails.InkFacilitation
                         this.Choice = Choice;
                     }
                 }
+                internal void EnableButtons(bool enable = true)
+                {
+                    foreach (Button button in Controller.InterfaceBroker.ButtonAnchor.GetComponentsInChildren<Button>())
+                    {
+                        button.interactable = enable;
+                    }
+                }
+                internal void DisableButtons() => EnableButtons(false);
 
                 internal void PresentButtons()
                 {

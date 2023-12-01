@@ -104,9 +104,7 @@ namespace ForgottenTrails.InkFacilitation
             base.Awake();
            
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
-        }
-        private void Start()
-        {
+        
             //book = FindFirstObjectByType<Book>(); 
             SetDresser.Assign();
             TextProducer.Assign();
@@ -115,6 +113,7 @@ namespace ForgottenTrails.InkFacilitation
         }
         private void InitialiseStateMachine()
         {
+            Debug.Log("Making state machine.");
             StateMachine = new
             (
             this,
@@ -141,7 +140,10 @@ namespace ForgottenTrails.InkFacilitation
                 StateMachine.Update();
             }
         }
-
+        private void OnDestroy()
+        {
+            InkDataAsset = null;
+        }
         #endregion
         // Public Methods
         #region Public Methods
@@ -165,10 +167,7 @@ namespace ForgottenTrails.InkFacilitation
         }
         private void ResetData()
         {
-            if (UnityEditor.EditorApplication.isPlaying == false)
-            {
-                InkDataAsset = CreateBlankData();
-            }
+            InkDataAsset = CreateBlankData();
         }
         private void ResetScene()
         {

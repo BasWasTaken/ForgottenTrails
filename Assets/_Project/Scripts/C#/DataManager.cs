@@ -182,6 +182,7 @@ namespace DataService
             }
             else
             {
+                ActiveDataDictionary.Clear();
                 ActiveDataProfile = profileName;
                 metaData = new();
                 return true;

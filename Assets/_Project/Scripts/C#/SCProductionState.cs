@@ -49,7 +49,6 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     get; set;
                 }
-                Coroutine coroutine;
                 #endregion
                 // Public Methods
                 #region Public Methods

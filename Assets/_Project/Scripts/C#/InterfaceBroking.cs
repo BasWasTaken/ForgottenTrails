@@ -35,6 +35,9 @@ namespace ForgottenTrails.InkFacilitation
 
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             internal GameObject mapButtonsContainer { get; set; }
+            [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
+            public Book book { get; set; }
+
             [field: SerializeField, BoxGroup("Scene References"), Required]
             public Image FloatingMarker { get; internal set; }
 

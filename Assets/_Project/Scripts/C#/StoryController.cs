@@ -72,8 +72,6 @@ namespace ForgottenTrails.InkFacilitation
         // Public Properties
         #region Public Properties
         public Story Story { get; private set; }
-        [field:SerializeField]
-        public Book book { get; set; }
         #endregion
         // Private Properties
         #region Private Properties

@@ -124,6 +124,12 @@ namespace ForgottenTrails.InkFacilitation
                                 }
 
                             }
+                            else if (input=="{UNITY:OpenMap}")
+                            {
+                                //Controller.InterfaceBroker.book.markers.mapMark.GetComponent<Button>().interactable = true; // allow the use of the map button
+                                // nee, ik denk te moeilijk! dit hoeft niet de knop te enabelen, gewoon wanneer dit er is kan de speler als het goed is o pde knop drukken en gaan reizen, maar hij kan altidj drukken.
+                                Debug.LogWarning("Info: Map Travel Available (Bas has not yet put in a notification or whatever)");
+                            }
                             else
                             {
                                 Button button = PresentButton(choice.text.Trim());
@@ -136,6 +142,7 @@ namespace ForgottenTrails.InkFacilitation
                         //scrollbar.value = 0;
                         return;
                     }
+                    
                     else// if(Controller.InterfaceBroker.hiddenChoices.Count==0)
                     {
                         // If we've read all the content and there's no choices, the story is finished!

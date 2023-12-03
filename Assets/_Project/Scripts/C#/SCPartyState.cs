@@ -37,8 +37,8 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnEnter()
             {
 
-                Controller.book.pages.partyPage.SetAsLastSibling();
-                Controller.book.markers.partyMark.color = Color.clear;
+                Controller.InterfaceBroker.book.pages.partyPage.SetAsLastSibling();
+                Controller.InterfaceBroker.book.markers.partyMark.color = Color.clear;
             }
             public override void OnUpdate()
             {
@@ -47,7 +47,7 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
-                Controller.book.markers.partyMark.color = Color.white;
+                Controller.InterfaceBroker.book.markers.partyMark.color = Color.white;
             }
             #endregion
             // Private Methods

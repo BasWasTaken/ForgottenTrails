@@ -2880,7 +2880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b306da1a19028478e52d52198d3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  location: seabreezePath
+  canonicalLocation: seabreezePath
 --- !u!1001 &665400246
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3294,7 +3294,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 915649941}
   m_OnClick:
     m_PersistentCalls:
@@ -4936,7 +4936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b306da1a19028478e52d52198d3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  location: ruinedCoast
+  canonicalLocation: ruinedCoast
 --- !u!1 &1278207890
 GameObject:
   m_ObjectHideFlags: 0
@@ -5520,8 +5520,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 42.07, y: -81.09}
-  m_SizeDelta: {x: 60.3063, y: 11.7423}
+  m_AnchoredPosition: {x: 42.07, y: -80.89138}
+  m_SizeDelta: {x: 60.3063, y: 12.1396}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1409877198
 MonoBehaviour:
@@ -5617,7 +5617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b306da1a19028478e52d52198d3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  location: EdanCastle
+  canonicalLocation: EdanCastle
 --- !u!1 &1431292871
 GameObject:
   m_ObjectHideFlags: 0
@@ -6948,7 +6948,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10.5
+  m_fontSize: 10.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8019,12 +8019,12 @@ MonoBehaviour:
     <ButtonPrefab>k__BackingField: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
     <ButtonAnchor>k__BackingField: {fileID: 28223511}
     <mapButtonsContainer>k__BackingField: {fileID: 1870545957}
+    <book>k__BackingField: {fileID: 275361440}
     <FloatingMarker>k__BackingField: {fileID: 531542277}
     <AdvanceDialogueDelay>k__BackingField: 0.4
     <SkipDelay>k__BackingField: 0.2
     inventory: {fileID: 530457801}
   <InputField>k__BackingField: {fileID: 1522983011}
-  <book>k__BackingField: {fileID: 275361440}
 --- !u!1 &2084113304
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,10 +46,14 @@ VAR VisitedLocations = ()
 // SYSTEM: Map
 // The map will consist of a ink knot that contains choices to unlocked locations. All of these will be caught by Unity and displayed as visual items on a map screen, which is opened and closed as the knot is accessed and left.
 //
+
+=== function AllowMap ===
+\{UNITY:OpenMap\}
+
+
+
 === MapScreen (-> returnTo) // the map knot. visit to open the map in unity.
 ~ _OpenMap()
-+ [Set out towards Eden Castle.]
-    -> TravelingTo(CastleEntrance)
 + [{MapChoice(EdanCastle)}]
     -> TravelingTo(CastleEntrance)
 + { HasVisited(EdanCastle)} [{MapChoice(EdanCastle)}] 

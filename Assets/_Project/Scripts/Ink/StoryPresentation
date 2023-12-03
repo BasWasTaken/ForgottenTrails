@@ -15,7 +15,7 @@ EXTERNAL _Spd(float)
 EXTERNAL _Halt(float) 
 
 === function Clear()  // Clears the textbox and moves that text to log
-~ Clear()
+~ _Clear()
 
 === function _Clear()
 <<i>Clear Page</i>>

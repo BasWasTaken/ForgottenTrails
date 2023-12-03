@@ -37,8 +37,8 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnEnter()
             {
 
-                Controller.book.pages.mapPage.SetAsLastSibling();
-                Controller.book.markers.mapMark.color = Color.clear;
+                Controller.InterfaceBroker.book.pages.mapPage.SetAsLastSibling();
+                Controller.InterfaceBroker.book.markers.mapMark.color = Color.clear;
                 foreach (var choice in Controller.Story.currentChoices)
                 {
                     if (choice.text.Contains("MapScreen")) 
@@ -64,7 +64,7 @@ namespace ForgottenTrails.InkFacilitation
                         break;
                     }
                 }
-                Controller.book.markers.mapMark.color = Color.white;
+                Controller.InterfaceBroker.book.markers.mapMark.color = Color.white;
             }
             #endregion
             // Private Methods

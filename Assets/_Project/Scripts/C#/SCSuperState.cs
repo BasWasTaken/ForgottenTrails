@@ -155,8 +155,9 @@ namespace ForgottenTrails.InkFacilitation
 
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
 
-                story.BindExternalFunction("_OpenMap", () => PerformInkFunction(() => Controller.InterfaceBroker.OpenMap())); // gaat dit goet met die beide transitions? nee dus.
-                story.BindExternalFunction("_CloseMap", () => PerformInkFunction(() => Controller.InterfaceBroker.CloseMap())); // gaat dit goet met die beide transitions?
+                // voor nu laat ik deze onderste twee even uit, want als het goed is gebeuren beide toch met dezelfde knop...
+                story.BindExternalFunction("_OpenMap", () => { });// PerformInkFunction(() => Controller.InterfaceBroker.OpenMap())); // gaat dit goet met die beide transitions? nee dus.
+               story.BindExternalFunction("_CloseMap", () => { }); //PerformInkFunction(() => Controller.InterfaceBroker.CloseMap())); // gaat dit goet met die beide transitions?
             }
 
 

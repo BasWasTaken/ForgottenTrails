@@ -12,7 +12,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class MapItem : MonoBehaviour
 {
-    public string location;
+    public string canonicalLocation;
 
     public Ink.Runtime.InkListItem InkListItem { get; set; }
     ///___METHODS___///

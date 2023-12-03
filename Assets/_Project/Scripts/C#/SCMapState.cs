@@ -17,11 +17,11 @@ namespace ForgottenTrails.InkFacilitation
         /// <summary>
         /// 
         /// </summary>
+ 
         public class SCMapState : SCBookMenuState
         {
             // Inspector Properties
             #region Inspector Properties
-            public MapItem[] mapButtons;
             #endregion
 
             // Public Properties
@@ -39,7 +39,15 @@ namespace ForgottenTrails.InkFacilitation
 
                 Controller.book.pages.mapPage.SetAsLastSibling();
                 Controller.book.markers.mapMark.color = Color.clear;
-                ShowTravelOptions();
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("MapScreen")) 
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);// hopelijk wordt ook dit niet dubbelop als je al van de visible optie komt.
+                        break;
+                    }
+                }
+                ShowOrHideTravelOptions(); 
             }
             public override void OnUpdate()
             {
@@ -48,29 +56,62 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("Put the map away"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);// hopelijk wordt ook dit niet dubbelop als je al van de visible optie komt.
+                        break;
+                    }
+                }
                 Controller.book.markers.mapMark.color = Color.white;
             }
             #endregion
             // Private Methods
             #region Private Methods
-            void ShowTravelOptions()
+            void ShowOrHideTravelOptions() // show all locations that are known to the player.
             {
-                foreach (MapItem button in mapButtons)
-                {
-                    foreach (var location in Controller.Story.currentChoices)//note this will allow player to travel away  bit earlier than they should be able to
-                    {
+                // first, hide all buttons.
 
-                        string found = location.text;
-                        if (found.Contains(button.location))
-                        {
-                            button.gameObject.SetActive(true);
-                        }
-                        else
-                        {
-                            button.gameObject.SetActive(false);
-                        }
-                    }
+                // then, for each button, check the known locations in ink, and if it's there, reveal that button.
+
+                // then, for each location travelable according to inky, try to find and make interactable a matching button (that should by now have been revealed)
+                // this means that outside of mapscenes, each button will remain noninteractable even when revealed.
+
+
+
+                // first let's collect all the options ink has given us
+
+                List<string> locationOptions = new();
+                foreach (var found in Controller.InterfaceBroker.hiddenChoices) // taken hidden instead of current because these will be conveniently filtered to have only the location as text hopefully
+                {
+                    if (found.Value.Type == InterfaceBroking.SCWaitingForChoiceState.ChoiceType.Map)
+                    {
+                        locationOptions.Add(found.Key);
+                    } 
                 }
+                
+                // then we'll go over each of the buttons in our mapscreen
+
+                foreach (MapItem item in Controller.InterfaceBroker.mapButtonsContainer.GetComponentsInChildren<MapItem>())
+                {
+                    // get list of known locations
+                    InkList knownLocations = Controller.Story.state.variablesState["KnownLocations"] as InkList;
+
+                    // is canocinal location found in this list?
+                    bool isKnown = knownLocations.ContainsItemNamed(item.canonicalLocation);
+
+                    // set (in)active depending on above
+                    item.gameObject.SetActive(isKnown);
+
+                    // is this location present in the options from ink?
+                    bool canBeVisited = locationOptions.Contains(item.canonicalLocation);
+
+                    // making them interactable or not
+                    item.GetComponent<Button>().interactable = canBeVisited;
+
+                }
+
             }
             #endregion
         }

@@ -1,6 +1,8 @@
 INCLUDE CustomFeatures
 INCLUDE Stories
 
+// TODO: split the scenes in this file up into smaller files, each inclued in stories.
+
 
 //AffectionValues
 VAR AffEdgar = 50
@@ -59,6 +61,9 @@ You turn on your back, the small canvas tent that shields you from the elements 
 
 =Tent
 You decide to
+*BAS202312031034 OPEN THE MAP
+-> MapScreen(->Awakening.Tent) // why do I need to include this?That's probably me not understanding the syntax well.
+
 *(PackUpEarly)[...pack up]{aglue} pack up.
 Or you would, but the grumbling of your stomach tells you that it's not going to be a fun hike without something to eat.
 

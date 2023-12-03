@@ -1,5 +1,5 @@
 // locations
-LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse, sampleCave, onTheRoad
+LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse, sampleCave, onTheRoad, ruinedCoast, seabreezePath
 
 // characters
 LIST Party = (Player), Alice, Robert

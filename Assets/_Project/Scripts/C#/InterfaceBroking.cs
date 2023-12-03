@@ -32,6 +32,9 @@ namespace ForgottenTrails.InkFacilitation
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             internal Transform ButtonAnchor { get; set; }
 
+
+            [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
+            internal GameObject mapButtonsContainer { get; set; }
             [field: SerializeField, BoxGroup("Scene References"), Required]
             public Image FloatingMarker { get; internal set; }
 
@@ -45,7 +48,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
-            Dictionary<string, HiddenChoice> hiddenChoices { get; set; } = new();
+            internal Dictionary<string, HiddenChoice> hiddenChoices { get; set; } = new();
             #endregion
             // Private Properties
             #region Private Properties
@@ -148,10 +151,45 @@ namespace ForgottenTrails.InkFacilitation
             }
             public bool TryTravelTo(MapItem location)
             {
-                return false;
-                // here copy from above
+                Choice discoveredChoice = null;
+                foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)
+                {
+                    if (keyValuePair.Value.Type == ChoiceType.Map)
+                    {
+                        string keyPhrase = keyValuePair.Key;
+                        Choice potentialChoice = keyValuePair.Value.Choice;
+                        if (location.canonicalLocation == keyPhrase)
+                        {
+                            discoveredChoice = potentialChoice;
+                            break;
+                        }
+                    }
+                    // else not travel, so need not be considered.
+                }
+
+                if (discoveredChoice != null)
+                {
+                    Controller.mapState.DropCondition = true;
+                    OnClickChoiceButton(discoveredChoice);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Nope, that location doesn't work!");
+                    return false;
+                }
             }
             #endregion
+
+            internal void OpenMap()
+            {
+                Controller.StateMachine.TransitionToState(Controller.mapState);
+            }
+            internal void CloseMap()
+            {
+                Controller.mapState.DropCondition = true;
+            }
+
             // Private Methods
             #region Private Methods
 

@@ -154,7 +154,11 @@ namespace ForgottenTrails.InkFacilitation
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
 
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
+
+                story.BindExternalFunction("_OpenMap", () => PerformInkFunction(() => Controller.InterfaceBroker.OpenMap())); // gaat dit goet met die beide transitions? nee dus.
+                story.BindExternalFunction("_CloseMap", () => PerformInkFunction(() => Controller.InterfaceBroker.CloseMap())); // gaat dit goet met die beide transitions?
             }
+
 
             private InkListItem ConvertListToItem(InkList inkList)
             {

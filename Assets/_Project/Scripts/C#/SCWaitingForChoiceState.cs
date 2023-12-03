@@ -110,7 +110,7 @@ namespace ForgottenTrails.InkFacilitation
                                 if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
                                 {
                                     int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
-                                    string key = input.Substring(startIndex + opener.Length, substringLength);
+                                    string key = input.Substring(startIndex + opener.Length, substringLength); // NOTE dit zou misschien eigenlijk "extracted" moeten heten en dan key als een integer oid, want atm kunnen er vgm gewoon duplicates ontstaan.
 
                                     Debug.Log("Encountered hidden choice: " + key);
 

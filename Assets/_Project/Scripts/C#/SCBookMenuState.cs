@@ -39,6 +39,10 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnUpdate()
             {
                 base.OnUpdate();
+                if (Input.GetKeyUp(KeyCode.Escape))
+                {
+                    ExitMenu();
+                }
             }
             public override void OnExit()
             {
@@ -47,6 +51,20 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Private Methods
             #region Private Methods
+            private void ExitMenu() {
+                var state = Controller.StateMachine.CurrentState;
+                if (StackBasedStateMachine<StoryController>.DoesXDescentFromY(state, this)) // this check should be redundant.... but is the current state a menu state?
+                {
+                    Controller.StateMachine.DropState(state);
+                    
+                }else
+                {
+                    throw new Exception("Unexpected State");
+                }
+
+
+                
+            }
 
             #endregion
         }

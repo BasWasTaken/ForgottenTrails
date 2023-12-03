@@ -46,6 +46,22 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("{UNITY:CloseMap}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.Continue();
+
+                        break;
+                    }
+                    else if(choice.text.Contains("{UNITY:ClosePartyScreen}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.Continue();
+                        break;
+                    }
+                }
                 Controller.InterfaceBroker.inventory.book.Replace();
             }
             #endregion

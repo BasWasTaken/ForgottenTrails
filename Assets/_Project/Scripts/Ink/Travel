@@ -60,7 +60,7 @@ VAR VisitedLocations = ()
     -> TravelingTo(CastleEntrance)
 + { HasVisited(sampleCave)} [{MapChoice(sampleCave)}] 
     -> TravelingTo(sampleCave)
-+ [Put the map away]    
++ [\{UNITY:CloseMap\}]    
 
 ~ _CloseMap()
     -> returnTo

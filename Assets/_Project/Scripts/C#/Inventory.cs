@@ -8,7 +8,7 @@ using Ink.Runtime;
 using MyGUI;
 using DataService;
 
-namespace items
+namespace Items
 {
 
     /// <summary>
@@ -18,13 +18,13 @@ namespace items
     {
         [Header("Prefab")]
         [SerializeField]
-        ItemRepresentation itemContainerPrefab;
+        ItemContainer itemContainerPrefab;
 
         public GUISlideIn book;
 
         
 
-        Dictionary<InkListItem, ItemRepresentation> UnityInventory = new();
+        Dictionary<InkListItem, ItemContainer> UnityInventory = new();
 
 
         public void FetchItems(InkList inkInventory)
@@ -55,7 +55,7 @@ namespace items
             {
                 if (!UnityInventory.ContainsKey(item))
                 {
-                    ItemRepresentation obj = Instantiate(itemContainerPrefab, transform);
+                    ItemContainer obj = Instantiate(itemContainerPrefab, transform);
                     obj.Construct(inventoryItem);
                     inventoryItem.InkListItem = item;
                     UnityInventory.Add(inventoryItem.InkListItem, obj);
@@ -72,7 +72,7 @@ namespace items
         }
         public void RemoveItem(InkListItem item)
         {
-            if (UnityInventory.TryGetValue(item, out ItemRepresentation value))
+            if (UnityInventory.TryGetValue(item, out ItemContainer value))
             {
                 UnityInventory.Remove(item);
                 Destroy(value.gameObject);

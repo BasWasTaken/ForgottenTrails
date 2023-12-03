@@ -12,7 +12,8 @@ using System.Security.Cryptography;
 using System.Text;
 using ForgottenTrails.InkFacilitation;
 using Ink.Runtime;
-using items;
+using Items;
+using Travel;
 
 namespace DataService
 {
@@ -23,9 +24,12 @@ namespace DataService
     {
         ///___VARIABLES___///
         #region inspector
+        [Tooltip("MANUAL LIST OF WHAT LISTS TO CHECK")]
         public string[] InkListNames;
         [SerializeField]
         List<InventoryItem> possibleItems = new();
+        [SerializeField]
+        List<MapLocationDefinition> possibleLocations = new();
         [Scene]
         [Tooltip("The main menu scene")]
         public string menuScene;
@@ -58,6 +62,7 @@ namespace DataService
         }
 
         #region backend
+        public Dictionary<InkListItem, InventoryItem> LocationDictionary { get; } = new();
         public Dictionary<InkListItem, InventoryItem> ItemDictionary { get; } = new();
         public Dictionary<InkListItem, string> assets = new();
 
@@ -66,18 +71,16 @@ namespace DataService
         protected override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto
-
-            
+            DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto            
         }
 
-        
-        [field:SerializeField]
+
+        [field: SerializeField]
         public TextAsset TextAsset { get; set; }
 
         static string GetRelativePath(string fullPath, string basePath)
         {
-            if (!fullPath.StartsWith(basePath))     
+            if (!fullPath.StartsWith(basePath))
             {
                 // The fullPath is not within the basePath.
                 // You should handle this case based on your requirements.
@@ -88,7 +91,7 @@ namespace DataService
             return relativePath;
         }
 
-        [Button("CreateAssetLibraries",EButtonEnableMode.Editor)]
+        [Button("CreateAssetLibraries", EButtonEnableMode.Editor)]
         public void CreateAssetLibraries()
         {
             string error = "";
@@ -96,28 +99,33 @@ namespace DataService
 
             // NOTE wsl ipv inventory aanroepen, inventory state?
             assets.Clear();
-            Story story = new(TextAsset.text);
+            Story story = new(TextAsset.text); // NOTE is dit waar de niet loading bug vandaan komt?
 
-            ListDefinition items=null;
+            ListDefinition items = null;
             ListDefinition affordances = null;
+            ListDefinition locations = null;
             foreach (string inkListName in InkListNames)
             {
                 //Debug.LogFormat("Searching for {0}", inkListName);
                 if (story.listDefinitions.TryListGetDefinition(inkListName, out ListDefinition listDefinition))
                 {
-                    if(inkListName == "Items")
-                    {   
-                       // Debug.Log("Found items list.");
+                    if (inkListName == "Items")
+                    {
+                        // Debug.Log("Found items list.");
                         items = listDefinition;
                     }
-                    else if(inkListName == "Affordances")
+                    else if (inkListName == "Affordances")
                     {
-                      //  Debug.Log("Found affordances list.");
+                        //  Debug.Log("Found affordances list.");
                         affordances = listDefinition;
+                    }
+                    else if (inkListName == "Locations")
+                    {
+                        locations = listDefinition;
                     }
                     else
                     {
-                       // Debug.LogFormat("Found {0}", listDefinition);
+                        // Debug.LogFormat("Found {0}", listDefinition);
                         foreach (InkListItem item in listDefinition.items.Keys)
                         {
                             string searchFor = item.itemName;
@@ -130,9 +138,9 @@ namespace DataService
                                 foreach (string asset in foundAssets)
                                 {
                                     string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
-                                    absolutePath = absolutePath.Substring(0,absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
+                                    absolutePath = absolutePath.Substring(0, absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
                                     string relativePath = GetRelativePath(absolutePath, basePath);
-                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower()+"_")) // check if whole name plus underscore present in asset
+                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
                                     {
                                         noError += string.Format("\nFound {1} for {0}", item, relativePath);
                                         if (assets.TryAdd(item, relativePath))
@@ -145,7 +153,7 @@ namespace DataService
                                         {
                                             error += string.Format("\nFound {1} for {0} but could not add it.", item, relativePath);
                                         }
-                                        
+
                                     }
                                     else
                                     {
@@ -159,7 +167,7 @@ namespace DataService
                                 }
                             }
                         }
-                    }                    
+                    }
                 }
                 else
                 {
@@ -175,9 +183,11 @@ namespace DataService
                 Debug.LogAssertion("ERROR IN ATTEMPTING TO LIST ASSETS" + error);
             }
 
-
-
-            if (ItemListsKnown(items, affordances))
+            if (items == null | affordances == null)
+            {
+                Debug.LogError(new NullReferenceException());
+            }
+            else if (ItemListsKnown(items, affordances))
             {
                 Debug.Log("Succesfully checked all items and affordances.");
             }
@@ -186,6 +196,19 @@ namespace DataService
                 Debug.Log("Could not match up items or affordances");
             }
 
+
+            if (locations == null)
+            {
+                Debug.LogError(new NullReferenceException());
+            }
+            else if (LocationsRecognised(locations))
+            {
+                Debug.Log("Succesfully checked all items and affordances.");
+            }
+            else
+            {
+                Debug.Log("Could not match up locations");
+            }
         }
 
         private bool ItemListsKnown(ListDefinition items, ListDefinition affordances)
@@ -244,5 +267,40 @@ namespace DataService
             }
         }
 
+        private bool LocationsRecognised(ListDefinition locations)
+        {
+            LocationDictionary.Clear();
+            Dictionary<string, MapLocationDefinition> TemporaryDictionary = new();
+            foreach (MapLocationDefinition loc in possibleLocations)
+            {
+                TemporaryDictionary.Add(loc.CanonicalName, loc);
+            }
+            string error = "";
+
+            // assert all locations to travel to from ink exist in unity 
+            // TODO
+
+            // assert all locations to travel to from unity exist in ink
+            foreach (var name in TemporaryDictionary.Keys)
+            {
+                Debug.Log(name);
+                Debug.Log(locations);
+                if (!locations.ContainsItemWithName(name))
+                {
+                    error += string.Format("\nLocation \"{0}\" not found in unity dictionary!", name);
+                }
+            }
+
+            if (error == "")
+            {
+                return true;
+            }
+            else
+            {
+                Debug.LogAssertion("LOCATIONS NOT MATCHED UP" + error);
+                return false;
+            }
+
+        }
     }
 }

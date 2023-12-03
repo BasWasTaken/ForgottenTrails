@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using TMPro;
-using items;
+using Items;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -77,7 +77,8 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 internal void DisableButtons() => EnableButtons(false);
 
-                internal void PresentButtons()
+                
+                    internal void PresentButtons()
                 {
                     if (Controller.Story.canContinue)
                     {
@@ -91,40 +92,8 @@ namespace ForgottenTrails.InkFacilitation
                         {
 
                             Choice choice = Controller.Story.currentChoices[i];
-                            string input = choice.text;
-
-                            if (Regex.IsMatch(input,"^{.+Choice\\(")) // automatically gets itemchoices, mapchoices, etc
-                            {
-
-                                string kind = input.Substring(1, input.IndexOf('C'));
-                                Debug.Log(kind);
-                                Enum.TryParse(kind,true, out ChoiceType choiceType);
-                                
-                                string opener = input.Substring(0, input.IndexOf('(')+1);
-                                string closer = input.Substring(input.IndexOf(')'));
-                                Debug.Log(opener);  
-                                Debug.Log(closer);
-                                int startIndex = input.IndexOf(opener);
-                                int endIndex = input.IndexOf(closer, startIndex);
-
-                                if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
-                                {
-                                    int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
-                                    string key = input.Substring(startIndex + opener.Length, substringLength); // NOTE dit zou misschien eigenlijk "extracted" moeten heten en dan key als een integer oid, want atm kunnen er vgm gewoon duplicates ontstaan.
-
-                                    Debug.Log("Encountered hidden choice: " + key);
-
-                                    // I now have the kind as wel as the value of the choice.
-                                    HiddenChoice newHidden = new(choiceType, choice);
-                                    Controller.InterfaceBroker.hiddenChoices.Add(key, newHidden);
-                                }
-                                else
-                                {
-                                    Debug.LogError("could not identify hidden choice");
-                                }
-
-                            }
-                            else if (input=="{UNITY:OpenMap}")
+                            if (Controller.InterfaceBroker.TryAddHiddenChoice(choice)) { }
+                            else if (choice.text == "{UNITY:OpenMap}")
                             {
                                 //Controller.InterfaceBroker.book.markers.mapMark.GetComponent<Button>().interactable = true; // allow the use of the map button
                                 // nee, ik denk te moeilijk! dit hoeft niet de knop te enabelen, gewoon wanneer dit er is kan de speler als het goed is o pde knop drukken en gaan reizen, maar hij kan altidj drukken.
@@ -134,7 +103,8 @@ namespace ForgottenTrails.InkFacilitation
                             {
                                 Button button = PresentButton(choice.text.Trim());
                                 /// Tell the button what to do when we press it
-                                button.onClick.AddListener(delegate {
+                                button.onClick.AddListener(delegate
+                                {
                                     Controller.InterfaceBroker.OnClickChoiceButton(choice);
                                 });
                             }

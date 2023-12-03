@@ -60,6 +60,10 @@ You turn on your back, the small canvas tent that shields you from the elements 
 ->Awakening.Tent
 
 =Tent
+~ LearnLoc(EdanCastle)
+~ LearnLoc(ruinedCoast)
+~ LearnLoc(seaBreezePath)
+
 You decide to
 *  [{AllowMap()}] -> MapScreen(->Awakening.Tent) // dit moet toch meer consise kunnen...?
 

@@ -10,8 +10,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Bas.Utility;
-using items;
+using Items;
 using static ForgottenTrails.InkFacilitation.StoryController.InterfaceBroking.SCWaitingForChoiceState;
+using System.Text.RegularExpressions;
+using Travel;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -68,7 +70,7 @@ namespace ForgottenTrails.InkFacilitation
 
 
             [SerializeField, Header("Scene References"), Required]
-            public items.Inventory inventory;
+            public Items.Inventory inventory;
 
             #region Public Methods
             public bool CanPresentChoices()
@@ -86,6 +88,57 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     return false; // technically, if ending the dialogue is a choise
                 }
+            }
+            internal void FindHiddenChoices()
+            {
+                hiddenChoices.Clear();
+                string message = "";
+                foreach (Choice choice in Controller.Story.currentChoices)
+                {
+                    bool succes = TryAddHiddenChoice(choice);
+
+                    message += string.Format("\n \"{0}\" was{1} a hidden choice", choice.text, succes ? "" : " not");
+                }
+
+                Debug.LogFormat("Found {0} hidden choices:\n{1}", hiddenChoices.Count, message);
+    
+            }
+            internal bool TryAddHiddenChoice(Choice choice)
+            {
+                string input = choice.text;
+                if (Regex.IsMatch(input, "^{.+Choice\\(")) // automatically gets itemchoices, mapchoices, etc
+                {
+
+                    string kind = input.Substring(1, input.IndexOf('C')-1);
+                    Debug.Log(kind);
+                    Enum.TryParse(kind, true, out ChoiceType choiceType);
+
+                    string opener = input.Substring(0, input.IndexOf('(') + 1);
+                    string closer = input.Substring(input.IndexOf(')'));
+                    Debug.Log(opener);
+                    Debug.Log(closer);
+                    int startIndex = input.IndexOf(opener);
+                    int endIndex = input.IndexOf(closer, startIndex);
+
+                    if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+                    {
+                        int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
+                        string key = input.Substring(startIndex + opener.Length, substringLength); // NOTE dit zou misschien eigenlijk "extracted" moeten heten en dan key als een integer oid, want atm kunnen er vgm gewoon duplicates ontstaan.
+
+                        Debug.Log("Encountered hidden choice: " + key);
+
+                        // I now have the kind as wel as the value of the choice.
+                        HiddenChoice newHidden = new(choiceType, choice);
+                        Controller.InterfaceBroker.hiddenChoices.Add(key, newHidden);
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.LogError("could not identify hidden choice");
+                        return false;
+                    }
+                }
+                else return false;
             }
 
             /// When we click the choice button, tell the story to choose that choice!
@@ -152,7 +205,7 @@ namespace ForgottenTrails.InkFacilitation
                     return false;
                 }
             }
-            public bool TryTravelTo(MapItem location)
+            public bool TryTravelTo(MapLocationContainer location)
             {
                 Choice discoveredChoice = null;
                 foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)

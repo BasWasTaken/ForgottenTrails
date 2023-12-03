@@ -9,6 +9,7 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using TMPro;
+using Travel;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -41,9 +42,11 @@ namespace ForgottenTrails.InkFacilitation
                 Controller.InterfaceBroker.book.markers.mapMark.color = Color.clear;
                 foreach (var choice in Controller.Story.currentChoices)
                 {
-                    if (choice.text.Contains("MapScreen")) 
+                    if (choice.text=="{UNITY:OpenMap}") 
                     {
                         Controller.Story.ChooseChoiceIndex(choice.index);// hopelijk wordt ook dit niet dubbelop als je al van de visible optie komt.
+                        Controller.Story.Continue();
+                        Controller.InterfaceBroker.FindHiddenChoices();
                         break;
                     }
                 }
@@ -55,15 +58,6 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
-
-                foreach (var choice in Controller.Story.currentChoices)
-                {
-                    if (choice.text.Contains("Put the map away"))
-                    {
-                        Controller.Story.ChooseChoiceIndex(choice.index);// hopelijk wordt ook dit niet dubbelop als je al van de visible optie komt.
-                        break;
-                    }
-                }
                 Controller.InterfaceBroker.book.markers.mapMark.color = Color.white;
             }
             #endregion
@@ -80,6 +74,8 @@ namespace ForgottenTrails.InkFacilitation
 
 
 
+
+
                 // first let's collect all the options ink has given us
 
                 List<string> locationOptions = new();
@@ -90,13 +86,15 @@ namespace ForgottenTrails.InkFacilitation
                         locationOptions.Add(found.Key);
                     } 
                 }
-                
+
+
                 // then we'll go over each of the buttons in our mapscreen
 
-                foreach (MapItem item in Controller.InterfaceBroker.mapButtonsContainer.GetComponentsInChildren<MapItem>())
+                // get list of known locations
+                InkList knownLocations = Controller.Story.state.variablesState["KnownLocations"] as InkList;
+
+                foreach (MapLocationContainer item in Controller.InterfaceBroker.mapButtonsContainer.GetComponentsInChildren<MapLocationContainer>())
                 {
-                    // get list of known locations
-                    InkList knownLocations = Controller.Story.state.variablesState["KnownLocations"] as InkList;
 
                     // is canocinal location found in this list?
                     bool isKnown = knownLocations.ContainsItemNamed(item.canonicalLocation);
@@ -111,6 +109,9 @@ namespace ForgottenTrails.InkFacilitation
                     item.GetComponent<Button>().interactable = canBeVisited;
 
                 }
+
+
+                // TODO: add check the other way round: any prompts from ink that could not be matched, should produce an error.
 
             }
             #endregion

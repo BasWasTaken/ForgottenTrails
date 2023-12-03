@@ -2667,7 +2667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917fd659e780df1449d84aca1e27a079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemContainerPrefab: {fileID: 616837255035053691, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
+  itemContainerPrefab: {fileID: 1472122517207343234, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
   book: {fileID: 275361438}
 --- !u!1 &531542275
 GameObject:
@@ -2880,7 +2880,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b306da1a19028478e52d52198d3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canonicalLocation: seabreezePath
+  definition: {fileID: 11400000, guid: eef37ceb75104dd4eaef00bafad55a51, type: 2}
+  Button: {fileID: 0}
 --- !u!1001 &665400246
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4936,7 +4937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b306da1a19028478e52d52198d3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canonicalLocation: ruinedCoast
+  definition: {fileID: 11400000, guid: c510bc596b3598544aa097a90b02b206, type: 2}
+  Button: {fileID: 0}
 --- !u!1 &1278207890
 GameObject:
   m_ObjectHideFlags: 0
@@ -5617,7 +5619,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b306da1a19028478e52d52198d3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canonicalLocation: EdanCastle
+  definition: {fileID: 11400000, guid: 3db0c11f6bef085488d1cded84be731b, type: 2}
+  Button: {fileID: 0}
 --- !u!1 &1431292871
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ LIST Items = knife, pot, rope, lantern, foragedMushrooms, wornSword
 
 ~ Items = LIST_ALL(Items)
 
-LIST Affordances = weapon, tool, cooking, cutting, stabbing
+LIST Affordances = weapon, tool, cooking, cutting, stabbing, food
 
 ~ Affordances = LIST_ALL(Affordances)
 

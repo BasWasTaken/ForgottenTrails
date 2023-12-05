@@ -174,40 +174,31 @@ namespace DataService
                     error += string.Format("\nListDefinition {0} not found.", inkListName);
                 }
             }
-            if (error == "")
+
+
+            string message;
+            if (error == "") message = "Succesfully fetched InkLists." + noError;
+            else message = "ERROR IN ATTEMPTING TO LIST ASSETS" + error;
+
+            if (items == null | affordances == null | locations == null)
             {
-                Debug.Log("Succesfully fetched InkLists." + noError);
+                throw new NullReferenceException("one of the expected inklists was not set to be searched. \nLog:" + message);
+            }
+            else if (error!="")
+            {
+                throw new Exception(message);
+            }
+            else if(!ItemListsKnown(items, affordances))
+            {
+                throw new Exception("Could not match up items or affordances. \nLog:"+message);
+            }
+            else if (!LocationsRecognised(locations))
+            {
+                throw new Exception("Could not match up locations. \nLog:" + message);
             }
             else
             {
-                Debug.LogAssertion("ERROR IN ATTEMPTING TO LIST ASSETS" + error);
-            }
-
-            if (items == null | affordances == null)
-            {
-                Debug.LogError(new NullReferenceException());
-            }
-            else if (ItemListsKnown(items, affordances))
-            {
-                Debug.Log("Succesfully checked all items and affordances.");
-            }
-            else
-            {
-                Debug.Log("Could not match up items or affordances");
-            }
-
-
-            if (locations == null)
-            {
-                Debug.LogError(new NullReferenceException());
-            }
-            else if (LocationsRecognised(locations))
-            {
-                Debug.Log("Succesfully checked all items and affordances.");
-            }
-            else
-            {
-                Debug.Log("Could not match up locations");
+                Debug.Log("Checked all lists and assets. No discrepencies found. \nLog:" + message);
             }
         }
 
@@ -283,8 +274,8 @@ namespace DataService
             // assert all locations to travel to from unity exist in ink
             foreach (var name in TemporaryDictionary.Keys)
             {
-                Debug.Log(name);
-                Debug.Log(locations);
+                //Debug.Log(name);
+                //Debug.Log(locations);
                 if (!locations.ContainsItemWithName(name))
                 {
                     error += string.Format("\nLocation \"{0}\" not found in unity dictionary!", name);

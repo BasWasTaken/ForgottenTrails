@@ -10,6 +10,7 @@ public enum Affordance
     tool,
     cutting,
     stabbing,
-    cooking
+    cooking,
+    food
     //vul aan
 }

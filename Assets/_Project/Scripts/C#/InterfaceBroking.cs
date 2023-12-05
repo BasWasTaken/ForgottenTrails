@@ -110,13 +110,13 @@ namespace ForgottenTrails.InkFacilitation
                 {
 
                     string kind = input.Substring(1, input.IndexOf('C')-1);
-                    Debug.Log(kind);
+                    //Debug.Log(kind);
                     Enum.TryParse(kind, true, out ChoiceType choiceType);
 
                     string opener = input.Substring(0, input.IndexOf('(') + 1);
                     string closer = input.Substring(input.IndexOf(')'));
-                    Debug.Log(opener);
-                    Debug.Log(closer);
+                    //Debug.Log(opener);
+                    //Debug.Log(closer);
                     int startIndex = input.IndexOf(opener);
                     int endIndex = input.IndexOf(closer, startIndex);
 
@@ -144,7 +144,7 @@ namespace ForgottenTrails.InkFacilitation
             /// When we click the choice button, tell the story to choose that choice!
             internal void OnClickChoiceButton(Choice choice)
             {
-                Debug.Log("chose " + choice.text);
+                //Debug.Log("chose " + choice.text);
                 Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
                 Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
                 RemoveOptions();

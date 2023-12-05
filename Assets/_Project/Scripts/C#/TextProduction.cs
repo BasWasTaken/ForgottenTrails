@@ -49,7 +49,7 @@ namespace ForgottenTrails.InkFacilitation
                 { return _textSpeedPreset; }
                 set
                 {
-                    Debug.Log(string.Format("Changed from {0} to {1} speed", TextSpeedPreset.ToString(), value.ToString()));
+                    //Debug.Log(string.Format("Changed from {0} to {1} speed", TextSpeedPreset.ToString(), value.ToString()));
                     _textSpeedPreset = value;
                     PlayerPrefs.SetInt("textSpeed", (int)_textSpeedPreset);
                 }

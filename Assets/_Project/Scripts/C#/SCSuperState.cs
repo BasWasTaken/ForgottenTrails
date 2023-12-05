@@ -148,16 +148,26 @@ namespace ForgottenTrails.InkFacilitation
 
                 story.BindExternalFunction("_Music_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
                 story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
-                
+
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
 
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
 
-                // voor nu laat ik deze onderste twee even uit, want als het goed is gebeuren beide toch met dezelfde knop...
-                story.BindExternalFunction("_OpenMap", () => { });// PerformInkFunction(() => Controller.InterfaceBroker.OpenMap())); // gaat dit goet met die beide transitions? nee dus.
-               story.BindExternalFunction("_CloseMap", () => { }); //PerformInkFunction(() => Controller.InterfaceBroker.CloseMap())); // gaat dit goet met die beide transitions?
+
+
+                // hoewel de map meestal met knop wordt opengemaakt, moet het ook uit verhaal kunnen:
+                story.BindExternalFunction("_OpenMap", () => PerformInkFunction(() => Controller.InterfaceBroker.OpenMap()));
+                    /*() =>
+                    {
+                        if (!Controller.TextProducer.Peeking)
+                        {
+                            Controller.InterfaceBroker.OpenMap();
+                        }
+                    });*/
+
+                // a close map function doesn't make sense, becausei nk only controls while it is being run! if it paused, it can't do anything.
             }
 
 
@@ -211,7 +221,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     message += "\n" + item + ": " + Controller.Story.state.variablesState[item].ToString();
                 }
-                Debug.Log(message);
+                //Debug.Log(message);
             }
 
             private void PopulateSceneFromData(StoryData input)

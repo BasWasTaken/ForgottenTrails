@@ -18,17 +18,18 @@ VAR TargetLocation = ()
 VAR VisitedLocations = ()
 ~ VisitedLocations = Locations()
 
+=== function KnowsLoc(location) ===
+~return KnownLocations has location
 
 === function LearnLoc(location) === /// add location to list
 { // if unknown, add to known
-- KnownLocations ? location:
+- !KnowsLoc(location):
     ~ KnownLocations += location
+    ~ Print("{location} added to travel log")
 }
 
 
 === function SetLocation(location) === // update current, previous, and all visited locations //maar deze history kan toch niet kloppen? want er kunnen toch geen duplicate items in zitten?
-
-
 ~ LearnLoc(location)
 
 //~ PreviousLocation = Locations()
@@ -40,11 +41,12 @@ VAR VisitedLocations = ()
 ~ VisitedLocations += location
 
 === function HasVisited(location) === // check list of visited locations
-~return VisitedLocations ? location
+~return VisitedLocations has location
 
 //
 // SYSTEM: Map
 // The map will consist of a ink knot that contains choices to unlocked locations. All of these will be caught by Unity and displayed as visual items on a map screen, which is opened and closed as the knot is accessed and left.
+// The first time the player learns of a location, it is added to the map. But, it is only made available to travel to after they've visited it once before. And, all travel is locked during dialogue sections.
 //
 
 === function AllowMap ===
@@ -54,26 +56,25 @@ VAR VisitedLocations = ()
 
 === MapScreen (-> returnTo) // the map knot. visit to open the map in unity.
 ~ _OpenMap()
-+ [{MapChoice(EdanCastle)}]
-    -> TravelingTo(CastleEntrance)
 + { HasVisited(EdanCastle)} [{MapChoice(EdanCastle)}] 
-    -> TravelingTo(CastleEntrance)
+    -> TravelingTo(->CastleEntrance)
 + { HasVisited(sampleCave)} [{MapChoice(sampleCave)}] 
-    -> TravelingTo(sampleCave)
+    -> TravelingTo(->sampleSampleCaveScene)
++ { HasVisited(seaBreezePath)} [{MapChoice(seaBreezePath)}] 
+    -> TravelingTo(->sampleSeaBreesePathScene)
 + [\{UNITY:CloseMap\}]    
 
-~ _CloseMap()
+\{UNITY:CloseMap()\}
     -> returnTo
+    
+=== function OpenMap()
+~ _OpenMap()
+
     
 === function _OpenMap() === // opens the map screen in unity
 \{UNITY:OpenMap()\}
 
 EXTERNAL _OpenMap()
-
-=== function _CloseMap() === // closes the map screen in unity
-\{Unity.CloseMap()\}
-
-EXTERNAL _CloseMap()
     
 === function MapChoice(destination) === // used to present an inky choice that will be represented visually on a map in unity. )in ink it simply lists as a normal choice)
 \{MapChoice({destination})\}

@@ -46,7 +46,6 @@ namespace ForgottenTrails.InkFacilitation
                 public override void OnExit()
                 {
                     EnableButtons(false);
-                    //this not done here anymore, but elsewhere- when a choise is made. RemoveOptions(); // Destroy old choices
                 }
                 #endregion
                 // Private Methods
@@ -78,11 +77,13 @@ namespace ForgottenTrails.InkFacilitation
                 internal void DisableButtons() => EnableButtons(false);
 
                 
-                    internal void PresentButtons()
+                internal void PresentButtons()
                 {
                     if (Controller.Story.canContinue)
                     {
-                        throw new Exception("no choices detected at this point");
+                        Debug.LogWarning("can continue- should do that before asking choices");
+                        // go to writing state?
+                        DropCondition = true;
                     }
                     else if (Controller.Story.currentChoices.Count > 0) /// Display all the choices, if there are any!
                     {

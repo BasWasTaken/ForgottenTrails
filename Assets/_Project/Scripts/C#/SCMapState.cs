@@ -58,6 +58,15 @@ namespace ForgottenTrails.InkFacilitation
             }
             public override void OnExit()
             {
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("{UNITY:CloseMap}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.ContinueMaximally();
+                        break;
+                    }
+                }
                 Controller.InterfaceBroker.book.markers.mapMark.color = Color.white;
             }
             #endregion
@@ -93,11 +102,18 @@ namespace ForgottenTrails.InkFacilitation
                 // get list of known locations
                 InkList knownLocations = Controller.Story.state.variablesState["KnownLocations"] as InkList;
 
+                foreach (var item in knownLocations)
+                {
+                    Debug.Log(item.Key.itemName);
+                }
+
                 foreach (MapLocationContainer item in Controller.InterfaceBroker.mapButtonsContainer.GetComponentsInChildren<MapLocationContainer>())
                 {
 
                     // is canocinal location found in this list?
                     bool isKnown = knownLocations.ContainsItemNamed(item.canonicalLocation);
+
+                    Debug.LogFormat("{0} is {1} known!", item.canonicalLocation, isKnown ? "":"not") ;
 
                     // set (in)active depending on above
                     item.gameObject.SetActive(isKnown);
@@ -107,6 +123,7 @@ namespace ForgottenTrails.InkFacilitation
 
                     // making them interactable or not
                     item.GetComponent<Button>().interactable = canBeVisited;
+                    Debug.LogFormat("{0} can {1} be visited!", item.canonicalLocation, canBeVisited ? "" : "not");
 
                 }
 

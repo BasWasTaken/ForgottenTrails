@@ -47,6 +47,15 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnExit()
             {
 
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("{UNITY:ClosePartyScreen}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.ContinueMaximally();
+                        break;
+                    }
+                }
                 Controller.InterfaceBroker.book.markers.partyMark.color = Color.white;
             }
             #endregion

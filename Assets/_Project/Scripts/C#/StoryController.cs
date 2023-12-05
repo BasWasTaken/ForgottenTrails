@@ -111,7 +111,7 @@ namespace ForgottenTrails.InkFacilitation
         }
         private void InitialiseStateMachine()
         {
-            Debug.Log("Making state machine.");
+            //Debug.Log("Making state machine.");
             StateMachine = new
             (
             this,

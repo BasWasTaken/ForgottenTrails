@@ -6,15 +6,14 @@ using UnityEditor;
 using ForgottenTrails.InkFacilitation;
 using UnityEngine.UI;
 
-namespace items
+namespace Items
 {
 
     /// <summary>
     /// <para>Summary not provided.</para>
     /// </summary>
     [RequireComponent(typeof(Image))]
-    [RequireComponent(typeof(TMPro.TextMeshProUGUI))]
-    public class ItemRepresentation : MonoBehaviour, IMouseOverOption
+    public class ItemContainer : MonoBehaviour, IMouseOverOption
     {
         public bool IsMouseOver { get; set; }
         private TMPro.TextMeshProUGUI prompt;

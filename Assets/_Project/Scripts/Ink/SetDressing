@@ -90,6 +90,10 @@ EXTERNAL _Ambiance_Remove(listItem)
 <<i>Removed all ambiance. </i>>
 EXTERNAL _Ambiance_RemoveAll()
 
+=== function Ambiance_Play(clip, volume)
+~_Ambiance_RemoveAll()
+~Ambiance_Add(clip, volume)
+
 // Music. Handled with external function.
 === function Music_Play(clip, volume) // play new clip or adjust volume of existing clip
 ~ Music = clip

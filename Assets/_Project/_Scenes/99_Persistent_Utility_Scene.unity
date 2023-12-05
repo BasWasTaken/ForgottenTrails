@@ -187,86 +187,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: menuScene
-      value: 00_MainMenu_Scene
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: textAsset
-      value: 
-      objectReference: {fileID: 4900000, guid: 8882d426ffe91ef4786331665f048139, type: 3}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: newGameScene
-      value: 01_Demo_Gameplay_Scene
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: <TextAsset>k__BackingField
-      value: 
-      objectReference: {fileID: 4900000, guid: d393fd924f9849344ade71dc807dbafa, type: 3}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[0]
-      value: Vox
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[1]
-      value: Sfx
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[2]
-      value: Music
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[3]
-      value: Ambiance
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[4]
-      value: Background
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[5]
-      value: Portraits
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[6]
-      value: Items
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: InkListNames.Array.data[7]
-      value: Affordances
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 865e52f4ed133bb4dac347d686f281c7, type: 2}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: e8ed6563ee9717447a4696035d3e6547, type: 2}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: 2465d9dfdd278b74593cf162ef0a079b, type: 2}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.data[3]
-      value: 
-      objectReference: {fileID: 11400000, guid: b4531b50a08aa704cafeca8a5a5604ab, type: 2}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.data[4]
-      value: 
-      objectReference: {fileID: 11400000, guid: 91bc0009517c7c248ac09b279b8aee36, type: 2}
-    - target: {fileID: 8663880123288258832, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: possibleItems.Array.data[5]
-      value: 
-      objectReference: {fileID: 11400000, guid: 4e3f9c270e35e2b4da8582591b3496ae, type: 2}
     - target: {fileID: 8663880123288258833, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -310,10 +230,6 @@ PrefabInstance:
     - target: {fileID: 8663880123288258833, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663880123288258838, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
-      propertyPath: nameOfMasterDataDirectory
-      value: PlayerData
       objectReference: {fileID: 0}
     - target: {fileID: 8663880123288258839, guid: 9a5006a2bd72d77488d393d95ed9d5b8, type: 3}
       propertyPath: m_Name

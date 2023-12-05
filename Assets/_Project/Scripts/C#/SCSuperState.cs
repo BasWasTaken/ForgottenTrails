@@ -148,13 +148,28 @@ namespace ForgottenTrails.InkFacilitation
 
                 story.BindExternalFunction("_Music_Play", (InkList clip, float relVol) => PerformInkFunction(() => Controller.SetDresser.InkRequestAudio(ConvertListToItem(clip), relVol)));
                 story.BindExternalFunction("_Music_Stop", () => PerformInkFunction(() => Controller.SetDresser.StopMusic()));
-                
+
                 story.ObserveVariable("Inventory", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.inventory.FetchItems(newValue as InkList)));
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
 
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
+
+
+
+                // hoewel de map meestal met knop wordt opengemaakt, moet het ook uit verhaal kunnen:
+                story.BindExternalFunction("_OpenMap", () => PerformInkFunction(() => Controller.InterfaceBroker.OpenMap()));
+                    /*() =>
+                    {
+                        if (!Controller.TextProducer.Peeking)
+                        {
+                            Controller.InterfaceBroker.OpenMap();
+                        }
+                    });*/
+
+                // a close map function doesn't make sense, becausei nk only controls while it is being run! if it paused, it can't do anything.
             }
+
 
             private InkListItem ConvertListToItem(InkList inkList)
             {
@@ -206,7 +221,7 @@ namespace ForgottenTrails.InkFacilitation
                 {
                     message += "\n" + item + ": " + Controller.Story.state.variablesState[item].ToString();
                 }
-                Debug.Log(message);
+                //Debug.Log(message);
             }
 
             private void PopulateSceneFromData(StoryData input)

@@ -1,135 +1,14 @@
+INCLUDE Core
 INCLUDE Lists
-INCLUDE Utility
+INCLUDE Items
+INCLUDE Travel
 INCLUDE StoryPresentation
 INCLUDE SetDressing
 INCLUDE VariableLanguage
-INCLUDE Map
+INCLUDE Utility
+
 // The formatting is such that all of the "normal" function names can be safely called from ink text. These then call on external functions (or fallbacks) which start with "_". In other words: never directly call functions starting with an underscore from your text!
-// See the Readme for all functions.
-
-
-//
-// SYSTEM: looping time of day
-// Unity currently does nothing with this feature.
-//
-LIST TimeOfDay = (Night), Dawn, Morning, Midday, Afternoon, Dusk, Evening
-
-=== function AdvanceTime() // used to progress time 1 or loop back around.
-{ TimeOfDay == 7:
-	~ TimeOfDay = 1
-- else:
-	~ TimeOfDay ++ 
-}   
- 
-//
-// SYSTEM: Inventory
-// Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
-//
-VAR Inventory = () // list of items the player has.
-~ Inventory = Items() // List of items defined in Lists
-
-=== function Item_Add(item) //Add item to inventory.
-    ~ Inventory += item
-
-    === function ItemChoice(itemOrAffordance) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal)
-\{ItemChoice({itemOrAffordance})\}
-
-VAR UsedItem = () // container for unity to tell ink what item it just used
-~ UsedItem = Items()
-
-=== function Item_Remove(item) // used to remove an item from the inventory
-    {Inventory has item:
-        ~ Inventory -= item
-    - else:
-        ~ PrintWarning("Attempted to remove an item that wasn't there!")
-    }
-    
-//
-// SYSTEM: Incremental knowledge tracking.
-// Allows tracking of what the player has witnessed throughout the game. Used by distinct LISTs. Each LIST is a chain of facts. Each fact supersedes the fact before. 
-//
-VAR knowledgeState = ()
-
-=== function Knows (fact) // check if fact is present in knowledge state, e.i. if it is known information
-   ~ return knowledgeState ? fact 
-
-=== function KnowledgeStateBetween(factX, factY) // used to check if knowledge state is between two specific points
-   ~ return knowledgeState? factX && not (knowledgeState ^ factY)
-
-=== function Learn(facts)  // used to "learn" (i.e. add to knowledge state) a fact, and all facts before it (since they are incremental)
-   ~ temp x = _Pop(facts)
-   {
-   - not x: 
-      ~ return false 
-
-   - not Knows(x):
-      ~ temp chain = LIST_ALL(x)
-      ~ temp statesGained = LIST_RANGE(chain, LIST_MIN(chain), x)
-      ~ knowledgeState += statesGained
-      ~ Learn (facts) 	// set any other states left to set
-      ~ return true  	       // and we set this state, so true
- 
-    - else:
-      ~ return false || Learn(facts) 
-    }	
-    
-//
-// SYSTEM: Location tracking
-// Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
-//
-    
-VAR CurrentLocation = ()
-~ CurrentLocation = Locations() // locations defined in Lists
-
-VAR PreviousLocation = () 
-~ PreviousLocation = Locations ()
-
-VAR TargetLocation = ()
-~ TargetLocation = Locations() 
-
-VAR VisitedEver = ()
-~ VisitedEver = Locations()
-
-=== function SetLocation(location) === // update current, previous, and all visited locations
-//~ PreviousLocation = Locations()
-//~ PreviousLocation += CurrentLocation
-~ PreviousLocation = CurrentLocation
-//~ CurrentLocation = Locations()
-//~ CurrentLocation += location
-~ CurrentLocation = location
-~ VisitedEver += location
-
-=== function HasVisited(location) === // check list of visited locations
-~return VisitedEver ? location
-
-// Seealso the map system in Map
-
-
-//
-// SYSTEM: affection tracking
-// Tracking numeric value for relationship between pc and other characters, and using cutoff points to determine friendly, hostile etc.
-// Can be compared simply by asking e.g.: {AFFHenry >= friendly}
-//
-
-LIST Attitudes = devoted = 100, alligned = 75, friendly = 60, ambivalent = 50, begrudging = 40, hostile = 25, spiteful = 0
-
-=== function GetAttitude(value) ===
-{
--   value >= LIST_VALUE(devoted):
-    ~ return devoted
--   value >= LIST_VALUE(alligned):
-    ~ return alligned
--   value >= LIST_VALUE(friendly):
-    ~ return friendly
--   value >= LIST_VALUE(ambivalent):
-    ~ return ambivalent
--   value >= LIST_VALUE(begrudging):
-    ~ return begrudging
--   value >= LIST_VALUE(hostile):
-    ~ return hostile
--   else:
-    ~ return spiteful
-}
+// See the Readme for all functions relevant for Vugs.
 
 
 

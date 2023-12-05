@@ -1,0 +1,36 @@
+//
+// SYSTEM: Inventory
+// Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
+//
+VAR Inventory = () // list of items the player has.
+~ Inventory = Items() // List of items defined in Lists
+
+=== function Item_Add(item) //Add item to inventory.
+    ~ Inventory += item
+
+=== function ItemChoice(itemOrAffordance) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal). 
+\{ItemChoice({itemOrAffordance})\}
+
+VAR UsedItem = () // container for unity to tell ink what item it just used
+~ UsedItem = Items()
+
+=== function _Item_Remove(item) // used to remove an item from the inventory
+    {
+    - Inventory has item: 
+        ~ Inventory -= item
+        ~ Print("Removed {item}. Items still in possesion: {Inventory}")
+    - else:
+        ~ PrintWarning("Attempted to remove an item that wasn't there!")
+    }
+    
+=== function Item_Remove(item)
+~ _Item_Remove(item)
+
+=== function Item_Consume() // remove item that was just used
+~ Item_Remove(UsedItem)
+
+=== function Item_UseAndRemove(item)
+~ UsedItem = item
+~ Item_Consume()
+
+

@@ -432,7 +432,7 @@ namespace DataService
             {
                 if (output == null)
                 {
-                    Debug.Log("Creating new data of type " + key);
+                    //Debug.Log("Creating new data of type " + key);
                     output = new T();
                 }
                 if (!ActiveDataDictionary.TryAdd(key, output)) // doersn't this mean the adding from reporteed data is superfluous?

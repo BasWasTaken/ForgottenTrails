@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using TMPro;
-using items;
+using Items;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -46,7 +46,6 @@ namespace ForgottenTrails.InkFacilitation
                 public override void OnExit()
                 {
                     EnableButtons(false);
-                    //this not done here anymore, but elsewhere- when a choise is made. RemoveOptions(); // Destroy old choices
                 }
                 #endregion
                 // Private Methods
@@ -77,11 +76,14 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 internal void DisableButtons() => EnableButtons(false);
 
+                
                 internal void PresentButtons()
                 {
                     if (Controller.Story.canContinue)
                     {
-                        throw new Exception("no choices detected at this point");
+                        Debug.LogWarning("can continue- should do that before asking choices");
+                        // go to writing state?
+                        DropCondition = true;
                     }
                     else if (Controller.Story.currentChoices.Count > 0) /// Display all the choices, if there are any!
                     {
@@ -91,44 +93,19 @@ namespace ForgottenTrails.InkFacilitation
                         {
 
                             Choice choice = Controller.Story.currentChoices[i];
-                            string input = choice.text;
-
-                            if (Regex.IsMatch(input,"^{.+Choice\\(")) // automatically gets itemchoices, mapchoices, etc
+                            if (Controller.InterfaceBroker.TryAddHiddenChoice(choice)) { }
+                            else if (choice.text == "{UNITY:OpenMap}")
                             {
-
-                                string kind = input.Substring(1, input.IndexOf('C'));
-                                Debug.Log(kind);
-                                Enum.TryParse(kind,true, out ChoiceType choiceType);
-                                
-                                string opener = input.Substring(0, input.IndexOf('(')+1);
-                                string closer = input.Substring(input.IndexOf(')'));
-                                Debug.Log(opener);  
-                                Debug.Log(closer);
-                                int startIndex = input.IndexOf(opener);
-                                int endIndex = input.IndexOf(closer, startIndex);
-
-                                if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
-                                {
-                                    int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
-                                    string key = input.Substring(startIndex + opener.Length, substringLength);
-
-                                    Debug.Log("Encountered hidden choice: " + key);
-
-                                    // I now have the kind as wel as the value of the choice.
-                                    HiddenChoice newHidden = new(choiceType, choice);
-                                    Controller.InterfaceBroker.hiddenChoices.Add(key, newHidden);
-                                }
-                                else
-                                {
-                                    Debug.LogError("could not identify hidden choice");
-                                }
-
+                                //Controller.InterfaceBroker.book.markers.mapMark.GetComponent<Button>().interactable = true; // allow the use of the map button
+                                // nee, ik denk te moeilijk! dit hoeft niet de knop te enabelen, gewoon wanneer dit er is kan de speler als het goed is o pde knop drukken en gaan reizen, maar hij kan altidj drukken.
+                                Debug.LogWarning("Info: Map Travel Available (Bas has not yet put in a notification or whatever)");
                             }
                             else
                             {
                                 Button button = PresentButton(choice.text.Trim());
                                 /// Tell the button what to do when we press it
-                                button.onClick.AddListener(delegate {
+                                button.onClick.AddListener(delegate
+                                {
                                     Controller.InterfaceBroker.OnClickChoiceButton(choice);
                                 });
                             }
@@ -136,6 +113,7 @@ namespace ForgottenTrails.InkFacilitation
                         //scrollbar.value = 0;
                         return;
                     }
+                    
                     else// if(Controller.InterfaceBroker.hiddenChoices.Count==0)
                     {
                         // If we've read all the content and there's no choices, the story is finished!

@@ -20,7 +20,7 @@ namespace Bas.Utility
             }
             else
             {
-                Debug.LogWarning(string.Format("Previously existing instance of {0} class already detected. Destroying presently waking instance called {1}.", GetType(), name));
+                Debug.Log(string.Format("Previously existing instance of {0} class already detected. Destroying presently waking instance called {1}.", GetType(), name));
                 Destroy(gameObject);
             }
         }

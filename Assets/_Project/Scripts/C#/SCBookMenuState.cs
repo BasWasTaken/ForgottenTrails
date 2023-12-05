@@ -39,14 +39,49 @@ namespace ForgottenTrails.InkFacilitation
             public override void OnUpdate()
             {
                 base.OnUpdate();
+                if (Input.GetKeyUp(KeyCode.Escape))
+                {
+                    ExitMenu();
+                }
             }
             public override void OnExit()
             {
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("{UNITY:CloseMap}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.Continue();
+
+                        break;
+                    }
+                    else if(choice.text.Contains("{UNITY:ClosePartyScreen}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.Continue();
+                        break;
+                    }
+                }
                 Controller.InterfaceBroker.inventory.book.Replace();
             }
             #endregion
             // Private Methods
             #region Private Methods
+            private void ExitMenu() {
+                var state = Controller.StateMachine.CurrentState;
+                if (StackBasedStateMachine<StoryController>.DoesXDescentFromY(state, this)) // this check should be redundant.... but is the current state a menu state?
+                {
+                    Controller.StateMachine.DropState(this);
+                    
+                }
+                else
+                {
+                    throw new Exception("Unexpected State");
+                }
+
+
+                
+            }
 
             #endregion
         }

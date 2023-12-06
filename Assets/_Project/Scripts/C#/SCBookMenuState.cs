@@ -71,8 +71,7 @@ namespace ForgottenTrails.InkFacilitation
                 var state = Controller.StateMachine.CurrentState;
                 if (StackBasedStateMachine<StoryController>.DoesXDescentFromY(state, this)) // this check should be redundant.... but is the current state a menu state?
                 {
-                    Controller.StateMachine.DropState(this);
-                    
+                    Controller.StateMachine.DropState(this);                    
                 }
                 else
                 {

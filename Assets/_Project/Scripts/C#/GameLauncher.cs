@@ -20,6 +20,15 @@ public class GameLauncher : MonoSingleton<GameLauncher>
         base.Awake();
         Application.targetFrameRate = 60;
     }
+    private void Start()
+    {
+        int i = 0;
+        do
+        {
+            i++;
+            profileNamer.text = "UnnamedGame" + i;
+        } while (DataManager.Instance.DataProfileExists(profileNamer.text));
+    }
     public void StartNewGame()
     {
         StartNewGame(profileNamer.text);

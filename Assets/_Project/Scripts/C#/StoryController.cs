@@ -84,9 +84,12 @@ namespace ForgottenTrails.InkFacilitation
         internal SCWaitingForInputState waitingForInputState = new();
         internal SCWaitingForChoiceState waitingForChoiceState = new();
         internal SCWaitingForContinueState waitingForContinueState = new();
-        internal SCGameMenuState gameMenuState = new();
-        internal SCInventoryState inventoryState = new();
+        internal SCBookMenuState bookMenuState = new();
         internal SCSettingsState settingsState = new();
+        internal SCDataState dataState = new();
+        internal SCInventoryState inventoryState = new();
+        internal SCMapState mapState = new();
+        internal SCPartyState partyState = new();
         internal SCSavingState savingState = new();
         #endregion
 
@@ -97,10 +100,10 @@ namespace ForgottenTrails.InkFacilitation
         override protected void Awake()
         {
             base.Awake();
+           
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
-        }
-        private void Start()
-        {
+        
+            //book = FindFirstObjectByType<Book>(); 
             SetDresser.Assign();
             TextProducer.Assign();
             InterfaceBroker.Assign();
@@ -108,6 +111,7 @@ namespace ForgottenTrails.InkFacilitation
         }
         private void InitialiseStateMachine()
         {
+            //Debug.Log("Making state machine.");
             StateMachine = new
             (
             this,
@@ -118,10 +122,13 @@ namespace ForgottenTrails.InkFacilitation
             waitingForInputState,
             waitingForChoiceState,
             waitingForContinueState,
-            gameMenuState,
-            inventoryState,
+            savingState,
+            bookMenuState,
             settingsState,
-            savingState
+            dataState,
+            inventoryState,
+            partyState,
+            mapState
             );
         }
         private void Update()
@@ -131,7 +138,10 @@ namespace ForgottenTrails.InkFacilitation
                 StateMachine.Update();
             }
         }
-
+        private void OnDestroy()
+        {
+            InkDataAsset = null;
+        }
         #endregion
         // Public Methods
         #region Public Methods
@@ -155,10 +165,7 @@ namespace ForgottenTrails.InkFacilitation
         }
         private void ResetData()
         {
-            if (UnityEditor.EditorApplication.isPlaying == false)
-            {
-                InkDataAsset = CreateBlankData();
-            }
+            InkDataAsset = CreateBlankData();
         }
         private void ResetScene()
         {

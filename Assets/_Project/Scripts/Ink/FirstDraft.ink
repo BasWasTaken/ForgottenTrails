@@ -1,6 +1,8 @@
 INCLUDE CustomFeatures
 INCLUDE Stories
 
+// TODO: split the scenes in this file up into smaller files, each inclued in stories.
+
 
 //AffectionValues
 VAR AffEdgar = 50
@@ -58,23 +60,27 @@ You turn on your back, the small canvas tent that shields you from the elements 
 ->Awakening.Tent
 
 =Tent
+
 You decide to
-*(PackUpEarly)...pack up[].
++  [{AllowMap()}] -> MapScreen(->Awakening.Tent) // dit moet toch meer consise kunnen...?
+
+*(PackUpEarly)[...pack up]{aglue} pack up.
 Or you would, but the grumbling of your stomach tells you that it's not going to be a fun hike without something to eat.
 
 You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented] 
 ->Tent
-*...make some breakfast first[].
+*[...make some breakfast first]{aglue} make some breakfast.
 Your stomach rumbles, and what poor sort would head off without a proper meal first anyway? 
 The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
-[ADDITION BAS FOR TESTING] Ah, there it is. You pick up the pot and add it to your inventory. {Item_Add(pot)}
+
+~Item_Add(pot)
 You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
-    **[{ItemOption(cooking)}]
+    **[{ItemChoice(cooking)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
-        ***[{ItemOption(foragedMushrooms)}]
-        {Item_Remove(UsedItem)}
-        You drop the mushrooms into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison. 
+        ***[{ItemChoice(food)}]
+        {Item_Consume()}
+        You drop the {UsedItem} into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison.
         A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 
         {Tent.PackUpEarly: |You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented]}
         Fully fed, it's about time to head off if you still want to make some decent progress today. 
@@ -134,14 +140,12 @@ At the center of the crossing you spot a decorated boulder: a Waystone.
 =Crossing
 +[Take the North Road]
 You decide to take the North road{PreviousLocation == EdinburghCastleEntrance: and go and go back the way you came.|  leading to {Knows(EdanCastleKnow.Exists):Edan Castle |the Hilltop Castle.}}
-~PreviousLocation = "EdinburghCrossroads"
 ->RoadToEdanCastle
 +[Take the East Road]
 Sorry buddy, no content East yet!
 ->EdinburghCrossroads.Crossing
 +[Take the South Road]
 You decide to {PreviousLocation ? ScotlandEntranceRoad:go back the way you came.|take the Southern Road.}
-~PreviousLocation = "EdinburghCrossroads"
 ->ScotlandEntranceRoad
 +[Take the West Road]
 Sorry buddy, no content West yet!
@@ -158,16 +162,23 @@ From this stone to Thahnford, 107 miles Southbound"
 
 A fourth line is also there, but the markings are scratched out. Carved beneath it in a freeform script -that barely passes as legible- is written a single word: "daemons".
 ->EdinburghCrossroads.Crossing
-+ [Check your map]
-    -> MapScreen (-> EdinburghCrossroads.Crossing)
+* [Consult your map]
+    You can open your map by clicking on the relevant tab above!
+    \[This is where the player learns about the map, and that they can also always open it with in the menu. But, currently, using this option caused a softlock! So sorry buddy, your game is softlocked now. You won't be able to go advance the story after the map closes. I'm working on it, al right?
+    {stop}
+    (Hope the quickload functionality works at the moment...)
+    {OpenMap()}
+    ->MapScreen (-> EdinburghCrossroads.Crossing)
+
++  [{AllowMap()}] -> MapScreen(-> EdinburghCrossroads.Crossing) // dit moet toch meer consise kunnen...?
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element
-~SetLocation(RoadToEdanCastle)
+~SetLocation(roadToEdanCastleLoc)
 {~->RandomEventsEdanArea|->CastleEntranceFromRoad}
 
 === CastleEntranceFromRoad
-~PreviousLocation = RoadToEdanCastle
+// removed manual edit of previouslocation, als het goed is wordt dit nu bijgehouden door setlocation. ~PreviousLocation = RoadToEdanCastle
 ->CastleEntrance
 
 === CastleEntrance ===
@@ -175,9 +186,9 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 
 = CastleEntranceFirst
 ~SetLocation(EdanCastleEntrance)
-#backdrop: CastleGate
-#music:
-#ambiance:
+~FadeToImage(CastleGate,0)
+//~Music_Play([nameOfClip])
+//~Ambiance_Add([name
 As you crest the hilltop a gatehouse comes into view. Its stones are worn, ancient. The top parts seem to have crumbled at some point, having now been replaced by wooden battlements. As you step forward in approach you hear a voice call out loudly from inside the gatehouse:
 
 "Halt! Who goes there, man or beast?"

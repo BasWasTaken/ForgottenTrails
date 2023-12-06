@@ -1,5 +1,7 @@
 // locations
-LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse, sampleCave, onTheRoad
+LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamState, ScotlandEntranceRoadLoc, EdinburghCastleEntrance, EdanCastleEntrance, EdanCastleGatehouse, sampleCave, onTheRoad, ruinedCoast, seaBreezePath
+
+~ Locations = LIST_ALL(Locations)
 
 // characters
 LIST Party = (Player), Alice, Robert
@@ -9,7 +11,7 @@ LIST Items = knife, pot, rope, lantern, foragedMushrooms, wornSword
 
 ~ Items = LIST_ALL(Items)
 
-LIST Affordances = weapon, tool, cooking, cutting, stabbing
+LIST Affordances = weapon, tool, cooking, cutting, stabbing, food
 
 ~ Affordances = LIST_ALL(Affordances)
 

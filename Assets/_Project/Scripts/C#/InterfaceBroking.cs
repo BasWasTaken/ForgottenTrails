@@ -10,7 +10,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Bas.Utility;
-using items;
+using Items;
+using static ForgottenTrails.InkFacilitation.StoryController.InterfaceBroking.SCWaitingForChoiceState;
+using System.Text.RegularExpressions;
+using Travel;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -31,6 +34,12 @@ namespace ForgottenTrails.InkFacilitation
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             internal Transform ButtonAnchor { get; set; }
 
+
+            [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
+            internal GameObject mapButtonsContainer { get; set; }
+            [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
+            public Book book { get; set; }
+
             [field: SerializeField, BoxGroup("Scene References"), Required]
             public Image FloatingMarker { get; internal set; }
 
@@ -44,7 +53,7 @@ namespace ForgottenTrails.InkFacilitation
             #endregion
             // Public Properties
             #region Public Properties
-            readonly Dictionary<string, Choice> hiddenChoices = new();
+            internal Dictionary<string, HiddenChoice> hiddenChoices { get; set; } = new();
             #endregion
             // Private Properties
             #region Private Properties
@@ -61,7 +70,7 @@ namespace ForgottenTrails.InkFacilitation
 
 
             [SerializeField, Header("Scene References"), Required]
-            public items.Inventory inventory;
+            public Items.Inventory inventory;
 
             #region Public Methods
             public bool CanPresentChoices()
@@ -80,10 +89,62 @@ namespace ForgottenTrails.InkFacilitation
                     return false; // technically, if ending the dialogue is a choise
                 }
             }
+            internal void FindHiddenChoices()
+            {
+                hiddenChoices.Clear();
+                string message = "";
+                foreach (Choice choice in Controller.Story.currentChoices)
+                {
+                    bool succes = TryAddHiddenChoice(choice);
+
+                    message += string.Format("\n \"{0}\" was{1} a hidden choice", choice.text, succes ? "" : " not");
+                }
+
+                Debug.LogFormat("Found {0} hidden choices:\n{1}", hiddenChoices.Count, message);
+    
+            }
+            internal bool TryAddHiddenChoice(Choice choice)
+            {
+                string input = choice.text;
+                if (Regex.IsMatch(input, "^{.+Choice\\(")) // automatically gets itemchoices, mapchoices, etc
+                {
+
+                    string kind = input.Substring(1, input.IndexOf('C')-1);
+                    //Debug.Log(kind);
+                    Enum.TryParse(kind, true, out ChoiceType choiceType);
+
+                    string opener = input.Substring(0, input.IndexOf('(') + 1);
+                    string closer = input.Substring(input.IndexOf(')'));
+                    //Debug.Log(opener);
+                    //Debug.Log(closer);
+                    int startIndex = input.IndexOf(opener);
+                    int endIndex = input.IndexOf(closer, startIndex);
+
+                    if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+                    {
+                        int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
+                        string key = input.Substring(startIndex + opener.Length, substringLength); // NOTE dit zou misschien eigenlijk "extracted" moeten heten en dan key als een integer oid, want atm kunnen er vgm gewoon duplicates ontstaan.
+
+                        Debug.Log("Encountered hidden choice: " + key);
+
+                        // I now have the kind as wel as the value of the choice.
+                        HiddenChoice newHidden = new(choiceType, choice);
+                        Controller.InterfaceBroker.hiddenChoices.Add(key, newHidden);
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.LogError("could not identify hidden choice");
+                        return false;
+                    }
+                }
+                else return false;
+            }
 
             /// When we click the choice button, tell the story to choose that choice!
             internal void OnClickChoiceButton(Choice choice)
             {
+                //Debug.Log("chose " + choice.text);
                 Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
                 Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
                 RemoveOptions();
@@ -102,27 +163,30 @@ namespace ForgottenTrails.InkFacilitation
             public bool TryUseItem(InventoryItem item)
             {
                 Choice discoveredChoice = null;
-                foreach (KeyValuePair<string, Choice> keyValuePair in hiddenChoices)
+                foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)
                 {
-
-                    string keyPhrase = keyValuePair.Key;
-                    Choice potentialChoice = keyValuePair.Value;
-                    if(item.CanonicalName == keyPhrase)
+                    if (keyValuePair.Value.Type == ChoiceType.Item)
                     {
-                        discoveredChoice = potentialChoice;
-                        break;
-                    }
-                    else
-                    {
-                        foreach (Affordance trait in item.Affordaces)
+                        string keyPhrase = keyValuePair.Key;
+                        Choice potentialChoice = keyValuePair.Value.Choice;
+                        if (item.CanonicalName == keyPhrase)
                         {
-                            if (trait.ToString() == keyPhrase)
+                            discoveredChoice = potentialChoice;
+                            break;
+                        }
+                        else
+                        {
+                            foreach (Affordance trait in item.Affordaces)
                             {
-                                discoveredChoice = potentialChoice;
-                                break;
+                                if (trait.ToString() == keyPhrase)
+                                {
+                                    discoveredChoice = potentialChoice;
+                                    break;
+                                }
                             }
                         }
                     }
+                    // else not item, so need not be considered.
                     
                 }
 
@@ -141,10 +205,50 @@ namespace ForgottenTrails.InkFacilitation
                     return false;
                 }
             }
+            public bool TryTravelTo(MapLocationContainer location)
+            {
+                Choice discoveredChoice = null;
+                foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)
+                {
+                    if (keyValuePair.Value.Type == ChoiceType.Map)
+                    {
+                        string keyPhrase = keyValuePair.Key;
+                        Choice potentialChoice = keyValuePair.Value.Choice;
+                        if (location.canonicalLocation == keyPhrase)
+                        {
+                            discoveredChoice = potentialChoice;
+                            break;
+                        }
+                    }
+                    // else not travel, so need not be considered.
+                }
+
+                if (discoveredChoice != null)
+                {
+                    Controller.mapState.DropCondition = true;
+                    OnClickChoiceButton(discoveredChoice);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Nope, that location doesn't work!");
+                    return false;
+                }
+            }
             #endregion
+
+            internal void OpenMap()
+            {
+                Controller.StateMachine.TransitionToState(Controller.mapState);
+            }
+            internal void CloseMap()
+            {
+                Controller.mapState.DropCondition = true;
+            }
+
             // Private Methods
             #region Private Methods
-            
+
             #endregion
         }
     }    

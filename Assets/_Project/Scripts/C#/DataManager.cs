@@ -45,9 +45,11 @@ namespace DataService
                     if (!Directory.Exists(path)) // create path if it doesn't exist. could maybe be useful as a static utility function tood
                     {
                         Directory.CreateDirectory(path);
+                        Debug.LogFormat("Created data profile for {0} at {1}.", value, path);
                         //metaData = new();
                     }
                     _ActiveDataProfile = value;
+                    Debug.LogFormat("Switched to data profile \"{0}\".", value);
                 }
                 else throw new Exception();
             }
@@ -85,6 +87,11 @@ namespace DataService
                 }
                 return output;
             }
+        }
+
+        public bool DataProfileExists(string profileToTest)
+        {
+            return DataProfiles.Contains(profileToTest);
         }
 
         /// <summary>
@@ -182,6 +189,7 @@ namespace DataService
             }
             else
             {
+                ActiveDataDictionary.Clear();
                 ActiveDataProfile = profileName;
                 metaData = new();
                 return true;
@@ -222,10 +230,13 @@ namespace DataService
 
             HashSet<DataClass> datas = new();
             // collect all the dataclasses in queue
-            foreach (KeyValuePair<string, DataClass> dataClass in ActiveDataDictionary)
+
+            if (ActiveDataProfile != DataProfile(ActiveDataProfileDirectory) | DataProfileDirectory(ActiveDataProfile) != (ActiveDataProfileDirectory)) throw new Exception();
+            foreach (KeyValuePair<string, DataClass> pair in ActiveDataDictionary)
             {
-                message += "\n" + dataClass.Key;
-                datas.Add(dataClass.Value);
+                if (pair.Value.Label + pair.Key != pair.Value.Key) throw new Exception();
+                message += "\n" + pair.Value.Label + ": " + pair.Key;
+                datas.Add(pair.Value);
             }
 
             // form file content
@@ -246,6 +257,7 @@ namespace DataService
             }
 
             metaData.timeSinceLastSave = 0;
+
             // Call the OnDataSaved event/callback, if there are subscribers
             OnDataSaved?.Invoke();
             if (datas.Count == 0)
@@ -254,7 +266,7 @@ namespace DataService
             }
             else
             {
-                //Debug.Log("Sucessfully saved " + message);
+                Debug.Log("Sucessfully saved " + message);
             }
         }
 
@@ -431,7 +443,7 @@ namespace DataService
             {
                 if (output == null)
                 {
-                    Debug.Log("Creating new data of type " + key);
+                    //Debug.Log("Creating new data of type " + key);
                     output = new T();
                 }
                 if (!ActiveDataDictionary.TryAdd(key, output)) // doersn't this mean the adding from reporteed data is superfluous?
@@ -462,7 +474,7 @@ namespace DataService
         }
         public string GetMostRecentFile() // like the below but iterating over multiple profiles
         {
-            string mostRecent = "PLACEHOLDER";
+            string mostRecent = "null";
             DateTime record = DateTime.MinValue;
             foreach (string profile in DataProfiles)
             {
@@ -476,11 +488,12 @@ namespace DataService
                     }
                 }
             }
-            return mostRecent;
+            if (mostRecent == "null") throw new Exception("No savedata found.");
+            else return mostRecent;
         }
         public string GetMostRecentFile(string profile)
         {
-            string mostRecent = "PLACEHOLDER";
+            string mostRecent = "null";
             DateTime record = DateTime.MinValue;
             foreach (string file in GetFilePaths(profile))
             {
@@ -491,11 +504,12 @@ namespace DataService
                     mostRecent = file;
                 }
             }
-            return mostRecent;
+            if (mostRecent == "null") throw new Exception("No savedata found.");
+            else            return mostRecent;
         }
         public string GetMostRecentFile(string profile, SaveMethod method)
         {
-            string mostRecent = "PLACEHOLDER";
+            string mostRecent = "null";
             DateTime record = DateTime.MinValue;
             foreach (string file in GetFilePaths(profile, method))
             {
@@ -506,6 +520,7 @@ namespace DataService
                     mostRecent = file;
                 }
             }
+            if (mostRecent == "null") throw new Exception("No savedata found.");
             return mostRecent;
         }
         public string GetMostRecentFile(SaveMethod method)
@@ -551,18 +566,45 @@ namespace DataService
             {
                 DataMatrix.Add(profile, new()); // if we haven't yet prepped the data for that porofile this session, that's fine, just create the dictionary
             }*/
+            /*
             ActiveDataDictionary.Clear();
+            // uhh maybe i literally jst forgot to switch to the dataprofile??? 
+
+
+                // what am i doing with this loop? comment your code bas ffs.
             foreach (DataClass dataClass in loaded_data.DataClasses)
             {
                 // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
-                if(ActiveDataProfile == profile)
+                if(ActiveDataProfile == profile) // wtf, waarom deze if stateement in een foreach loop terwijl dat hem helemaal niet veranderd? 
+            // ooh maybe i was confused and thought there would be data from multiple profiles hre?
                 {
                     ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
                 }
 
-                // hoe kan er hier al data in zijn??
-                // oh er zijn meerdere van hetzelfde type, want een hashset voorkomt dat helemaal niet of wel?
             }
+            */
+            // let's try this again.
+            // first, clear active data directory.
+
+            ActiveDataDictionary.Clear();
+            // then, switch profiles if needed
+            if (ActiveDataProfile != profile)
+            {
+                ActiveDataProfile = profile;
+            }
+            foreach (DataClass dataClass in loaded_data.DataClasses)
+            {
+                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+                if (ActiveDataProfile == profile)
+                {
+                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
+                }
+                else throw new Exception("Wrong profile!");
+
+            }
+
+
+
             metaData.timeSinceLastSave = 0;
 
             if (relaunchScene)

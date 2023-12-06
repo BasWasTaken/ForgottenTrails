@@ -6,13 +6,14 @@ using UnityEditor;
 using NaughtyAttributes;
 using ForgottenTrails;
 
-namespace items
+namespace Items
 {
     /// <summary>
     /// <para>Base type object for ingame items.</para>
     /// </summary>
     [Serializable]
     [CreateAssetMenu]
+    // This SHOULD be called ItemDefinition but if I change the name now then all the prefabs fucking break because unity is excellent (:
     public class InventoryItem : InkableObject
     {
         [field:SerializeField, BoxGroup("Info")]

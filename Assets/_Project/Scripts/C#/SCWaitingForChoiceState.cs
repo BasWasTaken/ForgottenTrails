@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using TMPro;
-using items;
+using Items;
 
 namespace ForgottenTrails.InkFacilitation
 {
@@ -37,6 +37,7 @@ namespace ForgottenTrails.InkFacilitation
                     {
                         PresentButtons(); // create new choices
                     }
+                    EnableButtons(true);
                 }
                 public override void OnUpdate()
                 {
@@ -44,18 +45,45 @@ namespace ForgottenTrails.InkFacilitation
                 }
                 public override void OnExit()
                 {
-                    //this not done here anymore, but elsewhere- when a choise is made. RemoveOptions(); // Destroy old choices
+                    EnableButtons(false);
                 }
                 #endregion
                 // Private Methods
                 #region Private Methods
-                const string opener = "{Unity.UseItem(";
-                const string closer = ")}";
+
+                public enum ChoiceType
+                {
+                    Item,
+                    Map,
+                    Party
+                }
+                public class HiddenChoice
+                {
+                    public ChoiceType Type;
+                    public Choice Choice;
+                    public HiddenChoice(ChoiceType Type, Choice Choice)
+                    {
+                        this.Type = Type;
+                        this.Choice = Choice;
+                    }
+                }
+                internal void EnableButtons(bool enable = true)
+                {
+                    foreach (Button button in Controller.InterfaceBroker.ButtonAnchor.GetComponentsInChildren<Button>())
+                    {
+                        button.interactable = enable;
+                    }
+                }
+                internal void DisableButtons() => EnableButtons(false);
+
+                
                 internal void PresentButtons()
                 {
                     if (Controller.Story.canContinue)
                     {
-                        throw new Exception("no choices detected at this point");
+                        Debug.LogWarning("can continue- should do that before asking choices");
+                        // go to writing state?
+                        DropCondition = true;
                     }
                     else if (Controller.Story.currentChoices.Count > 0) /// Display all the choices, if there are any!
                     {
@@ -65,31 +93,19 @@ namespace ForgottenTrails.InkFacilitation
                         {
 
                             Choice choice = Controller.Story.currentChoices[i];
-                            string input = choice.text;
-
-                            if (input.Contains("{"))
+                            if (Controller.InterfaceBroker.TryAddHiddenChoice(choice)) { }
+                            else if (choice.text == "{UNITY:OpenMap}")
                             {
-                                int startIndex = input.IndexOf(opener);
-                                int endIndex = input.IndexOf(closer, startIndex);
-
-                                if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
-                                {
-                                    int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1); 
-                                    string key = input.Substring(startIndex + opener.Length, substringLength);
-
-                                    Debug.Log("Encountered hidden choice: " + key);
-                                    Controller.InterfaceBroker.hiddenChoices.Add(key, choice);
-                                }
-                                else
-                                {
-                                }
-
+                                //Controller.InterfaceBroker.book.markers.mapMark.GetComponent<Button>().interactable = true; // allow the use of the map button
+                                // nee, ik denk te moeilijk! dit hoeft niet de knop te enabelen, gewoon wanneer dit er is kan de speler als het goed is o pde knop drukken en gaan reizen, maar hij kan altidj drukken.
+                                Debug.LogWarning("Info: Map Travel Available (Bas has not yet put in a notification or whatever)");
                             }
                             else
                             {
                                 Button button = PresentButton(choice.text.Trim());
                                 /// Tell the button what to do when we press it
-                                button.onClick.AddListener(delegate {
+                                button.onClick.AddListener(delegate
+                                {
                                     Controller.InterfaceBroker.OnClickChoiceButton(choice);
                                 });
                             }
@@ -97,9 +113,11 @@ namespace ForgottenTrails.InkFacilitation
                         //scrollbar.value = 0;
                         return;
                     }
-                    /// If we've read all the content and there's no choices, the story is finished!
-                    else
+                    
+                    else// if(Controller.InterfaceBroker.hiddenChoices.Count==0)
                     {
+                        // If we've read all the content and there's no choices, the story is finished!
+                    
                         throw new NotImplementedException("No choices possible");
                     }
                 }

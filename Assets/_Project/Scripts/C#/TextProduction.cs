@@ -49,7 +49,7 @@ namespace ForgottenTrails.InkFacilitation
                 { return _textSpeedPreset; }
                 set
                 {
-                    Debug.Log(string.Format("Changed from {0} to {1} speed", TextSpeedPreset.ToString(), value.ToString()));
+                    //Debug.Log(string.Format("Changed from {0} to {1} speed", TextSpeedPreset.ToString(), value.ToString()));
                     _textSpeedPreset = value;
                     PlayerPrefs.SetInt("textSpeed", (int)_textSpeedPreset);
                 }
@@ -117,7 +117,7 @@ namespace ForgottenTrails.InkFacilitation
             #region Public Methods
             public void ClearPage()
             {
-                if (Controller.TextProducer.Peeking) return;
+                if (Controller.TextProducer.Peeking) return; // not if we're just peeking
                 //Debug.Log("Clearing " +CurrentText);
                 HistoryTextBox.text += CurrentText; // move all text to the history log
                 CurrentText = ""; // clear current and prospective texts
@@ -130,7 +130,7 @@ namespace ForgottenTrails.InkFacilitation
             internal void Init(string cur, string his)
             {
                 CurrentText = cur;
-                VisibleCharacters = 0;
+                VisibleCharacters = cur.Length;
                 PreviousText = his;
             }
             internal void Spd(float speed)
@@ -193,7 +193,23 @@ namespace ForgottenTrails.InkFacilitation
 
                 return split.SkipLast(1).ToArray();
             }
+            internal int maxVis = 20;
 
+            internal int SetMaxLines()
+            {
+                string backup = Controller.TextProducer.CurrentText;
+                Controller.TextProducer.CurrentText = "";
+                maxVis = 0;
+                while (!Controller.TextProducer.TextBox.isTextOverflowing)
+                {
+                    maxVis++;
+                    Controller.TextProducer.CurrentText += '\n';
+                    if (maxVis > 1000) break;
+                }
+                Controller.TextProducer.CurrentText = backup;
+                Debug.Log(string.Format("fitted {0} lines in the text box!", maxVis));
+                return maxVis;
+            }
         }
     }
     

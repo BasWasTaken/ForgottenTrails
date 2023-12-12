@@ -15,14 +15,15 @@ using UnityEngine.UI;
 public class Book : MonoBehaviour
 {
     public void DropMenuState()
-    {
+    {/*
         Type menuType = typeof(SCBookMenuState);
         var current = StoryController.Instance.StateMachine.CurrentState;
         Type currentType = current.GetType();
         if (menuType.IsAssignableFrom(currentType))
         {
             StoryController.Instance.StateMachine.DropState(current);
-        }
+        }*/
+        StoryController.Instance.bookMenuState.ExitMenu();
     }
     public void EnterSettingsState()
     {

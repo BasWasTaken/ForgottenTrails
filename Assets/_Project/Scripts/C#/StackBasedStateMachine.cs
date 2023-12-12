@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using NaughtyAttributes;    
+using NaughtyAttributes;
+using ForgottenTrails.InkFacilitation;
 
 namespace Bas.Utility
 {
@@ -16,8 +17,21 @@ namespace Bas.Utility
     {
         // Inspector Properties
         #region Inspector Properties
-        [ReadOnly]
-        public string StatePeeker = "Not Started";
+        [SerializeField, TextArea(1, 20)]
+        private string _StatePeeker  = "Not Started";
+        public string StatePeeker
+        {
+            get { return _StatePeeker; }
+            private set
+            {
+                _StatePeeker = value;
+                foreach (var state in StateStack)
+                {
+                    _StatePeeker += "\n" + state.GetType().Name;
+                }
+            }
+        }
+
         [field: SerializeField, ReadOnly]
         public Stack<BaseState<T>> StateStack { get; private set; } = new();
 
@@ -66,7 +80,7 @@ namespace Bas.Utility
         /// <param name="goalState"></param>
         public void TransitionToState(BaseState<T> goalState)
         {
-            StatePeeker += string.Format(", transitioning to: {0}", goalState.GetType().ToString());
+            StatePeeker = string.Format(", transitioning to: {0}", goalState.GetType().Name);
 
             if (CurrentState != null)
             {
@@ -77,7 +91,7 @@ namespace Bas.Utility
             {
                 Debug.LogException(new NullReferenceException());
             }
-            StatePeeker = CurrentState.GetType().ToString();
+            StatePeeker = "transitioned";
         }
         /// <summary>
         /// Pop current state and revert back to the previous. Explicitly, in order: 
@@ -86,37 +100,89 @@ namespace Bas.Utility
         /// 3. If the stack is now empty, push the default one.
         /// 4. Fire appropriate OnEnter()s for the now topmost state.
         /// </summary>
-        /// <param name="caller"> The expected state to pop from</param>
-        public void DropState(BaseState<T> caller)
+        public void DropState()
         {
-            if (CurrentState != caller)
-            {
-                Debug.LogError(string.Format("State mismatch: {0} vs {1}.", caller, CurrentState));
-                // reset system.
-                Reset();
-                return;
-            }
-            if(StateStack.Count < 2)
-            {
-                Debug.LogWarning("Can't drop from the basestate with nothing to drop to.");
-                return;
-            }
+            DropState(CurrentState);
+        }
 
-            BaseState<T> goalState = StateStack.ToArray()[^2];
-            
-            PerformTransitionMethods(goalState);
-            StateStack.Pop(); // remove current state from top
+        //TODO: MOVE THIS
+        public bool TryGetChildStateFromStack(BaseState<T> parent, out BaseState<T> firstChild)
+        {
+            foreach (var state in StateStack)
+            {
+                if (DoesXDescentFromY(state, parent))
+                {
+                    firstChild = state;
+                    return true;
+                }
+            }
+            firstChild = null;
+            return false;
+        }
+
+        // TODO move this later
+        private void PerformDrop()
+        {
+            if (StateStack.Count < 2)
+            {
+                throw new Exception("Can't drop from the basestate with nothing to drop to.");
+            }
+            i++;
+            BaseState<T> toState = StateStack.ToArray()[^2];
+
+
+
+            PerformTransitionMethods(toState);
+            var dropped = StateStack.Pop(); // remove current state from top
+
+            dropped.DropCondition = false;
             CurrentState.OnEnter(); // Perform the enter behaviour
+        }
 
-            caller.DropCondition = false;
-
-            /* this should not be necessary
-            if (StateStack.Count == 0)
+        int i = 0;
+        /// <summary>
+        /// Drop until given state is dropped.
+        /// 1. Check if state is in history.
+        /// 2. If it's the current: just drop.
+        /// 3. If it's later, or an assignable: drop until the first time you drop the given state.
+        /// </summary>
+        /// <param name="caller"> The expected state to pop from</param>
+        public void DropState(BaseState<T> dropFrom)
+        {
+            if (CurrentState == dropFrom) // if this is the state we're in
             {
-                //StateStack.Push(BaseState);
-                TransitionToState(BaseState);
+                PerformDrop(); // simply drop it
+                DropState(dropFrom); // check if it needs to be done again in case of double states?
             }
-            */
+            else if (StateStack.Contains(dropFrom)) // else, if we do have that state somwhere
+            {
+                PerformDrop();  // perform a drop
+                DropState(dropFrom); // and keep going deeper until we have done this drop
+            }
+            else
+            {
+                if (DoesXDescentFromY(CurrentState, dropFrom)) // if the current state is a descendant of the dropstate
+                {
+                    PerformDrop();                    // drop it 
+                    DropState(dropFrom); // and check again
+                }
+                else if (TryGetChildStateFromStack(dropFrom, out BaseState<T> child))                // else if we do have a descendant in stack
+                {
+                    do
+                    {
+                        PerformDrop(); // drop one state
+                    } while (StateStack.Contains(child)); // until you reach past the child
+                    DropState(dropFrom); // and keep going deeper to check for next
+                }
+                else                // else: 
+                {
+                    //nothing left to do !check how many runthoughs this took.
+                    Debug.Log(i);
+                    i = 0;
+                }
+
+            }
+
         }
         private void PerformTransitionMethods(BaseState<T> goalState)
         {
@@ -172,11 +238,11 @@ namespace Bas.Utility
         {
             if (CurrentState.DropCondition)
             {
-                DropState(CurrentState);
+                DropState();
             }
             else
             {
-                StatePeeker = CurrentState.GetType().ToString();
+                StatePeeker = "update";
                 CurrentState.OnUpdate();
             }
         }

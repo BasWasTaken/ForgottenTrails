@@ -70,7 +70,7 @@ namespace ForgottenTrails.InkFacilitation
             public void ExitMenu()
             {
 
-                Debug.LogFormat("is {0}, a bookmenustate?", this); // simply "this" does not seem to work
+                //Debug.LogFormat("is {0}, a bookmenustate?", this); // simply "this" does not seem to work
                 Controller.StateMachine.DropState(Machine.KnownStates[typeof(SCBookMenuState)]); // the state to drom from may be a child but not a parent
             }
             #endregion

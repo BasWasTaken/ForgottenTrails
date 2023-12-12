@@ -177,7 +177,7 @@ namespace Bas.Utility
                 else                // else: 
                 {
                     //nothing left to do !check how many runthoughs this took.
-                    Debug.Log(i);
+                    //Debug.Log(i);
                     i = 0;
                 }
 

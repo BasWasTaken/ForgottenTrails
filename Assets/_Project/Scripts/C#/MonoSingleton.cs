@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace Bas.Utility 
+namespace Common.Utility 
 {
     /// <summary>
     /// <para>Base Class for creating Singleton-variants of <see cref="MonoBehaviour"/>s, meaning that only one instance is active at any time and this instance can easily be reached using a static field.</para>

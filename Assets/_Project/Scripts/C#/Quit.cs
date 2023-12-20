@@ -1,3 +1,6 @@
+namespace Common.Utility
+{
+
 public static class AppHelper
 {
 #if UNITY_WEBPLAYER
@@ -13,4 +16,5 @@ public static class AppHelper
         Application.Quit();
 #endif
     }
+}
 }

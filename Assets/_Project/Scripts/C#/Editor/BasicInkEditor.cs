@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using Ink.Runtime;
 using Ink.UnityIntegration;
-using Ink.Runtime;
 using NaughtyAttributes.Editor;
-using ForgottenTrails.InkFacilitation;
+using UnityEditor;
+using UnityEngine;
 
-namespace ForgottenTrails
+namespace Bas.ForgottenTrails.InkConnections
 {
     /// <summary>
     /// An editor custom made to view the basic ink script in unity's editors. 
@@ -35,7 +32,7 @@ namespace ForgottenTrails
             base.OnInspectorGUI();
             var realTarget = target as StoryController;
             var story = realTarget.Story;
-            
+
             InkPlayerWindow.DrawStoryPropertyField(story, new GUIContent("Story"));
         }
     }

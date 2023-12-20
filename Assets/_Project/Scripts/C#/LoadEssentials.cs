@@ -4,7 +4,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using UnityEngine.SceneManagement;
 
-namespace BasUtility
+namespace Common.Utility
 {
     public class LoadEssentials : MonoBehaviour
     {

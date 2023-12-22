@@ -1,2 +1,6 @@
 INCLUDE CharacterCreation
 INCLUDE SampleSnippets
+INCLUDE RandomEvents.ink
+INCLUDE Edan.ink
+INCLUDE introductionAwakening.ink
+INCLUDE SouthernRoads.ink

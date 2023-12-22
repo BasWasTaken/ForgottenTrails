@@ -1,0 +1,106 @@
+//
+// SYSTEM: Location tracking
+// Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
+//
+    
+VAR KnownLocations = ()
+~ KnownLocations = Locations()
+    
+VAR CurrentLocation = ()
+~ CurrentLocation = Locations() // locations defined in Lists
+
+VAR PreviousLocation = () 
+~ PreviousLocation = Locations ()
+
+VAR TargetLocation = ()
+~ TargetLocation = Locations() 
+
+VAR VisitedLocations = ()
+~ VisitedLocations = Locations()
+
+=== function KnowsLoc(location) ===
+~return KnownLocations has location
+
+=== function LearnLoc(location) === /// add location to list
+{ // if unknown, add to known
+- !KnowsLoc(location):
+    ~ KnownLocations += location
+    ~ Print("{location} added to travel log")
+}
+
+
+=== function SetLocation(location) === // update current, previous, and all visited locations //maar deze history kan toch niet kloppen? want er kunnen toch geen duplicate items in zitten?
+~ LearnLoc(location)
+
+//~ PreviousLocation = Locations()
+//~ PreviousLocation += CurrentLocation
+~ PreviousLocation = CurrentLocation
+//~ CurrentLocation = Locations()
+//~ CurrentLocation += location
+~ CurrentLocation = location
+~ VisitedLocations += location
+
+=== function HasVisited(location) === // check list of visited locations
+~return VisitedLocations has location
+
+//
+// SYSTEM: Map
+// The map will consist of a ink knot that contains choices to unlocked locations. All of these will be caught by Unity and displayed as visual items on a map screen, which is opened and closed as the knot is accessed and left.
+// The first time the player learns of a location, it is added to the map. But, it is only made available to travel to after they've visited it once before. And, all travel is locked during dialogue sections.
+//
+
+=== function AllowMap ===
+\{UNITY:OpenMap\}
+
+
+
+=== MapScreen (-> returnTo) // the map knot. visit to open the map in unity.
+~ _OpenMap()
++ { HasVisited(EdanCastle)} [{MapChoice(EdanCastle)}] 
+    -> TravelingTo(->CastleEntrance)
++ { HasVisited(sampleCave)} [{MapChoice(sampleCave)}] 
+    -> TravelingTo(->sampleSampleCaveScene)
++ { HasVisited(seaBreezePath)} [{MapChoice(seaBreezePath)}] 
+    -> TravelingTo(->sampleSeaBreesePathScene)
++ [\{UNITY:CloseMap\}]    
+
+\{UNITY:CloseMap()\}
+    -> returnTo
+    
+=== function OpenMap()
+~ _OpenMap()
+
+    
+=== function _OpenMap() === // opens the map screen in unity
+\{UNITY:OpenMap()\}
+
+EXTERNAL _OpenMap()
+    
+=== function MapChoice(destination) === // used to present an inky choice that will be represented visually on a map in unity. )in ink it simply lists as a normal choice)
+\{MapChoice({destination})\}
+
+=== TravelingTo(targetLocation) === // used for traveling from a to b via the map. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
+~ TargetLocation = targetLocation
+~ SetLocation(onTheRoad)
+~ travelRations--
+{
+- travelRations == 0:
+    -> Death
+- travelRations < lowRationsLimit:
+    -> InsertComplaint
+- else:
+    You eat yummy rations.
+} 
+{~ -> RandomTravelEvent -> TargetLocation | -> TargetLocation} 
+
+
+VAR lowRationsLimit = 9 
+
+
+=== InsertComplaint ===
+You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
+->->
+
+=== RandomTravelEvent ===
+A wild Pokémon appears!
+->->

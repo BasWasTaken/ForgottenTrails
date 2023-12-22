@@ -43,9 +43,11 @@ LIST Sfx = gong
 LIST Vox =  NA
 
 //Knowledge Chains
+//Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
 LIST EdanCastleKnow = (none), Exists, IsCastleOnHill
 LIST Edgar = (none), Exists, Name
 LIST Henry = (none), Exists, Name
-
+LIST Tomas = (none), Exists, Name
+LIST Eileen = (none), Exists, Name
 
 

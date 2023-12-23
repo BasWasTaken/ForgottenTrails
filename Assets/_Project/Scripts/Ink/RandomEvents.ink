@@ -16,7 +16,7 @@ Once at the top, you spot the source: a cooking fire set by the roadside. A man 
         You ignore their gesture. By now you're near enough to see their expressions and they exchange a worried glace. The pair appears to be in their early twenties, both with the same brown hair. The man's is a tussled affair, while the woman's is tied in a loose braid that's hanging over her right shoulder. 
         ->MerchantSiblings1a
         
-*[Give a traveler's greeting]
+*[Give a travelers' greeting]
     You wave at the pair with one hand, and cup the other around your mouth to amplify your shout. "Hail friends!" you bellow down the hill, "How does Crìsdaen's wind blow?"
     Both look up from their tasks, their gaze directed at you. They return your wave and {players_gender == male:the woman}{players_gender == female:the man} returns your greeting: "fair winds blew on our path friend!"
     
@@ -29,8 +29,8 @@ If you're seeing this something went wrong with the random event bit in Inky!
 ->END
 
 =MerchantSiblings1a
-     {Eileen == Exists: }
-        As you near a distance in which you would no longer need to shout, {players_gender == male:the woman}{players_gender == female:the man}{players_gender == androgynous:the man|the woman} speaks up: "Hello friend! How does Crìsdaen's wind blow?"
+     {Knows(Eileen.Exists): test }
+        As you near a distance in which you would no longer need to shout, {players_gender == male:the woman}{players_gender == female:the man}{~!the man|the woman} speaks up: "Hello friend! How does Crìsdaen's wind blow?"
         ***"Fair and true!"
         ***"A bit harsh at first, but quite alright now"
         ***"

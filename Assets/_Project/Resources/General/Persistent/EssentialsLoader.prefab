@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f017222ff7d54c47bcbb98b6b3cc556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alwaysOpenScene: AlwaysOpen
+  alwaysOpenScene: 00_MainMenu_Scene

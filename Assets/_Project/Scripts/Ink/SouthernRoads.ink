@@ -1,10 +1,10 @@
 ===ScotlandEntranceRoad===
-~SetLocation(ScotlandEntranceRoadLoc)
-{PreviousLocation ? EdinburghCrossroadsLoc: Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
+~SetLocation(LOC_ScotlandEntranceRoad)
+{PreviousLocation ? LOC_EdinburghCrossroads: Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}
 =ReturnVisit
 *[Go back the way you came]
 
-~PreviousLocation = ScotlandEntranceRoadLoc
+~PreviousLocation = LOC_ScotlandEntranceRoad
 ->EdinburghCrossroads
 =FirstVisit
 Step by step, you climb the hill. A worn path guides your feet, a pleasant change of pace from the overgrown woodland you found yourself in only two days ago.
@@ -21,7 +21,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
         ***[Survey the landscape]Beneath a bright morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a rocky outcrop. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
             ****[Continue following the road towards the castle]
             You continue your journey, the earth crunching beneath your feet. Almost at the halfway point between your hilltop outlook and the castle you find yourself at a crossroads. 
-            ~ PreviousLocation = ScotlandEntranceRoadLoc
+            ~ PreviousLocation = LOC_ScotlandEntranceRoad
             ->EdinburghCrossroads
         
             //As your gaze returns to the path before you, you realize you missed something on your first viewing: a person. Still far in the distance, but unmistakenbly a fellow traveler. They seem to be approaching at a fair pace, aided by a walking stick.
@@ -31,13 +31,13 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             //****[Set up an ambush]
             
 === EdinburghCrossroads ===
-~ SetLocation(EdinburghCrossroadsLoc)
-The road splits here into four directions. The northbound road {!HasVisited(EdanCastle) and Knows(edanca.Exists): presumably |}leads to {Knows(EdanCastleKnow.IsCastleOnHill):Edan Castle|the castle on the hill}{PreviousLocation ? roadToEdanCastleLoc:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? ScotlandEntranceRoadLoc:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+~ SetLocation(LOC_EdinburghCrossroads)
+The road splits here into four directions. The northbound road {!HasVisited(LOC_EdanCastle) and Knows(edanca.Exists): presumably |}leads to {Knows(EdanCastleKnow.IsCastleOnHill):Edan Castle|the castle on the hill}{PreviousLocation ? LOC_RoadToEdanCastle:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? LOC_ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
 +[Take the North Road]
-You decide to take the North road{PreviousLocation == EdinburghCastleEntrance: and go and go back the way you came.|  leading to {Knows(EdanCastleKnow.Exists):Edan Castle |the Hilltop Castle.}}
+You decide to take the North road{PreviousLocation == LOC_EdinburghCastleEntrance: and go and go back the way you came.|  leading to {Knows(EdanCastleKnow.Exists):Edan Castle |the Hilltop Castle.}}
 ->RoadToEdanCastle
 +[Take the East Road]
 Sorry buddy, no content East yet!
@@ -72,7 +72,7 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element
-~SetLocation(roadToEdanCastleLoc)
+~SetLocation(LOC_RoadToEdanCastle)
 {~->RandomEventsEdanArea|->CastleEntrance}
 
 === CastleEntranceFromRoad

@@ -1,9 +1,9 @@
 === CastleEntrance ===
-{HasVisited(EdanCastleEntrance): -> CastleEntranceReturnVisit|-> CastleEntranceFirst}
+{HasVisited(LOC_EdanCastleEntrance): -> CastleEntranceReturnVisit|-> CastleEntranceFirst}
 
 = CastleEntranceFirst
-~SetLocation(EdanCastleEntrance)
-~FadeToImage(CastleGate,0)
+~SetLocation(LOC_EdanCastleEntrance)
+~FadeToImage(BG_CastleGate,0)
 //~Music_Play([nameOfClip])
 //~Ambiance_Add([name
 As you crest the hilltop a gatehouse comes into view. Its stones are worn, ancient. The top parts seem to have crumbled at some point, having now been replaced by wooden battlements. As you step forward in approach you hear a voice call out loudly from inside the gatehouse:
@@ -39,7 +39,7 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
     The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man stands behind it holding the door open for you with one hand while leaning on a spear with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
     
     As you step inside the man shuts the door behind you, taking great care to put the locks back into place. 
-    ~SetLocation(EdanCastleGatehouse)
+    ~SetLocation(LOC_EdanCastleGatehouse)
         **Engage the man in some further conversation
         -> EdgarGatehouse
         **(thanked)Thank the man and head into town
@@ -50,8 +50,8 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
 *"Do you often have to kill creatures gently walking up to the door?"
 
 = CastleEntranceReturnVisit
-~SetLocation(EdanCastleEntrance)
-As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {!Inventory has lantern:but knowing it's there helps guide your feet.}{Inventory has lantern:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {Knows(Henry.Name):Henry|a guard} leaning on his halberd. 
+~SetLocation(LOC_EdanCastleEntrance)
+As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in de dark, {!Inventory has Lantern:but knowing it's there helps guide your feet.}{Inventory has Lantern:but your lantern illuminates your surroundings enough to find your way.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {Knows(Henry.Name):Henry|a guard} leaning on his halberd. 
 //{AffHenry < 25: } (to do: make scenario where Henry stops you)
 He looks {LIST_COUNT(Party)==1: you|your party} over and smiles. With his left hand, he gestures that you may pass into the settlement.
 +[Continue on]
@@ -61,8 +61,8 @@ He looks {LIST_COUNT(Party)==1: you|your party} over and smiles. With his left h
 ->RoadToEdanCastle
 
 = CastleEntranceReturnVisitNight
-{Inventory has lantern:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
-{Inventory has lantern:As you approach, you hear a man's voice ring out from behind the battlements:}
+{Inventory has Lantern:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
+{Inventory has Lantern:As you approach, you hear a man's voice ring out from behind the battlements:}
 "Hail traveler{LIST_COUNT(Party):s}, what's your business in Edani at this hour?"
 *{Knows(Edgar.Name)}"It's {LIST_COUNT(Party):us|me} Edgar, {PlayerName}{Party has Alice and Party !? Robert: and Alice}{Party !? Alice and Party has Robert: and Robert}, {Party has Alice and Party has Robert:Alice and Robert}."
     {AffEdgar < 25:"{PlayerName} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}

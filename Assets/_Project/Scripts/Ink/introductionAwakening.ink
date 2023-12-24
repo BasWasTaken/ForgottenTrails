@@ -1,6 +1,6 @@
 === Awakening ===
 ~TimeOfDay = Dawn
-~SetLocation(ScotlandEntranceRoadLoc)
+~SetLocation(LOC_ScotlandEntranceRoad)
 You awaken with a start. A dream after all. Of course it was, now that you look back on it. 
 You turn on your back, the small canvas tent that shields you from the elements coming into view. You can smell the morning forest and the smouldering remains of your campfire.
 ->Awakening.Tent
@@ -20,7 +20,7 @@ Your stomach rumbles, and what poor sort would head off without a proper meal fi
 The campfire has yet to go out completely and should be easy to light. With the help of some kindling you gathered last night, it doesn't take you long to get a nice flame going.
 The next step would be to hang your pot over the fire, but where did you leave the damn thing?
 
-~Item_Add(pot)
+~Item_Add(Pot)
 You can find your belongings by clicking on the backpack icon on the right. You can then right click an item and select 'use' to put it into action.
     **[{ItemChoice(cooking)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 

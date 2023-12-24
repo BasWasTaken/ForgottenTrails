@@ -1,19 +1,14 @@
 
-using UnityEngine;
-using System.IO;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using NaughtyAttributes;
 using Bas.Utility;
-using Newtonsoft.Json;
-using System.Security.Cryptography;
-using System.Text;
-using ForgottenTrails.InkFacilitation;
 using Ink.Runtime;
 using Items;
+using NaughtyAttributes;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Travel;
+using UnityEditor;
+using UnityEngine;
 
 namespace DataService
 {
@@ -129,6 +124,10 @@ namespace DataService
                         foreach (InkListItem item in listDefinition.items.Keys)
                         {
                             string searchFor = item.itemName;
+                            if (searchFor.StartsWith("BG_"))
+                            {
+                                searchFor = searchFor.Substring(3);
+                            }
                             if (searchFor != "none" & searchFor != "NA")
                             {
                                 // search for asset with that name in the database
@@ -140,7 +139,7 @@ namespace DataService
                                     string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
                                     absolutePath = absolutePath.Substring(0, absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
                                     string relativePath = GetRelativePath(absolutePath, basePath);
-                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
+                                    if (relativePath.ToLower().Contains(searchFor.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
                                     {
                                         noError += string.Format("\nFound {1} for {0}", item, relativePath);
                                         if (assets.TryAdd(item, relativePath))
@@ -184,13 +183,13 @@ namespace DataService
             {
                 throw new NullReferenceException("one of the expected inklists was not set to be searched. \nLog:" + message);
             }
-            else if (error!="")
+            else if (error != "")
             {
                 throw new Exception(message);
             }
-            else if(!ItemListsKnown(items, affordances))
+            else if (!ItemListsKnown(items, affordances))
             {
-                throw new Exception("Could not match up items or affordances. \nLog:"+message);
+                throw new Exception("Could not match up items or affordances. \nLog:" + message);
             }
             else if (!LocationsRecognised(locations))
             {

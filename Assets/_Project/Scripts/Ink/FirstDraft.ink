@@ -12,6 +12,8 @@ INCLUDE BasTest.ink
     -> RandomEventsEdanArea.MerchantSiblings
     + [Try Bas' Travel Example:]
     -> BasTravelTest
+    + [Proceed to Character Creation]
+    -> Preamble
     
 === Death ===
 And so ends this tale. Another apprentice that would never return, their findings lost to the wind.

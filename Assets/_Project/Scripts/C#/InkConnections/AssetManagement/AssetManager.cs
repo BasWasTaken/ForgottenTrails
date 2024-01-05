@@ -1,0 +1,311 @@
+using Bas.Common;
+using Bas.ForgottenTrails.InkConnections.Items;
+using Bas.ForgottenTrails.InkConnections.Travel;
+using Ink.Runtime;
+using NaughtyAttributes;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+namespace Bas.ForgottenTrails.InkConnections
+{
+    /// <summary>
+    /// AlwaysActive gameobject which can hold asset reference for easy access in any scene without use of addressables and recourcefolders.
+    /// </summary>
+    public class AssetManager : MonoSingleton<AssetManager>
+    {
+        ///___VARIABLES___///
+
+        #region Fields
+
+        [Tooltip("MANUAL LIST OF WHAT LISTS TO CHECK")]
+        public string[] InkListNames;
+
+        [Scene]
+        [Tooltip("The main menu scene")]
+        public string menuScene;
+
+        [Scene]
+        [Tooltip("The scene to load on new game")]
+        public string newGameScene;
+
+        public Dictionary<InkListItem, string> assets = new();
+
+        private const string resourceFolder = "/_Project/Resources/";
+
+        [SerializeField]
+        private List<InventoryItem> possibleItems = new();
+
+        [SerializeField]
+        private List<MapLocationDefinition> possibleLocations = new();
+
+        #endregion Fields
+
+        /* delete or ineed use list of folders to dssearch resources
+        [field:SerializeField, ValidateInput("IsResourcesDirectory")]
+        public string BackgroundsDirectory { get; private set; }
+
+        [field: SerializeField, ValidateInput("IsResourcesDirectory")]
+        public string PortraitsDirectory { get; private set; }
+        [field: SerializeField, ValidateInput("IsResourcesDirectory")]
+        public string VoxDirectory { get; private set; }
+        [field: SerializeField, ValidateInput("IsResourcesDirectory")]
+        public string SfxDirectory { get; private set; }
+        [field: SerializeField, ValidateInput("IsResourcesDirectory")]
+        public string AmbianceDirectory { get; private set; }
+        */
+
+        #region Properties
+
+        public Dictionary<InkListItem, InventoryItem> LocationDictionary { get; } = new();
+        public Dictionary<InkListItem, InventoryItem> ItemDictionary { get; } = new();
+
+        [field: SerializeField]
+        public TextAsset TextAsset { get; set; }
+
+        private string pathToResources => Application.dataPath + resourceFolder;
+        private string basePath => "Assets" + resourceFolder;
+
+        #endregion Properties
+
+        #region Public Methods
+
+        // helper functions
+        public bool IsResourcesDirectory(string relativePath)
+        {
+            return Directory.Exists(pathToResources + "/" + relativePath);
+        }
+
+        [Button("CreateAssetLibraries", EButtonEnableMode.Editor)]
+        public void CreateAssetLibraries()
+        {
+            string error = "";
+            string noError = "";
+
+            // NOTE wsl ipv inventory aanroepen, inventory state?
+            assets.Clear();
+            Story story = new(TextAsset.text); // NOTE is dit waar de niet loading bug vandaan komt?
+
+            ListDefinition items = null;
+            ListDefinition affordances = null;
+            ListDefinition locations = null;
+            foreach (string inkListName in InkListNames)
+            {
+                //Debug.LogFormat("Searching for {0}", inkListName);
+                if (story.listDefinitions.TryListGetDefinition(inkListName, out ListDefinition listDefinition))
+                {
+                    if (inkListName == "Items")
+                    {
+                        // Debug.Log("Found items list.");
+                        items = listDefinition;
+                    }
+                    else if (inkListName == "Affordances")
+                    {
+                        //  Debug.Log("Found affordances list.");
+                        affordances = listDefinition;
+                    }
+                    else if (inkListName == "Locations")
+                    {
+                        locations = listDefinition;
+                    }
+                    else
+                    {
+                        // Debug.LogFormat("Found {0}", listDefinition);
+                        foreach (InkListItem item in listDefinition.items.Keys)
+                        {
+                            string searchFor = item.itemName;
+                            if (searchFor != "none" & searchFor != "NA")
+                            {
+                                // search for asset with that name in the database
+                                string[] foundAssets = AssetDatabase.FindAssets(searchFor);
+                                int limit = 9;
+                                bool assetLocated = false;
+                                foreach (string asset in foundAssets)
+                                {
+                                    string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
+                                    absolutePath = absolutePath.Substring(0, absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
+                                    string relativePath = GetRelativePath(absolutePath, basePath);
+                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
+                                    {
+                                        noError += string.Format("\nFound {1} for {0}", item, relativePath);
+                                        if (assets.TryAdd(item, relativePath))
+                                        {
+                                            noError += " and succesfully added it.";
+                                            assetLocated = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            error += string.Format("\nFound {1} for {0} but could not add it.", item, relativePath);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        noError += String.Format("\nFound wrong asset for {0}: {1}. Trying next asset.", item, relativePath);
+                                    }
+                                    limit--;
+                                }
+                                if (!assetLocated)
+                                {
+                                    error += string.Format("\nitem {0} not found", item);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    error += string.Format("\nListDefinition {0} not found.", inkListName);
+                }
+            }
+
+            string message;
+            if (error == "") message = "Succesfully fetched InkLists." + noError;
+            else message = "ERROR IN ATTEMPTING TO LIST ASSETS" + error;
+
+            if (items == null | affordances == null | locations == null)
+            {
+                throw new NullReferenceException("one of the expected inklists was not set to be searched. \nLog:" + message);
+            }
+            else if (error != "")
+            {
+                throw new Exception(message);
+            }
+            else if (!ItemListsKnown(items, affordances))
+            {
+                throw new Exception("Could not match up items or affordances. \nLog:" + message);
+            }
+            else if (!LocationsRecognised(locations))
+            {
+                throw new Exception("Could not match up locations. \nLog:" + message);
+            }
+            else
+            {
+                Debug.Log("Checked all lists and assets. No discrepencies found. \nLog:" + message);
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        ///___METHODS___///
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private static string GetRelativePath(string fullPath, string basePath)
+        {
+            if (!fullPath.StartsWith(basePath))
+            {
+                // The fullPath is not within the basePath.
+                // You should handle this case based on your requirements.
+                Debug.LogError(String.Format("{0} is not in {1}", basePath, fullPath));
+            }
+
+            string relativePath = fullPath.Substring(basePath.Length);
+            return relativePath;
+        }
+
+        private bool ItemListsKnown(ListDefinition items, ListDefinition affordances)
+        {
+            ItemDictionary.Clear();
+            Dictionary<string, InventoryItem> TemporaryDictionary = new();
+
+            foreach (InventoryItem item in possibleItems)
+            {
+                TemporaryDictionary.Add(item.CanonicalName, item);
+            }
+
+            string error = "";
+
+            // assert all items from ink exist in unity
+            foreach (InkListItem inkListItem in items.items.Keys)
+            {
+                if (TemporaryDictionary.TryGetValue(inkListItem.itemName, out InventoryItem item))
+                {
+                    item.InkListItem = inkListItem;
+                    ItemDictionary.Add(inkListItem, item);
+                }
+                else
+                {
+                    error += string.Format("\nItem \"{0}\" not found in unity dictionary!", inkListItem.itemName);
+                }
+            }
+            // assert all afforances are same
+
+            // assert all affordances from ink exist in unity
+            foreach (InkListItem affordance in affordances.items.Keys)
+            {
+                if (!Enum.IsDefined(typeof(Affordance), affordance.itemName))
+                {
+                    error += string.Format("\nAffordance \"{0}\" not present in unity enum definition!", affordance);
+                }
+            }
+
+            // assert all affordances from unity exist in ink
+            foreach (string affordance in Enum.GetNames(typeof(Affordance)))
+            {
+                if (!affordances.ContainsItemWithName(affordance))
+                {
+                    error += string.Format("\nAffordance \"{0}\" not present in ink list!", affordance);
+                }
+            }
+
+            if (error == "")
+            {
+                return true;
+            }
+            else
+            {
+                Debug.LogAssertion("ITEMS OR AFFORDANCES NOT MATCHED UP" + error);
+                return false;
+            }
+        }
+
+        private bool LocationsRecognised(ListDefinition locations)
+        {
+            LocationDictionary.Clear();
+            Dictionary<string, MapLocationDefinition> TemporaryDictionary = new();
+            foreach (MapLocationDefinition loc in possibleLocations)
+            {
+                TemporaryDictionary.Add(loc.CanonicalName, loc);
+            }
+            string error = "";
+
+            // assert all locations to travel to from ink exist in unity
+            // TODO
+
+            // assert all locations to travel to from unity exist in ink
+            foreach (var name in TemporaryDictionary.Keys)
+            {
+                //Debug.Log(name);
+                //Debug.Log(locations);
+                if (!locations.ContainsItemWithName(name))
+                {
+                    error += string.Format("\nLocation \"{0}\" not found in unity dictionary!", name);
+                }
+            }
+
+            if (error == "")
+            {
+                return true;
+            }
+            else
+            {
+                Debug.LogAssertion("LOCATIONS NOT MATCHED UP" + error);
+                return false;
+            }
+        }
+
+        #endregion Private Methods
+    }
+}

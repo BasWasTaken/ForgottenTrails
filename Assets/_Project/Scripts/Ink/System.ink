@@ -210,16 +210,6 @@ You need food to survive idiot.
 }
 === _ArriveAt(location) === 
 ~SetLocation(location) // update curentlocation etc.
-/*
-TO DO FOR VUGS:
-De speler is nu aangekomen op de bedoelde locatie. D.w.z. de locatie variabele is geüpdated. Wat er nu moet gebeuren is aan jou, d.w.z: welke Ink Knot moet er afspelen? Dit moeten we op een bepaalde manier bepalen aan de hand van waar we nu zijn aangekomen etc. 
-Ik (Bas) stel het volgende voor: binnen deze knot (dus "ArriveAt(location)") wordt gechekt, per locatie, welke welkomstscene er zich moet afspelen? Die kun je dan veranderen enzo aan de hand van het spelverloop. Mocht het voor jou handig zijn kan deze knot dan natuurlijk ook verplaatst worden naar je randomevents ink ipv deze system ink.
-In het voorbeeld hieronder heb ik een aankomst op Loc_ScotlandEntranceRoad gekoppeld aan de arrival scene die jij al geschreven had. Daar checkt hij dus ook gewoon of de speler hier eerder is geweest enzo. Idem voor de CastleEntrance. Verdere moeten hier nog in gemaakt worden, met een of andere default catch. Maar volgens mij moet je voor het verloop van het verhaal altijd wel weten waar de speler is. Maar dat kan je natuurlijk ook doen door CurrentLocation te checken enzo.
-Laten we hier vooral even over sparren samen.
-*/
-~Print("NOTE TO VUGS: ZIE DE COMMENTS IN INK HIER! (In de '_ArriveAt(location)' knot in de 'System' file.)")
-NOTE TO VUGS: ZIE DE COMMENTS IN INK HIER! (In de '_ArriveAt(location)' knot in de 'System' file.)
-
 {
 - location == LOC_ScotlandEntranceRoad:
 You arrive at scotland Entrance!

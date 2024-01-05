@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8fa3f30abd33b44995a6e57906962f, type: 3}
   m_Name: Lantern
   m_EditorClassIdentifier: 
-  <CanonicalName>k__BackingField: lantern
+  <CanonicalName>k__BackingField: Lantern
   description: 
   image: {fileID: 21300000, guid: 61bb155d4852618469b64ffe6cd12809, type: 3}
   coinValue: 0

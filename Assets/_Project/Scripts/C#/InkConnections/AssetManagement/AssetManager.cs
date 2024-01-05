@@ -116,6 +116,10 @@ namespace Bas.ForgottenTrails.InkConnections
                         foreach (InkListItem item in listDefinition.items.Keys)
                         {
                             string searchFor = item.itemName;
+                            if (searchFor.StartsWith("BG_"))
+                            {
+                                searchFor = searchFor.Substring(3);
+                            }
                             if (searchFor != "none" & searchFor != "NA")
                             {
                                 // search for asset with that name in the database
@@ -127,7 +131,7 @@ namespace Bas.ForgottenTrails.InkConnections
                                     string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
                                     absolutePath = absolutePath.Substring(0, absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
                                     string relativePath = GetRelativePath(absolutePath, basePath);
-                                    if (relativePath.ToLower().Contains(item.itemName.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
+                                    if (relativePath.ToLower().Contains(searchFor.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
                                     {
                                         noError += string.Format("\nFound {1} for {0}", item, relativePath);
                                         if (assets.TryAdd(item, relativePath))

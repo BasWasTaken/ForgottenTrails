@@ -1,4 +1,5 @@
 using UnityEngine;
+
 namespace Bas.Common
 {
     /// <summary>
@@ -7,11 +8,17 @@ namespace Bas.Common
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         ///___VARIABLES___///
-        #region BACKEND_VARIABLES
+
+        #region Properties
+
         public static T Instance { get; private set; }
-        #endregion
+
+        #endregion Properties
+
         ///___METHODS___///
-        #region LIFESPAN
+
+        #region Protected Methods
+
         protected virtual void Awake()
         {
             if (Instance == null)
@@ -24,6 +31,7 @@ namespace Bas.Common
                 Destroy(gameObject);
             }
         }
-        #endregion
+
+        #endregion Protected Methods
     }
 }

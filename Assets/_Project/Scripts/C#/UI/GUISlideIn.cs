@@ -1,4 +1,3 @@
-
 using NaughtyAttributes;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -11,19 +10,27 @@ namespace Bas.ForgottenTrails.UI
     public class GUISlideIn : MonoBehaviour
     {
         ///___VARIABLES___///
-        #region inspector
-        [Required]
-        [SerializeField] private RectTransform rectTransform;
+
+        #region Fields
 
         [MinValue(-1), MaxValue(1)]
         public Vector2Int direction;
 
-        Vector3 displacement => 2 * direction * new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+        [Required]
+        [SerializeField] private RectTransform rectTransform;
 
-        #endregion
-        #region backend
         private bool displaced = false;
-        #endregion
+
+        #endregion Fields
+
+        #region Properties
+
+        private Vector3 displacement => 2 * direction * new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+
+        #endregion Properties
+
+        #region Public Methods
+
         ///___METHODS___///
         public void Toggle()
         {
@@ -36,6 +43,7 @@ namespace Bas.ForgottenTrails.UI
                 Displace();
             }
         }
+
         public void Displace()
         {
             if (!displaced)
@@ -44,6 +52,7 @@ namespace Bas.ForgottenTrails.UI
                 transform.localPosition += displacement;
             }
         }
+
         public void Replace()
         {
             if (displaced)
@@ -52,5 +61,7 @@ namespace Bas.ForgottenTrails.UI
                 transform.localPosition -= displacement;
             }
         }
+
+        #endregion Public Methods
     }
 }

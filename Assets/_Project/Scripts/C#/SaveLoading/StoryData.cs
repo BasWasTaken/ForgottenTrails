@@ -7,17 +7,23 @@ namespace Bas.ForgottenTrails.InkConnections
     public class StoryData : DataClass
     {
         // Inspector Properties
-        #region Inspector Properties
+
+        #region Public Constructors
+
+        public StoryData() : base()
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Properties
+
         public string StoryStateJson { get; set; } = ""; // string indicating most recently saved state of the ink object.
         public string CurrentText { get; set; } = "";
         public string HistoryText { get; set; } = "";
-        #endregion
-        // Constructor
-        #region Constructor
-        public StoryData() : base()
-        {
 
-        }
-        #endregion
+        #endregion Properties
+
+        // Constructor
     }
 }

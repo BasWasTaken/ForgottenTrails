@@ -1,14 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using NaughtyAttributes;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Common.Utility
 {
     public class LoadEssentials : MonoBehaviour
     {
+        #region Fields
+
         [Scene] public string alwaysOpenScene;
+
+        #endregion Fields
+
+        #region Private Methods
+
         private void Awake()
         {
             Scene scene = SceneManager.GetSceneByName(alwaysOpenScene);
@@ -17,7 +22,7 @@ namespace Common.Utility
                 SceneManager.LoadScene(alwaysOpenScene, LoadSceneMode.Additive);
             }
         }
+
+        #endregion Private Methods
     }
 }
-
-

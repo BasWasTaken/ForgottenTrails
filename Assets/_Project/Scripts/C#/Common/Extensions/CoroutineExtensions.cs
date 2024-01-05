@@ -1,3 +1,8 @@
+// ------------------------------------------------------------------------------
+// Created on: Pre-2024.
+// Author: Jaep
+// Purpose: Simplifying the use of coroutines.
+// ------------------------------------------------------------------------------
 using System;
 using System.Collections;
 using UnityEngine;
@@ -9,13 +14,23 @@ namespace Bas.Common.Extensions
     /// </summary>
     public static class CoroutineExtensions
     {
-        ///___METHODS___///
-        #region DelayedActions
-        /// Executes an action after a specified time has elapsed
+        #region Public Methods
+
+        // Executes an action after a specified time has elapsed
         public static Coroutine DelayedAction(this MonoBehaviour monoBehaviour, Action action, float secondsDelay)
         {
             return monoBehaviour.StartCoroutine(DelayedActionCoroutine(action, secondsDelay));
         }
+
+        public static Coroutine DelayedAction(this MonoBehaviour monoBehaviour, Action action, float secondsDelay, params bool[] conditions)
+        {
+            return monoBehaviour.StartCoroutine(DelayedActionCoroutine(action, secondsDelay));
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private static IEnumerator DelayedActionCoroutine(Action action, float duration)
         {
             yield return new WaitForSeconds(duration);
@@ -23,10 +38,6 @@ namespace Bas.Common.Extensions
             action();
         }
 
-        public static Coroutine DelayedAction(this MonoBehaviour monoBehaviour, Action action, float secondsDelay, params bool[] conditions)
-        {
-            return monoBehaviour.StartCoroutine(DelayedActionCoroutine(action, secondsDelay));
-        }
         private static IEnumerator DelayedActionCoroutine(Action action, float duration, params bool[] conditions)
         {
             yield return new WaitForSeconds(duration);
@@ -37,6 +48,7 @@ namespace Bas.Common.Extensions
 
             action();
         }
-        #endregion
+
+        #endregion Private Methods
     }
 }

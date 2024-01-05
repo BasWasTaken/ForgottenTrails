@@ -1,4 +1,3 @@
-
 using Bas.Common;
 using Bas.ForgottenTrails.InkConnections;
 using NaughtyAttributes;
@@ -9,26 +8,51 @@ using UnityEngine;
 
 namespace Bas.ForgottenTrails.SaveLoading
 {
-
     /// <summary>
     /// Allows other gameobjects to save and load data through use of <see cref="IDataService"/>.
     /// </summary>
     public class DataManager : MonoSingleton<DataManager>
     {
         ///___VARIABLES___///
-        #region INSPECTOR
+
+        #region Fields
 
         [SerializeField]
         protected MetaData metaData;
-        public MetaData MetaData => metaData;
-        #endregion
-        #region backend
 
-        #region Paths
+        private static string _ActiveDataProfile;
+        private static List<DataClass> reportedData = new();
 
         [Tooltip("Name of the folder to read from and write to")]
         [SerializeField]
         private string nameOfMasterDataDirectory = "PlayerData";
+
+        [Tooltip("File extension to use.")]
+        private string fileExtension = ".bin";
+
+        private bool TestNextFrame = false;
+
+        #endregion Fields
+
+        #region Events
+
+        public event Action OnDataSaved;
+
+        #endregion Events
+
+        #region Enums
+
+        public enum SaveMethod
+        {
+            manual,
+            auto,
+            quick
+        }
+
+        #endregion Enums
+
+        #region Properties
+
         public static string ActiveDataProfile
         {
             get { return Instance ? _ActiveDataProfile : null; }
@@ -49,9 +73,9 @@ namespace Bas.ForgottenTrails.SaveLoading
                 else throw new Exception();
             }
         }
-        private static string _ActiveDataProfile;
-        [Tooltip("File extension to use.")]
-        private string fileExtension = ".bin";
+
+        public MetaData MetaData => metaData;
+
         /// <summary>
         /// get folder containing all data (in subfolders)
         /// </summary>
@@ -70,7 +94,6 @@ namespace Bas.ForgottenTrails.SaveLoading
         /// </summary>
         public string[] DataProfileDirectories => Directory.GetDirectories(MasterDataDirectory);
 
-        public string DataProfile(string directory) => directory.Replace(MasterDataDirectory, "").Split('/')[0];
         public List<string> DataProfiles
         {
             get
@@ -84,6 +107,31 @@ namespace Bas.ForgottenTrails.SaveLoading
             }
         }
 
+        /// <summary>
+        /// get the active save profile
+        /// </summary>
+        public string ActiveDataProfileDirectory => DataProfileDirectory(ActiveDataProfile);
+
+        public Dictionary<string, DataClass> ActiveDataDictionary { get; } = new();
+
+        #endregion Properties
+
+        #region Public Methods
+
+        public static void ReportDataExists<T>(T data) where T : DataClass
+        {
+            try
+            {
+                reportedData.Add(data);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public string DataProfile(string directory) => directory.Replace(MasterDataDirectory, "").Split('/')[0];
+
         public bool DataProfileExists(string profileToTest)
         {
             return DataProfiles.Contains(profileToTest);
@@ -95,20 +143,6 @@ namespace Bas.ForgottenTrails.SaveLoading
         /// <param name="profile"></param>
         /// <returns></returns>
         public string DataProfileDirectory(string profile) => MasterDataDirectory + profile + "/";
-
-        /// <summary>
-        /// get the active save profile
-        /// </summary>
-        public string ActiveDataProfileDirectory => DataProfileDirectory(ActiveDataProfile);
-
-        private string GetPathForSaving(SaveMethod method)
-        {
-            return GetPathForSaving(ActiveDataProfile, method);
-        }
-        private string GetPathForSaving(string profile, SaveMethod method)
-        {
-            return DataProfileDirectory(profile) + method.ToString() + "save at " + Time.time + fileExtension;
-        }
 
         /// <summary>
         /// Get savedata by profile
@@ -147,34 +181,7 @@ namespace Bas.ForgottenTrails.SaveLoading
             }
             return files;
         }
-        #endregion 
 
-        #endregion
-        ///___METHODS___///
-        protected override void Awake()
-        {
-            base.Awake();
-            //DataMatrix = new();
-            ActiveDataDictionary.Clear();
-            reportedData = new();
-            DontDestroyOnLoad(gameObject); // move this to parent persistantmonosingleton? or 
-        }
-
-        static List<DataClass> reportedData = new();
-
-        public static void ReportDataExists<T>(T data) where T : DataClass
-        {
-            try
-            {
-                reportedData.Add(data);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        #region saving
         public bool TryStartNewGame(string profileName)
         {
             if (DataProfiles.Contains(profileName))
@@ -190,23 +197,7 @@ namespace Bas.ForgottenTrails.SaveLoading
                 return true;
             }
         }
-        //this is our save data structure.
-        [Serializable] //needs to be marked as serializable
-        struct MetaDataStruct
-        {
-            public string playerName;
-            public float totalPlayTime;
-            public float timeOnSave;
-            public HashSet<Type> dataTypes;
-            public HashSet<DataClass> DataClasses;
-        }
-        public enum SaveMethod
-        {
-            manual,
-            auto,
-            quick
-        }
-        public event Action OnDataSaved;
+
         public void SaveDataToFile(SaveMethod method) // for manuals hier ergens een override van profile naam? hm nee niet echt i guess
         {
             // exit if manual since i haven't done that yet
@@ -265,12 +256,326 @@ namespace Bas.ForgottenTrails.SaveLoading
             }
         }
 
-
         [Button("QuickSave", EButtonEnableMode.Playmode)]
         public void QuickSave() => SaveDataToFile(SaveMethod.quick);
 
-        #endregion
-        #region loading 
+        public bool CheckForReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
+        {
+            int added = 0;
+            bool anyNew = false;
+            string message = "attempt to fetch newly presented dataclasses:";
+            foreach (var item in reportedData)
+            {
+                anyNew = true;
+
+                string name = item.GetType().Name;
+
+                if (!dictionaryToAddTo.ContainsKey(name))
+                {
+                    added++;
+                    dictionaryToAddTo.Add(name, item);
+                    message += String.Format("\n {0} was added", name);
+                }
+                else message += String.Format("\n {0} is already contained? wait isn't that weird?", name);
+            }
+            if (anyNew)
+            {
+                string test0 = "test0 dic from reporteddata:";
+                foreach (var item in reportedData)
+                {
+                    test0 += "\n" + item;
+                }
+                Debug.Log(test0);
+            }
+            reportedData.Clear();
+            if (anyNew)
+            {
+                if (added > 0)
+                {
+                    Debug.Log("succeeded in " + message); return true;
+                }
+                else
+                {
+                    Debug.Log("failed " + message); return false;
+                }
+            }
+            else { Debug.Log("no new data things to add"); return true; }
+        }
+
+        public T GetDataOrMakeNew<T>() where T : DataClass, new()
+        {
+            string key = typeof(T).Name;
+            if (!ActiveDataDictionary.TryGetValue(key, out var output))
+            {
+                if (output == null)
+                {
+                    //Debug.Log("Creating new data of type " + key);
+                    output = new T();
+                }
+                if (!ActiveDataDictionary.TryAdd(key, output)) // doersn't this mean the adding from reporteed data is superfluous?
+                {
+                    Debug.LogError("still not added");
+                }
+            }
+            /*
+            string test = "test dic from getdataormakenew:";
+            foreach (var item in ActiveDataDictionary)
+            {
+                test += "\n"+item;
+            }
+            Debug.Log(test);
+            */
+            return (T)output;
+        }
+
+        public void LoadMostRecent()//from any profile
+        {
+            LoadDataFromFile(GetMostRecentFile());
+        }
+
+        [Button("QuickLoad")]
+        public void QuickLoad()
+        {
+            LoadDataFromFile(GetMostRecentFile(ActiveDataProfile, SaveMethod.quick));
+        }
+
+        public string GetMostRecentFile() // like the below but iterating over multiple profiles
+        {
+            string mostRecent = "null";
+            DateTime record = DateTime.MinValue;
+            foreach (string profile in DataProfiles)
+            {
+                foreach (string file in GetFilePaths(profile))
+                {
+                    DateTime contender = File.GetLastWriteTime(file);
+                    if (contender > record)
+                    {
+                        record = contender;
+                        mostRecent = file;
+                    }
+                }
+            }
+            if (mostRecent == "null") throw new Exception("No savedata found.");
+            else return mostRecent;
+        }
+
+        public string GetMostRecentFile(string profile)
+        {
+            string mostRecent = "null";
+            DateTime record = DateTime.MinValue;
+            foreach (string file in GetFilePaths(profile))
+            {
+                DateTime contender = File.GetLastWriteTime(file);
+                if (contender > record)
+                {
+                    record = contender;
+                    mostRecent = file;
+                }
+            }
+            if (mostRecent == "null") throw new Exception("No savedata found.");
+            else return mostRecent;
+        }
+
+        public string GetMostRecentFile(string profile, SaveMethod method)
+        {
+            string mostRecent = "null";
+            DateTime record = DateTime.MinValue;
+            foreach (string file in GetFilePaths(profile, method))
+            {
+                DateTime contender = File.GetLastWriteTime(file);
+                if (contender > record)
+                {
+                    record = contender;
+                    mostRecent = file;
+                }
+            }
+            if (mostRecent == "null") throw new Exception("No savedata found.");
+            return mostRecent;
+        }
+
+        public string GetMostRecentFile(SaveMethod method)
+        {
+            return GetMostRecentFile(ActiveDataProfile, method);
+        }
+
+        /// <summary>
+        /// used when loading save file (during reload or startup)
+        /// </summary>
+        public void LoadDataFromFile(string path, bool relaunchScene = true)
+        {
+            Debug.Log("attempting to load " + path);
+            //check if file available
+            if (!File.Exists(path)) throw new Exception("No file detected for path: " + path);
+
+            string profile = DataProfile(path);
+
+            //this is the formatter, you can also use an System.Xml.Serialization.XmlSerializer;
+            var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+            // json formatting and deformatting apperantly unused
+            //data = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+
+            // declare data var
+            MetaDataStruct loaded_data;
+
+            //again we open a filestream but now with fileMode.Open
+            using (Stream filestream = File.Open(path, FileMode.Open))
+            {
+                //deserialize directly from that stream.
+                loaded_data = (MetaDataStruct)formatter.Deserialize(filestream);
+            }
+
+            // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
+
+            /*
+            if (DataMatrix.ContainsKey(profile))
+            {
+                DataMatrix[profile].Clear();
+            }
+            else
+            {
+                DataMatrix.Add(profile, new()); // if we haven't yet prepped the data for that porofile this session, that's fine, just create the dictionary
+            }*/
+            /*
+            ActiveDataDictionary.Clear();
+            // uhh maybe i literally jst forgot to switch to the dataprofile???
+
+                // what am i doing with this loop? comment your code bas ffs.
+            foreach (DataClass dataClass in loaded_data.DataClasses)
+            {
+                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+                if(ActiveDataProfile == profile) // wtf, waarom deze if stateement in een foreach loop terwijl dat hem helemaal niet veranderd?
+            // ooh maybe i was confused and thought there would be data from multiple profiles hre?
+                {
+                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
+                }
+            }
+            */
+            // let's try this again.
+            // first, clear active data directory.
+
+            ActiveDataDictionary.Clear();
+            // then, switch profiles if needed
+            if (ActiveDataProfile != profile)
+            {
+                ActiveDataProfile = profile;
+            }
+            foreach (DataClass dataClass in loaded_data.DataClasses)
+            {
+                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
+                if (ActiveDataProfile == profile)
+                {
+                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
+                }
+                else throw new Exception("Wrong profile!");
+            }
+
+            metaData.timeSinceLastSave = 0;
+
+            if (relaunchScene)
+            {
+                // after this is done the scene ashould be (re)launched.
+                if (StoryController.Instance != null)
+                {
+                    StoryController.Instance.ResetSceneButton();
+                }
+                else
+                {
+                    //GameLauncher.Instance.LaunchGame(); done from gamelauncher already
+                }
+            }
+        }
+
+        public void WipeDataFromSlot(string profile)
+        {
+            DirectoryInfo dir = new(DataProfileDirectory(profile));
+            dir.Delete(true);
+            Debug.Log("Deleted data for profile " + profile);
+        }
+
+        [Button("Clear Data from this Profile")]
+        public void WipeDataFromSlot()
+        {
+            WipeDataFromSlot(ActiveDataProfile);
+        }
+
+        [Button("Clear data from all profiles")]
+        public void WipeDataFromAllSlots()
+        {
+            DirectoryInfo dir = new(MasterDataDirectory);
+            dir.Delete(true);
+            Debug.Log("Deleted data in all saveslots");
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        ///___METHODS___///
+        protected override void Awake()
+        {
+            base.Awake();
+            //DataMatrix = new();
+            ActiveDataDictionary.Clear();
+            reportedData = new();
+            DontDestroyOnLoad(gameObject); // move this to parent persistantmonosingleton? or
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private string GetPathForSaving(SaveMethod method)
+        {
+            return GetPathForSaving(ActiveDataProfile, method);
+        }
+
+        private string GetPathForSaving(string profile, SaveMethod method)
+        {
+            return DataProfileDirectory(profile) + method.ToString() + "save at " + Time.time + fileExtension;
+        }
+
+        private void FixedUpdate()
+        {
+            metaData.totalPlayTime += Time.fixedDeltaTime;
+            metaData.timeSinceLastSave += Time.fixedDeltaTime;
+
+            if (TestNextFrame)
+            {
+                if (ActiveDataDictionary != null)
+                {
+                    string test5 = "test5 dic from update:";
+
+                    foreach (var item in ActiveDataDictionary)
+                    {
+                        test5 += "\n" + item;
+                    }
+                    Debug.Log(test5);
+                }
+                TestNextFrame = false;
+            }
+        }
+
+        #endregion Private Methods
+
+        #region Structs
+
+        //this is our save data structure.
+        [Serializable] //needs to be marked as serializable
+        private struct MetaDataStruct
+        {
+            #region Fields
+
+            public string playerName;
+            public float totalPlayTime;
+            public float timeOnSave;
+            public HashSet<Type> dataTypes;
+            public HashSet<DataClass> DataClasses;
+
+            #endregion Fields
+        }
+
+        #endregion Structs
 
         /*
         // the container for various data profiles in accessable form (i.e. read from disk)
@@ -287,7 +592,7 @@ namespace Bas.ForgottenTrails.SaveLoading
                 else
                 {
                     var output = GetDataDictionary(ActiveDataProfile);
-                    
+
                     string test4 = "test4 dic in ActiveDataDictionary:";
                     foreach (var item in output)
                     {
@@ -357,7 +662,6 @@ namespace Bas.ForgottenTrails.SaveLoading
                 }
                 else
                 {
-
                     string test1 = "test1 dic in GetDataDictionary, before CheckForReportedData:";
                     foreach (var item in output)
                     {
@@ -372,7 +676,6 @@ namespace Bas.ForgottenTrails.SaveLoading
                     }
                     else
                     {
-
                         string test2 = "test2 dic in GetDataDictionary, after CheckForReportedData:";
                         foreach (var item in output)
                         {
@@ -386,306 +689,29 @@ namespace Bas.ForgottenTrails.SaveLoading
                 }
         }
         */
-        public Dictionary<string, DataClass> ActiveDataDictionary { get; } = new();
-        public bool CheckForReportedData(ref Dictionary<string, DataClass> dictionaryToAddTo)
-        {
-            int added = 0;
-            bool anyNew = false;
-            string message = "attempt to fetch newly presented dataclasses:";
-            foreach (var item in reportedData)
-            {
-                anyNew = true;
-
-                string name = item.GetType().Name;
-
-                if (!dictionaryToAddTo.ContainsKey(name))
-                {
-                    added++;
-                    dictionaryToAddTo.Add(name, item);
-                    message += String.Format("\n {0} was added", name);
-                }
-                else message += String.Format("\n {0} is already contained? wait isn't that weird?", name);
-            }
-            if (anyNew)
-            {
-                string test0 = "test0 dic from reporteddata:";
-                foreach (var item in reportedData)
-                {
-                    test0 += "\n" + item;
-                }
-                Debug.Log(test0);
-
-            }
-            reportedData.Clear();
-            if (anyNew)
-            {
-                if (added > 0)
-                {
-                    Debug.Log("succeeded in " + message); return true;
-                }
-                else
-                {
-                    Debug.Log("failed " + message); return false;
-                }
-            }
-            else { Debug.Log("no new data things to add"); return true; }
-        }
-
-        public T GetDataOrMakeNew<T>() where T : DataClass, new()
-        {
-            string key = typeof(T).Name;
-            if (!ActiveDataDictionary.TryGetValue(key, out var output))
-            {
-                if (output == null)
-                {
-                    //Debug.Log("Creating new data of type " + key);
-                    output = new T();
-                }
-                if (!ActiveDataDictionary.TryAdd(key, output)) // doersn't this mean the adding from reporteed data is superfluous?
-                {
-                    Debug.LogError("still not added");
-                }
-            }
-            /*
-            string test = "test dic from getdataormakenew:";
-            foreach (var item in ActiveDataDictionary)
-            {
-                test += "\n"+item;
-            }
-            Debug.Log(test); 
-            */
-            return (T)output;
-        }
-
-        public void LoadMostRecent()//from any profile
-        {
-            LoadDataFromFile(GetMostRecentFile());
-        }
-
-        [Button("QuickLoad")]
-        public void QuickLoad()
-        {
-            LoadDataFromFile(GetMostRecentFile(ActiveDataProfile, SaveMethod.quick));
-        }
-        public string GetMostRecentFile() // like the below but iterating over multiple profiles
-        {
-            string mostRecent = "null";
-            DateTime record = DateTime.MinValue;
-            foreach (string profile in DataProfiles)
-            {
-                foreach (string file in GetFilePaths(profile))
-                {
-                    DateTime contender = File.GetLastWriteTime(file);
-                    if (contender > record)
-                    {
-                        record = contender;
-                        mostRecent = file;
-                    }
-                }
-            }
-            if (mostRecent == "null") throw new Exception("No savedata found.");
-            else return mostRecent;
-        }
-        public string GetMostRecentFile(string profile)
-        {
-            string mostRecent = "null";
-            DateTime record = DateTime.MinValue;
-            foreach (string file in GetFilePaths(profile))
-            {
-                DateTime contender = File.GetLastWriteTime(file);
-                if (contender > record)
-                {
-                    record = contender;
-                    mostRecent = file;
-                }
-            }
-            if (mostRecent == "null") throw new Exception("No savedata found.");
-            else return mostRecent;
-        }
-        public string GetMostRecentFile(string profile, SaveMethod method)
-        {
-            string mostRecent = "null";
-            DateTime record = DateTime.MinValue;
-            foreach (string file in GetFilePaths(profile, method))
-            {
-                DateTime contender = File.GetLastWriteTime(file);
-                if (contender > record)
-                {
-                    record = contender;
-                    mostRecent = file;
-                }
-            }
-            if (mostRecent == "null") throw new Exception("No savedata found.");
-            return mostRecent;
-        }
-        public string GetMostRecentFile(SaveMethod method)
-        {
-            return GetMostRecentFile(ActiveDataProfile, method);
-        }
-
-        /// <summary>
-        /// used when loading save file (during reload or startup)
-        /// </summary>
-        public void LoadDataFromFile(string path, bool relaunchScene = true)
-        {
-            Debug.Log("attempting to load " + path);
-            //check if file available
-            if (!File.Exists(path)) throw new Exception("No file detected for path: " + path);
-
-            string profile = DataProfile(path);
-
-            //this is the formatter, you can also use an System.Xml.Serialization.XmlSerializer;
-            var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-
-            // json formatting and deformatting apperantly unused
-            //data = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
-
-            // declare data var
-            MetaDataStruct loaded_data;
-
-            //again we open a filestream but now with fileMode.Open
-            using (Stream filestream = File.Open(path, FileMode.Open))
-            {
-                //deserialize directly from that stream.
-                loaded_data = (MetaDataStruct)formatter.Deserialize(filestream);
-            }
-
-            // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
-
-            /*
-            if (DataMatrix.ContainsKey(profile))
-            {
-                DataMatrix[profile].Clear(); 
-            }
-            else
-            {
-                DataMatrix.Add(profile, new()); // if we haven't yet prepped the data for that porofile this session, that's fine, just create the dictionary
-            }*/
-            /*
-            ActiveDataDictionary.Clear();
-            // uhh maybe i literally jst forgot to switch to the dataprofile??? 
-
-
-                // what am i doing with this loop? comment your code bas ffs.
-            foreach (DataClass dataClass in loaded_data.DataClasses)
-            {
-                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
-                if(ActiveDataProfile == profile) // wtf, waarom deze if stateement in een foreach loop terwijl dat hem helemaal niet veranderd? 
-            // ooh maybe i was confused and thought there would be data from multiple profiles hre?
-                {
-                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
-                }
-
-            }
-            */
-            // let's try this again.
-            // first, clear active data directory.
-
-            ActiveDataDictionary.Clear();
-            // then, switch profiles if needed
-            if (ActiveDataProfile != profile)
-            {
-                ActiveDataProfile = profile;
-            }
-            foreach (DataClass dataClass in loaded_data.DataClasses)
-            {
-                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
-                if (ActiveDataProfile == profile)
-                {
-                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
-                }
-                else throw new Exception("Wrong profile!");
-
-            }
-
-
-
-            metaData.timeSinceLastSave = 0;
-
-            if (relaunchScene)
-            {
-                // after this is done the scene ashould be (re)launched.
-                if (StoryController.Instance != null)
-                {
-                    StoryController.Instance.ResetSceneButton();
-                }
-                else
-                {
-                    //GameLauncher.Instance.LaunchGame(); done from gamelauncher already
-                }
-            }
-
-        }
-
-
-        #endregion
-        #region resetting data
-
-
-        public void WipeDataFromSlot(string profile)
-        {
-            DirectoryInfo dir = new(DataProfileDirectory(profile));
-            dir.Delete(true);
-            Debug.Log("Deleted data for profile " + profile);
-        }
-
-        [Button("Clear Data from this Profile")]
-        public void WipeDataFromSlot()
-        {
-            WipeDataFromSlot(ActiveDataProfile);
-        }
-
-        [Button("Clear data from all profiles")]
-        public void WipeDataFromAllSlots()
-        {
-            DirectoryInfo dir = new(MasterDataDirectory);
-            dir.Delete(true);
-            Debug.Log("Deleted data in all saveslots");
-        }
-
-        #endregion
-
-        #region loop
-        bool TestNextFrame = false;
-        private void FixedUpdate()
-        {
-            metaData.totalPlayTime += Time.fixedDeltaTime;
-            metaData.timeSinceLastSave += Time.fixedDeltaTime;
-
-            if (TestNextFrame)
-            {
-
-                if (ActiveDataDictionary != null)
-                {
-                    string test5 = "test5 dic from update:";
-
-                    foreach (var item in ActiveDataDictionary)
-                    {
-                        test5 += "\n" + item;
-                    }
-                    Debug.Log(test5);
-                }
-                TestNextFrame = false;
-            }
-        }
-        #endregion
     }
+
     [Serializable]
     public class MetaData : DataClass
     {
+        #region Fields
+
+        public const string textConst = "const";
         public float currentPlayTime = 0;// Time.realtimeSinceStartup;
         public float totalPlayTime = 0;
         public float timeSinceLastSave = 0;
 
         public string testText = "nulled";
-        public const string textConst = "const";
         public string playerName = "Sam";
-        public MetaData() : base() { }
 
+        #endregion Fields
 
+        #region Public Constructors
+
+        public MetaData() : base()
+        {
+        }
+
+        #endregion Public Constructors
     }
-
-
-
-
 }

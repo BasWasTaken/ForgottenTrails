@@ -3,25 +3,16 @@ using UnityEngine;
 
 namespace Bas.ForgottenTrails.Presentation
 {
-
     public class FeedAudio : MonoBehaviour
     {
-        private AudioSource audioSource;
-        private void Awake()
-        {
-            if (!TryGetComponent(out audioSource))
-            {
-                foreach (AudioSource item in FindObjectsOfType<AudioSource>())
-                {
-                    if (item.gameObject.name.Contains("System"))
-                    {
+        #region Fields
 
-                        audioSource = item;
-                        break;
-                    }
-                }
-            }
-        }
+        private AudioSource audioSource;
+
+        #endregion Fields
+
+        #region Public Methods
+
         public void Feed(AudioClip audioClip)
         {
             if (audioClip != null)
@@ -34,11 +25,32 @@ namespace Bas.ForgottenTrails.Presentation
                 }
             }
         }
-        IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void Awake()
+        {
+            if (!TryGetComponent(out audioSource))
+            {
+                foreach (AudioSource item in FindObjectsOfType<AudioSource>())
+                {
+                    if (item.gameObject.name.Contains("System"))
+                    {
+                        audioSource = item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
         {
             yield return new WaitWhile(() => audioSource.isPlaying);
             audioSource.clip = null;
         }
-    }
 
+        #endregion Private Methods
+    }
 }

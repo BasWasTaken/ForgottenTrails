@@ -1,5 +1,6 @@
 using UnityEngine;
-namespace Common.Utility 
+
+namespace Common.Utility
 {
     /// <summary>
     /// <para>Base Class for creating Singleton-variants of <see cref="MonoBehaviour"/>s, meaning that only one instance is active at any time and this instance can easily be reached using a static field.</para>
@@ -7,11 +8,17 @@ namespace Common.Utility
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         ///___VARIABLES___///
-        #region BACKEND_VARIABLES
+
+        #region Properties
+
         public static T Instance { get; private set; }
-        #endregion
+
+        #endregion Properties
+
         ///___METHODS___///
-        #region LIFESPAN
+
+        #region Protected Methods
+
         protected virtual void Awake()
         {
             if (Instance == null)
@@ -24,6 +31,7 @@ namespace Common.Utility
                 Destroy(gameObject);
             }
         }
-        #endregion
+
+        #endregion Protected Methods
     }
 }

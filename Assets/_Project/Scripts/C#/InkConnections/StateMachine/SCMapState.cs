@@ -11,28 +11,25 @@ namespace Bas.ForgottenTrails.InkConnections
     public partial class StoryController : MonoSingleton<StoryController>
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
+
+        #region Classes
 
         public class SCMapState : SCBookMenuState
         {
             // Inspector Properties
-            #region Inspector Properties
-            #endregion
 
             // Public Properties
-            #region Public Properties
 
-            #endregion
             // Private Properties
-            #region Private Properties
 
-            #endregion
             // Public Methods
+
             #region Public Methods
+
             public override void OnEnter()
             {
-
                 Controller.InterfaceBroker.book.pages.mapPage.SetAsLastSibling();
                 Controller.InterfaceBroker.book.markers.mapMark.color = Color.clear;
                 foreach (var choice in Controller.Story.currentChoices)
@@ -47,10 +44,12 @@ namespace Bas.ForgottenTrails.InkConnections
                 }
                 ShowOrHideTravelOptions();
             }
+
             public override void OnUpdate()
             {
                 base.OnUpdate();
             }
+
             public override void OnExit()
             {
                 foreach (var choice in Controller.Story.currentChoices)
@@ -64,10 +63,14 @@ namespace Bas.ForgottenTrails.InkConnections
                 }
                 Controller.InterfaceBroker.book.markers.mapMark.color = Color.white;
             }
-            #endregion
+
+            #endregion Public Methods
+
             // Private Methods
+
             #region Private Methods
-            void ShowOrHideTravelOptions() // show all locations that are known to the player.
+
+            private void ShowOrHideTravelOptions() // show all locations that are known to the player.
             {
                 // first, hide all buttons.
 
@@ -75,10 +78,6 @@ namespace Bas.ForgottenTrails.InkConnections
 
                 // then, for each location travelable according to inky, try to find and make interactable a matching button (that should by now have been revealed)
                 // this means that outside of mapscenes, each button will remain noninteractable even when revealed.
-
-
-
-
 
                 // first let's collect all the options ink has given us
 
@@ -90,7 +89,6 @@ namespace Bas.ForgottenTrails.InkConnections
                         locationOptions.Add(found.Key);
                     }
                 }
-
 
                 // then we'll go over each of the buttons in our mapscreen
 
@@ -104,7 +102,6 @@ namespace Bas.ForgottenTrails.InkConnections
 
                 foreach (MapLocationContainer item in Controller.InterfaceBroker.mapButtonsContainer.GetComponentsInChildren<MapLocationContainer>())
                 {
-
                     // is canocinal location found in this list?
                     bool isKnown = knownLocations.ContainsItemNamed(item.canonicalLocation);
 
@@ -119,14 +116,14 @@ namespace Bas.ForgottenTrails.InkConnections
                     // making them interactable or not
                     item.GetComponent<Button>().interactable = canBeVisited;
                     Debug.LogFormat("{0} can {1} be visited!", item.canonicalLocation, canBeVisited ? "" : "not");
-
                 }
 
-
                 // TODO: add check the other way round: any prompts from ink that could not be matched, should produce an error.
-
             }
-            #endregion
+
+            #endregion Private Methods
         }
+
+        #endregion Classes
     }
 }

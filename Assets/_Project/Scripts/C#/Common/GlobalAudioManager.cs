@@ -6,13 +6,21 @@ namespace Bas.Common
     public class GlobalAudioManager : MonoSingleton<GlobalAudioManager>
     {
         // Public Properties
-        #region Public Properties
+
+        #region Properties
+
         public AudioHandler Global { get; private set; }
-        #endregion
+
+        #endregion Properties
+
+        #region Protected Methods
+
         protected override void Awake()
         {
             base.Awake();
             DontDestroyOnLoad(this.gameObject);
         }
+
+        #endregion Protected Methods
     }
 }

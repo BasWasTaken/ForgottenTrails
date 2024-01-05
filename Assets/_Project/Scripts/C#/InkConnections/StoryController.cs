@@ -1,5 +1,4 @@
-﻿
-using Bas.Common;
+﻿using Bas.Common;
 using Bas.ForgottenTrails.SaveLoading;
 using Ink.Runtime;
 using NaughtyAttributes;
@@ -9,7 +8,6 @@ using UnityEngine.UI;
 using static Bas.ForgottenTrails.InkConnections.StoryController.InterfaceBroking;
 using static Bas.ForgottenTrails.InkConnections.StoryController.TextProduction;
 
-
 namespace Bas.ForgottenTrails.InkConnections
 {
     /// <summary>
@@ -18,22 +16,46 @@ namespace Bas.ForgottenTrails.InkConnections
     public partial class StoryController : MonoSingleton<StoryController>
     {
         // Constants
-        #region Constants
+
+        #region Fields
+
+        internal SCDummyState dummyState = new();
+
+        // TODO: how to avoid having to make this from here?
+        internal SCSuperState superState = new();
+
+        // Private Properties
+        internal TextProduction.SCProductionState productionState = new();
+
+        internal SCFunctionState functionState = new();
+        internal SCWaitingForInputState waitingForInputState = new();
+        internal SCWaitingForChoiceState waitingForChoiceState = new();
+        internal SCWaitingForContinueState waitingForContinueState = new();
+        internal SCBookMenuState bookMenuState = new();
+        internal SCSettingsState settingsState = new();
+        internal SCDataState dataState = new();
+        internal SCInventoryState inventoryState = new();
+        internal SCMapState mapState = new();
+        internal SCPartyState partyState = new();
+        internal SCSavingState savingState = new();
         private const string dataLabel = "BasicInkScript"; // NOTE:  isn't this ridiculous? if you'll be using this object as ink interface all the time, it should't itelf store particular data, you should have objets etc store data... else all will be under here, won't it? or will it just be settings?
 
-        #endregion
         // Inspector Properties & Helpers
-        #region Inspector Properties & Helpers
-
-        [field: SerializeField, ReadOnly, BoxGroup("State Info")]
-        public StackBasedStateMachine<StoryController> StateMachine { get; private set; }
-
-
-        public TextAsset InkStoryAsset { get { return AssetManager.Instance.TextAsset; } set { AssetManager.Instance.TextAsset = value; } }
 
         [SerializeField, BoxGroup("Data"), ReadOnly]
         [Tooltip("View data object containing INK data.")]
         private StoryData _inkDataAsset = null;
+
+        #endregion Fields
+
+        #region Properties
+
+        [field: SerializeField, ReadOnly, BoxGroup("State Info")]
+        public StackBasedStateMachine<StoryController> StateMachine { get; private set; }
+
+        public TextAsset InkStoryAsset
+        { get { return AssetManager.Instance.TextAsset; } set { AssetManager.Instance.TextAsset = value; } }
+
         public StoryData InkDataAsset
         {
             get
@@ -50,11 +72,7 @@ namespace Bas.ForgottenTrails.InkConnections
             }
         }
 
-        [Tooltip("Reset ink data in object. Note: does not remove data from file")]
-        [Button("ResetInkData", EButtonEnableMode.Editor)] public void ResetInkDataButton() => ResetData();
-
-        [Tooltip("Load data from disk and reset scene.")]
-        [Button("ResetScene", EButtonEnableMode.Playmode)] public void ResetSceneButton() => ResetScene();
+        public Story Story { get; private set; }
 
         [field: SerializeField, BoxGroup("TextProducer")]
         internal TextProduction TextProducer { get; set; }
@@ -65,52 +83,51 @@ namespace Bas.ForgottenTrails.InkConnections
         [field: SerializeField, BoxGroup("InterfaceBroker")]
         internal InterfaceBroking InterfaceBroker { get; set; }
 
-
         [field: SerializeField, BoxGroup("SceneReferences")]
         internal TMPro.TMP_InputField InputField { get; set; }
 
+        #endregion Properties
 
-        #endregion
+        #region Public Methods
+
+        [Tooltip("Reset ink data in object. Note: does not remove data from file")]
+        [Button("ResetInkData", EButtonEnableMode.Editor)] public void ResetInkDataButton() => ResetData();
+
+        [Tooltip("Load data from disk and reset scene.")]
+        [Button("ResetScene", EButtonEnableMode.Playmode)] public void ResetSceneButton() => ResetScene();
+
         // Public Properties
-        #region Public Properties
-        public Story Story { get; private set; }
-        #endregion
-        // Private Properties
-        #region Private Properties
-
-        #region States
-        internal SCDummyState dummyState = new(); // TODO: how to avoid having to make this from here?
-        internal SCSuperState superState = new();
-        internal TextProduction.SCProductionState productionState = new();
-        internal SCFunctionState functionState = new();
-        internal SCWaitingForInputState waitingForInputState = new();
-        internal SCWaitingForChoiceState waitingForChoiceState = new();
-        internal SCWaitingForContinueState waitingForContinueState = new();
-        internal SCBookMenuState bookMenuState = new();
-        internal SCSettingsState settingsState = new();
-        internal SCDataState dataState = new();
-        internal SCInventoryState inventoryState = new();
-        internal SCMapState mapState = new();
-        internal SCPartyState partyState = new();
-        internal SCSavingState savingState = new();
-        #endregion
-
-        #endregion
-
         // LifeCycle Methods
-        #region LifeCycle Methods
-        override protected void Awake()
+
+        public void AssignName()
+        {
+            Story.state.variablesState["PlayerName"] = DataManager.Instance.MetaData.playerName = InputField.text;
+            InputField.DeactivateInputField();
+            InputField.gameObject.SetActive(false);
+            waitingForInputState.DropCondition = true;
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override void Awake()
         {
             base.Awake();
 
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
 
-            //book = FindFirstObjectByType<Book>(); 
+            //book = FindFirstObjectByType<Book>();
             SetDresser.Assign();
             TextProducer.Assign();
             InterfaceBroker.Assign();
             InitialiseStateMachine();
         }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
         private void InitialiseStateMachine()
         {
             //Debug.Log("Making state machine.");
@@ -133,6 +150,7 @@ namespace Bas.ForgottenTrails.InkConnections
             mapState
             );
         }
+
         private void Update()
         {
             if (StateMachine.CurrentState != null)
@@ -140,17 +158,16 @@ namespace Bas.ForgottenTrails.InkConnections
                 StateMachine.Update();
             }
         }
+
         private void OnDestroy()
         {
             InkDataAsset = null;
         }
-        #endregion
-        // Public Methods
-        #region Public Methods
 
-        #endregion
+        // Public Methods
+
         // Private Methods
-        #region Private Methods 
+
         /// <summary>
         /// Make a new <see cref="StoryData"/>object
         /// </summary>
@@ -165,10 +182,12 @@ namespace Bas.ForgottenTrails.InkConnections
             }
             return data;
         }
+
         private void ResetData()
         {
             InkDataAsset = CreateBlankData();
         }
+
         private void ResetScene()
         {
             if (UnityEditor.EditorApplication.isPlaying == true)
@@ -179,6 +198,7 @@ namespace Bas.ForgottenTrails.InkConnections
                 //StateMachine.TransitionToState(StoryController.Instance.superState);
             }
         }
+
         private void StopScene()
         {
             foreach (GameObject obj in FindObjectsOfType<GameObject>())
@@ -186,18 +206,12 @@ namespace Bas.ForgottenTrails.InkConnections
                 StopAllCoroutines();
             }
         }
+
         private void PromptName()
         {
             StateMachine.TransitionToState(waitingForInputState);
             InputField.gameObject.SetActive(true);
             InputField.ActivateInputField();
-        }
-        public void AssignName()
-        {
-            Story.state.variablesState["PlayerName"] = DataManager.Instance.MetaData.playerName = InputField.text;
-            InputField.DeactivateInputField();
-            InputField.gameObject.SetActive(false);
-            waitingForInputState.DropCondition = true;
         }
 
         private void ConsoleLogInk(string text, bool warning = false)
@@ -211,6 +225,7 @@ namespace Bas.ForgottenTrails.InkConnections
                 Debug.Log("Message from INK Script: " + text);
             }
         }
-        #endregion
+
+        #endregion Private Methods
     }
 }

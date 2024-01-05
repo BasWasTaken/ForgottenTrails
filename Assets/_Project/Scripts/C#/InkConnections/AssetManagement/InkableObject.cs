@@ -8,6 +8,5 @@ namespace Bas.ForgottenTrails.InkConnections
     /// If the objects require special behaviour to work right, it can be added here for all of them.
     public abstract class InkableObject : ScriptableObject
     {
-
     }
 }

@@ -1,4 +1,3 @@
-
 using Bas.Common;
 using UnityEngine;
 
@@ -6,26 +5,25 @@ namespace Bas.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
+        #region Classes
+
         public class SCBookMenuState : SCSuperState
         {
             // Inspector Properties
-            #region Inspector Properties
 
-            #endregion
             // Public Properties
-            #region Public Properties
 
-            #endregion
             // Private Properties
-            #region Private Properties
 
-            #endregion
             // Public Methods
+
             #region Public Methods
+
             public override void OnEnter()
             {
                 Controller.InterfaceBroker.inventory.book.Displace();
             }
+
             public override void OnUpdate()
             {
                 base.OnUpdate();
@@ -34,6 +32,7 @@ namespace Bas.ForgottenTrails.InkConnections
                     ExitMenu();
                 }
             }
+
             public override void OnExit()
             {
                 foreach (var choice in Controller.Story.currentChoices)
@@ -54,16 +53,18 @@ namespace Bas.ForgottenTrails.InkConnections
                 }
                 Controller.InterfaceBroker.inventory.book.Replace();
             }
-            #endregion
+
             // Private Methods
-            #region Private Methods
+
             public void ExitMenu()
             {
-
                 //Debug.LogFormat("is {0}, a bookmenustate?", this); // simply "this" does not seem to work
                 Controller.StateMachine.DropState(Machine.KnownStates[typeof(SCBookMenuState)]); // the state to drom from may be a child but not a parent
             }
-            #endregion
+
+            #endregion Public Methods
         }
+
+        #endregion Classes
     }
 }

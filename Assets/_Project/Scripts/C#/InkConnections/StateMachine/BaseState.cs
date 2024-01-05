@@ -1,4 +1,3 @@
-
 using System;
 
 namespace Bas.ForgottenTrails.InkConnections
@@ -9,19 +8,34 @@ namespace Bas.ForgottenTrails.InkConnections
     public abstract class BaseState<T>
     {
         // Public Properties
-        #region Public Properties
+
+        #region Fields
+
+        public bool DropCondition = false;
+
+        #endregion Fields
+
+        #region Properties
+
         public StackBasedStateMachine<T> Machine { get; set; }
         public T Controller { get; set; }
         public Type DirectBase => GetType().BaseType;
-        public bool DropCondition = false;
 
-        #endregion
+        #endregion Properties
+
         // Public Methods
-        #region Public Methods
-        public virtual void OnEnter(/*T controller*/) { }
-        public virtual void OnUpdate(/*T controller*/) { }
-        public virtual void OnExit(/*T controller*/) { }
-        #endregion
-    }
 
+        #region Public Methods
+
+        public virtual void OnEnter(/*T controller*/)
+        { }
+
+        public virtual void OnUpdate(/*T controller*/)
+        { }
+
+        public virtual void OnExit(/*T controller*/)
+        { }
+
+        #endregion Public Methods
+    }
 }

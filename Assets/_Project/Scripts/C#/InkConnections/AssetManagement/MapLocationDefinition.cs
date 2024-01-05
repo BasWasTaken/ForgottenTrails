@@ -11,12 +11,19 @@ namespace Bas.ForgottenTrails.InkConnections.Travel
     [CreateAssetMenu]
     public class MapLocationDefinition : InkableObject
     {
+        #region Fields
+
+        public string description = "";
+
+        #endregion Fields
+
+        #region Properties
+
         [field: SerializeField, BoxGroup("Info")]
         public string CanonicalName { get; private set; }
 
         public Ink.Runtime.InkListItem InkListItem { get; set; }
-        public string description = "";
+
+        #endregion Properties
     }
-
-
 }

@@ -1,4 +1,3 @@
-
 namespace Bas.ForgottenTrails.InkConnections.Items
 {
     public enum Affordance

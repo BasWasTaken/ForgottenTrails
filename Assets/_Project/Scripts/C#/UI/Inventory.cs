@@ -6,22 +6,24 @@ using UnityEngine;
 
 namespace Bas.ForgottenTrails.UI
 {
-
     /// <summary>
     /// <para>Summary not provided.</para>
     /// </summary>
     public class Inventory : MonoBehaviour
     {
-        [Header("Prefab")]
-        [SerializeField]
-        ItemContainer itemContainerPrefab;
+        #region Fields
 
         public GUISlideIn book;
 
+        [Header("Prefab")]
+        [SerializeField]
+        private ItemContainer itemContainerPrefab;
 
+        private Dictionary<InkListItem, ItemContainer> UnityInventory = new();
 
-        Dictionary<InkListItem, ItemContainer> UnityInventory = new();
+        #endregion Fields
 
+        #region Public Methods
 
         public void FetchItems(InkList inkInventory)
         {
@@ -45,6 +47,7 @@ namespace Bas.ForgottenTrails.UI
                 }
             }
         }
+
         public void AddItem(InkListItem item)
         {
             if (AssetManager.Instance.ItemDictionary.TryGetValue(item, out InventoryItem inventoryItem))
@@ -66,6 +69,7 @@ namespace Bas.ForgottenTrails.UI
                 Debug.LogError(string.Format("Item \"{0}\" not recognised!", item.itemName));
             }
         }
+
         public void RemoveItem(InkListItem item)
         {
             if (UnityInventory.TryGetValue(item, out ItemContainer value))
@@ -77,7 +81,8 @@ namespace Bas.ForgottenTrails.UI
             {
                 Debug.LogError(string.Format("Item \"{0}\" not found in inventory!", item.itemName));
             }
-
         }
+
+        #endregion Public Methods
     }
 }

@@ -6,49 +6,21 @@ using UnityEngine;
 namespace Bas.ForgottenTrails.InkConnections
 {
     [Serializable]
-    /// <summary>
-    /// <para>State machine for a particular type of <see cref="FSMState"/>, and using stack-based logic such as pop and push.</para>
-    /// A nested stack-based finite state machine. To be honest i strongly suspect this bastard hybrid form of a nested and a stack-based fsm has the copmlications of both and possibly the benefits of neither but it's what i threw together and build the current system on, and it suits my purposes for now.
-    /// </summary>
     public class StackBasedStateMachine<T>
     {
         // Inspector Properties
-        #region Inspector Properties
+
+        #region Fields
+
         [SerializeField, TextArea(1, 20)]
         private string _StatePeeker = "Not Started";
-        public string StatePeeker
-        {
-            get { return _StatePeeker; }
-            private set
-            {
-                _StatePeeker = value;
-                foreach (var state in StateStack)
-                {
-                    _StatePeeker += "\n" + state.GetType().Name;
-                }
-            }
-        }
 
-        [field: SerializeField, ReadOnly]
-        public Stack<BaseState<T>> StateStack { get; private set; } = new();
+        private int i = 0;
 
-        public T Controller { get; private set; }
+        #endregion Fields
 
-        #endregion
-        // Public Properties
-        #region Public Properties
-        public BaseState<T> CurrentState => StateStack.TryPeek(out BaseState<T> result) ? result : null;
-        public Dictionary<Type, BaseState<T>> KnownStates { get; private set; } = new();
+        #region Public Constructors
 
-        #endregion
-        // Private Properties
-        #region Private Properties
-        private BaseState<T> BaseState { get; set; }
-        private BaseState<T> StartState { get; set; }
-
-        #endregion
-        // Constructor
-        #region Constructor
         public StackBasedStateMachine(T controller, params BaseState<T>[] states)
         {
             StatePeeker = "Constructing";
@@ -68,11 +40,65 @@ namespace Bas.ForgottenTrails.InkConnections
             TransitionToState(StartState);
         }
 
-        #endregion
+        #endregion Public Constructors
+
+        #region Properties
+
+        public string StatePeeker
+        {
+            get { return _StatePeeker; }
+            private set
+            {
+                _StatePeeker = value;
+                foreach (var state in StateStack)
+                {
+                    _StatePeeker += "\n" + state.GetType().Name;
+                }
+            }
+        }
+
+        [field: SerializeField, ReadOnly]
+        public Stack<BaseState<T>> StateStack { get; private set; } = new();
+
+        public T Controller { get; private set; }
+
+        // Public Properties
+
+        public BaseState<T> CurrentState => StateStack.TryPeek(out BaseState<T> result) ? result : null;
+        public Dictionary<Type, BaseState<T>> KnownStates { get; private set; } = new();
+
+        // Private Properties
+
+        private BaseState<T> BaseState { get; set; }
+        private BaseState<T> StartState { get; set; }
+
+        #endregion Properties
+
+        // Constructor
         // Public Methods
+
         #region Public Methods
+
+        public static bool IsXAncestorToY(BaseState<T> X, BaseState<T> Y)
+        {
+            // simply get the doesdescent function but flipping x and y.
+            return DoesXDescentFromY(Y, X);
+        }
+
+        // Private Methods
+        public static bool DoesXDescentFromY(BaseState<T> X, BaseState<T> Y)
+        {
+            Type descendantType = X.GetType();
+            Type ancestorType = Y.GetType();
+
+            // Check if the X type is assignable from the Y type,
+            // which means 'Y' is an ancestor of 'X'.
+            // which means 'X' descents from 'Y'
+            return ancestorType.IsAssignableFrom(descendantType);
+        }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="goalState"></param>
         public void TransitionToState(BaseState<T> goalState)
@@ -90,8 +116,9 @@ namespace Bas.ForgottenTrails.InkConnections
             }
             StatePeeker = "transitioned";
         }
+
         /// <summary>
-        /// Pop current state and revert back to the previous. Explicitly, in order: 
+        /// Pop current state and revert back to the previous. Explicitly, in order:
         /// 1. Fire appropriate OnExit()s.
         /// 2. Pop the state from the stack.
         /// 3. If the stack is now empty, push the default one.
@@ -117,26 +144,6 @@ namespace Bas.ForgottenTrails.InkConnections
             return false;
         }
 
-        // TODO move this later
-        private void PerformDrop()
-        {
-            if (StateStack.Count < 2)
-            {
-                throw new Exception("Can't drop from the basestate with nothing to drop to.");
-            }
-            i++;
-            BaseState<T> toState = StateStack.ToArray()[^2];
-
-
-
-            PerformTransitionMethods(toState);
-            var dropped = StateStack.Pop(); // remove current state from top
-
-            dropped.DropCondition = false;
-            CurrentState.OnEnter(); // Perform the enter behaviour
-        }
-
-        int i = 0;
         /// <summary>
         /// Drop until given state is dropped.
         /// 1. Check if state is in history.
@@ -160,7 +167,7 @@ namespace Bas.ForgottenTrails.InkConnections
             {
                 if (DoesXDescentFromY(CurrentState, dropFrom)) // if the current state is a descendant of the dropstate
                 {
-                    PerformDrop();                    // drop it 
+                    PerformDrop();                    // drop it
                     DropState(dropFrom); // and check again
                 }
                 else if (TryGetChildStateFromStack(dropFrom, out BaseState<T> child))                // else if we do have a descendant in stack
@@ -171,49 +178,15 @@ namespace Bas.ForgottenTrails.InkConnections
                     } while (StateStack.Contains(child)); // until you reach past the child
                     DropState(dropFrom); // and keep going deeper to check for next
                 }
-                else                // else: 
+                else                // else:
                 {
                     //nothing left to do !check how many runthoughs this took.
                     //Debug.Log(i);
                     i = 0;
                 }
-
-            }
-
-        }
-        private void PerformTransitionMethods(BaseState<T> goalState)
-        {
-
-            BaseState<T> intermediateState = CurrentState;
-
-            BaseState<T> commonState = GetCommonAncestorIncluding(intermediateState, goalState);
-            // transitions upwards:
-            while (intermediateState != commonState & intermediateState != BaseState) // loops. always fires first onexit, except in cases where the to state is a decendent from the currentstate. (because the current is also the common ancestor)
-            {
-                intermediateState.OnExit();
-                intermediateState = GetParent(intermediateState);
-            }
-            // transition downwards:
-            while (intermediateState != goalState & goalState != BaseState)
-            {
-                intermediateState = GetChildTowards(intermediateState, goalState);
-                intermediateState.OnEnter();
             }
         }
-        private BaseState<T> GetCommonAncestorIncluding(BaseState<T> fromState, BaseState<T> toState)
-        {
-            int levelDifference = 0;
-            BaseState<T> current = fromState;
 
-            while (current != null && !IsXAncestorToY(current, toState)) //if this is not an ancestor
-            {
-                // go up a level
-                current = GetParent(current);
-                levelDifference++;
-            }
-            return current;
-            // de fromstate kan hier uitkomen, als het goed is. ik denk de tostate ook, maar daar ben ik minder zeker van. check dit morgen met frisse ogen nog even.
-        }
         public void Reset(bool hard = false)
         {
             // should use this, but it's not working:
@@ -244,24 +217,61 @@ namespace Bas.ForgottenTrails.InkConnections
             }
         }
 
-        #endregion
-        // Private Methods
-        #region Private Methods 
-        public static bool IsXAncestorToY(BaseState<T> X, BaseState<T> Y)
-        {
-            // simply get the doesdescent function but flipping x and y.
-            return DoesXDescentFromY(Y, X);
-        }
-        public static bool DoesXDescentFromY(BaseState<T> X, BaseState<T> Y)
-        {
-            Type descendantType = X.GetType();
-            Type ancestorType = Y.GetType();
+        #endregion Public Methods
 
-            // Check if the X type is assignable from the Y type,
-            // which means 'Y' is an ancestor of 'X'.
-            // which means 'X' descents from 'Y'
-            return ancestorType.IsAssignableFrom(descendantType);
+        #region Private Methods
+
+        // TODO move this later
+        private void PerformDrop()
+        {
+            if (StateStack.Count < 2)
+            {
+                throw new Exception("Can't drop from the basestate with nothing to drop to.");
+            }
+            i++;
+            BaseState<T> toState = StateStack.ToArray()[^2];
+
+            PerformTransitionMethods(toState);
+            var dropped = StateStack.Pop(); // remove current state from top
+
+            dropped.DropCondition = false;
+            CurrentState.OnEnter(); // Perform the enter behaviour
         }
+
+        private void PerformTransitionMethods(BaseState<T> goalState)
+        {
+            BaseState<T> intermediateState = CurrentState;
+
+            BaseState<T> commonState = GetCommonAncestorIncluding(intermediateState, goalState);
+            // transitions upwards:
+            while (intermediateState != commonState & intermediateState != BaseState) // loops. always fires first onexit, except in cases where the to state is a decendent from the currentstate. (because the current is also the common ancestor)
+            {
+                intermediateState.OnExit();
+                intermediateState = GetParent(intermediateState);
+            }
+            // transition downwards:
+            while (intermediateState != goalState & goalState != BaseState)
+            {
+                intermediateState = GetChildTowards(intermediateState, goalState);
+                intermediateState.OnEnter();
+            }
+        }
+
+        private BaseState<T> GetCommonAncestorIncluding(BaseState<T> fromState, BaseState<T> toState)
+        {
+            int levelDifference = 0;
+            BaseState<T> current = fromState;
+
+            while (current != null && !IsXAncestorToY(current, toState)) //if this is not an ancestor
+            {
+                // go up a level
+                current = GetParent(current);
+                levelDifference++;
+            }
+            return current;
+            // de fromstate kan hier uitkomen, als het goed is. ik denk de tostate ook, maar daar ben ik minder zeker van. check dit morgen met frisse ogen nog even.
+        }
+
         private BaseState<T> GetParent(BaseState<T> child)
         {
             Type U = child.DirectBase;
@@ -275,6 +285,7 @@ namespace Bas.ForgottenTrails.InkConnections
             }
             return parent;
         }
+
         private BaseState<T> GetChildTowards(BaseState<T> fromState, BaseState<T> toState)
         {
             if (!IsXAncestorToY(fromState, toState))
@@ -291,6 +302,7 @@ namespace Bas.ForgottenTrails.InkConnections
             }
             return intermediate;
         }
-        #endregion
+
+        #endregion Private Methods
     }
 }

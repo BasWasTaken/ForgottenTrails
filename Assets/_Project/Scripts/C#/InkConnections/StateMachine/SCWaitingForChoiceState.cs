@@ -9,20 +9,33 @@ namespace Bas.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
+        #region Classes
+
         public partial class InterfaceBroking
         {
+            #region Classes
+
             public class SCWaitingForChoiceState : SCWaitingForInputState
             {
                 // Public Properties
-                #region Public Properties
 
-                #endregion
                 // Private Properties
-                #region Private Properties
 
-                #endregion
                 // Public Methods
+
+                #region Enums
+
+                public enum ChoiceType
+                {
+                    Item,
+                    Map,
+                    Party
+                }
+
+                #endregion Enums
+
                 #region Public Methods
+
                 public override void OnEnter()
                 {
                     if (!DropCondition)
@@ -31,34 +44,21 @@ namespace Bas.ForgottenTrails.InkConnections
                     }
                     EnableButtons(true);
                 }
+
                 public override void OnUpdate()
                 {
                     base.OnUpdate();
                 }
+
                 public override void OnExit()
                 {
                     EnableButtons(false);
                 }
-                #endregion
-                // Private Methods
-                #region Private Methods
 
-                public enum ChoiceType
-                {
-                    Item,
-                    Map,
-                    Party
-                }
-                public class HiddenChoice
-                {
-                    public ChoiceType Type;
-                    public Choice Choice;
-                    public HiddenChoice(ChoiceType Type, Choice Choice)
-                    {
-                        this.Type = Type;
-                        this.Choice = Choice;
-                    }
-                }
+                #endregion Public Methods
+
+                #region Internal Methods
+
                 internal void EnableButtons(bool enable = true)
                 {
                     foreach (Button button in Controller.InterfaceBroker.ButtonAnchor.GetComponentsInChildren<Button>())
@@ -66,8 +66,8 @@ namespace Bas.ForgottenTrails.InkConnections
                         button.interactable = enable;
                     }
                 }
-                internal void DisableButtons() => EnableButtons(false);
 
+                internal void DisableButtons() => EnableButtons(false);
 
                 internal void PresentButtons()
                 {
@@ -83,7 +83,6 @@ namespace Bas.ForgottenTrails.InkConnections
                         //Debug.Log("Choices detected!");
                         for (int i = 0; i < Controller.Story.currentChoices.Count; i++)
                         {
-
                             Choice choice = Controller.Story.currentChoices[i];
                             if (Controller.InterfaceBroker.TryAddHiddenChoice(choice)) { }
                             else if (choice.text == "{UNITY:OpenMap}")
@@ -114,6 +113,10 @@ namespace Bas.ForgottenTrails.InkConnections
                     }
                 }
 
+                #endregion Internal Methods
+
+                #region Private Methods
+
                 // Creates a button showing the choice text
                 private Button PresentButton(string text)
                 {
@@ -126,7 +129,6 @@ namespace Bas.ForgottenTrails.InkConnections
                     TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
                     choiceText.text = text;
 
-
                     /// Make the button expand to fit the text
                     /* we don't want that, i want the reverse
         HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
@@ -135,8 +137,38 @@ namespace Bas.ForgottenTrails.InkConnections
 
                     return choice;
                 }
-                #endregion
+
+                #endregion Private Methods
+
+                #region Classes
+
+                // Private Methods
+                public class HiddenChoice
+                {
+                    #region Fields
+
+                    public ChoiceType Type;
+                    public Choice Choice;
+
+                    #endregion Fields
+
+                    #region Public Constructors
+
+                    public HiddenChoice(ChoiceType Type, Choice Choice)
+                    {
+                        this.Type = Type;
+                        this.Choice = Choice;
+                    }
+
+                    #endregion Public Constructors
+                }
+
+                #endregion Classes
             }
+
+            #endregion Classes
         }
+
+        #endregion Classes
     }
 }

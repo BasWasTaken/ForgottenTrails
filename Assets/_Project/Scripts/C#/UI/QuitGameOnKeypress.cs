@@ -3,16 +3,17 @@
 namespace Bas.ForgottenTrails.UI
 {
     /// <summary>
-    /// Simply provides functionality to close the deployed game executable. 
+    /// Simply provides functionality to close the deployed game executable.
     /// </summary>
     public class QuitGameOnKeypress : MonoBehaviour
     {
         public KeyCode key = KeyCode.Escape;
 
-        void Update()
+        private void Update()
         {
             if (Input.GetKeyDown(key)) Quit();
         }
+
         public void Quit()
         {
 #if UNITY_EDITOR
@@ -23,4 +24,3 @@ namespace Bas.ForgottenTrails.UI
         }
     }
 }
-

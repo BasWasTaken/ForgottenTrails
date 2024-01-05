@@ -10,19 +10,43 @@ namespace Bas.ForgottenTrails.UI
     public class GraphicsSettings : MonoBehaviour
     {
         ///___VARIABLES___///
-        #region INSPECTOR
-        public TMP_Dropdown resolutionDropdown;
-        #endregion
-        #region BACKEND_VARIABLES
-        Resolution[] resolutions;
 
-        #endregion
+        #region Fields
+
+        public TMP_Dropdown resolutionDropdown;
+
+        private Resolution[] resolutions;
+
+        #endregion Fields
+
         ///___METHODS___///
-        #region LIFESPAN
+
+        #region Public Methods
+
+        public void SetQuality(int value)
+        {
+            QualitySettings.SetQualityLevel(value);
+        }
+
+        public void SetResolution(int resolutionIndex)
+        {
+            Resolution res = resolutions[resolutionIndex];
+            Screen.SetResolution(res.width, res.height, Screen.fullScreen);
+        }
+
+        public void SetFullscreen(bool value)
+        {
+            Screen.fullScreen = value;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void Awake()
         {
-
         }
+
         private void Start()
         {
             resolutions = Screen.resolutions;
@@ -46,28 +70,11 @@ namespace Bas.ForgottenTrails.UI
             resolutionDropdown.value = curIndex;
             resolutionDropdown.RefreshShownValue();
         }
-        #endregion
-        #region LOOP
+
         private void Update()
         {
+        }
 
-        }
-        #endregion
-        #region OTHER_METHODS
-        public void SetQuality(int value)
-        {
-            QualitySettings.SetQualityLevel(value);
-        }
-        public void SetResolution(int resolutionIndex)
-        {
-            Resolution res = resolutions[resolutionIndex];
-            Screen.SetResolution(res.width, res.height, Screen.fullScreen);
-        }
-        public void SetFullscreen(bool value)
-        {
-            Screen.fullScreen = value;
-        }
-        #endregion
+        #endregion Private Methods
     }
 }
-

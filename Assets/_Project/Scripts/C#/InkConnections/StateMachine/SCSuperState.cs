@@ -10,24 +10,38 @@ namespace Bas.ForgottenTrails.InkConnections
     public partial class StoryController : MonoSingleton<StoryController>
     {
         // Public Properties
-        #region Public Properties
+
+        #region Events
+
+        public static event Action<Story> OnCreateStory;
+
+        #endregion Events
+
+        #region Properties
+
         public bool LoadingFromDisk { get; protected set; }
         public bool SavingToDisk { get; protected set; }
         public bool InteractingWithDisk => LoadingFromDisk | SavingToDisk;
 
-        #endregion
+        #endregion Properties
+
+        #region Classes
 
         // Events
-        #region Events
-        public static event Action<Story> OnCreateStory;
-
-        #endregion
-
         public class SCSuperState : SCDummyState
         {
             // Private Properties
-            #region Private Properties
+
+            #region Fields
+
+            private bool _goForStart = false;
+
+            #endregion Fields
+
+            #region Properties
+
             protected float TimeSinceAdvance { get; set; } = 0;
+
             private bool GoForStart
             {
                 get
@@ -43,18 +57,17 @@ namespace Bas.ForgottenTrails.InkConnections
                     };
                 }
             }
-            private bool _goForStart = false;
-            private void FlagGoForStart()
-            {
-                _goForStart = true;
-            }
-            #endregion
-            // Public Methods
+
+            #endregion Properties
+
             #region Public Methods
+
             public override void OnEnter()
             {
                 Initialise();
             }
+
+            // Public Methods
             public override void OnUpdate()
             {
                 base.OnUpdate();
@@ -73,14 +86,55 @@ namespace Bas.ForgottenTrails.InkConnections
                     //Debug.Log("test message b from " + this);
                 }
             }
+
             public override void OnExit()
             {
                 // Do whatever you need to exit playmode and return to main menu or whatever
             }
 
-            #endregion
-            // Private Methods
+            #endregion Public Methods
+
+            #region Internal Methods
+
+            internal void PerformInkFunction(Action function)
+            {
+                if (!Controller.TextProducer.Peeking)
+                {
+                    Controller.TextProducer.PendingFunctions.Enqueue(function);
+                    Controller.StateMachine.TransitionToState(Controller.functionState);
+                }
+            }
+
+            internal void PauseText(float seconds)
+            {
+                Controller.TextProducer.scriptedPause += seconds;
+            }
+
+            #endregion Internal Methods
+
+            #region Protected Methods
+
+            /// <summary>
+            /// preps data for saving. happens whenever input is giving, i.e. before every production cycle.
+            /// </summary>
+            protected void UpdateDataAsset()
+            {
+                // save all the things
+                Controller.InkDataAsset.CurrentText = Controller.TextProducer.CurrentText;
+                Controller.InkDataAsset.HistoryText = Controller.TextProducer.PreviousText;
+                Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson();
+            }
+
+            #endregion Protected Methods
+
             #region Private Methods
+
+            private void FlagGoForStart()
+            {
+                _goForStart = true;
+            }
+
+            // Private Methods
 
             private void Initialise()
             {
@@ -106,7 +160,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 ReadStoryStateFromData(Controller.InkDataAsset);
             }
 
-
             /// <summary>
             /// Prepares scene to contain story
             /// </summary>
@@ -119,7 +172,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 Controller.TextProducer.TextSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)TextProduction.TextSpeed.medium);
                 PopulateSceneFromData(Controller.InkDataAsset);
             }
-
 
             private void BindAndObserve(Story story)
             {
@@ -148,8 +200,6 @@ namespace Bas.ForgottenTrails.InkConnections
 
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
 
-
-
                 // hoewel de map meestal met knop wordt opengemaakt, moet het ook uit verhaal kunnen:
                 story.BindExternalFunction("_OpenMap", () => PerformInkFunction(() => Controller.InterfaceBroker.OpenMap()));
                 /*() =>
@@ -163,7 +213,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 // a close map function doesn't make sense, becausei nk only controls while it is being run! if it paused, it can't do anything.
             }
 
-
             private InkListItem ConvertListToItem(InkList inkList)
             {
                 if (inkList.Count == 1)
@@ -176,19 +225,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 {
                     throw new Exception(String.Format("{0} contains more than 1 item!", inkList));
                 }
-            }
-
-            internal void PerformInkFunction(Action function)
-            {
-                if (!Controller.TextProducer.Peeking)
-                {
-                    Controller.TextProducer.PendingFunctions.Enqueue(function);
-                    Controller.StateMachine.TransitionToState(Controller.functionState);
-                }
-            }
-            internal void PauseText(float seconds)
-            {
-                Controller.TextProducer.scriptedPause += seconds;
             }
 
             /// <summary>
@@ -232,7 +268,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 InkList background = Controller.Story.state.variablesState["Background"] as InkList;
                 Controller.SetDresser.SetBackground(ConvertListToItem(background));
 
-
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
 
                 Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
@@ -247,18 +282,9 @@ namespace Bas.ForgottenTrails.InkConnections
                 Controller.StateMachine.TransitionToState(Controller.productionState);
             }
 
-            /// <summary>
-            /// preps data for saving. happens whenever input is giving, i.e. before every production cycle.
-            /// </summary>
-            protected void UpdateDataAsset()
-            {
-                // save all the things 
-                Controller.InkDataAsset.CurrentText = Controller.TextProducer.CurrentText;
-                Controller.InkDataAsset.HistoryText = Controller.TextProducer.PreviousText;
-                Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson();
-            }
-
-            #endregion
+            #endregion Private Methods
         }
+
+        #endregion Classes
     }
 }

@@ -5,28 +5,29 @@ namespace Bas.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
+        #region Classes
+
         public partial class InterfaceBroking
         {
+            #region Classes
+
             public class SCWaitingForContinueState : SCWaitingForInputState
             {
                 // Inspector Properties
-                #region Inspector Properties
 
-                #endregion
                 // Public Properties
-                #region Public Properties
 
-                #endregion
                 // Private Properties
-                #region Private Properties
 
-                #endregion
                 // Public Methods
+
                 #region Public Methods
+
                 public override void OnEnter()
                 {
                     Controller.InterfaceBroker.FloatingMarker.gameObject.SetActive(true); // set bouncing triangle at most recent line
                 }
+
                 public override void OnUpdate()
                 {
                     base.OnUpdate();
@@ -39,17 +40,20 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                     }
                 }
+
                 public override void OnExit()
                 {
-                    Controller.InterfaceBroker.FloatingMarker.gameObject.SetActive(false); // remove marker 
+                    Controller.InterfaceBroker.FloatingMarker.gameObject.SetActive(false); // remove marker
                 }
-                #endregion
-                // Private Methods
-                #region Private Methods
 
-                #endregion
+                #endregion Public Methods
+
+                // Private Methods
             }
+
+            #endregion Classes
         }
 
+        #endregion Classes
     }
 }

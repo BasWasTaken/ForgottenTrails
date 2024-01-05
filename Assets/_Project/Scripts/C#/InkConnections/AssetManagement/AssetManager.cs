@@ -1,5 +1,3 @@
-
-
 using Bas.Common;
 using Bas.ForgottenTrails.InkConnections.Items;
 using Bas.ForgottenTrails.InkConnections.Travel;
@@ -19,20 +17,33 @@ namespace Bas.ForgottenTrails.InkConnections
     public class AssetManager : MonoSingleton<AssetManager>
     {
         ///___VARIABLES___///
-        #region inspector
+
+        #region Fields
+
         [Tooltip("MANUAL LIST OF WHAT LISTS TO CHECK")]
         public string[] InkListNames;
-        [SerializeField]
-        List<InventoryItem> possibleItems = new();
-        [SerializeField]
-        List<MapLocationDefinition> possibleLocations = new();
+
         [Scene]
         [Tooltip("The main menu scene")]
         public string menuScene;
+
         [Scene]
         [Tooltip("The scene to load on new game")]
         public string newGameScene;
-        /* delete or ineed use list of folders to dssearch resources 
+
+        public Dictionary<InkListItem, string> assets = new();
+
+        private const string resourceFolder = "/_Project/Resources/";
+
+        [SerializeField]
+        private List<InventoryItem> possibleItems = new();
+
+        [SerializeField]
+        private List<MapLocationDefinition> possibleLocations = new();
+
+        #endregion Fields
+
+        /* delete or ineed use list of folders to dssearch resources
         [field:SerializeField, ValidateInput("IsResourcesDirectory")]
         public string BackgroundsDirectory { get; private set; }
 
@@ -46,45 +57,25 @@ namespace Bas.ForgottenTrails.InkConnections
         public string AmbianceDirectory { get; private set; }
         */
 
-        #endregion
+        #region Properties
+
+        public Dictionary<InkListItem, InventoryItem> LocationDictionary { get; } = new();
+        public Dictionary<InkListItem, InventoryItem> ItemDictionary { get; } = new();
+
+        [field: SerializeField]
+        public TextAsset TextAsset { get; set; }
+
         private string pathToResources => Application.dataPath + resourceFolder;
-        private const string resourceFolder = "/_Project/Resources/";
         private string basePath => "Assets" + resourceFolder;
+
+        #endregion Properties
+
+        #region Public Methods
 
         // helper functions
         public bool IsResourcesDirectory(string relativePath)
         {
             return Directory.Exists(pathToResources + "/" + relativePath);
-        }
-
-        #region backend
-        public Dictionary<InkListItem, InventoryItem> LocationDictionary { get; } = new();
-        public Dictionary<InkListItem, InventoryItem> ItemDictionary { get; } = new();
-        public Dictionary<InkListItem, string> assets = new();
-
-        #endregion
-        ///___METHODS___///
-        protected override void Awake()
-        {
-            base.Awake();
-            DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto            
-        }
-
-
-        [field: SerializeField]
-        public TextAsset TextAsset { get; set; }
-
-        static string GetRelativePath(string fullPath, string basePath)
-        {
-            if (!fullPath.StartsWith(basePath))
-            {
-                // The fullPath is not within the basePath.
-                // You should handle this case based on your requirements.
-                Debug.LogError(String.Format("{0} is not in {1}", basePath, fullPath));
-            }
-
-            string relativePath = fullPath.Substring(basePath.Length);
-            return relativePath;
         }
 
         [Button("CreateAssetLibraries", EButtonEnableMode.Editor)]
@@ -149,7 +140,6 @@ namespace Bas.ForgottenTrails.InkConnections
                                         {
                                             error += string.Format("\nFound {1} for {0} but could not add it.", item, relativePath);
                                         }
-
                                     }
                                     else
                                     {
@@ -170,7 +160,6 @@ namespace Bas.ForgottenTrails.InkConnections
                     error += string.Format("\nListDefinition {0} not found.", inkListName);
                 }
             }
-
 
             string message;
             if (error == "") message = "Succesfully fetched InkLists." + noError;
@@ -196,6 +185,34 @@ namespace Bas.ForgottenTrails.InkConnections
             {
                 Debug.Log("Checked all lists and assets. No discrepencies found. \nLog:" + message);
             }
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        ///___METHODS___///
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private static string GetRelativePath(string fullPath, string basePath)
+        {
+            if (!fullPath.StartsWith(basePath))
+            {
+                // The fullPath is not within the basePath.
+                // You should handle this case based on your requirements.
+                Debug.LogError(String.Format("{0} is not in {1}", basePath, fullPath));
+            }
+
+            string relativePath = fullPath.Substring(basePath.Length);
+            return relativePath;
         }
 
         private bool ItemListsKnown(ListDefinition items, ListDefinition affordances)
@@ -264,7 +281,7 @@ namespace Bas.ForgottenTrails.InkConnections
             }
             string error = "";
 
-            // assert all locations to travel to from ink exist in unity 
+            // assert all locations to travel to from ink exist in unity
             // TODO
 
             // assert all locations to travel to from unity exist in ink
@@ -287,7 +304,8 @@ namespace Bas.ForgottenTrails.InkConnections
                 Debug.LogAssertion("LOCATIONS NOT MATCHED UP" + error);
                 return false;
             }
-
         }
+
+        #endregion Private Methods
     }
 }

@@ -1,17 +1,46 @@
+// ------------------------------------------------------------------------------
+// Created on: Pre-2024.
+// Author: Bas Vegt.
+// Purpose: Handling several audio sources from within one object.
+// ------------------------------------------------------------------------------
 using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Bas.Common
 {
-
     /// <summary>
     /// <para>Simply a container to handle several <see cref="AudioSource"/>s (as child objects) from within one object.</para>
     /// </summary>
     public class AudioHandler : MonoBehaviour
     {
         // Inspector Properties
-        #region Inspector Properties
+
+        #region Fields
+
+        [SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for ambiance.")]
+        public AudioSource AudioSourceAmbiance;
+
+        private List<AudioSource> _AudioSourcesAmbiance = new();
+
+        #endregion Fields
+
+        #region Enums
+
+        public enum AudioGroup
+        {
+            Sfx,
+            Ambiance,
+            Music,
+            Voice,
+            System
+        }
+
+        #endregion Enums
+
+        #region Properties
+
         [field: SerializeField, BoxGroup("Scene References"), Required]
         [Tooltip("Here drag the component used for system sounds like ui.")]
         public AudioSource AudioSourceSystem { get; private set; }
@@ -24,11 +53,7 @@ namespace Bas.Common
         [Tooltip("Here drag the component used for voice.")]
         public AudioSource AudioSourceVoice { get; private set; }
 
-        [SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for ambiance.")]
-        public AudioSource AudioSourceAmbiance; // NOTE should actually chagne this name so that not accidentalyl called
-
-        private List<AudioSource> _AudioSourcesAmbiance = new();
+        // NOTE should actually chagne this name so that not accidentalyl called
         public List<AudioSource> AudioSourcesAmbiance
         {
             get
@@ -44,12 +69,22 @@ namespace Bas.Common
                 _AudioSourcesAmbiance = value;
             }
         }
+
+        [field: SerializeField, BoxGroup("Scene References"), Required]
+        [Tooltip("Here drag the component used for music.")]
+        public AudioSource AudioSourceMusic { get; private set; }
+
+        #endregion Properties
+
+        #region Public Methods
+
         public AudioSource NewAmbienceLayer()
         {
             AudioSource source = Instantiate(AudioSourceAmbiance, transform);
             _AudioSourcesAmbiance.Add(source);
             return source;
         }
+
         public bool TryGetAmbianceSource(AudioClip clip, out AudioSource audioSource)
         {
             if (clip == null)
@@ -87,13 +122,8 @@ namespace Bas.Common
             return NewAmbienceLayer();
         }
 
-        [field: SerializeField, BoxGroup("Scene References"), Required]
-        [Tooltip("Here drag the component used for music.")]
-        public AudioSource AudioSourceMusic { get; private set; }
-
-        #endregion
         // Public Methods
-        #region Public Methods
+
         public AudioSource GetSource(AudioGroup audioGroup)
         {
             return audioGroup switch
@@ -107,20 +137,8 @@ namespace Bas.Common
             };
         }
 
-        #endregion
-
+        #endregion Public Methods
 
         // Peripheral
-        #region Peripheral
-        public enum AudioGroup
-        {
-            Sfx,
-            Ambiance,
-            Music,
-            Voice,
-            System
-        }
-
-        #endregion
     }
 }

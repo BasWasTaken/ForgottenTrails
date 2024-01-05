@@ -10,53 +10,50 @@ using static Bas.Common.AudioHandler;
 
 namespace Bas.ForgottenTrails.InkConnections
 {
-
     [RequireComponent(typeof(AudioHandler))]
     public partial class StoryController : MonoSingleton<StoryController>
     {/// <summary>
-     /// <para>Works in tandem with <see cref="StoryController"/> to populate scenes with assets and effects as dictated in <see cref="Ink.Runtime.Story"/> assets.</para>
-     /// </summary>
+        #region Classes
+
+        /// <para>Works in tandem with <see cref="StoryController"/> to populate scenes with assets and effects as dictated in <see cref="Ink.Runtime.Story"/> assets.</para>
+        /// </summary>
         [Serializable]
         public class SetDressing
         {
             // Inspector Properties
-            #region Inspector Properties
 
-            #endregion
             // Public Properties
-            #region Public Properties
 
-            #endregion
             // Private Properties
-            #region Private Properties
-            private StoryController Controller;
-            internal AudioHandler AudioHandler { get; set; }
-            #endregion
-            // Constructor
-            #region Constructor
-            internal void Assign()
-            {
-                Controller = Instance;
-                AudioHandler = Controller.GetComponent<AudioHandler>();
-            }
-            #endregion
-            // Public Methods
-            #region Public Methods
 
-            #endregion
-            // Private Methods
-            #region Private Methods
-
-            #endregion
-            // UNRESOLVED
-            [SerializeField, Header("Prefabs"), Required]
-            private Image portraitPrefab = null;
-            [SerializeField, Header("Scene References"), Required]
-            private HorizontalLayoutGroup portraits;
+            #region Fields
 
             [SerializeField, Header("Scene References"), Required]
             public BackGround bgImage;
 
+            private StoryController Controller;
+
+            // UNRESOLVED
+            [SerializeField, Header("Prefabs"), Required]
+            private Image portraitPrefab = null;
+
+            // Private Methods
+            [SerializeField, Header("Scene References"), Required]
+            private HorizontalLayoutGroup portraits;
+
+            #endregion Fields
+
+            #region Properties
+
+            internal AudioHandler AudioHandler { get; set; }
+
+            #endregion Properties
+
+            // Constructor
+
+            #region Public Methods
+
+            // Public Methods
             public void SetColor(string color, float duration = 0)
             {
                 Controller.StartCoroutine(bgImage.FadeTo(color, duration));
@@ -68,9 +65,8 @@ namespace Bas.ForgottenTrails.InkConnections
 
                 if (inkListItem.itemName == "none")
                 {
-
                 }
-                else // if any other item beside "none" 
+                else // if any other item beside "none"
                 {
                     if (AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                     {
@@ -108,7 +104,7 @@ namespace Bas.ForgottenTrails.InkConnections
                         Destroy(item.gameObject);
                     }
                 }
-                else // if any other items beside "none" 
+                else // if any other items beside "none"
                 {
                     // TODO: first remove unneeded, then add missing, instead of just..:
 
@@ -132,6 +128,7 @@ namespace Bas.ForgottenTrails.InkConnections
                     }
                 }
             }
+
             public void InkRequestAudio(InkListItem inkListItem, float relVol = .5f)
             {
                 AudioClip find = FindAudio(inkListItem);
@@ -145,32 +142,36 @@ namespace Bas.ForgottenTrails.InkConnections
                 };
                 PlayOrStopAudio(find, audioGroup, relVol);
             }
+
             public void StopMusic()
             {
                 ProcessStopRequest(AudioGroup.Music);
             }
+
             public void RemoveAmbianceAll()
             {
                 ProcessStopRequest(AudioGroup.Ambiance);
             }
+
             public void RemoveAmbiance(InkListItem inkListItem)
             {
                 AudioClip clip = FindAudio(inkListItem);
                 ProcessStopRequest(AudioGroup.Ambiance, clip);
             }
+
             public void RemoveAmbiance(AudioClip clip)
             {
                 ProcessStopRequest(AudioGroup.Ambiance, clip);
             }
+
             public AudioClip FindAudio(InkListItem inkListItem)
             {
                 AudioClip audioClip = null; // default to null
 
                 if (inkListItem.itemName == "none")
                 {
-
                 }
-                else // if any other item beside "none" 
+                else // if any other item beside "none"
                 {
                     if (AssetManager.Instance.assets.TryGetValue(inkListItem, out string path))
                     {
@@ -184,13 +185,7 @@ namespace Bas.ForgottenTrails.InkConnections
                 return audioClip;
             }
 
-            private void AudioFadeOut(AudioSource audioSource, AudioClip audioClip)
-            {
-                ShiftVolumeGradually(audioSource, audioClip, 0);
-                StopClipWhenVolume0(audioSource);
-                RemoveClipWhenFinished(audioSource);
-            }
-            /// can be made a lot cleaner, I think. perhaps should be split up 
+            /// can be made a lot cleaner, I think. perhaps should be split up
             public void ProcessStopRequest(AudioGroup audioGroup, AudioClip audioClip = null, bool sudden = false)
             {
                 AudioSource audioSource;
@@ -238,9 +233,30 @@ namespace Bas.ForgottenTrails.InkConnections
                         AudioFadeOut(audioSource, audioClip);
                     }
                 }
-
             }
-            /// can be made a lot cleaner, I think. perhaps should be split up 
+
+            #endregion Public Methods
+
+            #region Internal Methods
+
+            internal void Assign()
+            {
+                Controller = Instance;
+                AudioHandler = Controller.GetComponent<AudioHandler>();
+            }
+
+            #endregion Internal Methods
+
+            #region Private Methods
+
+            private void AudioFadeOut(AudioSource audioSource, AudioClip audioClip)
+            {
+                ShiftVolumeGradually(audioSource, audioClip, 0);
+                StopClipWhenVolume0(audioSource);
+                RemoveClipWhenFinished(audioSource);
+            }
+
+            /// can be made a lot cleaner, I think. perhaps should be split up
             private void PlayOrStopAudio(AudioClip audioClip, AudioGroup audioGroup, float relVol = .5f)
             {
                 AudioSource audioSource = AudioHandler.GetSource(audioGroup);
@@ -250,7 +266,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 }
                 else
                 {
-
                     if (relVol > 1)
                     {
                         Debug.LogWarningFormat("Relative volume of {0} exceeds accepted cap of 1.", relVol);
@@ -268,10 +283,12 @@ namespace Bas.ForgottenTrails.InkConnections
                             audioSource.loop = false;
                             audioSource.PlayOneShot(audioClip, relVol);
                             break;
+
                         case AudioGroup.Voice:
                             audioSource.loop = false;
                             audioSource.PlayOneShot(audioClip, relVol);
                             break;
+
                         case AudioGroup.Ambiance:
                             if (AudioHandler.TryGetAmbianceSource(audioClip, out audioSource)) // if the clip is already playing
                             {
@@ -287,6 +304,7 @@ namespace Bas.ForgottenTrails.InkConnections
                                 audioSource.Play();
                             }
                             break;
+
                         case AudioGroup.Music:
                             if (audioSource.clip != audioClip) /// if it's a different clip than before, start playing at volume
                             {
@@ -300,17 +318,20 @@ namespace Bas.ForgottenTrails.InkConnections
                                 Controller.StartCoroutine(ShiftVolumeGradually(audioSource, audioClip, relVol));
                             }
                             break;
+
                         case AudioGroup.System:
                             audioSource.loop = false;
                             audioSource.PlayOneShot(audioClip, relVol);
                             break;
+
                         default:
                             break;
                     }
                     Controller.StartCoroutine(RemoveClipWhenFinished(audioSource));
                 }
             }
-            IEnumerator ShiftVolumeGradually(AudioSource audioSource, AudioClip audioClip, float relVol)
+
+            private IEnumerator ShiftVolumeGradually(AudioSource audioSource, AudioClip audioClip, float relVol)
             {
                 float t = .1f; ///how long to wait before each increment
                 float d = .01f; ///size of an increment
@@ -321,17 +342,21 @@ namespace Bas.ForgottenTrails.InkConnections
                 }
             }
 
-            IEnumerator StopClipWhenVolume0(AudioSource audioSource)
+            private IEnumerator StopClipWhenVolume0(AudioSource audioSource)
             {
                 if (audioSource.volume > 0) yield return new WaitWhile(() => audioSource.volume > 0);
                 audioSource.Stop();
             }
-            IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
+
+            private IEnumerator RemoveClipWhenFinished(AudioSource audioSource)
             {
                 if (audioSource.isPlaying) yield return new WaitWhile(() => audioSource.isPlaying);
                 audioSource.clip = null;
             }
 
+            #endregion Private Methods
         }
+
+        #endregion Classes
     }
 }

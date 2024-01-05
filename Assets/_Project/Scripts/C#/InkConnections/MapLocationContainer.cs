@@ -3,16 +3,36 @@ using UnityEngine.UI;
 
 namespace Bas.ForgottenTrails.InkConnections.Travel
 {
-
     /// <summary>
     /// <para>Summary not provided.</para>
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class MapLocationContainer : MonoBehaviour
     {
+        #region Fields
+
         public MapLocationDefinition definition;
-        public string canonicalLocation => definition.CanonicalName;
         [HideInInspector] public Button Button;
+
+        #endregion Fields
+
+        #region Properties
+
+        public string canonicalLocation => definition.CanonicalName;
+
+        #endregion Properties
+
+        #region Public Methods
+
+        public void ActivateFromButton()
+        {
+            StoryController.Instance.InterfaceBroker.TryTravelTo(this);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         ///___METHODS___///
         ///
         private void Awake()
@@ -21,9 +41,7 @@ namespace Bas.ForgottenTrails.InkConnections.Travel
             Button.onClick.AddListener(() => ActivateFromButton());
             //GetComponentInChildren<TMPro.TextMeshProUGUI>().text = canonicalLocation;
         }
-        public void ActivateFromButton()
-        {
-            StoryController.Instance.InterfaceBroker.TryTravelTo(this);
-        }
+
+        #endregion Private Methods
     }
 }

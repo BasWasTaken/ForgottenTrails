@@ -9,14 +9,23 @@ namespace Bas.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
+        #region Classes
+
         public partial class TextProduction
         {
             // Public Properties
-            #region Public Properties
 
-            public bool EncounteredStop { get; private set; } = false;
-            public bool Peeking { get; private set; } = false;
-            public bool Skipping { get; private set; } = false;
+            #region Fields
+
+            [HideInInspector]
+            public TextProducerStatus TPStatus = TextProducerStatus.Idle;
+
+            internal float scriptedPause = 0f;
+
+            #endregion Fields
+
+            #region Enums
+
             public enum TextProducerStatus
             {
                 Idle,
@@ -25,26 +34,57 @@ namespace Bas.ForgottenTrails.InkConnections
                 Paused,
                 Done
             }
-            [HideInInspector]
-            public TextProducerStatus TPStatus = TextProducerStatus.Idle;
 
-            internal float scriptedPause = 0f;
-            #endregion
+            #endregion Enums
+
+            #region Properties
+
+            public bool EncounteredStop { get; private set; } = false;
+            public bool Peeking { get; private set; } = false;
+            public bool Skipping { get; private set; } = false;
+
+            #endregion Properties
+
+            #region Classes
+
             public class SCProductionState : SCSuperState
             {
                 // Private Properties
-                #region Private Properties
 
+                #region Fields
 
                 internal float timeSinceLastCharacter;
+
+                private int tagLevel = 0;
+
+                private char letter;
+
+                private float typeWriterPause = 0;
+
+                private Stopwatch Stopwatch = new();
+
+                private float delayExpec = 0;
+
+                private string letters;
+
+                #endregion Fields
+
+                #region Properties
+
+                // make into class?? nah..
+                internal string report { get; set; } = "";
 
                 private string NewText
                 {
                     get; set;
                 }
-                #endregion
+
+                #endregion Properties
+
                 // Public Methods
+
                 #region Public Methods
+
                 public override void OnEnter()
                 {
                     if (!DropCondition)
@@ -53,6 +93,7 @@ namespace Bas.ForgottenTrails.InkConnections
                         timeSinceLastCharacter = 0f;
                     }
                 }
+
                 public override void OnUpdate()
                 {
                     base.OnUpdate();
@@ -93,23 +134,72 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                     }
                 }
+
                 public override void OnExit()
                 {
                     //suspend coroutine?
                 }
-                #endregion
+
+                #endregion Public Methods
+
                 // Private Methods
+
+                #region Internal Methods
+
+                internal string ParseText(string input)
+                {
+                    Regex tags = new(@"\{([^>]+)\}");
+
+                    foreach (Match match in tags.Matches(input))
+                    {
+                        //Debug.Log(string.Format("Encountered command {0} in {1}",match.Value,output));
+
+                        if (match.Value == "{stop}")
+                        {
+                            //Debug.Log("recognised stop command");
+                            Controller.TextProducer.EncounteredStop = true;
+                            //catchAfterStop = input.Substring(match.Index+match.Value.Length);
+
+                            //input = input.Substring(0, match.Index);
+                        }
+                        else if (match.Value == "{glue}")
+                        {
+                            input = input.TrimEnd('\n'); /// remove linebreak from this
+                        }
+                        else if (match.Value == "{aglue}")
+                        {
+                            Controller.TextProducer.CurrentText = Controller.TextProducer.CurrentText.TrimEnd('\n'); /// remove linebreak from previous
+                        }
+
+                        input = input.Replace(match.Value, ""); /// remove the command
+                    }
+
+                    string output = "";
+
+                    if (input == "<br>\n" | input == "<br>") /// when hitting explicit linebreak //which is it?
+                    {
+                        output += "\n"; //add a newline
+                    }
+                    else
+                    {
+                        output = input; /// leave the input unaltered
+                    }
+
+                    //Debug.Log("Write line as: " + output);
+                    return output;
+                }
+
+                #endregion Internal Methods
+
                 #region Private Methods
+
                 private void AdvanceStory()
                 {
                     TimeSinceAdvance = 0; // reset timer for skip button
                     Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base; // NOTE OR transitionto writing. i know sort oif have a statemachine inside statemachine, not very neat, but also feels insane to make multiple for states for this.
                     InitiateTextProduction();
                 }
-                // make into class?? nah..
-                internal string report { get; set; } = "";
-                int tagLevel = 0;
-                char letter;
+
                 /// <summary>
                 /// Runs the per line steps required for parsing and showing ink story
                 /// </summary>
@@ -126,12 +216,11 @@ namespace Bas.ForgottenTrails.InkConnections
                     // Test the fit of the new text, clearing page if needed.
                     ClearPageIfNeeded();
 
-
                     TextLoop(); // start textloop
                 }
+
                 private void TextLoop()
                 {
-
                     // get next line using cotninue async, and parse it using our custom code
                     NewText = ParseText(Controller.Story.Continue());
 
@@ -139,13 +228,13 @@ namespace Bas.ForgottenTrails.InkConnections
 
                     // further state and function checks should not be necessary: i've got my statemachine for that and i should trust it. if it doesn't work, i want to discover that so i can fix it.
 
-
                     // set state to typing (by lack of better option)
                     report = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tIntended\t\tActual\t\tExtra\n", Controller.TextProducer.TextSpeedActual, Controller.TextProducer.TextSpeedPreset); // prepare console report
                     letter = new();
                     Controller.TextProducer.TPStatus = TextProducerStatus.Working_Typing; // indicate we are typing, and let the method in update() do the rest
                 }
-                void ClearPageIfNeeded()
+
+                private void ClearPageIfNeeded()
                 {
                     var storedState = Controller.Story.state.ToJson(); // set return point
                     Controller.TextProducer.Peeking = true; // begin traversal
@@ -160,14 +249,13 @@ namespace Bas.ForgottenTrails.InkConnections
 
                     bool overflow = !DoesTextFit(paragraphToBeAdded);
 
-
                     Controller.Story.state.LoadJson(storedState); // return to original state, reverting from peaking
                     Controller.TextProducer.Peeking = false;
 
                     if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
-
                 }
-                void ForceFitText(string text)
+
+                private void ForceFitText(string text)
                 {
                     if (!DoesTextFit(text))
                     {
@@ -177,12 +265,13 @@ namespace Bas.ForgottenTrails.InkConnections
                     }
                     Controller.TextProducer.CurrentText += text; //add the new text, invisibly
                 }
+
                 /// <summary>
-                /// 
+                ///
                 /// </summary>
                 /// <param name="text"></param>
                 /// <returns></returns>
-                bool DoesTextFit(string text)
+                private bool DoesTextFit(string text)
                 {
                     string backup = Controller.TextProducer.CurrentText; // make backup
                     //Debug.Log(Controller.TextProducer.TextBox.textInfo.lineCount);
@@ -195,7 +284,6 @@ namespace Bas.ForgottenTrails.InkConnections
                     /*
                                             foreach (var choice in Controller.Story.currentChoices)
                                             {
-
                                                 //                        Debug.Log("testing choices fit...");
                                                 Controller.TextProducer.CurrentText += choice.text + '\n' + '\n'+'\n';
                                             }
@@ -203,12 +291,10 @@ namespace Bas.ForgottenTrails.InkConnections
 
                                         */
 
-
                     bool overflow = Controller.TextProducer.TextBox.textInfo.lineCount > Controller.TextProducer.maxVis; // store result
                     Controller.TextProducer.CurrentText = backup; // restore backup
                     return !overflow;
                 }
-                float typeWriterPause = 0;
 
                 private void UpdateTypeWriter()
                 {
@@ -229,9 +315,7 @@ namespace Bas.ForgottenTrails.InkConnections
                         {
                             //                            Debug.Log("pause");
                             Controller.TextProducer.typingSound.Pause();
-
                         }
-
                     }
                     else
                     {
@@ -247,18 +331,15 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                     }
                 }
-                Stopwatch Stopwatch = new();
+
                 private void IndicateLineDone()
                 {
-
                     Controller.TextProducer.typingSound.Pause();
                     //Debug.Log(report);
                     // if done, indicate so (ideally i guess iw ould use an event, but for now it's fine to call an encounterstop method)
 
-
                     //   in which we continue with a small delay (calling initate text production again if story can still continue) or we exit if either is not the case
                     // and also in that function textproducestatus is set to done again. and skipping is set to false.
-
 
                     Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
 
@@ -297,12 +378,14 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                     }
                 }
+
                 private void IndicateTextDone()
                 {
                     Controller.TextProducer.Skipping = false; // turn of skipping if it was on
 
                     Controller.TextProducer.TPStatus = TextProducerStatus.Done;
                 }
+
                 private void TypeCharactersUsingDelays(bool checkPageAgain = true)
                 {
                     Stopwatch.Stop();
@@ -337,7 +420,6 @@ namespace Bas.ForgottenTrails.InkConnections
                             {
                                 break; // we're done
                             }
-
                         } while (maxDelay > typeWriterPause);
                     }
                     else
@@ -345,14 +427,11 @@ namespace Bas.ForgottenTrails.InkConnections
                         TypeSingleCharacter(); // just type 1 character
                     }
 
-
                     delayExpec = MathF.Round(typeWriterPause * 1000 + Controller.TextProducer.scriptedPause);
                     report += string.Format("\'{0}\'\t\t{1}", letters, delayExpec);
                     Stopwatch.Restart(); //start measurement from this moment to the capture
-
                 }
-                float delayExpec = 0;
-                string letters;
+
                 private void TypeSingleCharacter()
                 {
                     // reveal next
@@ -376,7 +455,7 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                         else // for any other type of cahracter:
                         {
-                            if (tagLevel == 0) // if we're not in a tag, 
+                            if (tagLevel == 0) // if we're not in a tag,
                             {
                                 //apply potential delays for the typewriting effect
                                 if (Controller.TextProducer.Skipping & !Controller.TextProducer.StillPauseWhileSkipping) // if skipping and set to not apply any delay then
@@ -403,10 +482,10 @@ namespace Bas.ForgottenTrails.InkConnections
                     {
                         throw new Exception();
                     }
-                }   /*            
+                }   /*
+
                 public IEnumerator ProduceTextOuter()
                 {
-                    #region TryFit
                     Stopwatch stopwatch = new();
                     if (true)//Controller.TextProducer.ClearWhenFull)
                     {
@@ -438,15 +517,14 @@ namespace Bas.ForgottenTrails.InkConnections
 
                         if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
                     }
-                    #endregion TryFit
-                    #region continueloop
+
                     do
                     {
                         if (Controller.StateMachine.CurrentState != this) yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this);
 
                         // NOTE: do i want to add ifspace remaining in textbox check here per line?
-                        #region InnerLoop
-                        Controller.Story.ContinueAsync(0); // advance a bit 
+
+                        Controller.Story.ContinueAsync(0); // advance a bit
                         string newLine = Controller.Story.currentText; // get the next line up until there
                                                                        // string newLine = story.Continue();
 
@@ -462,7 +540,6 @@ namespace Bas.ForgottenTrails.InkConnections
                         {
                             yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this); // only continue in right state
                         }
-
 
                         Controller.TextProducer.TPStatus = TextProducerStatus.Working_Typing;  // Indicate we are now typing
 
@@ -481,15 +558,14 @@ namespace Bas.ForgottenTrails.InkConnections
                             Controller.TextProducer.CurrentText = NewText; // add new text anyway
                         }
 
-                        #region RevealLetters
                         string message = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra", Controller.TextProducer.TextSpeedActual, Controller.TextProducer.TextSpeedPreset); // prepare console message
                         int tagLevel = 0; ///int to remember if we go down any nested tags
-                        char letter;///prepare marker  
+                        char letter;///prepare marker
                         while (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.CurrentText.Length) /// while not all characters are visible
                         {
                             if (!Controller.isActiveAndEnabled) yield return new WaitUntil(() => Controller.isActiveAndEnabled); // only continue if enabled
                             if (Controller.StateMachine.CurrentState != this) yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this); // only continue in right state
-                            letter = Controller.TextProducer.CurrentText[Controller.TextProducer.VisibleCharacters]; /// store letter we're typing letter   
+                            letter = Controller.TextProducer.CurrentText[Controller.TextProducer.VisibleCharacters]; /// store letter we're typing letter
                             Controller.TextProducer.VisibleCharacters++; /// show the character
                             if (letter == '<')/// if we come across this we've entered a(nother) tag
                             {
@@ -524,15 +600,12 @@ namespace Bas.ForgottenTrails.InkConnections
                                 float delayActual = MathF.Round(stopwatch.ElapsedMilliseconds);
                                 message += string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letter, delayActual, delayMs, delayActual - delayMs);
                                 stopwatch.Restart();
-
                             }
                         }
 
                         Debug.Log(message);
-                        #endregion RevealLetters
 
                         Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
-                        #endregion InnerLoop
 
                         if (Controller.TextProducer.EncounteredStop)  // if we encounter a stop
                         {
@@ -548,54 +621,11 @@ namespace Bas.ForgottenTrails.InkConnections
                             }
                         }
                     } while (Controller.Story.canContinue); // while the story can continue without input on choices
-                    #endregion continueloo
+
                     Controller.TextProducer.Skipping = false; // turn of skipping if it was on
 
                     Controller.TextProducer.TPStatus = TextProducerStatus.Done;
                 }*/
-
-                internal string ParseText(string input)
-                {
-                    Regex tags = new(@"\{([^>]+)\}");
-
-                    foreach (Match match in tags.Matches(input))
-                    {
-                        //Debug.Log(string.Format("Encountered command {0} in {1}",match.Value,output));
-
-                        if (match.Value == "{stop}")
-                        {
-                            //Debug.Log("recognised stop command");
-                            Controller.TextProducer.EncounteredStop = true;
-                            //catchAfterStop = input.Substring(match.Index+match.Value.Length);
-
-                            //input = input.Substring(0, match.Index); 
-                        }
-                        else if (match.Value == "{glue}")
-                        {
-                            input = input.TrimEnd('\n'); /// remove linebreak from this
-                        }
-                        else if (match.Value == "{aglue}")
-                        {
-                            Controller.TextProducer.CurrentText = Controller.TextProducer.CurrentText.TrimEnd('\n'); /// remove linebreak from previous
-                        }
-
-                        input = input.Replace(match.Value, ""); /// remove the command
-                    }
-
-                    string output = "";
-
-                    if (input == "<br>\n" | input == "<br>") /// when hitting explicit linebreak //which is it?
-                    {
-                        output += "\n"; //add a newline
-                    }
-                    else
-                    {
-                        output = input; /// leave the input unaltered
-                    }
-
-                    //Debug.Log("Write line as: " + output);
-                    return output;
-                }
 
                 private void DetermineNextTransition()
                 {
@@ -615,6 +645,7 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                     }
                 }
+
                 private void OnInteractionEnd()
                 {
                     // Disengage with current story / dialogue, as we have seen its end or chose a goodbye option.
@@ -627,9 +658,12 @@ namespace Bas.ForgottenTrails.InkConnections
                     DropCondition = true;
                 }
 
-                #endregion
+                #endregion Private Methods
             }
+
+            #endregion Classes
         }
 
+        #endregion Classes
     }
 }

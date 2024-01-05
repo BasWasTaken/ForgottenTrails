@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Bas.ForgottenTrails.UI
 {
-
     /// <summary>
     /// <para>Summary not provided.</para>
     /// </summary>
@@ -10,16 +9,22 @@ namespace Bas.ForgottenTrails.UI
     {
         ///___VARIABLES___///
 
-
         ///___METHODS___///
         ///
 
+        #region Fields
+
         public TMPro.TextMeshProUGUI textBox;
+
+        #endregion Fields
+
+        #region Public Methods
 
         public void Flip(int dir = 1)
         {
             textBox.pageToDisplay += dir;
         }
 
+        #endregion Public Methods
     }
 }

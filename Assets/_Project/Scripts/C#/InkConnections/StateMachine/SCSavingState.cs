@@ -1,7 +1,7 @@
-using Bas.Common;
-using Bas.ForgottenTrails.SaveLoading;
+using VVGames.Common;
+using VVGames.ForgottenTrails.SaveLoading;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
@@ -9,14 +9,6 @@ namespace Bas.ForgottenTrails.InkConnections
 
         public class SCSavingState : SCSuperState
         {
-            // Inspector Properties
-
-            // Public Properties
-
-            // Private Properties
-
-            // Public Methods
-
             #region Public Methods
 
             public override void OnEnter()
@@ -42,8 +34,6 @@ namespace Bas.ForgottenTrails.InkConnections
             }
 
             #endregion Public Methods
-
-            // Private Methods
 
             #region Private Methods
 

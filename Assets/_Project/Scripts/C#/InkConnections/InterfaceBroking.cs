@@ -1,7 +1,3 @@
-using Bas.Common;
-using Bas.ForgottenTrails.InkConnections.Items;
-using Bas.ForgottenTrails.InkConnections.Travel;
-using Bas.ForgottenTrails.UI;
 using Ink.Runtime;
 using NaughtyAttributes;
 using System;
@@ -9,9 +5,13 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
-using static Bas.ForgottenTrails.InkConnections.StoryController.InterfaceBroking.SCWaitingForChoiceState;
+using VVGames.Common;
+using VVGames.ForgottenTrails.InkConnections.Items;
+using VVGames.ForgottenTrails.InkConnections.Travel;
+using VVGames.ForgottenTrails.UI;
+using static VVGames.ForgottenTrails.InkConnections.StoryController.InterfaceBroking.SCWaitingForChoiceState;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
@@ -204,8 +204,7 @@ namespace Bas.ForgottenTrails.InkConnections
                     if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
                     {
                         int substringLength = endIndex - startIndex - opener.Length;// (closer.Length-1);
-                        string key = input.Substring(startIndex + opener.Length, substringLength); // NOTE dit zou misschien eigenlijk "extracted" moeten heten en dan key als een integer oid, want atm kunnen er vgm gewoon duplicates ontstaan.
-
+                        string key = input.Substring(startIndex + opener.Length, substringLength); // Dev note: potential room for duplicate key-related errors here?
                         Debug.Log("Encountered hidden choice: " + key);
 
                         // I now have the kind as wel as the value of the choice.
@@ -226,11 +225,11 @@ namespace Bas.ForgottenTrails.InkConnections
             internal void OnClickChoiceButton(Choice choice)
             {
                 //Debug.Log("chose " + choice.text);
-                Controller.Story.ChooseChoiceIndex(choice.index); /// feed the choice
-                Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); /// record the story state NOTE why safe here, won't that cause delay?
+                Controller.Story.ChooseChoiceIndex(choice.index); // feed the choice
+                Controller.InkDataAsset.StoryStateJson = Controller.Story.state.ToJson(); // record the story state
                 RemoveOptions();
                 Controller.waitingForChoiceState.DropCondition = true;
-                Controller.StateMachine.TransitionToState(Controller.savingState);
+                Controller.StateMachine.TransitionToState(Controller.savingState); // save the game
             }
 
             internal void RemoveOptions()// Destroys all the buttons from choices
@@ -253,8 +252,6 @@ namespace Bas.ForgottenTrails.InkConnections
             }
 
             #endregion Internal Methods
-
-            // Private Methods
         }
 
         #endregion Classes

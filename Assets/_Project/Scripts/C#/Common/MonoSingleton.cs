@@ -1,21 +1,17 @@
 using UnityEngine;
 
-namespace Bas.Common
+namespace VVGames.Common
 {
     /// <summary>
     /// <para>Base Class for creating Singleton-variants of <see cref="MonoBehaviour"/>s, meaning that only one instance is active at any time and this instance can easily be reached using a static field.</para>
     /// </summary>
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        ///___VARIABLES___///
-
         #region Properties
 
         public static T Instance { get; private set; }
 
         #endregion Properties
-
-        ///___METHODS___///
 
         #region Protected Methods
 

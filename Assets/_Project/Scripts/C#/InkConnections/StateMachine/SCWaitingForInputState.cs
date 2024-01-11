@@ -1,6 +1,6 @@
-using Bas.Common;
+using VVGames.Common;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {

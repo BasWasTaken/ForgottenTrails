@@ -1,4 +1,4 @@
-namespace Bas.ForgottenTrails.InkConnections.Items
+namespace VVGames.ForgottenTrails.InkConnections.Items
 {
     public enum Affordance
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     /// <summary>
     /// Simply provides functionality to close the deployed game executable.

@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.InkConnections.Items
+namespace VVGames.ForgottenTrails.InkConnections.Items
 {
     /// <summary>
     /// <para>Base type object for ingame items.</para>
     /// </summary>
     [Serializable]
-    [CreateAssetMenu]
+    [CreateAssetMenu(fileName = "MapLocation", menuName = "Forgotten Trails/Inventory Item")]
     public class InventoryItem : InkableObject
     {
         #region Fields

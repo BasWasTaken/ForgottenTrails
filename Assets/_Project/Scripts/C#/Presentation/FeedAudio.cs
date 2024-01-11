@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.Presentation
+namespace VVGames.ForgottenTrails.Presentation
 {
     public class FeedAudio : MonoBehaviour
     {

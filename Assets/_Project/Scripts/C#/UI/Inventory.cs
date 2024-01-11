@@ -1,10 +1,10 @@
-using Bas.ForgottenTrails.InkConnections;
-using Bas.ForgottenTrails.InkConnections.Items;
+using VVGames.ForgottenTrails.InkConnections;
+using VVGames.ForgottenTrails.InkConnections.Items;
 using Ink.Runtime;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     /// <summary>
     /// <para>Summary not provided.</para>

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.SaveLoading
+namespace VVGames.ForgottenTrails.SaveLoading
 {
     /// <summary>
     /// <para>Summary not provided.</para>

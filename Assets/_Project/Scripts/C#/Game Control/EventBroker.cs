@@ -1,4 +1,4 @@
-namespace Bas.ForgottenTrails.Events
+namespace VVGames.ForgottenTrails.Events
 {
     /// <summary>
     /// Handles communication between classes without them having to etablish a connection first.

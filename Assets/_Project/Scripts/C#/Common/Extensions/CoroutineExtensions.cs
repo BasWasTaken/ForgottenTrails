@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Bas.Common.Extensions
+namespace VVGames.Common.Extensions
 {
     /// <summary>
     /// Extension class that allows for simple access to delayed actions.

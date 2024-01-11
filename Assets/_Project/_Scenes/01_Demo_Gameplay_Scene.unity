@@ -1599,8 +1599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92130e48c9cc27946b369e5fa40684eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 275361435}
   direction: {x: 0, y: -1}
+  rectTransform: {fileID: 275361435}
 --- !u!114 &275361439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2655,8 +2655,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917fd659e780df1449d84aca1e27a079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemContainerPrefab: {fileID: 1472122517207343234, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
   book: {fileID: 275361438}
+  itemContainerPrefab: {fileID: 1472122517207343234, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
 --- !u!1 &531542275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2971,7 +2971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22491254, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 37.49
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22491254, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -7969,10 +7969,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3837fd452f5b2040aebfebcc675fef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioSourceAmbiance: {fileID: 4636245371363056738}
   <AudioSourceSystem>k__BackingField: {fileID: 4636245370548742609}
   <AudioSourceSfx>k__BackingField: {fileID: 4636245369445873570}
   <AudioSourceVoice>k__BackingField: {fileID: 4636245370948959648}
-  AudioSourceAmbiance: {fileID: 4636245371363056738}
   <AudioSourceMusic>k__BackingField: {fileID: 4636245370335439450}
 --- !u!114 &2009679607
 MonoBehaviour:
@@ -7990,31 +7990,27 @@ MonoBehaviour:
     _StatePeeker: 
   <TextProducer>k__BackingField:
     TPStatus: 0
-    <TextBox>k__BackingField: {fileID: 348379362}
-    <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
-    <HistoryTextBox>k__BackingField: {fileID: 2084113306}
-    <typingSound>k__BackingField: {fileID: 1768160763}
     _textSpeedPreset: 48
-    <Pauses>k__BackingField:
-      _dotPause: 6
-      _commaPause: 3.5
-      _spacePause: 1.5
-      _normalPause: 1
     <AutoAdvance>k__BackingField: 0
     <StillPauseWhileSkipping>k__BackingField: 1
+    <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
+    <HistoryTextBox>k__BackingField: {fileID: 2084113306}
+    <Pauses>k__BackingField: {fileID: 11400000, guid: 83cbd8cda1b9e2344b5a412c57f5020d, type: 2}
+    <TextBox>k__BackingField: {fileID: 348379362}
+    <typingSound>k__BackingField: {fileID: 1768160763}
   <SetDresser>k__BackingField:
+    bgImage: {fileID: 1320078387}
     portraitPrefab: {fileID: 8404248775511915677, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
     portraits: {fileID: 1206258461}
-    bgImage: {fileID: 1320078387}
   <InterfaceBroker>k__BackingField:
+    inventory: {fileID: 530457801}
     <ButtonPrefab>k__BackingField: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
-    <ButtonAnchor>k__BackingField: {fileID: 28223511}
-    <mapButtonsContainer>k__BackingField: {fileID: 1870545957}
     <book>k__BackingField: {fileID: 275361440}
     <FloatingMarker>k__BackingField: {fileID: 531542277}
     <AdvanceDialogueDelay>k__BackingField: 0.4
     <SkipDelay>k__BackingField: 0.2
-    inventory: {fileID: 530457801}
+    <ButtonAnchor>k__BackingField: {fileID: 28223511}
+    <mapButtonsContainer>k__BackingField: {fileID: 1870545957}
   <InputField>k__BackingField: {fileID: 1522983011}
 --- !u!1 &2084113304
 GameObject:

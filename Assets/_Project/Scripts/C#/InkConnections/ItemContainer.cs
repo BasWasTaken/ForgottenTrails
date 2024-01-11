@@ -1,8 +1,8 @@
-using Bas.ForgottenTrails.UI;
+using VVGames.ForgottenTrails.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Bas.ForgottenTrails.InkConnections.Items
+namespace VVGames.ForgottenTrails.InkConnections.Items
 {
     /// <summary>
     /// <para>Summary not provided.</para>

@@ -1,7 +1,7 @@
-using Bas.Common;
+using VVGames.Common;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {

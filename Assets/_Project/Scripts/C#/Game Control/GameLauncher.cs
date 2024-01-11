@@ -1,11 +1,11 @@
-using Bas.Common;
-using Bas.ForgottenTrails.InkConnections;
-using Bas.ForgottenTrails.SaveLoading;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VVGames.Common;
+using VVGames.ForgottenTrails.InkConnections;
+using VVGames.ForgottenTrails.SaveLoading;
 
-namespace Bas.ForgottenTrails
+namespace VVGames.ForgottenTrails
 {
     public class GameLauncher : MonoSingleton<GameLauncher>
     {
@@ -40,11 +40,7 @@ namespace Bas.ForgottenTrails
             LaunchGame();
         }
 
-        // how single purpose should scripts be?
-        // for instance, should these two methods be in a profileselector and saveselector component? it does make linking to them in the scene a bit more intuitive,
-        // but i can't help but think that'd be a bit overkill...
-        // well yeah i guess i should eb cause if i want them on any other buttons i don't want another whole gamelauncher!
-        // soo i guess TODO: make these into separate components (low priority)
+        // dev note: if I ever want the dropdown elements elsewhere, I can just separate these into disctinct components
         public void ShowProfiles()
         {
             profileSelector.ClearOptions();

@@ -1,13 +1,13 @@
-using Bas.Common;
 using NaughtyAttributes;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
+using VVGames.Common;
 using Debug = UnityEngine.Debug;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
@@ -119,7 +119,7 @@ namespace Bas.ForgottenTrails.InkConnections
 
             [field: SerializeField, Header("Settings"), BoxGroup("Settings")]
             [Tooltip("Define pause timings here.")]
-            internal PauseInfo Pauses { get; set; } = new();
+            internal PauseSettings Pauses { get; set; }
 
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
             [Tooltip("Panel to display current paragraph.")]
@@ -196,52 +196,6 @@ namespace Bas.ForgottenTrails.InkConnections
             }
 
             #endregion Private Methods
-
-            #region Classes
-
-            // Peripheral
-            [Serializable]
-            public class PauseInfo
-            {
-                #region Fields
-
-                // relatie delays
-                public float _dotPause;// = 2.5f;
-
-                public float _commaPause;// = 2f;
-                public float _spacePause;// = 1.5f;
-
-                [ReadOnly, MinValue(1), MaxValue(1)]
-                public float _normalPause = 1f;
-
-                #endregion Fields
-
-                // should stay at 1
-
-                #region Public Methods
-
-                public float GetPause(char letter) // TODO: make this a scriptable object so that chagnes persist? and the nyou can also make the settings hotswapapble
-                {
-                    float delay = letter switch
-                    {
-                        '.' => _dotPause,
-                        ':' => _dotPause,
-                        ',' => _commaPause,
-                        ';' => _commaPause,
-                        ' ' => _spacePause,
-                        '\t' => _spacePause,
-                        '\n' => _spacePause,
-                        _ => _normalPause,
-                    };
-                    return delay;
-                }
-
-                #endregion Public Methods
-            }
-
-            #endregion Classes
-
-            // DEPRICATED
         }
 
         #endregion Classes

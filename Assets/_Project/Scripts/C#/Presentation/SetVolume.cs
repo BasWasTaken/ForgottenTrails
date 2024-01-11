@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     /// <summary>
     /// Controls game volume through slider objects and stores value in playerprefs.

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     /// <summary>
     /// <para>Abstract for every type of scriptableobject use for ink.</para>

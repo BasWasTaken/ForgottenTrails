@@ -2,7 +2,7 @@ using NaughtyAttributes;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     /// <summary>
     /// Allows gui elements to slide into view when clicked

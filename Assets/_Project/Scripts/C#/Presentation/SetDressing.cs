@@ -1,14 +1,14 @@
-using Bas.Common;
-using Bas.ForgottenTrails.Presentation;
 using Ink.Runtime;
 using NaughtyAttributes;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using static Bas.Common.AudioHandler;
+using VVGames.Common;
+using VVGames.ForgottenTrails.Presentation;
+using static VVGames.Common.AudioHandler;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     [RequireComponent(typeof(AudioHandler))]
     public partial class StoryController : MonoSingleton<StoryController>
@@ -96,7 +96,7 @@ namespace Bas.ForgottenTrails.InkConnections
             {
                 //List<Sprite> sprites = null; // default to no sprites
 
-                if (inkList.maxItem.Key.itemName == "none") // NOTE: this check even unnesesay, can just move into the foreach and ignore the "none", elghouth I guess that would mean having to go this each iteration
+                if (inkList.maxItem.Key.itemName == "none")
                 {
                     // clear all portraits
                     foreach (Image item in portraits.GetComponentsInChildren<Image>())
@@ -106,7 +106,8 @@ namespace Bas.ForgottenTrails.InkConnections
                 }
                 else // if any other items beside "none"
                 {
-                    // TODO: first remove unneeded, then add missing, instead of just..:
+                    // NOTE: currently this clears everything, and then adds all the sprites. This is not ideal, as it is technically slightly less optimal and more importantly, might introduce some weirdness in the order of the sprites.
+                    // TODO 202401111700: It would be better if first the unneeded sprites were removed, and then the new ones added.
 
                     // add all sprites
                     foreach (InkListItem inkListItem in inkList.Keys)

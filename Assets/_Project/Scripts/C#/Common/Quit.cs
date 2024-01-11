@@ -1,4 +1,4 @@
-namespace Bas.Common
+namespace VVGames.Common
 {
     public static class AppHelper
     {

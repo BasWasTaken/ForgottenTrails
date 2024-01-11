@@ -1,11 +1,11 @@
-using Bas.Common;
-using Bas.ForgottenTrails.SaveLoading;
+using VVGames.Common;
+using VVGames.ForgottenTrails.SaveLoading;
 using Ink.Runtime;
 using System;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {

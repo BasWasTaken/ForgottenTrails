@@ -7,15 +7,13 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Bas.Common
+namespace VVGames.Common
 {
     /// <summary>
     /// <para>Simply a container to handle several <see cref="AudioSource"/>s (as child objects) from within one object.</para>
     /// </summary>
     public class AudioHandler : MonoBehaviour
     {
-        // Inspector Properties
-
         #region Fields
 
         [SerializeField, BoxGroup("Scene References"), Required]
@@ -53,7 +51,6 @@ namespace Bas.Common
         [Tooltip("Here drag the component used for voice.")]
         public AudioSource AudioSourceVoice { get; private set; }
 
-        // NOTE should actually chagne this name so that not accidentalyl called
         public List<AudioSource> AudioSourcesAmbiance
         {
             get
@@ -122,8 +119,6 @@ namespace Bas.Common
             return NewAmbienceLayer();
         }
 
-        // Public Methods
-
         public AudioSource GetSource(AudioGroup audioGroup)
         {
             return audioGroup switch
@@ -138,7 +133,5 @@ namespace Bas.Common
         }
 
         #endregion Public Methods
-
-        // Peripheral
     }
 }

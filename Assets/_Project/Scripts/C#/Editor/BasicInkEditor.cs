@@ -4,7 +4,7 @@ using NaughtyAttributes.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     /// <summary>
     /// An editor custom made to view the basic ink script in unity's editors.

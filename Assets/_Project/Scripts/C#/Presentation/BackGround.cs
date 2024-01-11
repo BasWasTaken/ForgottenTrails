@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Bas.ForgottenTrails.Presentation
+namespace VVGames.ForgottenTrails.Presentation
 {
     /// <summary>
     /// <para>SUMMARY GOES HERE.</para>

@@ -1,9 +1,9 @@
-using Bas.ForgottenTrails.InkConnections;
-using Bas.ForgottenTrails.SaveLoading;
+using VVGames.ForgottenTrails.InkConnections;
+using VVGames.ForgottenTrails.SaveLoading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     public class ExitToMain : MonoBehaviour
     {

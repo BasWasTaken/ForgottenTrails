@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     [Serializable]
     public class StackBasedStateMachine<T>
@@ -74,9 +74,6 @@ namespace Bas.ForgottenTrails.InkConnections
 
         #endregion Properties
 
-        // Constructor
-        // Public Methods
-
         #region Public Methods
 
         public static bool IsXAncestorToY(BaseState<T> X, BaseState<T> Y)
@@ -85,7 +82,6 @@ namespace Bas.ForgottenTrails.InkConnections
             return DoesXDescentFromY(Y, X);
         }
 
-        // Private Methods
         public static bool DoesXDescentFromY(BaseState<T> X, BaseState<T> Y)
         {
             Type descendantType = X.GetType();
@@ -129,7 +125,6 @@ namespace Bas.ForgottenTrails.InkConnections
             DropState(CurrentState);
         }
 
-        //TODO: MOVE THIS
         public bool TryGetChildStateFromStack(BaseState<T> parent, out BaseState<T> firstChild)
         {
             foreach (var state in StateStack)
@@ -221,7 +216,6 @@ namespace Bas.ForgottenTrails.InkConnections
 
         #region Private Methods
 
-        // TODO move this later
         private void PerformDrop()
         {
             if (StateStack.Count < 2)

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     /// <summary>
     /// <para>SUMMARY GOES HERE.</para>

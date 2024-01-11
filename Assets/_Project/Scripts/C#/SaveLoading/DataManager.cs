@@ -1,12 +1,12 @@
-using Bas.Common;
-using Bas.ForgottenTrails.InkConnections;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using VVGames.Common;
+using VVGames.ForgottenTrails.InkConnections;
 
-namespace Bas.ForgottenTrails.SaveLoading
+namespace VVGames.ForgottenTrails.SaveLoading
 {
     /// <summary>
     /// Allows other gameobjects to save and load data through use of <see cref="IDataService"/>.
@@ -83,7 +83,7 @@ namespace Bas.ForgottenTrails.SaveLoading
         {
             get
             {
-                string masterFolderPath = Application.persistentDataPath + "/" + nameOfMasterDataDirectory + "/"; // note creates incompatability with macos thorugh slashes
+                string masterFolderPath = Application.persistentDataPath + "/" + nameOfMasterDataDirectory + "/"; // NOTE: For MacOS, this uses different slashes. Might need to be changed.
                 if (!Directory.Exists(masterFolderPath)) Directory.CreateDirectory(masterFolderPath);
                 return masterFolderPath;
             }
@@ -425,33 +425,6 @@ namespace Bas.ForgottenTrails.SaveLoading
                 loaded_data = (MetaDataStruct)formatter.Deserialize(filestream);
             }
 
-            // NOTE een deel hiervan moet denk ik in de machine of controller gebeuren, ipv hier
-
-            /*
-            if (DataMatrix.ContainsKey(profile))
-            {
-                DataMatrix[profile].Clear();
-            }
-            else
-            {
-                DataMatrix.Add(profile, new()); // if we haven't yet prepped the data for that porofile this session, that's fine, just create the dictionary
-            }*/
-            /*
-            ActiveDataDictionary.Clear();
-            // uhh maybe i literally jst forgot to switch to the dataprofile???
-
-                // what am i doing with this loop? comment your code bas ffs.
-            foreach (DataClass dataClass in loaded_data.DataClasses)
-            {
-                // DataMatrix[profile].Add(dataClass.GetType().Name, dataClass);
-                if(ActiveDataProfile == profile) // wtf, waarom deze if stateement in een foreach loop terwijl dat hem helemaal niet veranderd?
-            // ooh maybe i was confused and thought there would be data from multiple profiles hre?
-                {
-                    ActiveDataDictionary.Add(dataClass.GetType().Name, dataClass);
-                }
-            }
-            */
-            // let's try this again.
             // first, clear active data directory.
 
             ActiveDataDictionary.Clear();
@@ -474,7 +447,7 @@ namespace Bas.ForgottenTrails.SaveLoading
 
             if (relaunchScene)
             {
-                // after this is done the scene ashould be (re)launched.
+                // after this is done the scene should be (re)launched.
                 if (StoryController.Instance != null)
                 {
                     StoryController.Instance.ResetSceneButton();

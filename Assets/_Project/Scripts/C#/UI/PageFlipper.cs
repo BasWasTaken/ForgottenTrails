@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.UI
+namespace VVGames.ForgottenTrails.UI
 {
     /// <summary>
     /// <para>Summary not provided.</para>

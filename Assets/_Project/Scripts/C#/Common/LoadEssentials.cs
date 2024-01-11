@@ -2,7 +2,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Bas.Common
+namespace VVGames.Common
 {
     public class LoadEssentials : MonoBehaviour
     {

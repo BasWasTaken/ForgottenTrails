@@ -1,32 +1,25 @@
-﻿using Bas.Common;
-using Bas.ForgottenTrails.SaveLoading;
-using Ink.Runtime;
+﻿using Ink.Runtime;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static Bas.ForgottenTrails.InkConnections.StoryController.InterfaceBroking;
-using static Bas.ForgottenTrails.InkConnections.StoryController.TextProduction;
+using VVGames.Common;
+using VVGames.ForgottenTrails.SaveLoading;
+using static VVGames.ForgottenTrails.InkConnections.StoryController.InterfaceBroking;
+using static VVGames.ForgottenTrails.InkConnections.StoryController.TextProduction;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     /// <summary>
     /// <para>Behaviour for parsing content from <see cref="Story"/> files and passing it onto the appropriate monobehaviours.</para>
     /// </summary>
     public partial class StoryController : MonoSingleton<StoryController>
     {
-        // Constants
-
         #region Fields
 
-        internal SCDummyState dummyState = new();
-
-        // TODO: how to avoid having to make this from here?
+        internal SCDummyState dummyState = new(); //feels like I could have a more clean way of declaring a state machine
         internal SCSuperState superState = new();
-
-        // Private Properties
-        internal TextProduction.SCProductionState productionState = new();
-
+        internal SCProductionState productionState = new();
         internal SCFunctionState functionState = new();
         internal SCWaitingForInputState waitingForInputState = new();
         internal SCWaitingForChoiceState waitingForChoiceState = new();
@@ -38,9 +31,8 @@ namespace Bas.ForgottenTrails.InkConnections
         internal SCMapState mapState = new();
         internal SCPartyState partyState = new();
         internal SCSavingState savingState = new();
-        private const string dataLabel = "BasicInkScript"; // NOTE:  isn't this ridiculous? if you'll be using this object as ink interface all the time, it should't itelf store particular data, you should have objets etc store data... else all will be under here, won't it? or will it just be settings?
 
-        // Inspector Properties & Helpers
+        private const string dataLabel = "BasicInkScript"; // DEPRECATED: labels are remaining artifact from when I thought there would be many different data objects
 
         [SerializeField, BoxGroup("Data"), ReadOnly]
         [Tooltip("View data object containing INK data.")]
@@ -115,7 +107,7 @@ namespace Bas.ForgottenTrails.InkConnections
         {
             base.Awake();
 
-            transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // NOTE: Why do I do this?
+            transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // I don't remember why this is here (as of 2024-01-11)
 
             //book = FindFirstObjectByType<Book>();
             SetDresser.Assign();
@@ -174,7 +166,7 @@ namespace Bas.ForgottenTrails.InkConnections
         /// <returns>The freshly made blank data</returns>
         private StoryData CreateBlankData(bool forBootup = false)
         {
-            // NOTE: Is this the optimal way of doing this?
+            // NOTE: this feels like a bit of a hacky way to create new data
             StoryData data = new();
             if (!forBootup)
             {

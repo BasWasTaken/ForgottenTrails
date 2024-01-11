@@ -1,6 +1,3 @@
-using Bas.Common;
-using Bas.ForgottenTrails.InkConnections.Items;
-using Bas.ForgottenTrails.InkConnections.Travel;
 using Ink.Runtime;
 using NaughtyAttributes;
 using System;
@@ -8,8 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using VVGames.Common;
+using VVGames.ForgottenTrails.InkConnections.Items;
+using VVGames.ForgottenTrails.InkConnections.Travel;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     /// <summary>
     /// AlwaysActive gameobject which can hold asset reference for easy access in any scene without use of addressables and recourcefolders.
@@ -84,9 +84,8 @@ namespace Bas.ForgottenTrails.InkConnections
             string error = "";
             string noError = "";
 
-            // NOTE wsl ipv inventory aanroepen, inventory state?
             assets.Clear();
-            Story story = new(TextAsset.text); // NOTE is dit waar de niet loading bug vandaan komt?
+            Story story = new(TextAsset.text);
 
             ListDefinition items = null;
             ListDefinition affordances = null;
@@ -195,11 +194,10 @@ namespace Bas.ForgottenTrails.InkConnections
 
         #region Protected Methods
 
-        ///___METHODS___///
         protected override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(gameObject); // todo: move to subclass persistentmonosignleto
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion Protected Methods
@@ -284,9 +282,6 @@ namespace Bas.ForgottenTrails.InkConnections
                 TemporaryDictionary.Add(loc.CanonicalName, loc);
             }
             string error = "";
-
-            // assert all locations to travel to from ink exist in unity
-            // TODO
 
             // assert all locations to travel to from unity exist in ink
             foreach (var name in TemporaryDictionary.Keys)

@@ -1,6 +1,6 @@
 using System;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     /// <summary>
     /// <para>Base class for states used in StateMachine Pattern.</para>

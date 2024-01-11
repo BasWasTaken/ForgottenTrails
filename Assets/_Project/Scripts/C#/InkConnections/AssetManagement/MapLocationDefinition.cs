@@ -2,13 +2,13 @@ using NaughtyAttributes;
 using System;
 using UnityEngine;
 
-namespace Bas.ForgottenTrails.InkConnections.Travel
+namespace VVGames.ForgottenTrails.InkConnections.Travel
 {
     /// <summary>
     /// <para>Base type object for ingame items.</para>
     /// </summary>
     [Serializable]
-    [CreateAssetMenu]
+    [CreateAssetMenu(fileName = "MapLocation", menuName = "Forgotten Trails/MapLocation")]
     public class MapLocationDefinition : InkableObject
     {
         #region Fields

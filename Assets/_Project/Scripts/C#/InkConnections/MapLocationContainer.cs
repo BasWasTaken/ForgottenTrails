@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Bas.ForgottenTrails.InkConnections.Travel
+namespace VVGames.ForgottenTrails.InkConnections.Travel
 {
     /// <summary>
     /// <para>Summary not provided.</para>

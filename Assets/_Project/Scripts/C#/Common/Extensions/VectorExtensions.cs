@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------------------
 // Created on: Pre-2024.
 // Author: Jaep
-// Purpose: Simplif vector calculations.
+// Purpose: Simplify vector calculations.
 // ------------------------------------------------------------------------------
 using UnityEngine;
 
-namespace Bas.Common.Extensions
+namespace VVGames.Common.Extensions
 {
     /// <summary>
     /// Extension class for easing vector calculations by handling associated convertions.

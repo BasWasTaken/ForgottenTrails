@@ -1,11 +1,11 @@
-using Bas.Common;
 using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using VVGames.Common;
 using Debug = UnityEngine.Debug;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
@@ -196,7 +196,7 @@ namespace Bas.ForgottenTrails.InkConnections
                 private void AdvanceStory()
                 {
                     TimeSinceAdvance = 0; // reset timer for skip button
-                    Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base; // NOTE OR transitionto writing. i know sort oif have a statemachine inside statemachine, not very neat, but also feels insane to make multiple for states for this.
+                    Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
                     InitiateTextProduction();
                 }
 
@@ -360,7 +360,7 @@ namespace Bas.ForgottenTrails.InkConnections
                                 // exit the loop or continue with a small delay
                                 if (Controller.TextProducer.AutoAdvance)
                                 {
-                                    // note maybe endofline pause? from settings or pause info?
+                                    // Might be a good idea to add a small delay here, to fire after each continue, if the dotpauses are not enough.
                                     TextLoop();
                                     return;
                                 }
@@ -403,7 +403,7 @@ namespace Bas.ForgottenTrails.InkConnections
                         }
                     }
                     Controller.TextProducer.typingSound.UnPause();
-                    float cps = speed / Controller.TextProducer.Pauses._normalPause;
+                    float cps = speed / Controller.TextProducer.Pauses.normalPause;
                     float fps = Application.targetFrameRate;
                     if (cps > fps) // if tasked to draw characters more frequently than once per frame
                     {
@@ -482,150 +482,7 @@ namespace Bas.ForgottenTrails.InkConnections
                     {
                         throw new Exception();
                     }
-                }   /*
-
-                public IEnumerator ProduceTextOuter()
-                {
-                    Stopwatch stopwatch = new();
-                    if (true)//Controller.TextProducer.ClearWhenFull)
-                    {
-                        // TODO: construct future checker for all upcoming lines here
-                        var storedState = Controller.Story.state.ToJson(); // set return point
-
-                        Controller.TextProducer.Peeking = true; // begin traversal
-                        string toBeAdded = "";
-                        while (Controller.Story.canContinue) // continue maximally or to stop
-                        {
-                            // issue occurs the very first time the story reaches this point.
-                            toBeAdded += Controller.Story.Continue();
-                            if (toBeAdded.Contains("{stop}")) break;
-                        }
-                        // check size and clear page if needed
-                        string bufferText = Controller.TextProducer.CurrentText; // make backup
-                        Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
-                        Controller.TextProducer.CurrentText += toBeAdded + '\n'; // test if the text will fit
-                        foreach (var choice in Controller.Story.currentChoices)
-                        {
-                            Controller.TextProducer.CurrentText += '\n' + choice.text;
-                        }
-                        yield return 0;// wait 1 frame
-                        bool overflow = Controller.TextProducer.OverFlowTextBox.text.Length > 0; // store result
-
-                        Controller.TextProducer.CurrentText = bufferText; // restore backup
-                        Controller.Story.state.LoadJson(storedState); // return to original state, reverting from peaking
-                        Controller.TextProducer.Peeking = false;
-
-                        if (overflow) { Controller.TextProducer.ClearPage(); } // clear page if needed
-                    }
-
-                    do
-                    {
-                        if (Controller.StateMachine.CurrentState != this) yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this);
-
-                        // NOTE: do i want to add ifspace remaining in textbox check here per line?
-
-                        Controller.Story.ContinueAsync(0); // advance a bit
-                        string newLine = Controller.Story.currentText; // get the next line up until there
-                                                                       // string newLine = story.Continue();
-
-                        string parsedText = ParseText(newLine);
-
-                        NewText = parsedText;
-                        //Debug.Log("Write a line: " + newLine);
-                        if (Controller.TextProducer.PendingFunctions.Count > 0)
-                        {
-                            yield return new WaitUntil(() => Controller.TextProducer.PendingFunctions.Count == 0); // wait till functions dfone
-                        }
-                        if (Controller.StateMachine.CurrentState != this)
-                        {
-                            yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this); // only continue in right state
-                        }
-
-                        Controller.TextProducer.TPStatus = TextProducerStatus.Working_Typing;  // Indicate we are now typing
-
-                        if (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.CurrentText.Length)
-                        {
-                            Controller.TextProducer.VisibleCharacters = Controller.TextProducer.CurrentText.Length;
-                            Debug.LogWarning("Not all characters were done.");
-                        }
-
-                        string backup = Controller.TextProducer.CurrentText; // make backup
-                        Controller.TextProducer.CurrentText += NewText; //add the new text, invisibly
-                        if (Controller.TextProducer.OverFlowTextBox.text.Length > 0) // check for overflow
-                        {
-                            Controller.TextProducer.CurrentText = backup; // restore backup
-                            Controller.TextProducer.ClearPage(); // save page and clear it
-                            Controller.TextProducer.CurrentText = NewText; // add new text anyway
-                        }
-
-                        string message = string.Format("On speed {0} (base {1}) wrote:\nChar\t\tDelay\t\tIntended\t\tExtra", Controller.TextProducer.TextSpeedActual, Controller.TextProducer.TextSpeedPreset); // prepare console message
-                        int tagLevel = 0; ///int to remember if we go down any nested tags
-                        char letter;///prepare marker
-                        while (Controller.TextProducer.VisibleCharacters < Controller.TextProducer.CurrentText.Length) /// while not all characters are visible
-                        {
-                            if (!Controller.isActiveAndEnabled) yield return new WaitUntil(() => Controller.isActiveAndEnabled); // only continue if enabled
-                            if (Controller.StateMachine.CurrentState != this) yield return new WaitUntil(() => Controller.StateMachine.CurrentState == this); // only continue in right state
-                            letter = Controller.TextProducer.CurrentText[Controller.TextProducer.VisibleCharacters]; /// store letter we're typing letter
-                            Controller.TextProducer.VisibleCharacters++; /// show the character
-                            if (letter == '<')/// if we come across this we've entered a(nother) tag
-                            {
-                                tagLevel++;
-                            }
-                            else if (letter == '>')/// if we come acros this, we've exited one level of tag
-                            {
-                                tagLevel--;
-                                if (tagLevel < 0)
-                                {
-                                    throw new("That's more closing than opening tag brackets!");
-                                }
-                            }
-                            else if (tagLevel == 0) /// if we're not in a tag, apply potential delays for the typewriting effect
-                            {
-                                //Debug.Log("show me " + letter);
-                                float delay = 0; // initialise delay
-                                if (Controller.TextProducer.Skipping & !Controller.TextProducer.StillPauseWhileSkipping)
-                                {
-                                    // keep at zero
-                                }
-                                else
-                                {
-                                    delay = Controller.TextProducer.Pauses.GetPause(letter) / Controller.TextProducer.TextSpeedActual; // get pause info
-                                    //if (Controller.TextProducer.Skipping) delay /= Controller.TextProducer.skipAccelerant; // accelerate if skipping
-                                }
-                                if (delay > 0)/// apply the delay if any
-                                {
-                                    yield return new WaitForSecondsRealtime(delay);
-                                }
-                                float delayMs = MathF.Round(delay * 1000 + Controller.TextProducer.scriptedPause);
-                                float delayActual = MathF.Round(stopwatch.ElapsedMilliseconds);
-                                message += string.Format("\n\'{0}\'\t\t{1} ms\t\t{2} ms\t\t {3} ms", letter, delayActual, delayMs, delayActual - delayMs);
-                                stopwatch.Restart();
-                            }
-                        }
-
-                        Debug.Log(message);
-
-                        Controller.TextProducer.TPStatus = TextProducerStatus.Working_Base;
-
-                        if (Controller.TextProducer.EncounteredStop)  // if we encounter a stop
-                        {
-                            Controller.TextProducer.EncounteredStop = false;
-                            // exit the loop or continue with a small delay
-                            if (Controller.TextProducer.AutoAdvance)
-                            {
-                                yield return new WaitForFixedUpdate();
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    } while (Controller.Story.canContinue); // while the story can continue without input on choices
-
-                    Controller.TextProducer.Skipping = false; // turn of skipping if it was on
-
-                    Controller.TextProducer.TPStatus = TextProducerStatus.Done;
-                }*/
+                }
 
                 private void DetermineNextTransition()
                 {
@@ -654,7 +511,9 @@ namespace Bas.ForgottenTrails.InkConnections
                     Controller.InkStoryAsset = null;
                     Controller.Story = null;
                     Debug.Log(new NotImplementedException());
-                    // TODO: LATER: evt volgende story feeden
+                    // This is where we'd feed a next story if relevant, but I don't think it will be.
+                    // To elaborate: in other games, ink can be used to feed content through a particular object or character, close that, then move on to another.
+                    // But in this game, it's all within one story structure- we never leave an ink story, so we never need to load a new one.
                     DropCondition = true;
                 }
 

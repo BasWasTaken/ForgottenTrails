@@ -1,7 +1,7 @@
-using Bas.ForgottenTrails.SaveLoading;
+using VVGames.ForgottenTrails.SaveLoading;
 using System;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     [Serializable]
     public class StoryData : DataClass

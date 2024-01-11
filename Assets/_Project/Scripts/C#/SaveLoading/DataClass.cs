@@ -1,6 +1,6 @@
 using System;
 
-namespace Bas.ForgottenTrails.SaveLoading
+namespace VVGames.ForgottenTrails.SaveLoading
 {
     /// <summary>
     /// Abstract class for savedata.

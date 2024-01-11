@@ -1,12 +1,12 @@
-using Bas.Common;
-using Bas.ForgottenTrails.InkConnections.Travel;
 using Ink.Runtime;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VVGames.Common;
+using VVGames.ForgottenTrails.InkConnections.Travel;
 using Debug = UnityEngine.Debug;
 
-namespace Bas.ForgottenTrails.InkConnections
+namespace VVGames.ForgottenTrails.InkConnections
 {
     public partial class StoryController : MonoSingleton<StoryController>
     {
@@ -118,7 +118,7 @@ namespace Bas.ForgottenTrails.InkConnections
                     Debug.LogFormat("{0} can {1} be visited!", item.canonicalLocation, canBeVisited ? "" : "not");
                 }
 
-                // TODO: add check the other way round: any prompts from ink that could not be matched, should produce an error.
+                // TODO 202401111659: add check the other way round: any prompts from ink that could not be matched, should produce an error.
             }
 
             #endregion Private Methods

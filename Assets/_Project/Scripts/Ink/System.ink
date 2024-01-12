@@ -416,7 +416,7 @@ VAR AffRobert = 50
    -> DONE
    
    
-LIST Background = (none), BG_VaultHall, BG_VaultLibrary, BG_VaultHall2, BG_VaultOffice, BG_CastleGate // list of BackGrounds
+LIST Background = (none), BG_VaultHall, BG_VaultLibrary, BG_VaultHall2, BG_VaultOffice, BG_CastleGate, BG_SketchTest // list of BackGrounds
   
 === function FadeToImage(image, duration) // name of image and duration in seconds (e.g. 0.5)
     ~ Background = image //update background 

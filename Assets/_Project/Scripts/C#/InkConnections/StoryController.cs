@@ -88,9 +88,6 @@ namespace VVGames.ForgottenTrails.InkConnections
         [Tooltip("Load data from disk and reset scene.")]
         [Button("ResetScene", EButtonEnableMode.Playmode)] public void ResetSceneButton() => ResetScene();
 
-        // Public Properties
-        // LifeCycle Methods
-
         public void AssignName()
         {
             Story.state.variablesState["PlayerName"] = DataManager.Instance.MetaData.playerName = InputField.text;

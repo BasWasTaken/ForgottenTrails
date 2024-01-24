@@ -1,5 +1,5 @@
-using VVGames.ForgottenTrails.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace VVGames.ForgottenTrails.InkConnections.Items
@@ -8,31 +8,30 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
     /// <para>Summary not provided.</para>
     /// </summary>
     [RequireComponent(typeof(Image))]
-    public class ItemContainer : MonoBehaviour, IMouseOverOption
+    public class ItemContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler
     {
         #region Fields
 
         [SerializeField]
         public InventoryItem definition;
 
-        private TMPro.TextMeshProUGUI prompt;
+        private TMPro.TextMeshProUGUI hoverText;
+        public GameObject ContextMenu;
 
         #endregion Fields
 
-        #region Properties
 
-        public bool IsMouseOver { get; set; }
+        public bool isHovered = false;
 
-        #endregion Properties
 
         #region Public Methods
+
 
         public void Construct(InventoryItem inventoryItem)
         {
             definition = inventoryItem;
             GetComponent<Image>().sprite = definition.image;
-            prompt = GetComponentInChildren<TMPro.TextMeshProUGUI>();
-            prompt.text = definition.description;
+            hoverText = GetComponentInChildren<TMPro.TextMeshProUGUI>();
         }
 
         public void ActivateFromButton()
@@ -40,53 +39,72 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
             StoryController.Instance.InterfaceBroker.TryUseItem(definition);
         }
 
+        #region PointerEvents
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            isHovered = true;
+            ShowHoverText(definition.name);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            isHovered = false;
+            hoverText.gameObject.SetActive(false);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                ShowContextMenu();
+            }
+        }
+
+
+        #endregion PointerEvents
+
+
         #endregion Public Methods
 
-        #region Private Methods
-
-        void IMouseOverOption.OnMouseExit()
+        public void OnPointerMove(PointerEventData eventData)
         {
-            // You can call the default implementation if needed
-            OnMouseExit();
+            hoverText.transform.position = Input.mousePosition;
         }
-
-        void IMouseOverOption.UpdateWhenMouseOver()
+        private void Start()
         {
-            // You can call the default implementation if needed
-            UpdateWhenMouseOver();
+            // Disable the context menu initially
+            if (ContextMenu != null)
+            {
+                ContextMenu.SetActive(false);
+            }
         }
-
-        // Explicitly implementing the interface methods
-        void IMouseOverOption.OnMouseEnter()
+        // Update is called once per frame
+        private void Update()
         {
-            // You can call the default implementation if needed
-            OnMouseEnter();
+            // Close context menu on right-click outside the UI element
+            if (ContextMenu != null && Input.GetMouseButtonDown(1) && !isHovered)
+            {
+                ContextMenu.SetActive(false);
+            }
         }
-
-        #endregion Private Methods
-
-        // Default implementation for the interface methods
-        private void OnMouseEnter()
+        private void ShowHoverText(string text)
         {
-            IsMouseOver = true;
-            prompt.gameObject.SetActive(true);
-            prompt.text = "";
+            if (hoverText != null)
+            {
+                hoverText.text = text;
+            }
         }
-
-        private void OnMouseExit()
+        private void ShowContextMenu()
         {
-            IsMouseOver = false;
-            prompt.gameObject.SetActive(false);
-        }
+            // Check if the context menu exists
+            if (ContextMenu == null) return;
+            // Set the context menu to active
+            ContextMenu.SetActive(true);
 
-        private void OnMouseOver()
-        {
-            UpdateWhenMouseOver();
-        }
-
-        private void UpdateWhenMouseOver()
-        {
-            prompt.transform.position = Input.mousePosition;
+            // Add options to the context menu
+            //ContextMenu.AddOption("Use Item", definition);
+            //ContextMenu.AddOption("Inspect Item", definition);
         }
     }
 }

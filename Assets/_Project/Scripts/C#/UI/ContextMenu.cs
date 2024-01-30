@@ -6,25 +6,20 @@ using Button = UnityEngine.UI.Button;
 
 namespace VVGames.ForgottenTrails
 {
+    ///
     public class ContextMenu : MonoSingleton<ContextMenu>
     {
-        [SerializeField] private TextMeshProUGUI hoverText;
+        #region Fields
+
+        [SerializeField] private GameObject hoverText;
         [SerializeField] private GameObject ContextMenuObject;
         [SerializeField] private Button buttonPrefab;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            hoverText = GetComponent<TextMeshProUGUI>();
-        }
-        private void Start()
-        {
-            // Disable the context menu initially
-            if (ContextMenuObject != null)
-            {
-                ContextMenuObject.SetActive(false);
-            }
-        }
+        private float timeLeft = 0;
+
+        #endregion Fields
+
+        #region Public Methods
 
         public void AddOption(string text, UnityAction onClick)
         {
@@ -37,7 +32,6 @@ namespace VVGames.ForgottenTrails
             button.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = text;
         }
 
-
         public void Clear()
         {
             foreach (Transform child in ContextMenuObject.transform)
@@ -47,16 +41,65 @@ namespace VVGames.ForgottenTrails
 
             ContextMenuObject.SetActive(false);
         }
+
+        public void ShowHoverText(Vector2 position, string text)
+        {
+            if (hoverText == null) return;
+            if (ContextMenuObject.activeSelf)
+            {
+                return; /// stop if thecontext menu is already active.
+            }
+            hoverText.SetActive(true);
+            hoverText.transform.position = position;
+            hoverText.GetComponentInChildren<TextMeshProUGUI>().text = text;
+            timeLeft = .5f;
+        }
+
+        public void ShowContextMenu(Vector2 position)
+        {
+            if (hoverText.gameObject.activeSelf)
+            {
+                return; // stop if the hover tool is already active.
+            }
+            ContextMenuObject.SetActive(true);
+            ContextMenuObject.transform.position = position;
+        }
+
+        public void RemoveHoverText(string text)
+        {
+            if (hoverText == null) return;
+            if (hoverText.GetComponentInChildren<TextMeshProUGUI>().text == text)
+            {
+                hoverText.GetComponentInChildren<TextMeshProUGUI>().text = "";
+                hoverText.gameObject.SetActive(false);
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void Start()
+        {
+            ContextMenuObject.SetActive(false);
+
+            hoverText.SetActive(false);
+        }
+
         // Update is called once per frame
         private void Update()
         {
-            // Close context menu on right-click outside the UI element
-            if (ContextMenuObject != null && Input.GetMouseButtonDown(1) && !IsMouseOverUIElement(ContextMenuObject.GetComponent<RectTransform>()))
+            if (ContextMenuObject != null)
             {
-                ContextMenuObject.SetActive(false);
+                // Close context menu on right-click outside the UI element
+                if (Input.GetMouseButtonDown(1) && !IsMouseOverUIElement(ContextMenuObject.GetComponent<RectTransform>()))
+                {
+                    ContextMenuObject.SetActive(false);
+                }
             }
         }
-        bool IsMouseOverUIElement(RectTransform rectTransform)
+
+        private bool IsMouseOverUIElement(RectTransform rectTransform)
         {
             // Get the position of the mouse in screen space
             Vector2 mousePosition = Input.mousePosition;
@@ -65,28 +108,6 @@ namespace VVGames.ForgottenTrails
             return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePosition);
         }
 
-        public void ShowHoverText(Vector2 position, string text)
-        {
-            if (hoverText == null) return;
-            hoverText.gameObject.SetActive(true);
-            hoverText.transform.position = position;
-            hoverText.text = text;
-        }
-
-        public void ShowContextMenu(Vector2 position)
-        {
-            ContextMenuObject.SetActive(true);
-            ContextMenuObject.transform.position = position;
-
-        }
-        public void RemoveHoverText(string text)
-        {
-            if (hoverText == null) return;
-            if (hoverText.text == text)
-            {
-                hoverText.text = "";
-                hoverText.gameObject.SetActive(false);
-            }
-        }
+        #endregion Private Methods
     }
 }

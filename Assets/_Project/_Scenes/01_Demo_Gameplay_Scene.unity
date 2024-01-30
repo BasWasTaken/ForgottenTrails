@@ -3100,7 +3100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22491254, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 37.49
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22491254, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3446,7 +3446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2527964009008988475, guid: bd8c16100dfde8b49ab52759514f4e7b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 22.885
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2527964009008988475, guid: bd8c16100dfde8b49ab52759514f4e7b, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5248,7 +5248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e767ea173feccb4ca30848e691c4dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverText: {fileID: 0}
+  hoverText: {fileID: 2527964009132488223}
   ContextMenuObject: {fileID: 146410795}
   buttonPrefab: {fileID: 2527964008796065323, guid: bd8c16100dfde8b49ab52759514f4e7b, type: 3}
 --- !u!4 &1304190508
@@ -8704,9 +8704,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.4056604, g: 0.36930403, b: 0.36930403, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8797,7 +8797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

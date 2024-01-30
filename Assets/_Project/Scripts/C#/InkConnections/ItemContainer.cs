@@ -15,14 +15,15 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
         [SerializeField]
         public InventoryItem definition;
 
+        public bool isHovered;
+
+        // check if contained in contextmenu.hovered?
+
+        private float timeLeft = 0f;
+
         #endregion Fields
 
-
-        public bool isHovered; // check if contained in contextmenu.hovered?
-
-
         #region Public Methods
-
 
         public void Construct(InventoryItem inventoryItem)
         {
@@ -36,8 +37,6 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
             StoryController.Instance.InterfaceBroker.TryUseItem(definition);
         }
 
-        #region PointerEvents
-
         public void OnPointerEnter(PointerEventData eventData)
         {
             isHovered = true;
@@ -47,7 +46,7 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
         public void OnPointerExit(PointerEventData eventData)
         {
             isHovered = false;
-            ContextMenu.Instance.RemoveHoverText(definition.name);
+            timeLeft = .1f; // ToDO: improve with fadeout
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -67,18 +66,33 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
 
         public void Inspect()
         {
-            StoryController.Instance.InterfaceBroker.book.RightPage.FeedText(definition.description);
+            StoryController.Instance.InterfaceBroker.book.RightPage.FeedText(definition.description + "\n" + "Worth: " + definition.coinValue);
         }
-
-
-        #endregion PointerEvents
-
-
-        #endregion Public Methods
 
         public void OnPointerMove(PointerEventData eventData)
         {
             //hoverText.transform.position = Input.mousePosition;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void Update()
+        {
+            if (!isHovered)
+            {
+                if (timeLeft > 0)
+                {
+                    timeLeft -= Time.deltaTime;
+                }
+                else
+                {
+                    ContextMenu.Instance.RemoveHoverText(definition.name);
+                }
+            }
+        }
+
+        #endregion Private Methods
     }
 }

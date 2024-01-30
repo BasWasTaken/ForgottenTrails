@@ -1,5 +1,5 @@
-using VVGames.Common;
 using UnityEngine;
+using VVGames.Common;
 
 namespace VVGames.ForgottenTrails.InkConnections
 {
@@ -21,7 +21,7 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.inventory.book.Displace();
+                Controller.InterfaceBroker.inventory.book.Slide.Displace();
             }
 
             public override void OnUpdate()
@@ -51,7 +51,9 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.inventory.book.Replace();
+
+                Controller.InterfaceBroker.inventory.book.RightPage.Clear();
+                Controller.InterfaceBroker.inventory.book.Slide.Replace();
             }
 
             // Private Methods
@@ -59,7 +61,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             public void ExitMenu()
             {
                 //Debug.LogFormat("is {0}, a bookmenustate?", this); // simply "this" does not seem to work
-                Controller.StateMachine.DropState(Machine.KnownStates[typeof(SCBookMenuState)]); // the state to drom from may be a child but not a parent
+                Controller.StateMachine.DropState(Machine.KnownStates[typeof(SCBookMenuState)]); // the state to drop from may be a child but not a parent
             }
 
             #endregion Public Methods

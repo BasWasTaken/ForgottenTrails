@@ -1,7 +1,7 @@
-using VVGames.ForgottenTrails.InkConnections;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using VVGames.ForgottenTrails.InkConnections;
 
 namespace VVGames.ForgottenTrails.UI
 {
@@ -12,11 +12,15 @@ namespace VVGames.ForgottenTrails.UI
     {
         #region Properties
 
+        public GUISlideIn Slide => GetComponent<GUISlideIn>();
+
         [field: SerializeField]
         public Pages pages { get; set; }
 
         [field: SerializeField]
         public Bookmarks markers { get; set; }
+        [field: SerializeField]
+        public RightPage RightPage { get; set; }
 
         #endregion Properties
 

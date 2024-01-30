@@ -1,5 +1,6 @@
-using VVGames.ForgottenTrails.UI;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace VVGames.ForgottenTrails.InkConnections.Items
@@ -7,86 +8,91 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
     /// <summary>
     /// <para>Summary not provided.</para>
     /// </summary>
-    [RequireComponent(typeof(Image))]
-    public class ItemContainer : MonoBehaviour, IMouseOverOption
+    public class ItemContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler
     {
         #region Fields
 
         [SerializeField]
         public InventoryItem definition;
 
-        private TMPro.TextMeshProUGUI prompt;
+        public bool isHovered;
+
+        // check if contained in contextmenu.hovered?
+
+        private float timeLeft = 0f;
 
         #endregion Fields
-
-        #region Properties
-
-        public bool IsMouseOver { get; set; }
-
-        #endregion Properties
 
         #region Public Methods
 
         public void Construct(InventoryItem inventoryItem)
         {
             definition = inventoryItem;
-            GetComponent<Image>().sprite = definition.image;
-            prompt = GetComponentInChildren<TMPro.TextMeshProUGUI>();
-            prompt.text = definition.description;
+            GetComponentInChildren<Image>().sprite = definition.image;
+            GetComponentInChildren<TextMeshProUGUI>().text = definition.name;
         }
 
-        public void ActivateFromButton()
+        public void UseItemInDefinition()
         {
             StoryController.Instance.InterfaceBroker.TryUseItem(definition);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            isHovered = true;
+            ContextMenu.Instance.ShowHoverText(eventData.position, definition.name);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            isHovered = false;
+            timeLeft = .1f; // ToDO: improve with fadeout
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                Inspect();
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                ContextMenu.Instance.Clear();
+                ContextMenu.Instance.AddOption("Use " + definition.name, UseItemInDefinition);
+                ContextMenu.Instance.AddOption("Inspect " + definition.name, Inspect);
+                ContextMenu.Instance.ShowContextMenu(eventData.position);
+            }
+        }
+
+        public void Inspect()
+        {
+            StoryController.Instance.InterfaceBroker.book.RightPage.FeedText(definition.description + "\n" + "Worth: " + definition.coinValue);
+        }
+
+        public void OnPointerMove(PointerEventData eventData)
+        {
+            //hoverText.transform.position = Input.mousePosition;
         }
 
         #endregion Public Methods
 
         #region Private Methods
 
-        void IMouseOverOption.OnMouseExit()
+        private void Update()
         {
-            // You can call the default implementation if needed
-            OnMouseExit();
-        }
-
-        void IMouseOverOption.UpdateWhenMouseOver()
-        {
-            // You can call the default implementation if needed
-            UpdateWhenMouseOver();
-        }
-
-        // Explicitly implementing the interface methods
-        void IMouseOverOption.OnMouseEnter()
-        {
-            // You can call the default implementation if needed
-            OnMouseEnter();
+            if (!isHovered)
+            {
+                if (timeLeft > 0)
+                {
+                    timeLeft -= Time.deltaTime;
+                }
+                else
+                {
+                    ContextMenu.Instance.RemoveHoverText(definition.name);
+                }
+            }
         }
 
         #endregion Private Methods
-
-        // Default implementation for the interface methods
-        private void OnMouseEnter()
-        {
-            IsMouseOver = true;
-            prompt.gameObject.SetActive(true);
-            prompt.text = "";
-        }
-
-        private void OnMouseExit()
-        {
-            IsMouseOver = false;
-            prompt.gameObject.SetActive(false);
-        }
-
-        private void OnMouseOver()
-        {
-            UpdateWhenMouseOver();
-        }
-
-        private void UpdateWhenMouseOver()
-        {
-            prompt.transform.position = Input.mousePosition;
-        }
     }
 }

@@ -14,6 +14,7 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
     {
         #region Fields
 
+        [TextArea(minLines: 2, maxLines: 10)]
         public string description = "";
 
         public Sprite image;

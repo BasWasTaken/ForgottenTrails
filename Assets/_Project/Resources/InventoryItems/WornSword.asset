@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8fa3f30abd33b44995a6e57906962f, type: 3}
   m_Name: WornSword
   m_EditorClassIdentifier: 
-  <CanonicalName>k__BackingField: WornSword
-  description: 
+  description: description for a sword
   image: {fileID: 21300000, guid: afb4797b3354f144fb43c8230c269f91, type: 3}
   coinValue: 0
   modifier: 0
+  <CanonicalName>k__BackingField: WornSword
   <Affordaces>k__BackingField: 000000000200000003000000

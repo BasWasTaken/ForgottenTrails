@@ -1,8 +1,8 @@
-using VVGames.ForgottenTrails.InkConnections;
-using VVGames.ForgottenTrails.InkConnections.Items;
 using Ink.Runtime;
 using System.Collections.Generic;
 using UnityEngine;
+using VVGames.ForgottenTrails.InkConnections;
+using VVGames.ForgottenTrails.InkConnections.Items;
 
 namespace VVGames.ForgottenTrails.UI
 {
@@ -13,7 +13,7 @@ namespace VVGames.ForgottenTrails.UI
     {
         #region Fields
 
-        public GUISlideIn book;
+        public Book book;
 
         [Header("Prefab")]
         [SerializeField]

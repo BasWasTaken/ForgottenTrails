@@ -31,9 +31,18 @@ public class ScriptableObjectDrawer : PropertyDrawer
             EditorGUI.indentLevel++;
 
             // Draw object properties
-            if (!editor)
-                Editor.CreateCachedEditor(property.objectReferenceValue, null, ref editor);
-            editor.OnInspectorGUI();
+            if (property.objectReferenceValue != null)
+            {
+                CreateCachedEditor(property.objectReferenceValue, null);
+                if (editor != null)
+                {
+                    editor.OnInspectorGUI();
+                }
+            }
+            else
+            {
+                EditorGUI.LabelField(position, "No ScriptableObject assigned");
+            }
 
             // Set indent back to what it was
             EditorGUI.indentLevel--;
@@ -41,4 +50,24 @@ public class ScriptableObjectDrawer : PropertyDrawer
     }
 
     #endregion Public Methods
+
+    #region Private Methods
+
+    // Create cached editor
+    private void CreateCachedEditor(Object obj, Editor previousEditor)
+    {
+        if (obj == null)
+        {
+            editor = null;
+            return;
+        }
+
+        if (editor == null || previousEditor == null || editor.target != obj || previousEditor.target != obj)
+        {
+            Editor.DestroyImmediate(previousEditor);
+            editor = Editor.CreateEditor(obj);
+        }
+    }
+
+    #endregion Private Methods
 }

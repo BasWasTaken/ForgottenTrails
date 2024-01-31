@@ -1,8 +1,8 @@
-using VVGames.Common;
-using VVGames.ForgottenTrails.SaveLoading;
 using Ink.Runtime;
 using System;
 using UnityEngine;
+using VVGames.Common;
+using VVGames.ForgottenTrails.SaveLoading;
 using Debug = UnityEngine.Debug;
 
 namespace VVGames.ForgottenTrails.InkConnections
@@ -96,6 +96,11 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             #region Internal Methods
 
+            internal void PauseText(float seconds)
+            {
+                Controller.TextProducer.scriptedPause += seconds;
+            }
+
             internal void PerformInkFunction(Action function)
             {
                 if (!Controller.TextProducer.Peeking)
@@ -103,11 +108,6 @@ namespace VVGames.ForgottenTrails.InkConnections
                     Controller.TextProducer.PendingFunctions.Enqueue(function);
                     Controller.StateMachine.TransitionToState(Controller.functionState);
                 }
-            }
-
-            internal void PauseText(float seconds)
-            {
-                Controller.TextProducer.scriptedPause += seconds;
             }
 
             #endregion Internal Methods
@@ -127,14 +127,11 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             #endregion Protected Methods
 
+            // Private Methods
+
             #region Private Methods
 
-            private void FlagGoForStart()
-            {
-                _goForStart = true;
-            }
-
-            // Private Methods
+            #region Initialise
 
             private void Initialise()
             {
@@ -144,6 +141,8 @@ namespace VVGames.ForgottenTrails.InkConnections
                 FlagGoForStart();
             }
 
+            #region InitialiseStory
+
             /// <summary>
             /// Preps story for play. Should be called after <see cref="InkData"/> object has been initialised or loaded.
             /// </summary>
@@ -151,26 +150,6 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 Controller.Story = new Story(Controller.InkStoryAsset.text);
                 BindAndObserve(Controller.Story); // this only needs to happen the first time!
-            }
-
-            private void InitialiseData()
-            {
-                // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
-                Controller.InkDataAsset = DataManager.Instance.GetDataOrMakeNew<StoryData>();
-                ReadStoryStateFromData(Controller.InkDataAsset);
-            }
-
-            /// <summary>
-            /// Prepares scene to contain story
-            /// </summary>
-            private void PrepScene()
-            {
-                AssetManager.Instance.CreateAssetLibraries();
-                //Controller.TextProducer.SetMaxLines();
-                Controller.TextProducer.maxVis = 20;
-                Controller.InterfaceBroker.RemoveOptions();
-                Controller.TextProducer.TextSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)TextProduction.TextSpeed.medium);
-                PopulateSceneFromData(Controller.InkDataAsset);
             }
 
             private void BindAndObserve(Story story)
@@ -227,6 +206,17 @@ namespace VVGames.ForgottenTrails.InkConnections
                 }
             }
 
+            #endregion InitialiseStory
+
+            #region InitialiseData
+
+            private void InitialiseData()
+            {
+                // voorheen werd eventueel hier van disk gelezen, maar dat is niet meer zo. data wordt bij startup afgelezen en is daarna gewoon beschikbaar
+                Controller.InkDataAsset = DataManager.Instance.GetDataOrMakeNew<StoryData>();
+                ReadStoryStateFromData(Controller.InkDataAsset);
+            }
+
             /// <summary>
             /// Feed the <paramref name="input"/>'s story state into the story we are currently loading.
             /// </summary>
@@ -253,8 +243,27 @@ namespace VVGames.ForgottenTrails.InkConnections
                 //Debug.Log(message);
             }
 
+            #endregion InitialiseData
+
+            #region PrepScene
+
+            /// <summary>
+            /// Prepares scene to contain story
+            /// </summary>
+            private void PrepScene()
+            {
+                AssetManager.Instance.CreateAssetLibraries();
+                //Controller.TextProducer.SetMaxLines();
+                Controller.TextProducer.maxVis = 20;
+                Controller.InterfaceBroker.RemoveOptions();
+                Controller.TextProducer.TextSpeedPreset = (TextProduction.TextSpeed)PlayerPrefs.GetInt("textSpeed", (int)TextProduction.TextSpeed.medium);
+                PopulateSceneFromData(Controller.InkDataAsset);
+            }
+
             private void PopulateSceneFromData(StoryData input)
             {
+                // this function is fired just after the storystatejson has been created from input. thus, the json in the input here hoeft als het goed is niet meer gebruikt te worden.
+
                 //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
                 InkList music = Controller.Story.state.variablesState["Music"] as InkList;
                 Controller.SetDresser.InkRequestAudio(music.maxItem.Key);
@@ -271,6 +280,16 @@ namespace VVGames.ForgottenTrails.InkConnections
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
 
                 Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
+                Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
+            }
+
+            #endregion PrepScene
+
+            #region start
+
+            private void FlagGoForStart()
+            {
+                _goForStart = true;
             }
 
             /// <summary>
@@ -281,6 +300,10 @@ namespace VVGames.ForgottenTrails.InkConnections
                 OnCreateStory?.Invoke(Controller.Story);
                 Controller.StateMachine.TransitionToState(Controller.productionState);
             }
+
+            #endregion start
+
+            #endregion Initialise
 
             #endregion Private Methods
         }

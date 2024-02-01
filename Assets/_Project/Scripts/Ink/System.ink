@@ -247,7 +247,7 @@ You arrive at scotland Entrance!
 
 === function AllowMap === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
 /*
-Unfortunately. the format for properly including this option is a bit esoteric as of the time of writing (2023-12-24). Brace yourself. It is as follows:
+Unfortunately. the format for properly including this option is a bit esoteric as of the time of writing (2023-12-24). It is as follows:
 
 +  [{AllowMap()}] -> MapScreen(-> SceneToReturnTo) 
 
@@ -338,7 +338,7 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
   
   === Section_TrackParty ===
   /* ---------------------------------
-   ### System: 
+   ### System: Tracking party members and speaking to them, potentially triggering leave conditions
   ----------------------------------*/
   -> DONE
   // WIP
@@ -348,6 +348,114 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
    ----------------------------------*/
 LIST Party = (Player), Alice, Robert
 
+
+=== function Party_AddMember(member) // Add character to party
+    ~ Party += member
+{member} joined the party.
+    
+=== function Party_RemoveMember(member) // Add character to party
+    ~ Party -= member
+{member} left the party.
+
+=== function AllowPartyChanges=== // including this in the list of choices allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
+
+
+/*
+Unfortunately. similarly to the map screen, the format for properly including this option is a bit esoteric as of the time of writing (2024-02-02). It is as follows:
+
++  [{AllowPartyChanges()}] -> PartyScreen(-> SceneToReturnTo) ->
+
+"SceneToReturnTo" is the scene this choice is IN, i.e. the scene to return to after closing the party screen or going through the dialogues from it.
+So you must copy past that whole line as a choice and replace the "SceneToReturnTo" bit with whatever knot you are making the choice from.
+*/
+
+\{UNITY:OpenPartyScreen\}
+
+=== function OpenPartyScreen() // call to open the map screen in unity
+~ _OpenMap()
+
+=== function _OpenPartyScreen() === // opens the map screen in unity
+\{UNITY:OpenPartyScreen()\}
+
+EXTERNAL _OpenPartyScreen()
+
+=== PartyScreen (-> returnTo) // the party knot. visit to open the party scren in unity. 
+~ _OpenPartyScreen()
++ { Party?Alice} [{_PartyChoice(Alice)}] 
+    -> AliceDialogue(returnTo)
++ { Party?Robert} [{_PartyChoice(Robert)}] 
+    -> RobertDialogue(returnTo)
++ [\{UNITY:ClosePartyScreen\}]    
+    \{UNITY:ClosePartyScreen()\}
+    -> returnTo
+    
+== AliceDialogue(->returnTo) // wondering whether we wanna have these sections here or in a story ink. they are part of the system in a way but they will also be where we write personal interactions with the party members potentially. het wordt ook wel erg veel hier...
+"Alice..."
++ [Compliment]
+    -> Compliment(returnTo)
++ [Dismiss this party member]
+    -> Dismiss(returnTo)
++ [Remark on a thing that just happened.]
+    -> Sample(returnTo)
+    
+= Compliment(->returnTo)
++ "I think you're doing great."
+    "Cool thanks."
+    -> returnTo(returnTo)
+    
+= Sample(->returnTo)
+* Witty remark relevant to the thing we just witnessed.
+    Fitting response.
+    -> returnTo
+* Another witty remark relevant to the other thing we just witnessed.
+    Fitting response.
+    -> returnTo
+* -> 
+    "Actually, I got nothing."
+    -> returnTo
+    
+= Dismiss(->returnTo)
+You sure?
+    + (confirm)[Y]"I think you should just leave."
+    Alice is fucking pissed, dude.
+    ~Party_RemoveMember(Alice)
+    -> returnTo
+    + [N]"Nevermind"
+    -> returnTo
+
+== RobertDialogue(->returnTo)
+"Robbie..."
++ [Compliment]
+    -> Compliment(returnTo)
++ [Dismiss this party member]
+    -> Dismiss(returnTo)
+    
+= Compliment(->returnTo)
++ "I think you're doing great."
+    "Cool thanks."
+    -> returnTo
+    
+= Dismiss(->returnTo)
+You sure?
+    + (confirm)Y
+    Rob is okay with it.
+    But {aglue}
+    ~Party_RemoveMember(Robert)
+    -> AliceDialogue.Dismiss.confirm
+    -> returnTo
+    + N
+    Ah, we cool then.
+    -> returnTo
+
+
+    
+=== function _PartyChoice(character) === // used to present an inky choice that will be represented by a portrait in unity. in inky, it will just be an ormal option to click
+\{PartyChoice({character})\}
+
+
+
+
+
    === Section_TrackAffection ===
   /* ---------------------------------
    #### System: Track opinion of NPCs regarding the player
@@ -355,6 +463,7 @@ LIST Party = (Player), Alice, Robert
    -> DONE
   // Tracking numeric value for relationship between pc and other characters, and using cutoff points to determine friendly, hostile etc.
   // Can be compared simply by asking e.g.: {AFFHenry >= friendly}
+
 
 
 

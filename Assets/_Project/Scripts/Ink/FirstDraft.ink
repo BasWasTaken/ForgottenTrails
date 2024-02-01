@@ -10,7 +10,9 @@ INCLUDE BasTest.ink
 === Start ===
     + [Proceed with Vugs' sequence]
     -> RandomEventsEdanArea.MerchantSiblings
-    + [Try Bas' Travel Example:]
+    + [Try Bas' Travel Example]
+    ~Party_AddMember(Alice)
+    ~Party_AddMember(Robert)
     -> BasTravelTest
     + [Proceed to Character Creation]
     -> Preamble

@@ -5,11 +5,11 @@ INCLUDE BasTest.ink
 
 // starting inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
--> Start 
+-> Start
 
 === Start ===
     + [Proceed with Vugs' sequence]
-    -> RandomEventsEdanArea.MerchantSiblings
+    -> MerchantSiblings1
     + [Try Bas' Travel Example:]
     -> BasTravelTest
     + [Proceed to Character Creation]

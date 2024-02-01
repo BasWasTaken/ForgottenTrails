@@ -379,74 +379,78 @@ So you must copy past that whole line as a choice and replace the "SceneToReturn
 
 EXTERNAL _OpenPartyScreen()
 
-=== PartyScreen (-> returnTo) // the party knot. visit to open the party scren in unity. 
+=== PartyScreen // the party knot. visit to open the party scren in unity. 
 ~ _OpenPartyScreen()
 + { Party?Alice} [{_PartyChoice(Alice)}] 
-    -> AliceDialogue(returnTo)
+    ->AliceDialogue
 + { Party?Robert} [{_PartyChoice(Robert)}] 
-    -> RobertDialogue(returnTo)
+    ->RobertDialogue
 + [\{UNITY:ClosePartyScreen\}]    
     \{UNITY:ClosePartyScreen()\}
-    -> returnTo
+-    ->->
     
-== AliceDialogue(->returnTo) // wondering whether we wanna have these sections here or in a story ink. they are part of the system in a way but they will also be where we write personal interactions with the party members potentially. het wordt ook wel erg veel hier...
+== AliceDialogue // wondering whether we wanna have these sections here or in a story ink. they are part of the system in a way but they will also be where we write personal interactions with the party members potentially. het wordt ook wel erg veel hier...
 "Alice..."
 + [Compliment]
-    -> Compliment(returnTo)
+    ->Compliment
 + [Dismiss this party member]
-    -> Dismiss(returnTo)
+    ->Dismiss
 + [Remark on a thing that just happened.]
-    -> Sample(returnTo)
+    ->Sample
     
-= Compliment(->returnTo)
+= Compliment
 + "I think you're doing great."
     "Cool thanks."
-    -> returnTo(returnTo)
+    ->->
     
-= Sample(->returnTo)
+= Sample
 * Witty remark relevant to the thing we just witnessed.
     Fitting response.
-    -> returnTo
+    ->->
 * Another witty remark relevant to the other thing we just witnessed.
     Fitting response.
-    -> returnTo
+    ->->
 * -> 
     "Actually, I got nothing."
-    -> returnTo
+    ->->
     
-= Dismiss(->returnTo)
+= Dismiss
 You sure?
     + (confirm)[Y]"I think you should just leave."
+    -> Leaving
+    ->->
+    + [N]"Nevermind"
+    ->->
+    
+= Leaving
     Alice is fucking pissed, dude.
     ~Party_RemoveMember(Alice)
-    -> returnTo
-    + [N]"Nevermind"
-    -> returnTo
-
-== RobertDialogue(->returnTo)
+    ->->
+== RobertDialogue
 "Robbie..."
 + [Compliment]
-    -> Compliment(returnTo)
+    ->Compliment
 + [Dismiss this party member]
-    -> Dismiss(returnTo)
+    ->Dismiss
     
-= Compliment(->returnTo)
+= Compliment
 + "I think you're doing great."
     "Cool thanks."
-    -> returnTo
+    ->->
     
-= Dismiss(->returnTo)
+= Dismiss
 You sure?
-    + (confirm)Y
-    Rob is okay with it.
-    But {aglue}
-    ~Party_RemoveMember(Robert)
-    -> AliceDialogue.Dismiss.confirm
-    -> returnTo
-    + N
+    + (confirm)[Y]
+    -> Leaving
+    + [N]
     Ah, we cool then.
-    -> returnTo
+    ->->
 
+= Leaving
+    Rob is okay with it.
+    ~Party_RemoveMember(Robert)
+    But <>
+    -> AliceDialogue.Leaving
 
     
 === function _PartyChoice(character) === // used to present an inky choice that will be represented by a portrait in unity. in inky, it will just be an ormal option to click

@@ -12,7 +12,7 @@
     . Alone.
 }
 
-    +  [{AllowPartyChanges()}] -> PartyScreen(-> BasTravelTest) ->
+    +  [{AllowPartyChanges()}] -> PartyScreen -> BasTravelTest
     +  [{AllowMap()}] -> MapScreen(-> BasTravelTest) 
    
     

@@ -66,9 +66,10 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
     {stop}
     (Hope the quickload functionality works at the moment...)
     {OpenMap()}
-    ->MapScreen (-> EdinburghCrossroads.Crossing)
-
-+  [{AllowMap()}] -> MapScreen(-> EdinburghCrossroads.Crossing) // dit moet toch meer consise kunnen...?
+    -> MapScreen(-> Crossing.)
+<- AllowMap(-> Crossing)
+<- AllowPartyScreen(-> Crossing)
+-> DONE
 
 === RoadToEdanCastle
 //Add first time content, repeated content and randomizer element

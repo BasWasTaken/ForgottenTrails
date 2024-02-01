@@ -8,7 +8,8 @@ You turn on your back, the small canvas tent that shields you from the elements 
 =Tent
 
 You decide to
-+  [{AllowMap()}] -> MapScreen(->Awakening.Tent) // dit moet toch meer consise kunnen...?
+<- AllowMap(->Tent)
+<- AllowPartyScreen(-> Tent)
 
 *(PackUpEarly)[...pack up]{aglue} pack up.
 Or you would, but the grumbling of your stomach tells you that it's not going to be a fun hike without something to eat.

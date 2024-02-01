@@ -1,6 +1,6 @@
 === BasTravelTest ===
 ~SetLocation(LOC_EdanCastle)
-    For sake of example, you are currently at Edan Castle<>
+    {For sake of example, y|Y}ou are {currently|still} at Edan Castle<>
 {
     - Party?Alice && Party?Robert:
     , together with Alice and Robert.
@@ -11,10 +11,9 @@
     - else:
     . Alone.
 }
-
-    +  [{AllowPartyChanges()}] -> PartyScreen -> BasTravelTest
-    +  [{AllowMap()}] -> MapScreen(-> BasTravelTest) 
-   
+<-AllowPartyScreen(-> BasTravelTest)
+<-AllowMap(-> BasTravelTest)
+-> DONE
     
 === SampleSampleCaveScene
 You're in a cave now!

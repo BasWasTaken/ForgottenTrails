@@ -161,7 +161,7 @@ You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
 You need food to survive idiot.
 -> Death
 
-=== TravelingTo(targetLocation) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
+=== TravelingTo(targetLocation, ->targetScene) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
 ~ TargetLocation = targetLocation
 ~ temp OriginLocation = CurrentLocation
 ~ SetLocation(LOC_OnTheRoad)
@@ -203,27 +203,16 @@ You need food to survive idiot.
 {
 - SucceededRandomEvent:
         ~Print("Proceeding with traversal.")
-    -> _ArriveAt(TargetLocation)
+    ~_ArriveAt(TargetLocation)
+    ->targetScene
 - else:
         ~Print("Aborting traversal. Returning to previous location.")
-    -> _ArriveAt(OriginLocation)
+    ~_ArriveAt(OriginLocation)
+    ->->
 }
-=== _ArriveAt(location) === 
+=== function _ArriveAt(location) === 
 ~SetLocation(location) // update curentlocation etc.
-{
-- location == LOC_ScotlandEntranceRoad:
-You arrive at scotland Entrance!
--> ScotlandEntranceRoad
-- location == LOC_EdanCastle:
-->  CastleEntrance
-- location == LOC_SampleCave:
--> SampleSampleCaveScene
-- location == LOC_SeaBreezePath:
--> SampleSeaBreesePathScene
 
-- else:
--> DONE// wsl willen we hier een of ander default. ik weet niet eens of deze "DONE"werkt, ik snap nog niet wanneer ik een DONE nodig heb vs een tunnel ("->->").
-}
 
 === RandomTravelEvent ===
 ->RandomEventsEdanArea->
@@ -245,31 +234,22 @@ You arrive at scotland Entrance!
    // he map will consist of a ink knot that contains choices to unlocked locations. All of these will be caught by Unity and displayed as visual items on a map screen, which is opened and closed as the knot is accessed and left.
    // The first time the player learns of a location, it is added to the map. But, it is only made available to travel to after they've visited it once before. And, all travel is locked during dialogue sections.
 
-=== function AllowMap === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
-/*
-Unfortunately. the format for properly including this option is a bit esoteric as of the time of writing (2023-12-24). It is as follows:
+=== AllowMap(-> returnTo) === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
 
-+  [{AllowMap()}] -> MapScreen(-> SceneToReturnTo) 
++  [{OpenMap()}] -> MapScreen(returnTo)
 
-"SceneToReturnTo" is the scene this choice is IN, i.e. the scene to return to after closing the map without traveling. 
-So you must copy past that whole line as a choice and replace the "SceneToReturnTo" bit with whatever knot you are making the choice from.
-*/
-
-\{UNITY:OpenMap\}
-
-=== MapScreen (-> returnTo) // the map knot. visit to open the map in unity. This knot should include all possible items on the player's map
+=== MapScreen(-> returnTo) // the map knot. visit to open the map in unity. This knot should include all possible items on the player's map
 ~ _OpenMap()
 + { HasVisited(LOC_EdanCastle)} [{_MapChoice(LOC_EdanCastle)}] 
-    -> TravelingTo(->CastleEntrance)
+    -> TravelingTo(LOC_EdanCastle, ->ScotlandEntranceRoad)->returnTo
 + { HasVisited(LOC_SampleCave)} [{_MapChoice(LOC_SampleCave)}] 
-    -> TravelingTo(->SampleSampleCaveScene)
+    -> TravelingTo(LOC_SampleCave, ->SampleSampleCaveScene)->returnTo
 + { HasVisited(LOC_SeaBreezePath)} [{_MapChoice(LOC_SeaBreezePath)}] 
-    -> TravelingTo(->SampleSeaBreesePathScene)
+    -> TravelingTo(LOC_SeaBreezePath, ->SampleSeaBreesePathScene)->returnTo
 + [\{UNITY:CloseMap\}]    
+    \{UNITY:CloseMap()\}
+-    ->->
 
-\{UNITY:CloseMap()\}
-    -> returnTo
-    
 === function OpenMap() // call to open the map screen in unity
 ~ _OpenMap()
     
@@ -279,7 +259,7 @@ So you must copy past that whole line as a choice and replace the "SceneToReturn
 EXTERNAL _OpenMap()
     
 === function _MapChoice(destination) === // used to present an inky choice that will be represented visually on a map in unity. (in ink it simply lists as a normal choice)
-\{MapChoice({destination})\}
+\{MapChoice({destination})\
 
   === Section_TrackInventory ===
   /* ---------------------------------
@@ -357,37 +337,27 @@ LIST Party = (Player), Alice, Robert
     ~ Party -= member
 {member} left the party.
 
-=== function AllowPartyChanges=== // including this in the list of choices allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
 
-
-/*
-Unfortunately. similarly to the map screen, the format for properly including this option is a bit esoteric as of the time of writing (2024-02-02). It is as follows:
-
-+  [{AllowPartyChanges()}] -> PartyScreen(-> SceneToReturnTo) ->
-
-"SceneToReturnTo" is the scene this choice is IN, i.e. the scene to return to after closing the party screen or going through the dialogues from it.
-So you must copy past that whole line as a choice and replace the "SceneToReturnTo" bit with whatever knot you are making the choice from.
-*/
-
-\{UNITY:OpenPartyScreen\}
+=== AllowPartyScreen(->returnTo) === // including this in the list of choices as a "thread statement" allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
++  [{OpenPartyScreen()}]    -> PartyScreen(returnTo)
 
 === function OpenPartyScreen() // call to open the map screen in unity
-~ _OpenMap()
+~ _OpenPartyScreen()
 
 === function _OpenPartyScreen() === // opens the map screen in unity
 \{UNITY:OpenPartyScreen()\}
 
 EXTERNAL _OpenPartyScreen()
 
-=== PartyScreen // the party knot. visit to open the party scren in unity. 
+=== PartyScreen(-> returnTo) // the party knot. visit to open the party scren in unity. 
 ~ _OpenPartyScreen()
 + { Party?Alice} [{_PartyChoice(Alice)}] 
-    ->AliceDialogue
+    ->AliceDialogue->returnTo
 + { Party?Robert} [{_PartyChoice(Robert)}] 
-    ->RobertDialogue
+    ->RobertDialogue->returnTo
 + [\{UNITY:ClosePartyScreen\}]    
     \{UNITY:ClosePartyScreen()\}
--    ->->
+-     (done) -> returnTo
     
 == AliceDialogue // wondering whether we wanna have these sections here or in a story ink. they are part of the system in a way but they will also be where we write personal interactions with the party members potentially. het wordt ook wel erg veel hier...
 "Alice..."
@@ -401,26 +371,28 @@ EXTERNAL _OpenPartyScreen()
 = Compliment
 + "I think you're doing great."
     "Cool thanks."
-    ->->
+-    ->->
++ "Cool face."
+    "Yeah thanks."
+-    ->->
     
 = Sample
 * Witty remark relevant to the thing we just witnessed.
     Fitting response.
-    ->->
+-    ->->
 * Another witty remark relevant to the other thing we just witnessed.
     Fitting response.
-    ->->
+-    ->->
 * -> 
     "Actually, I got nothing."
-    ->->
+-    ->->
     
 = Dismiss
 You sure?
     + (confirm)[Y]"I think you should just leave."
     -> Leaving
-    ->->
     + [N]"Nevermind"
-    ->->
+-    ->->
     
 = Leaving
     Alice is fucking pissed, dude.
@@ -436,7 +408,10 @@ You sure?
 = Compliment
 + "I think you're doing great."
     "Cool thanks."
-    ->->
+-    ->->
++ "Cool face."
+    "Yeah thanks."
+-    ->->
     
 = Dismiss
 You sure?
@@ -444,7 +419,7 @@ You sure?
     -> Leaving
     + [N]
     Ah, we cool then.
-    ->->
+-    ->->
 
 = Leaving
     Rob is okay with it.

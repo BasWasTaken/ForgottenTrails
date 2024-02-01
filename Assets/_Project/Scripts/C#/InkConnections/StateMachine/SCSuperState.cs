@@ -190,6 +190,8 @@ namespace VVGames.ForgottenTrails.InkConnections
                 });*/
 
                 // a close map function doesn't make sense, becausei nk only controls while it is being run! if it paused, it can't do anything.
+
+                story.BindExternalFunction("_OpenPartyScreen", () => Debug.LogError(new NotImplementedException()));
             }
 
             private InkListItem ConvertListToItem(InkList inkList)

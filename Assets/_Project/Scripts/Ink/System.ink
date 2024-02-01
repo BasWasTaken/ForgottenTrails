@@ -406,7 +406,7 @@ VAR AffRobert = 50
    -> DONE
    
    
-LIST Background = (none), BG_VaultHall, BG_VaultLibrary, BG_VaultHall2, BG_VaultOffice, BG_CastleGate // list of BackGrounds
+LIST Background = (none), BG_Road1, BG_VaultHall, BG_VaultLibrary, BG_VaultHall2, BG_VaultOffice, BG_CastleGate // list of BackGrounds
   
 === function FadeToImage(image, duration) // name of image and duration in seconds (e.g. 0.5)
     ~ Background = image //update background 
@@ -515,7 +515,7 @@ EXTERNAL _Ambiance_RemoveAll()
 ~_Ambiance_RemoveAll()
 ~Ambiance_Add(clip, volume)
 
-LIST Music = (none), theStreetsOfWhiteRun
+LIST Music = (none), theStreetsOfWhiteRun, TabiNoTochuu
 // Music. Handled with external function.
 === function Music_Play(clip, volume) // play new clip or adjust volume of existing clip
 ~ Music = clip

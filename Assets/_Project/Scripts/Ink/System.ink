@@ -208,8 +208,8 @@ You need food to survive idiot.
 - else:
         ~Print("Aborting traversal. Returning to previous location.")
     ~_ArriveAt(OriginLocation)
-    ->->
 }
+-    ->->
 === function _ArriveAt(location) === 
 ~SetLocation(location) // update curentlocation etc.
 
@@ -217,7 +217,7 @@ You need food to survive idiot.
 === RandomTravelEvent ===
 ->RandomEventsEdanArea->
 ~Print("A Random event happened!")
-->->
+- ->->
 /*Continue, or head back anyway?
     + [Continue]
         ->->
@@ -248,7 +248,7 @@ You need food to survive idiot.
     -> TravelingTo(LOC_SeaBreezePath, ->SampleSeaBreesePathScene)->returnTo
 + [\{UNITY:CloseMap\}]    
     \{UNITY:CloseMap()\}
--    ->->
+    ->->
 
 === function OpenMap() // call to open the map screen in unity
 ~ _OpenMap()

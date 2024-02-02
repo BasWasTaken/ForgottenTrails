@@ -9,7 +9,7 @@ INCLUDE BasTest.ink
 
 === Start ===
     + [Proceed with Vugs' sequence]
-    -> AliceEvent1
+    -> MerchantSiblings1
     + [Try Bas' Travel Example:]
     -> BasTravelTest
     + [Proceed to Character Creation]

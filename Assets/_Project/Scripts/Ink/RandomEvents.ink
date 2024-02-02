@@ -46,26 +46,27 @@ Once at the top, you spot the source: a cooking fire set by the roadside. A man 
                 *"I just really don't feel like dealing with people right now."
 
 =MerchantSiblings1a
-<- MerchantSiblings1aa
-<- UnprovokedAttackMerchants
-=MerchantSiblings1aa
-     {Knows(Eileen.Exists): test }
-        As you near a distance in which you would no longer need to shout, {players_gender == male:the woman}{players_gender == female:the man}{~!the man|the woman} speaks up: "Hello friend! How does Crìsdaen's wind blow?"
+{Knows(Eileen.Exists): test }
+    As you near a distance in which you would no longer need to shout, {players_gender == male:the woman}{players_gender == female:the man}{~!the man|the woman} speaks up: "Hello friend! How does Crìsdaen's wind blow?
+    - (test)
+        <- UnprovokedAttackMerchants(->test)
         ***Imply the road is safe.
         ->->
         ***Imply the road is dangerous
         ->->
         ***Keep ignoring them. 
         ->->
-
+        
+        
         //This is going to provide issues. Discuss for meeting.
-=UnprovokedAttackMerchants
+=UnprovokedAttackMerchants(->returnTo)
 //How to account for multiple traits? Say, weapon and ranged/melee?
 +[{ItemChoice(weapon)}]
 Your hand drifts to your weapon. For a moment you hesitate
     ++and you think the better of it. 
+    ->returnTo 
+    ++but then you strike.  
     ->DONE
-    ++but then you strike.       
 =MerchantSiblings1b
 ->->
 

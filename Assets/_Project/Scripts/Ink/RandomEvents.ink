@@ -7,8 +7,8 @@
 // Perhaps you could write/think of an example scenario where that would apply (such as a crumbling bridge or cave in) and then we can see what makes sense to us.
 ~ Party += Alice
 
-The road you're following steadily climbs a gentle hill. As you gaze over the hilltop, you see a small stream of smoke rising upward. 
-Once at the top, you spot the source: a cooking fire set by the roadside. A man seems to be stirring something in a pot, while a woman is tending to a horse that's lazily grazing on some grass. The animal is probably responsible for pulling the wagon, which currently stands parked a little ways off the road. 
+The road you're following steadily climbs a gentle hill. Gazing over the hilltop, you can see a small stream of smoke rising upward. 
+Once at the top, you spot the source: a cooking fire set by the roadside. A man seems to be stirring something in a pot, while a woman is tending to a horse that's lazily grazing on some grass. A wagon stands a little ways of the road, most likely the animal's burden. 
 
 *[Continue on your way]
     You decide to just continue on your way. However as you descend the hill, the woman spots you. She seems to say something to the man, prompting him to look up. Both give you a pleasant wave. 

@@ -15,9 +15,9 @@ namespace VVGames.ForgottenTrails
         [SerializeField] private GameObject ContextMenuObject;
         [SerializeField] private Button buttonPrefab;
 
-        private float timeLeft = 0;
-
         #endregion Fields
+
+        private float timeLeft = 0f;
 
         #region Public Methods
 
@@ -52,17 +52,14 @@ namespace VVGames.ForgottenTrails
             hoverText.SetActive(true);
             hoverText.transform.position = position;
             hoverText.GetComponentInChildren<TextMeshProUGUI>().text = text;
-            timeLeft = .5f;
         }
 
         public void ShowContextMenu(Vector2 position)
         {
-            if (hoverText.gameObject.activeSelf)
-            {
-                return; // stop if the hover tool is already active.
-            }
             ContextMenuObject.SetActive(true);
-            ContextMenuObject.transform.position = position;
+            ContextMenuObject.transform.position = hoverText.gameObject.activeSelf ? hoverText.transform.position : position;
+            RemoveHoverText(hoverText.GetComponentInChildren<TextMeshProUGUI>().text);
+            timeLeft = 1f;
         }
 
         public void RemoveHoverText(string text)
@@ -73,6 +70,11 @@ namespace VVGames.ForgottenTrails
                 hoverText.GetComponentInChildren<TextMeshProUGUI>().text = "";
                 hoverText.gameObject.SetActive(false);
             }
+        }
+
+        private void RemoveContextMenu()
+        {
+            ContextMenuObject.SetActive(false);
         }
 
         #endregion Public Methods
@@ -91,10 +93,19 @@ namespace VVGames.ForgottenTrails
         {
             if (ContextMenuObject != null)
             {
-                // Close context menu on right-click outside the UI element
-                if (Input.GetMouseButtonDown(1) && !IsMouseOverUIElement(ContextMenuObject.GetComponent<RectTransform>()))
+                if (timeLeft > 0)
                 {
-                    ContextMenuObject.SetActive(false);
+                    timeLeft -= Time.deltaTime; //tick
+                }
+
+                // if outside the UI element...
+                if (!IsMouseOverUIElement(ContextMenuObject.GetComponent<RectTransform>()))
+                {
+                    // if a second has passed or on right click, close the context menu
+                    if (timeLeft < 0 | Input.GetMouseButtonDown(1))
+                    {
+                        RemoveContextMenu();
+                    }
                 }
             }
         }

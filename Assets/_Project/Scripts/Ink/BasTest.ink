@@ -1,38 +1,12 @@
 // --------- Bas  ---------
 === BasTravelTest ===
-Blah Blah
-testt
-test2
-test3
-+ what goes wrong?
--> verder
-
-== verder
 ~Party_AddMember(Alice)
-+ add member?
-
--> verder1
-
-== verder1
-test4
 ~Party_AddMember(Robert)
-test5
-
-+ add another?
-
--> verder2
-
-== verder2
+//added party{stop}
 ~SetLocation(LOC_EdanCastle)
-
-+ set location?
-
--> verder4
-
-== verder4
-test6
+//settet location{stop}
 - (top)
-
+Hello player.
 {For sake of example, y|Y}ou are {currently|still} at {CurrentLocation}<>
 {
     - Party?Alice && Party?Robert:
@@ -44,10 +18,10 @@ test6
     - else:
     . Alone.
 }
+{stop}
+There will now be some choices.
 <-AllowPartyScreen(-> top)
 <-AllowMap(-> top)
-+ I wanna test the linebreaks
-    -> lineBreakTest
 -> DONE
     
 === lineBreakTest

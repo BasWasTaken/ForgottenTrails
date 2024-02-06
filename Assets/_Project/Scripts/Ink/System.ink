@@ -262,10 +262,10 @@ You need food to survive idiot.
 
 === AllowMap(-> returnTo) === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
 
-+  [{OpenMap()}] -> MapScreen(returnTo)
++  [\{UNITY:OpenMap\}] -> MapScreen(returnTo) //WITHOUT "()"
 
 === MapScreen(-> returnTo) // the map knot. visit to open the map in unity. This knot should include all possible items on the player's map
-~ _OpenMap()
+~ OpenMap()
 + { HasVisited(LOC_EdanCastle)} [{_MapChoice(LOC_EdanCastle)}] 
     -> TravelingTo(LOC_EdanCastle, ->ScotlandEntranceRoad)->returnTo
 + { HasVisited(LOC_SampleCave)} [{_MapChoice(LOC_SampleCave)}] 
@@ -274,7 +274,7 @@ You need food to survive idiot.
     -> TravelingTo(LOC_SeaBreezePath, ->SampleSeaBreesePathScene)->returnTo
 + [\{UNITY:CloseMap\}]    
     \{UNITY:CloseMap()\}
-    ->->
+-     (done) -> returnTo
 
 === function OpenMap() // call to open the map screen in unity
 ~ _OpenMap()
@@ -367,9 +367,8 @@ VAR Party = () // list of characters in party
 //System: {member} left the party.
 ~Print("{member} left the party.")
 
-
 === AllowPartyScreen(->returnTo) === // including this in the list of choices as a "thread statement" allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
-+  [{OpenPartyScreen()}]    -> PartyScreen(returnTo)
++  [\{UNITY:OpenPartyScreen\}] -> PartyScreen(returnTo) //WITHOUT "()"
 
 === function OpenPartyScreen() // call to open the map screen in unity
 ~ _OpenPartyScreen()

@@ -28,6 +28,17 @@ namespace VVGames.ForgottenTrails.InkConnections
                 Controller.InterfaceBroker.book.pages.partyPage.SetAsLastSibling();
                 Controller.InterfaceBroker.book.markers.partyMark.color = Color.clear;
                 Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
+
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text == "{UNITY:OpenPartyScreen}")
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);// hopelijk wordt ook dit niet dubbelop als je al van de visible optie komt.
+                        Controller.Story.Continue();
+                        Controller.InterfaceBroker.FindHiddenChoices();
+                        break;
+                    }
+                }
             }
 
             public override void OnUpdate()

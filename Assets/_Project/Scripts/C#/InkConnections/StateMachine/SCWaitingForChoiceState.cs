@@ -1,8 +1,8 @@
-using VVGames.Common;
 using Ink.Runtime;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using VVGames.Common;
 using Debug = UnityEngine.Debug;
 
 namespace VVGames.ForgottenTrails.InkConnections
@@ -85,11 +85,19 @@ namespace VVGames.ForgottenTrails.InkConnections
                         {
                             Choice choice = Controller.Story.currentChoices[i];
                             if (Controller.InterfaceBroker.TryAddHiddenChoice(choice)) { }
-                            else if (choice.text == "{UNITY:OpenMap}")
+                            else if (choice.text == "{UNITY:" +
+                                     "OpenMap" +
+                                     "}")
                             {
                                 //Controller.InterfaceBroker.book.markers.mapMark.GetComponent<Button>().interactable = true; // allow the use of the map button
                                 // nee, ik denk te moeilijk! dit hoeft niet de knop te enabelen, gewoon wanneer dit er is kan de speler als het goed is o pde knop drukken en gaan reizen, maar hij kan altidj drukken.
-                                Debug.LogWarning("Info: Map Travel Available (Bas has not yet put in a notification or whatever)");
+                                Debug.Log("Info: Map Travel Available (Bas has not yet put in a notification or whatever)");
+                            }
+                            else if (choice.text == "{UNITY:" +
+                                     "OpenPartyScreen" +
+                                     "}")
+                            {
+                                Debug.Log("Info: Party Discussion Available (Bas has not yet put in a notification or whatever)");
                             }
                             else
                             {

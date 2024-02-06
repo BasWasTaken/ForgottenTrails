@@ -1,11 +1,20 @@
 // --------- Bas  ---------
 === BasTravelTest ===
 ~SetLocation(LOC_EdanCastle)
-    For sake of example, you are currently at Edan Castle.
-    Say you choose to travel to the Scotland Entrance location:
-    + [You know what, I do choose to travel to Scotland!]
-    -> TravelingTo(LOC_ScotlandEntranceRoad)
-   
+    {For sake of example, y|Y}ou are {currently|still} at Edan Castle<>
+{
+    - Party?Alice && Party?Robert:
+    , together with Alice and Robert.
+    - Party?Alice:
+    , together with Alice.
+    - Party?Robert:
+    , together with Robert.
+    - else:
+    . Alone.
+}
+<-AllowPartyScreen(-> BasTravelTest)
+<-AllowMap(-> BasTravelTest)
+-> DONE
     
 === SampleSampleCaveScene
 You're in a cave now!
@@ -13,4 +22,9 @@ You're in a cave now!
 
 === SampleSeaBreesePathScene
 You're on a sea breeze path now! Whoo!
+-> DONE
+
+
+=== blahblah
+test
 -> DONE

@@ -767,7 +767,7 @@ RectTransform:
   m_Children:
   - {fileID: 1431292872}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -859,7 +859,7 @@ RectTransform:
   m_Children:
   - {fileID: 5633965167979026436}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1491,7 +1491,7 @@ RectTransform:
   m_Children:
   - {fileID: 1870545958}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2249,7 +2249,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 376688487}
   m_OnClick:
     m_PersistentCalls:
@@ -3100,7 +3100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22491254, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 37.49
       objectReference: {fileID: 0}
     - target: {fileID: 22491254, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3446,7 +3446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2527964009008988475, guid: bd8c16100dfde8b49ab52759514f4e7b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 22.885002
       objectReference: {fileID: 0}
     - target: {fileID: 2527964009008988475, guid: bd8c16100dfde8b49ab52759514f4e7b, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5717,7 +5717,7 @@ RectTransform:
   m_Children:
   - {fileID: 1178258167}
   m_Father: {fileID: 1458519075}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -6178,10 +6178,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1773213213}
-  - {fileID: 189748203}
   - {fileID: 192848685}
   - {fileID: 268175080}
   - {fileID: 1375451937}
+  - {fileID: 189748203}
   m_Father: {fileID: 275361435}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

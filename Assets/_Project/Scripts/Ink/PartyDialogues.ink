@@ -1,11 +1,11 @@
-// --------- Bas Section ---------
+// --------- Shared ---------
 === PartyDialogues(-> returnTo)
 + { Party?Alice} [{_PartyChoice(Alice)}] 
     ->AliceDialogue->returnTo
 + { Party?Robert} [{_PartyChoice(Robert)}] 
     ->RobertDialogue->returnTo
     
-// --------- Shared Section ---------
+// --------- Shared ---------
 == AliceDialogue
 "Alice..."
 + [Compliment]

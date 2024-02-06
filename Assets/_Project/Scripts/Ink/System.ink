@@ -1,5 +1,5 @@
 INCLUDE PartyDialogues.ink
-// --------- Bas  ---------
+// --------- Bas ---------
 === Section_Top ===
 /* ---------------------------------
     # Custom Features

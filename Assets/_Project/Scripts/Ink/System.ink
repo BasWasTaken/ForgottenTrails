@@ -1,3 +1,5 @@
+INCLUDE PartyDialogues.ink
+
 === Section_Top ===
 /* ---------------------------------
     # Custom Features
@@ -331,11 +333,13 @@ LIST Party = (Player), Alice, Robert
 
 === function Party_AddMember(member) // Add character to party
     ~ Party += member
-{member} joined the party.
+//System: {member} joined the party.
+~Print("{member} joined the party.")
     
 === function Party_RemoveMember(member) // Add character to party
     ~ Party -= member
-{member} left the party.
+//System: {member} left the party.
+~Print("{member} left the party.")
 
 
 === AllowPartyScreen(->returnTo) === // including this in the list of choices as a "thread statement" allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
@@ -349,83 +353,14 @@ LIST Party = (Player), Alice, Robert
 
 EXTERNAL _OpenPartyScreen()
 
+
 === PartyScreen(-> returnTo) // the party knot. visit to open the party scren in unity. 
 ~ _OpenPartyScreen()
-+ { Party?Alice} [{_PartyChoice(Alice)}] 
-    ->AliceDialogue->returnTo
-+ { Party?Robert} [{_PartyChoice(Robert)}] 
-    ->RobertDialogue->returnTo
+<- PartyDialogues(returnTo)
 + [\{UNITY:ClosePartyScreen\}]    
     \{UNITY:ClosePartyScreen()\}
 -     (done) -> returnTo
     
-== AliceDialogue // wondering whether we wanna have these sections here or in a story ink. they are part of the system in a way but they will also be where we write personal interactions with the party members potentially. het wordt ook wel erg veel hier...
-"Alice..."
-+ [Compliment]
-    ->Compliment
-+ [Dismiss this party member]
-    ->Dismiss
-+ [Remark on a thing that just happened.]
-    ->Sample
-    
-= Compliment
-+ "I think you're doing great."
-    "Cool thanks."
--    ->->
-+ "Cool face."
-    "Yeah thanks."
--    ->->
-    
-= Sample
-* Witty remark relevant to the thing we just witnessed.
-    Fitting response.
--    ->->
-* Another witty remark relevant to the other thing we just witnessed.
-    Fitting response.
--    ->->
-* -> 
-    "Actually, I got nothing."
--    ->->
-    
-= Dismiss
-You sure?
-    + (confirm)[Y]"I think you should just leave."
-    -> Leaving
-    + [N]"Nevermind"
--    ->->
-    
-= Leaving
-    Alice is fucking pissed, dude.
-    ~Party_RemoveMember(Alice)
-    ->->
-== RobertDialogue
-"Robbie..."
-+ [Compliment]
-    ->Compliment
-+ [Dismiss this party member]
-    ->Dismiss
-    
-= Compliment
-+ "I think you're doing great."
-    "Cool thanks."
--    ->->
-+ "Cool face."
-    "Yeah thanks."
--    ->->
-    
-= Dismiss
-You sure?
-    + (confirm)[Y]
-    -> Leaving
-    + [N]
-    Ah, we cool then.
--    ->->
-
-= Leaving
-    Rob is okay with it.
-    ~Party_RemoveMember(Robert)
-    But <>
-    -> AliceDialogue.Leaving
 
     
 === function _PartyChoice(character) === // used to present an inky choice that will be represented by a portrait in unity. in inky, it will just be an ormal option to click

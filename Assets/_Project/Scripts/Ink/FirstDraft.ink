@@ -10,8 +10,10 @@ INCLUDE BasTest.ink
 === Start ===
     + [Proceed with Vugs' sequence]
     -> CastleGatehouseCourtyard
-    + [Try Bas' Travel Example:]
+    + [Try Bas' Travel and party Example:]
     -> BasTravelTest
+    + [I wanna test the linebreaks]
+    -> lineBreakTest
     + [Proceed to Character Creation]
     -> Preamble
     

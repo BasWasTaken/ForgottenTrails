@@ -46,8 +46,6 @@ test6
 }
 <-AllowPartyScreen(-> top)
 <-AllowMap(-> top)
-+ I wanna test the linebreaks
-    -> lineBreakTest
 -> DONE
     
 === lineBreakTest
@@ -59,10 +57,17 @@ testStopSameLineA{stop}testStopSameLineB
 testLineBreakA
 
 testLineBreakB
+testLineBreaksA
+
+
+testLineBreaksB
+testBRA
+<br>
+testBRB
 testNativeGlueA<>
 testNativeGlueB
-testMyGlueA
-testMyGlueB{glue}
+testMyGlueA{glue}
+testMyGlueB
 
 testMyAfterGlueA
 {aglue}testMyAfterGlueB

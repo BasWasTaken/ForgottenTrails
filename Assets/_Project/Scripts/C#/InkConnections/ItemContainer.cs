@@ -25,6 +25,8 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
 
         #region Public Methods
 
+        private float activationDelay = .5f;
+
         public void Construct(InventoryItem inventoryItem)
         {
             definition = inventoryItem;
@@ -40,7 +42,7 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
         public void OnPointerEnter(PointerEventData eventData)
         {
             isHovered = true;
-            ContextMenu.Instance.ShowHoverText(eventData.position, definition.name);
+            activationDelay = .5f;
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -80,7 +82,19 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
 
         private void Update()
         {
-            if (!isHovered)
+            if (isHovered)
+            {
+                if (activationDelay > 0)
+                {
+                    activationDelay -= Time.deltaTime;
+                }
+                else if (activationDelay != -99)
+                {
+                    ContextMenu.Instance.ShowHoverText(Input.mousePosition, definition.name);
+                    activationDelay = -99;
+                }
+            }
+            else
             {
                 if (timeLeft > 0)
                 {

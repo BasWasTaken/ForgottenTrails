@@ -1,5 +1,6 @@
-using VVGames.Common;
+using Ink.Runtime;
 using UnityEngine;
+using VVGames.Common;
 
 namespace VVGames.ForgottenTrails.InkConnections
 {
@@ -23,6 +24,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 Controller.InterfaceBroker.book.pages.inventoryPage.SetAsLastSibling();
                 Controller.InterfaceBroker.book.markers.inventoryMark.color = Color.clear;
+                Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
             }
 
             public override void OnUpdate()
@@ -32,6 +34,15 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             public override void OnExit()
             {
+                foreach (var choice in Controller.Story.currentChoices)
+                {
+                    if (choice.text.Contains("{UNITY:CloseInventory}"))
+                    {
+                        Controller.Story.ChooseChoiceIndex(choice.index);
+                        Controller.Story.ContinueMaximally();
+                        break;
+                    }
+                }
                 Controller.InterfaceBroker.book.markers.inventoryMark.color = Color.white;
             }
 

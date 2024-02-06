@@ -7,7 +7,7 @@
 === MerchantSiblings1 ===
 // Note from Bas: This is all happening on the location "ontheroad". I think this is fine but I don't know what your plans are with regards to what should and should not be a location. Like we discussed yesterday, I can imagine if events reach a certain length, and/or there are characters that we want to be able to return to, it might make sense to make a dedicated location for them that we divert into, instead of having it all happen "on the road". But we'll have to think on how exactly to do that. It will involve changing the "TargetLocation" variable to a new location, but I don't know if it needs anything else. 
 // Perhaps you could write/think of an example scenario where that would apply (such as a crumbling bridge or cave in) and then we can see what makes sense to us.
-~ Party += Alice
+~Party_AddMember(Alice) // Bas@Vugs: replaced "Party += Alice" with the "add" function".~ Party += Alice
 
 The road you're following steadily climbs a gentle hill. Gazing over the hilltop, you can see a small stream of smoke rising upward. 
 Once at the top, you spot the source: a cooking fire set by the roadside. A man seems to be stirring something in a pot, while a woman is tending to a horse that's lazily grazing on some grass. A wagon stands a little ways of the road, most likely the animal's burden. 

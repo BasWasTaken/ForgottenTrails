@@ -1,3 +1,4 @@
+// --------- Bas  ---------
 === BasTravelTest ===
 ~SetLocation(LOC_EdanCastle)
     For sake of example, you are currently at Edan Castle.

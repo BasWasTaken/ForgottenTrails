@@ -33,10 +33,17 @@ testStopSameLineA{stop}testStopSameLineB
 testLineBreakA
 
 testLineBreakB
+testLineBreaksA
+
+
+testLineBreaksB
+testBRA
+<br>
+testBRB
 testNativeGlueA<>
 testNativeGlueB
-testMyGlueA
-testMyGlueB{glue}
+testMyGlueA{glue}
+testMyGlueB
 
 testMyAfterGlueA
 {aglue}testMyAfterGlueB

@@ -25,21 +25,18 @@ namespace VVGames.ForgottenTrails.UI
 
         public void FetchPartyMembers(InkList inkParty)
         {
-            Debug.Log("test");
             // destroy all buttons
             foreach (Button button in GetComponentsInChildren<Button>())
             {
                 Destroy(button.gameObject);
             }
 
-            Debug.Log("test");
             // make new
 
             foreach (InkListItem member in inkParty.Keys)
             {
                 AddPartyMember(member);
             }
-            Debug.Log("test");
         }
 
         public void AddPartyMember(InkListItem member)

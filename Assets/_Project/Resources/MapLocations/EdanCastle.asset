@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c92e65f6b635794c9cb2fc5aa62604f, type: 3}
   m_Name: EdanCastle
   m_EditorClassIdentifier: 
-  <CanonicalName>k__BackingField: EdanCastle
+  <CanonicalName>k__BackingField: LOC_EdanCastle
   description: 

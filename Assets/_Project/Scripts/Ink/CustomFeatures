@@ -1,4 +1,4 @@
-INCLUDE Core
+INCLUDE System_Core
 INCLUDE Lists
 INCLUDE Items
 INCLUDE Travel

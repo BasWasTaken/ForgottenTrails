@@ -6,6 +6,12 @@ LIST Locations = EdanCastle, roadToEdanCastleLoc, EdinburghCrossroadsLoc, dreamS
 // characters
 LIST Party = (Player), Alice, Robert
 
+//AffectionValues
+VAR AffEdgar = 50
+VAR AffHenry = 50
+VAR AffAlice = 50
+VAR AffRobert = 50
+
 // items and such
 LIST Items = knife, pot, rope, lantern, foragedMushrooms, wornSword
 
@@ -14,6 +20,9 @@ LIST Items = knife, pot, rope, lantern, foragedMushrooms, wornSword
 LIST Affordances = weapon, tool, cooking, cutting, stabbing, food
 
 ~ Affordances = LIST_ALL(Affordances)
+
+// starting inventory
+~ Inventory = (knife, rope, lantern, foragedMushrooms)
 
 // rations and money are currently not in inventory sytem:
 VAR travelRations = 107
@@ -32,4 +41,11 @@ LIST Ambiance = (none), chatter
 LIST Sfx = gong
 
 LIST Vox =  NA
+
+//Knowledge Chains
+LIST EdanCastleKnow = (none), Exists, IsCastleOnHill
+LIST Edgar = (none), Exists, Name
+LIST Henry = (none), Exists, Name
+
+
 

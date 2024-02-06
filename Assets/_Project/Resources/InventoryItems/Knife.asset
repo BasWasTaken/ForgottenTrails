@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8fa3f30abd33b44995a6e57906962f, type: 3}
   m_Name: Knife
   m_EditorClassIdentifier: 
-  <CanonicalName>k__BackingField: knife
-  description: 
+  description: Knifes are sharp.
   image: {fileID: 21300000, guid: 97e8425a8287a3441bb2b4359251e540, type: 3}
   coinValue: 0
   modifier: 0
+  <CanonicalName>k__BackingField: Knife
   <Affordaces>k__BackingField: 00000000020000000100000004000000

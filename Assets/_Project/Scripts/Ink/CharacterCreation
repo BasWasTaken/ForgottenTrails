@@ -1,11 +1,10 @@
+// --------- Vugs Section ---------
 === Preamble ===
-//Click to start.
-//* [Start!]
 -> Opening
 
 ===Opening===
-~ FadeToImage(vaultLibrary, 1)
-~ SetLocation(dreamState)
+~ FadeToImage(BG_VaultLibrary, 1)
+~ SetLocation(LOC_DreamState)
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark.
 {stop}
 It's a place that in an ancient past held a different name but you know it by two: "The Vault of Forgotten Books" and "Home". 
@@ -167,6 +166,7 @@ Right. A young {person} called {PlayerName}.
 -> Opening.Master
 
 = Master
+~ FadeToImage(BG_VaultOffice, 1)
 {Opening.MirrorY: As you lower the mirror in your hand}{Opening.MirrorN: As you leave the mirror on the floor} you hear a familiar voice call out to you. You turn to face it and find that the scenery has changed around you. The comforting smell of books remains but a small open window provides some fresh air. The office is just as you remember it: a small space that forms a stark contrast with the garden outside its window. Its floorboards are barely visible beneath the array of books, knick-knacks and tea cups that should have been returned to the kitchen days ago. You're sitting in a woodback chair. Across from you, behind a hardwooden desk, sits an elderly man. His kind eyes look into yours and you feel a bout of homesickness brewing in your stomach, although cannot fathom why. <br>
 He hands you a large, leatherbound tome: your journal. Your most important possession. If you can fill its pages with knowledge not yet held within the Vault, or document where and how you found a tome not yet present on its shelves, you can become like the man in front of you: a keeper. A guaranteed lifetime within these halls, curating knowledge and educating the next generation. If you can't...<br>
 You decide not to think about that. You give your master a <>
@@ -259,3 +259,4 @@ As you press on, your ears pick up another melody. Faintly at first, but with ev
 *...turn back towards the plains[].
 
 -> END
+// --------- End of Vugs Section ---------

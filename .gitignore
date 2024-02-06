@@ -73,3 +73,4 @@ crashlytics-build.properties
 
 # Personal additions:
 *.dwlt
+Assets/_Project/Resources/General/InkJSONs/FirstDraft.json

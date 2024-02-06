@@ -2667,7 +2667,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.15997115
+  m_Size: 0.15997113
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8387,6 +8387,7 @@ MonoBehaviour:
     TPStatus: 0
     _textSpeedPreset: 48
     <AutoAdvance>k__BackingField: 0
+    <RequireSpaceToContinue>k__BackingField: 0
     <StillPauseWhileSkipping>k__BackingField: 1
     <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
     <HistoryTextBox>k__BackingField: {fileID: 2084113306}

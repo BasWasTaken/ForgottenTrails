@@ -1,3 +1,4 @@
+// --------- Vugs  ---------
 === Awakening ===
 ~TimeOfDay = Dawn
 ~SetLocation(LOC_ScotlandEntranceRoad)

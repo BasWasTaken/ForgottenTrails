@@ -1,3 +1,4 @@
+// --------- Vugs ---------
 ===ScotlandEntranceRoad===
 ~SetLocation(LOC_ScotlandEntranceRoad)
 {PreviousLocation ? LOC_EdinburghCrossroads: Ah, a return visit! Too bad this isn't implemented yet.->ScotlandEntranceRoad.ReturnVisit|->ScotlandEntranceRoad.FirstVisit}

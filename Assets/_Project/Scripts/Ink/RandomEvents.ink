@@ -1,14 +1,16 @@
+// --------- Shared ---------
 === RandomEventsEdanArea ===
 //To do: add event content
 {~->MerchantSiblings1|->Deer|->Downpour} // NOTE FROM BAS: ! removed the "!" because they were not working as intended, i.e., they wer not marking these options as once-only, they were just showing up as text. Maybe "once-only"(!) and "shuffle"(~) are not compatible?
 
+// --------- Vugs  ---------
 === MerchantSiblings1 ===
 // Note from Bas: This is all happening on the location "ontheroad". I think this is fine but I don't know what your plans are with regards to what should and should not be a location. Like we discussed yesterday, I can imagine if events reach a certain length, and/or there are characters that we want to be able to return to, it might make sense to make a dedicated location for them that we divert into, instead of having it all happen "on the road". But we'll have to think on how exactly to do that. It will involve changing the "TargetLocation" variable to a new location, but I don't know if it needs anything else. 
 // Perhaps you could write/think of an example scenario where that would apply (such as a crumbling bridge or cave in) and then we can see what makes sense to us.
 ~ Party += Alice
 
-The road you're following steadily climbs a gentle hill. As you gaze over the hilltop, you see a small stream of smoke rising upward. 
-Once at the top, you spot the source: a cooking fire set by the roadside. A man seems to be stirring something in a pot, while a woman is tending to a horse that's lazily grazing on some grass. The animal is probably responsible for pulling the wagon, which currently stands parked a little ways off the road. 
+The road you're following steadily climbs a gentle hill. Gazing over the hilltop, you can see a small stream of smoke rising upward. 
+Once at the top, you spot the source: a cooking fire set by the roadside. A man seems to be stirring something in a pot, while a woman is tending to a horse that's lazily grazing on some grass. A wagon stands a little ways of the road, most likely the animal's burden. 
 
 *[Continue on your way]
     You decide to just continue on your way. However as you descend the hill, the woman spots you. She seems to say something to the man, prompting him to look up. Both give you a pleasant wave. 
@@ -74,47 +76,6 @@ Your hand drifts to your weapon. For a moment you hesitate
  =MerchantSiblingsAmbush
     [Insert Ambush Scene Here]
      ->->
-
-=== Deer ===
-TestDeer
-->->
-
-=== Downpour ===
-VAR RemainingRain = 0 
-~ RemainingRain = RANDOM(0,3)
-//Add companion dependent dialogue
-As you're traveling, you start to notice dark clouds gathering overhead.
-*Press on
-    It's probably nothing. And even so, a little rain can't stop you, right?
-    ->CheckRain
-*Seek shelter
-    You decide not to risk getting drenched and find some cover.
--> CheckRain->Shelter
-
-= CheckRain
-{
--RemainingRain>0:
-    Sure enough, before too long it starts too rain.
--else:
-    Soon enough the dark clouds part away.
-}
-    ->->
-
-= Shelter
-~RemainingRain--
-~AdvanceTime()
-
-    {
-    -RemainingRain>0:
-        The rain pours on.
-        + [Sit and wait]
-        ->Shelter
-        + [Decide to start up again despite the rain.]
-        ->->
-    -else:
-        After waiting a while, the rain lets up and you proceed with your journey.
-        ->->
-    }
     
 ==AliceEvent1==
 ~ FadeToImage(BG_Road1, 1)
@@ -274,3 +235,47 @@ She shakes her head, "There are a few more verses{AffAlice >=50:." And with a wi
 *[Continue your journey]
     You decide to carry on.
     ->->
+    
+    
+    
+// --------- Bas ---------
+=== Deer ===
+TestDeer
+->->
+
+=== Downpour ===
+VAR RemainingRain = 0 
+~ RemainingRain = RANDOM(0,3)
+//Add companion dependent dialogue
+As you're traveling, you start to notice dark clouds gathering overhead.
+*Press on
+    It's probably nothing. And even so, a little rain can't stop you, right?
+    ->CheckRain
+*Seek shelter
+    You decide not to risk getting drenched and find some cover.
+-> CheckRain->Shelter
+
+= CheckRain
+{
+-RemainingRain>0:
+    Sure enough, before too long it starts too rain.
+-else:
+    Soon enough the dark clouds part away.
+}
+    ->->
+
+= Shelter
+~RemainingRain--
+~Time_Advance() // ToDo Bas: use new time advancement feature to improve this
+
+    {
+    -RemainingRain>0:
+        The rain pours on.
+        + [Sit and wait]
+        ->Shelter
+        + [Decide to start up again despite the rain.]
+        ->->
+    -else:
+        After waiting a while, the rain lets up and you proceed with your journey.
+        ->->
+    }

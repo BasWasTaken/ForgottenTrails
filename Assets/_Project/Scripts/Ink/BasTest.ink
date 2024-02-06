@@ -1,7 +1,13 @@
 // --------- Bas  ---------
 === BasTravelTest ===
+~Party_AddMember(Alice)
+~Party_AddMember(Robert)
+//added party{stop}
 ~SetLocation(LOC_EdanCastle)
-    {For sake of example, y|Y}ou are {currently|still} at Edan Castle<>
+//settet location{stop}
+- (top)
+Hello player.
+{For sake of example, y|Y}ou are {currently|still} at {CurrentLocation}<>
 {
     - Party?Alice && Party?Robert:
     , together with Alice and Robert.
@@ -12,9 +18,30 @@
     - else:
     . Alone.
 }
-<-AllowPartyScreen(-> BasTravelTest)
-<-AllowMap(-> BasTravelTest)
+{stop}
+There will now be some choices.
+<-AllowPartyScreen(-> top)
+<-AllowMap(-> top)
 -> DONE
+    
+=== lineBreakTest
+testNormalA
+testNormalB
+testStopA{stop}
+testStopB
+testStopSameLineA{stop}testStopSameLineB
+testLineBreakA
+
+testLineBreakB
+testNativeGlueA<>
+testNativeGlueB
+testMyGlueA
+testMyGlueB{glue}
+
+testMyAfterGlueA
+{aglue}testMyAfterGlueB
++ Ok, Thanks
+-> BasTravelTest
     
 === SampleSampleCaveScene
 You're in a cave now!

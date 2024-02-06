@@ -65,6 +65,9 @@ namespace VVGames.ForgottenTrails.InkConnections
             public bool AutoAdvance { get; internal set; } = false;
 
             [field: SerializeField, BoxGroup("Settings")]
+            public bool RequireSpaceToContinue { get; internal set; } = false;
+
+            [field: SerializeField, BoxGroup("Settings")]
             public bool StillPauseWhileSkipping { get; internal set; } = true;
 
             public float TextSpeedMod { get; private set; }

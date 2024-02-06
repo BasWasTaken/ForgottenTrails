@@ -1,5 +1,5 @@
 INCLUDE PartyDialogues.ink
-// --------- Bas  ---------
+// --------- Bas ---------
 === Section_Top ===
 /* ---------------------------------
     # Custom Features
@@ -121,8 +121,8 @@ VAR DaysPassed = 0
   ----------------------------------*/
   -> DONE
   // Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
-  
-LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath
+
+LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath // Vugs may add items to this list.
 
 ~ Locations = LIST_ALL(Locations)  
     
@@ -262,10 +262,10 @@ You need food to survive idiot.
 
 === AllowMap(-> returnTo) === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
 
-+  [{OpenMap()}] -> MapScreen(returnTo)
++  [\{UNITY:OpenMap\}] -> MapScreen(returnTo) //WITHOUT "()"
 
 === MapScreen(-> returnTo) // the map knot. visit to open the map in unity. This knot should include all possible items on the player's map
-~ _OpenMap()
+~ OpenMap()
 + { HasVisited(LOC_EdanCastle)} [{_MapChoice(LOC_EdanCastle)}] 
     -> TravelingTo(LOC_EdanCastle, ->ScotlandEntranceRoad)->returnTo
 + { HasVisited(LOC_SampleCave)} [{_MapChoice(LOC_SampleCave)}] 
@@ -274,7 +274,7 @@ You need food to survive idiot.
     -> TravelingTo(LOC_SeaBreezePath, ->SampleSeaBreesePathScene)->returnTo
 + [\{UNITY:CloseMap\}]    
     \{UNITY:CloseMap()\}
-    ->->
+-     (done) -> returnTo
 
 === function OpenMap() // call to open the map screen in unity
 ~ _OpenMap()
@@ -294,11 +294,11 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword // existing items
+LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 
-LIST Affordances = weapon, tool, cooking, cutting, stabbing, food
+LIST Affordances = weapon, tool, cooking, cutting, stabbing, food // Vugs may add items to this list.
 
 ~ Affordances = LIST_ALL(Affordances) // Full list for Unity syncing. Note Bas: I should maybe prefix with underscore 
 
@@ -352,8 +352,10 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
    /* ---------------------------------
    #### List: Characters
    ----------------------------------*/
-LIST Party = (Player), Alice, Robert
+LIST PartyCandidates = Player, Alice, Robert // potential party members // Vugs may add items to this list.
+VAR Party = () // list of characters in party
 
+~ Party = PartyCandidates() // restrict to characters defined in list
 
 === function Party_AddMember(member) // Add character to party
     ~ Party += member
@@ -365,9 +367,8 @@ LIST Party = (Player), Alice, Robert
 //System: {member} left the party.
 ~Print("{member} left the party.")
 
-
 === AllowPartyScreen(->returnTo) === // including this in the list of choices as a "thread statement" allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
-+  [{OpenPartyScreen()}]    -> PartyScreen(returnTo)
++  [\{UNITY:OpenPartyScreen\}] -> PartyScreen(returnTo) //WITHOUT "()"
 
 === function OpenPartyScreen() // call to open the map screen in unity
 ~ _OpenPartyScreen()

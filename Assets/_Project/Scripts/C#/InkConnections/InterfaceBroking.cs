@@ -27,6 +27,8 @@ namespace VVGames.ForgottenTrails.InkConnections
             [SerializeField, Header("Scene References"), Required]
             public Inventory inventory;
 
+            public PartyScreen partyScreen;
+
             private StoryController Controller;
 
             #endregion Fields
@@ -162,6 +164,36 @@ namespace VVGames.ForgottenTrails.InkConnections
                 }
             }
 
+            public bool TryConverseMember(InkListItem member)
+            {
+                Choice discoveredChoice = null;
+                foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)
+                {
+                    if (keyValuePair.Value.Type == ChoiceType.Party)
+                    {
+                        string keyPhrase = keyValuePair.Key;
+                        Choice potentialChoice = keyValuePair.Value.Choice;
+                        if (member.itemName == keyPhrase)
+                        {
+                            discoveredChoice = potentialChoice;
+                            break;
+                        }
+                    }
+                }
+
+                if (discoveredChoice != null)
+                {
+                    Controller.partyState.DropCondition = true;
+                    OnClickChoiceButton(discoveredChoice);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Nope, that party member doesn't work!");
+                    return false;
+                }
+            }
+
             #endregion Public Methods
 
             #region Internal Methods
@@ -249,6 +281,16 @@ namespace VVGames.ForgottenTrails.InkConnections
             internal void CloseMap()
             {
                 Controller.mapState.DropCondition = true;
+            }
+
+            internal void OpenPartyScreen()
+            {
+                Controller.StateMachine.TransitionToState(Controller.partyState);
+            }
+
+            internal void ClosePartyScreen()
+            {
+                Controller.partyState.DropCondition = true;
             }
 
             #endregion Internal Methods

@@ -354,7 +354,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                         }
                         else
                         {
-                            if (Controller.TextProducer.EncounteredStop)// if we encounter a stop
+                            if (Controller.TextProducer.EncounteredStop | Controller.TextProducer.RequireSpaceToContinue)// if we encounter a stop
                             {
                                 Controller.TextProducer.EncounteredStop = false;
                                 // exit the loop or continue with a small delay

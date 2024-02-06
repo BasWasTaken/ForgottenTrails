@@ -5,6 +5,8 @@ INCLUDE BasTest.ink
 
 // starting inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
+~ Party = (Player)
+
 -> Start
 
 === Start ===

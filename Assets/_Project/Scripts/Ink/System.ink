@@ -121,8 +121,8 @@ VAR DaysPassed = 0
   ----------------------------------*/
   -> DONE
   // Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
-  
-LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath
+
+LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath // Vugs may add items to this list.
 
 ~ Locations = LIST_ALL(Locations)  
     
@@ -294,11 +294,11 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword // existing items
+LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 
-LIST Affordances = weapon, tool, cooking, cutting, stabbing, food
+LIST Affordances = weapon, tool, cooking, cutting, stabbing, food // Vugs may add items to this list.
 
 ~ Affordances = LIST_ALL(Affordances) // Full list for Unity syncing. Note Bas: I should maybe prefix with underscore 
 
@@ -352,8 +352,10 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
    /* ---------------------------------
    #### List: Characters
    ----------------------------------*/
-LIST Party = (Player), Alice, Robert
+LIST PartyCandidates = Player, Alice, Robert // potential party members // Vugs may add items to this list.
+VAR Party = () // list of characters in party
 
+~ Party = PartyCandidates() // restrict to characters defined in list
 
 === function Party_AddMember(member) // Add character to party
     ~ Party += member

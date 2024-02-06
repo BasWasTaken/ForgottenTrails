@@ -1,5 +1,6 @@
-using VVGames.Common;
+using Ink.Runtime;
 using UnityEngine;
+using VVGames.Common;
 
 namespace VVGames.ForgottenTrails.InkConnections
 {
@@ -26,6 +27,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 Controller.InterfaceBroker.book.pages.partyPage.SetAsLastSibling();
                 Controller.InterfaceBroker.book.markers.partyMark.color = Color.clear;
+                Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
             }
 
             public override void OnUpdate()

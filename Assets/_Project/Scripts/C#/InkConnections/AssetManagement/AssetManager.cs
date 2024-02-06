@@ -90,6 +90,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             ListDefinition items = null;
             ListDefinition affordances = null;
             ListDefinition locations = null;
+            ListDefinition partyCandidates = null;
             foreach (string inkListName in InkListNames)
             {
                 //Debug.LogFormat("Searching for {0}", inkListName);
@@ -108,6 +109,10 @@ namespace VVGames.ForgottenTrails.InkConnections
                     else if (inkListName == "Locations")
                     {
                         locations = listDefinition;
+                    }
+                    else if (inkListName == "PartyCandidates")
+                    {
+                        partyCandidates = listDefinition;
                     }
                     else
                     {
@@ -168,7 +173,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             if (error == "") message = "Succesfully fetched InkLists." + noError;
             else message = "ERROR IN ATTEMPTING TO LIST ASSETS" + error;
 
-            if (items == null | affordances == null | locations == null)
+            if (items == null | affordances == null | locations == null | partyCandidates == null)
             {
                 throw new NullReferenceException("one of the expected inklists was not set to be searched. \nLog:" + message);
             }

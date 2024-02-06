@@ -4,7 +4,7 @@
     ->AliceDialogue->returnTo
 + { Party?Robert} [{_PartyChoice(Robert)}] 
     ->RobertDialogue->returnTo
-    
+        
 // --------- Shared ---------
 == AliceDialogue
 "Alice..."

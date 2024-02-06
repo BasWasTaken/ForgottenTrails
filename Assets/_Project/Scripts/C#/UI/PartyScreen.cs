@@ -15,11 +15,9 @@ namespace VVGames.ForgottenTrails.UI
     {
         #region Fields
 
-        public Book book;
-
         [Header("Prefab")]
         [SerializeField]
-        private Button PartyMemberButton; // ToDO: replace with container holding scriptable object so you can include a portrait, etc.
+        private Button PartyMemberButton; // ToDo: replace with container holding scriptable object so you can include a portrait, etc.
 
         #endregion Fields
 
@@ -27,21 +25,21 @@ namespace VVGames.ForgottenTrails.UI
 
         public void FetchPartyMembers(InkList inkParty)
         {
-            Debug.Log(Time.time);
+            Debug.Log("test");
             // destroy all buttons
             foreach (Button button in GetComponentsInChildren<Button>())
             {
                 Destroy(button.gameObject);
             }
 
-            Debug.Log(Time.time);
+            Debug.Log("test");
             // make new
 
             foreach (InkListItem member in inkParty.Keys)
             {
                 AddPartyMember(member);
             }
-            Debug.Log(Time.time);
+            Debug.Log("test");
         }
 
         public void AddPartyMember(InkListItem member)

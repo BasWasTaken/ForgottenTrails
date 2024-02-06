@@ -2667,7 +2667,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1164061984}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.15997113
+  m_Size: 0.15997115
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5454,8 +5454,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 253.38196, y: 1102.9146}
-  m_SizeDelta: {x: 250.61609, y: 343.75208}
+  m_AnchoredPosition: {x: 0.000022888184, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1358846102
 GameObject:
@@ -5887,7 +5887,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee7956e37aaa544885ec025ca05075e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  book: {fileID: 275361440}
   PartyMemberButton: {fileID: 575780824247763585, guid: ed8d240cdffd3b44fbfaf11fbc3953a0, type: 3}
 --- !u!1 &1409877196
 GameObject:
@@ -8400,6 +8399,7 @@ MonoBehaviour:
     portraits: {fileID: 1206258461}
   <InterfaceBroker>k__BackingField:
     inventory: {fileID: 530457801}
+    partyScreen: {fileID: 1376392224}
     <ButtonPrefab>k__BackingField: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
     <book>k__BackingField: {fileID: 275361440}
     <FloatingMarker>k__BackingField: {fileID: 531542277}

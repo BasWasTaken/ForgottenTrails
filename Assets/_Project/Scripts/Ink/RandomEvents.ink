@@ -243,78 +243,139 @@ She shakes her head, "There are a few more verses{AffAlice >=50:." And with a wi
 TestDeer
 ->->
 
+VAR rainStart = -1
+VAR rainStop = -1
+=== function turnsTilRaining
+~temp turns = TURNS_SINCE(->Downpour) + ExtraTime
+{
+-rainStart < turns && turns < rainStop:
+0 // return 0 meaning it is now raining
+- rainStart > turns:
+{rainStart-turns} // return turns remaining until rain starts
+- turns > rainStop:
+{rainStop-turns}// return how many turns ago the rain stopped
+}
+
 === Downpour ===
-VAR RemainingRain = 0 
-VAR Weather = "dry"
-~ RemainingRain = RANDOM(0,LIST_COUNT(LIST_ALL(TimeOfDay)))
-~Print("rain set to last {RemainingRain} turns")
+- (calc) //set raining false
+~ rainStart = RANDOM(0, 28) // determine rain start 
+~ rainStop = RANDOM(rainStart, rainStart+28) // determine rain end
+~Print("Randomly determined rain will start {rainStart} turns from now, and last {rainStop-rainStart} turns")
+- (tell)
 As you're traveling, you start to notice dark clouds gathering overhead.
-*(noShelter)[Press on]
-    {!shelter:It's probably nothing. And even so, a|A} little rain can't stop you, right?
-    VAR tookShelter=false
-    -> checkRain
-*(shelter)[Seek shelter]
+
+*(dontSeekShelter)[Press on]
+    {seekShelter:A|It's probably nothing. And even so, a} little rain can't stop you, right?
+    VAR shelterFound = false
+    -> pressOn
+*(seekShelter)[Seek shelter]
     You decide not to risk getting drenched and find some cover. 
     VAR shelterDistance = 0
     ~ shelterDistance = RANDOM(0,2)
-    -> lookForShelter->checkRain
+    -> lookForShelter
 
+= pressOn
++ {turnsTilRaining>0} [stubbornly keep walking] You stubbornly keep walking.
+    ->checkTime->pressOn
++ {turnsTilRaining==0} [live with your decision] You stubbornly keep walking.
+    ->-> // escape!
++ {turnsTilRaining<0} [keep walking but now you're dry]
+    ->-> // escape!
 
-= passTime
-
-{- tookShelter && !foundShelter:
-{lookForShelter}
-}
-~shelterDistance-=1
-~Time_Advance() 
-~RemainingRain--
-- (checkRain)
-    {
-    -RemainingRain>0:
-        ~Weather = "raining"
-        {Sure enough, before too long it starts too rain.|The rain pours on.}
-    -else:
-        ~Weather= "dry"
-        {TURNS_SINCE(->Start)<1:Soon enough|Finally} the dark clouds part away.
-    }
-
-= lookForShelter
+// now keep redirectinguntil the rain is passed or we give up, and at that point, continue out of the tunnel back to the travel
+VAR i = 0
+= checkTime
 {
-    - shelterDistance<=0:
-    -> foundShelter
-    - else:
-    You {|still} can't find any decent cover to shield you from the rain {Weather=="rainig":drenching your clothes|looming overhead}
+-i>7:
+~Time_Advance()
+~i=0
+- else:
+~i ++
 }
-+ [keep searching]
-    ->passTime->
-+ [Give up and continue your journey]
-    ->noShelter
+-(describeWeather)
+{
+- turnsTilRaining>0:
+    Skies go {|ever} darker...
+- turnsTilRaining == 0:
+    {Sure enough, it starts too rain.|The rain pours on.}
+- turnsTilRaining<0:
+    {The rain lets up.|The air feels damp from the {recent|} rain.}
+}
 
-= foundShelter
-You {TURNS_SINCE(->shelter)>0:finally} find some shelther: ->naturalShelter
-Grateful for the little cover you found, you   
+-(describeSituation)
+{
+- shelterFound:
+->WaitInShelter
+- seekShelter && !dontSeekShelter:
+->lookForShelter
+- else:
+    {
+    - seekShelter && dontSeekShelter:
+    (if only you had not given up on shelter)
+    - else:
+    (if only you had found shelter)
+    }
+(describe whether you are wet or not.)
+}
+->-> // does this go to press on?
+
+
+= lookForShelter // go to checkrain
+{ 
+    - shelterDistance<=0:
+    -> findShelter
+    - else:
+    ~shelterDistance-=1
+    You {|still} can't find any decent cover to shield you from the rain {turnsTilRaining>0:looming overhead|drenching your clothes}
+}
+
++ [keep searching]
+    ->checkTime
++ [Give up and continue your journey]
+    ->dontSeekShelter // go to the press on option anyway
+    
+= findShelter
+~ shelterFound = true
+You {TURNS_SINCE(->seekShelter)>1:finally} find some shelther: (describe shelter)//REPLACE WITH ->naturalShelter
+- (inShelter)
+Grateful for the little cover you found, you{glue}
 - (rest)
 * (backpackoff) [Take of your backpack]
-    take of your pack ->rest
+    take of your pack{glue} ->rest
 * (comfortable)[Find a comfortable position]
     ** {backpackoff}[Lie down on the soft moss]
-    lie down on the soft moss, ->rest
-    ** [Sit down against <a surface depending on the shelter>]
-    sit down, lean back,->rest
+    lie down on the soft moss,{glue} ->rest
+    ** [Sit down against (a surface depending on the shelter)]
+    sit down, lean back,{glue}->rest
 + {comfortable}[rest your eyes]
-    and rest your eyes, ->passTime
+    and rest your eyes. ->checkTime
 + [Wait]
-    {|and} wait. ->passTime
-+ {TURNS_SINCE(->rest)>0} [Give up and continue your journey]
-    ->noShelter
-    
-= waiting
-->passTime->
+    {|and} wait. ->checkTime
++ {!comfortable} [change your mind and continue your journey]
+    ->dontSeekShelter
+  
+= WaitInShelter
+You are in your shelter.
+    + {turnsTilRaining>=0}[continue waiting]
+        VAR ExtraTime = 0 
+        ++[wait just a few minutes]
+        ~ ExtraTime+=1
+        ->checkTime
+        ++[zone out for a while]
+        ~ ExtraTime+=RANDOM(3, 6)
+        ->checkTime
+        ++[take a nap]
+        ~ ExtraTime+=RANDOM(8, 36)
+        ->checkTime
+    * {turnsTilRaining>=0} [Give up and continue your journey]
+        ->dontSeekShelter
+    * {turnsTilRaining<0} [Gather your things and set out.]
     After waiting a while, the rain lets up and you proceed with your journey.
-    * [continue waiting]
-        ->passTime
-    + [Give up and continue your journey]
-        ->noShelter
+    - ->->
+// WIP UNDER THIS LINE ______
+
+
+    
     
 
 
@@ -329,7 +390,7 @@ Grateful for the little cover you found, you
 
 == Overhang
 VAR Shelter = ->Overhang
-A nearby mountainside offers a bit of dry soil by way of an overhang a few meters off the ground. It doesn't look like the most comfortable place to pass the time, but anything beats getting soaked. You {Weather=="raining":quickly} make your way over to the rocky wall. 
+A nearby mountainside offers a bit of dry soil by way of an overhang a few meters off the ground. It doesn't look like the most comfortable place to pass the time, but anything beats getting soaked. {turnsTilRaining<2:Feeling the clouds grow thicker, you quickly|You} make your way over to the rocky wall. 
 * [Enter]
 Taking care not to hit your head on the ceiling, which at points is rather closer to the ground then you hoped for, you squeeze your way into your dry haven. 
 {

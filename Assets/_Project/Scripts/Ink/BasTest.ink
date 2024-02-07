@@ -21,7 +21,7 @@ Hello player.
 There will now be some choices.
 <-AllowPartyScreen(-> top)
 <-AllowMap(-> top)
-* Please show me a random travel event. -> Downpour -> top
+* Please show me a travel event. -> Downpour -> TravelingTo(LOC_EdanCastle, ->ScotlandEntranceRoad)->top
 -> DONE
     
 === lineBreakTest

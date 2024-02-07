@@ -21,6 +21,9 @@ INCLUDE PartyDialogues.ink
    ~ list -= x 
    ~ return x
 
+=== function came_from(-> x)
+	~ return TURNS_SINCE(x) == 0
+
   === Section_TrackKnowledge ===
   /* ---------------------------------
    ### System: Incremental knowledge tracking.

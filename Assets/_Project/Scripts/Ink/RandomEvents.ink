@@ -1,7 +1,7 @@
 // --------- Shared ---------
 === RandomEventsEdanArea ===
 //To do: add event content
-{~->MerchantSiblings1|->Deer|->Downpour} // NOTE FROM BAS: ! removed the "!" because they were not working as intended, i.e., they wer not marking these options as once-only, they were just showing up as text. Maybe "once-only"(!) and "shuffle"(~) are not compatible?
+{~->MerchantSiblings1|->Deer|->Downpour} 
 
 // --------- Vugs  ---------
 === MerchantSiblings1 ===
@@ -245,37 +245,109 @@ TestDeer
 
 === Downpour ===
 VAR RemainingRain = 0 
-~ RemainingRain = RANDOM(0,3)
-//Add companion dependent dialogue
+VAR Weather = "dry"
+~ RemainingRain = RANDOM(0,LIST_COUNT(LIST_ALL(TimeOfDay)))
+~Print("rain set to last {RemainingRain} turns")
 As you're traveling, you start to notice dark clouds gathering overhead.
-*Press on
-    It's probably nothing. And even so, a little rain can't stop you, right?
-    ->CheckRain
-*Seek shelter
-    You decide not to risk getting drenched and find some cover.
--> CheckRain->Shelter
+*(noShelter)[Press on]
+    {!shelter:It's probably nothing. And even so, a|A} little rain can't stop you, right?
+    VAR tookShelter=false
+    -> checkRain
+*(shelter)[Seek shelter]
+    You decide not to risk getting drenched and find some cover. 
+    VAR shelterDistance = 0
+    ~ shelterDistance = RANDOM(0,2)
+    -> lookForShelter->checkRain
 
-= CheckRain
-{
--RemainingRain>0:
-    Sure enough, before too long it starts too rain.
--else:
-    Soon enough the dark clouds part away.
+
+= passTime
+
+{- tookShelter && !foundShelter:
+{lookForShelter}
 }
-    ->->
-
-= Shelter
+~shelterDistance-=1
+~Time_Advance() 
 ~RemainingRain--
-~Time_Advance() // ToDo Bas: use new time advancement feature to improve this
-
+- (checkRain)
     {
     -RemainingRain>0:
-        The rain pours on.
-        + [Sit and wait]
-        ->Shelter
-        + [Decide to start up again despite the rain.]
-        ->->
+        ~Weather = "raining"
+        {Sure enough, before too long it starts too rain.|The rain pours on.}
     -else:
-        After waiting a while, the rain lets up and you proceed with your journey.
-        ->->
+        ~Weather= "dry"
+        {TURNS_SINCE(->Start)<1:Soon enough|Finally} the dark clouds part away.
     }
+
+= lookForShelter
+{
+    - shelterDistance<=0:
+    -> foundShelter
+    - else:
+    You {|still} can't find any decent cover to shield you from the rain {Weather=="rainig":drenching your clothes|looming overhead}
+}
++ [keep searching]
+    ->passTime->
++ [Give up and continue your journey]
+    ->noShelter
+
+= foundShelter
+You {TURNS_SINCE(->shelter)>0:finally} find some shelther: ->naturalShelter
+Grateful for the little cover you found, you   
+- (rest)
+* (backpackoff) [Take of your backpack]
+    take of your pack ->rest
+* (comfortable)[Find a comfortable position]
+    ** {backpackoff}[Lie down on the soft moss]
+    lie down on the soft moss, ->rest
+    ** [Sit down against <a surface depending on the shelter>]
+    sit down, lean back,->rest
++ {comfortable}[rest your eyes]
+    and rest your eyes, ->passTime
++ [Wait]
+    {|and} wait. ->passTime
++ {TURNS_SINCE(->rest)>0} [Give up and continue your journey]
+    ->noShelter
+    
+= waiting
+->passTime->
+    After waiting a while, the rain lets up and you proceed with your journey.
+    * [continue waiting]
+        ->passTime
+    + [Give up and continue your journey]
+        ->noShelter
+    
+
+
+
+
+
+    
+== naturalShelter
+//ToDO: make this dependent on environment
+{~->Overhang|->Leaves|->Cave}
+->->
+
+== Overhang
+VAR Shelter = ->Overhang
+A nearby mountainside offers a bit of dry soil by way of an overhang a few meters off the ground. It doesn't look like the most comfortable place to pass the time, but anything beats getting soaked. You {Weather=="raining":quickly} make your way over to the rocky wall. 
+* [Enter]
+Taking care not to hit your head on the ceiling, which at points is rather closer to the ground then you hoped for, you squeeze your way into your dry haven. 
+{
+-LIST_COUNT(Party)>2:
+You help your companions in as well, although each subsequent fellow makes the room less and less comfortable.
+-LIST_COUNT(Party)>1:
+You help your companion in as well.
+- else:
+You are glad to be on your own here, as you doubt this place would have accomodated any more travelers.
+} 
+->->
+== Leaves
+~Shelter = ->Leaves
+Some big ol' trees provide some meager cover against the elements.
+//ToDoBas: elaborate
+->->
+== Cave
+~Shelter = ->Cave
+You find a cave to hide in.
+//ToDoBas: elaborate
+->->

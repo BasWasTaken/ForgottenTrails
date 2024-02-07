@@ -626,6 +626,19 @@ VAR aglue = "\{aglue\}" // used to glue this to previous line
 === function isAre(list)
 	{LIST_COUNT(list) == 1:is|are}
 
+=== function listWithCommas(list, if_empty)
+    {LIST_COUNT(list):
+    - 2:
+            {LIST_MIN(list)} and {listWithCommas(list - LIST_MIN(list), if_empty)}
+    - 1:
+            {list}
+    - 0:
+            {if_empty}
+    - else:
+              {LIST_MIN(list)}, {listWithCommas(list - LIST_MIN(list), if_empty)}
+    }
+
+
 
 VAR PlayerName = "PlayerName"
 

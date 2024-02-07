@@ -18,10 +18,10 @@ Hello player.
     - else:
     . Alone.
 }
-{stop}
 There will now be some choices.
 <-AllowPartyScreen(-> top)
 <-AllowMap(-> top)
+* Please show me a random travel event. -> Downpour -> top
 -> DONE
     
 === lineBreakTest

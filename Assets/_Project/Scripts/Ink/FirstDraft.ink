@@ -13,7 +13,7 @@ INCLUDE EdanInn.ink
 
 === Start ===
     + [Proceed with Vugs' sequence]
-    -> CastleGatehouseCourtyard
+    -> EdanInn
     + [Try Bas' Travel and party Example:]
     -> BasTravelTest
     + [I wanna test the linebreaks]

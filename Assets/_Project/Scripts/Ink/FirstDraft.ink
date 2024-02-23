@@ -2,6 +2,8 @@
 INCLUDE System.ink
 INCLUDE Stories
 INCLUDE BasTest.ink
+INCLUDE EdanInn.ink
+
 
 // starting inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)

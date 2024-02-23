@@ -62,11 +62,16 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
 //Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
 // Bas: Absoluut, laat maar weten. 
 // Overigens is dit trouwens een voorbeeld van iets dat me misschien handig lijkt om in een andere file te defineren: jij zult wsl veel nieuwe knowledge chains aan moeten maken, en dan is het miss fijn als je niet steeds dit hele systeem document door hoef te spitten. (Idem voor items etc.)
+// Vugs: dit wordt nu al irritant idd nu ik er voor de eerste keer echt mee bezig ben xD
 LIST EdanCastleKnow = (none), Exists, IsCastleOnHill // wat is dit nou weer voor een verschikkelijke variabelnaam die ik heb gemaakt wtf
 LIST Edgar = (none), Exists, Name
 LIST Henry = (none), Exists, Name
 LIST Tomas = (none), Exists, Name
 LIST Eileen = (none), Exists, Name
+//I keep running into the issue that you can't give the same name to things that have already been used elsewhere, even in different functions or as the variable instead of the variable name. You seem to have fixed this, how?
+//LIST Alice = (none), Exists, Name
+LIST Rubert = (none), Exists, Name
+LIST Edie = (none), Exists, Name
     
  === Section_Extended ===
  /* ---------------------------------
@@ -84,6 +89,7 @@ LIST Eileen = (none), Exists, Name
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
 //@Vugs: thoughts on the above? Do you agree with these parts of day, or should Night be considered part of the next day or split up?
+//@Bas: This looks good to me! 
 
 VAR DaysPassed = 0
 
@@ -116,7 +122,9 @@ VAR DaysPassed = 0
 }
 
 
-
+=== Section_TrackWeather ===
+LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
+-> DONE
 
   === Section_TrackLocations ===
   /* ---------------------------------
@@ -297,7 +305,7 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword // existing items // Vugs may add items to this list.
+LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 
@@ -440,7 +448,7 @@ VAR AffEdgar = 50
 VAR AffHenry = 50
 VAR AffAlice = 50
 VAR AffRobert = 50
-  
+VAR AffEdie = 50  
   
   
   === Section_Effects ===

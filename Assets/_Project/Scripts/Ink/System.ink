@@ -337,12 +337,9 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
 === function Item_Remove(item)
 ~ _Item_Remove(item)
 
-=== function Item_Consume() // remove item that was just used
+=== function Item_RemoveLastUsed() // remove item that was just used
 ~ Item_Remove(UsedItem)
 
-=== function Item_UseAndRemove(item)
-~ UsedItem = item
-~ Item_Consume()
   
   
   === Section_TrackParty ===
@@ -382,7 +379,7 @@ VAR Party = () // list of characters in party
 EXTERNAL _OpenPartyScreen()
 
 
-=== PartyScreen(-> returnTo) // the party knot. visit to open the party scren in unity. 
+=== PartyScreen(-> returnTo) // the party knot. visit to open the party screen in unity. 
 ~ _OpenPartyScreen()
 <- PartyDialogues(returnTo)
 + [\{UNITY:ClosePartyScreen\}]    
@@ -413,7 +410,7 @@ EXTERNAL _OpenPartyScreen()
 
 LIST Attitudes = devoted = 100, alligned = 75, friendly = 60, ambivalent = 50, begrudging = 40, hostile = 25, spiteful = 0
 
-=== function GetAttitude(value) ===
+=== function ConvertAttitude(value) ===
 {
 -   value >= LIST_VALUE(devoted):
     ~ return devoted
@@ -430,6 +427,7 @@ LIST Attitudes = devoted = 100, alligned = 75, friendly = 60, ambivalent = 50, b
 -   else:
     ~ return spiteful
 }
+
   
   
    /* ---------------------------------
@@ -626,19 +624,19 @@ VAR aglue = "\{aglue\}" // used to glue this to previous line
   // 
 
 
-=== function isAre(list)
+=== function IsAre(list)
 	{LIST_COUNT(list) == 1:is|are}
 
-=== function listWithCommas(list, if_empty)
+=== function ListWithCommas(list, if_empty)
     {LIST_COUNT(list):
     - 2:
-            {LIST_MIN(list)} and {listWithCommas(list - LIST_MIN(list), if_empty)}
+            {LIST_MIN(list)} and {ListWithCommas(list - LIST_MIN(list), if_empty)}
     - 1:
             {list}
     - 0:
             {if_empty}
     - else:
-              {LIST_MIN(list)}, {listWithCommas(list - LIST_MIN(list), if_empty)}
+              {LIST_MIN(list)}, {ListWithCommas(list - LIST_MIN(list), if_empty)}
     }
 
 

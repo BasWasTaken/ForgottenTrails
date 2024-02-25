@@ -2,6 +2,8 @@
 INCLUDE System.ink
 INCLUDE Stories
 INCLUDE BasTest.ink
+INCLUDE EdanInn.ink
+
 
 // starting inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
@@ -11,7 +13,7 @@ INCLUDE BasTest.ink
 
 === Start ===
     + [Proceed with Vugs' sequence]
-    -> CastleGatehouseCourtyard
+    -> EdanInn
     + [Try Bas' Travel and party Example:]
     -> BasTravelTest
     + [I wanna test the linebreaks]

@@ -87,7 +87,7 @@ You open your mouth to speak, but before you get any words out Alice's humming t
 You decide not to break the silence. Whether she sees this as approval of her humming or another silence to fill you do not know. Regardless, she begins to add words to the song. 
 ->TravelersSong1A
 ==TravelersSong1A==
-~ _Music_Play(TabiNoTochuu, 1)
+~ Music_Play(TabiNoTochuu, 1)
 As I wander down
 this endless road,
 on a journey all alone.
@@ -108,8 +108,7 @@ and I sang along:
 there stands a tower made of gold,
 where a Northern queen blessed the moon 
 and received blackened keys threefold"
-//I don't think I understand how to stop the music lol
-~ _Music_Play(Music.none, 0)
+~ Music_Stop()
 
 Her song reaches a small crescendo, which she seemingly deems a good point to stop her performance. 
 

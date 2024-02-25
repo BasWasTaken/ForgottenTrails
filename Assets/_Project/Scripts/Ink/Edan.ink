@@ -86,21 +86,10 @@ You decide to leave and take the path back down the hill.
 *[Wait]
 
 === CastleGatehouseCourtyard ===
-~ Time_AdvanceUntil(Dawn)
-//Vugs: I'm 100% certain I'm using the wrong syntax for the line below, but unsure how to fix. @Bas
-//Bas @Vugs: Not sure if you're talking about the TimeOfDay syntax, or the ink if-statements. 
-// I don't think you can say "variable == value1 or value2 or value3", you'd have to say "variable == value1 or variable == value2 or variable == value3".But, lists assume an additive structure, meaning you can instead use "greater than", "smaller than", etc. (Here we consider the day to start at dawn and end at night.)
-// Ik heb die hieronder toegepast. Treft dit wat je bedoelde, of had je het ergens anders over?
-//  I've also changed the above line to use a new function for passing time of day until a specific point, instead of setting it manually. The reason for this is that this function also ticks 1 day in the variable that tracks how many in-game days have passed since the start of the story. If by the way you don't necessarily want the time to advance if it is already at the appropriate time, use "waituntil"
-// I don't see anything else wrong with the broader if-statement at first glance but could be missing something.
-{On the other side of the gate you find yourself standing in a small courtyard. Directly across from you the road continues at a steady incline and further into the settlement. The castle town's battlements stand firm to your left and right{TimeOfDay >= Dusk:, illuminated by flickering torchlight.|. You see one or two other{TimeOfDay == Dawn: early} travelers passing through.}| You find yourself in the courtyard next to the entrance gate. {TimeOfDay >= Dusk: The torchlight from the battlements casts a pleasant glow.}}
+{On the other side of the gate you find yourself standing in a small courtyard. Directly across from you the road continues at a steady incline and further into the settlement. The castle town's battlements stand firm to your left and right{TimeOfDay >= Dusk and TimeOfDay <= Night:, illuminated by flickering torchlight.|. You see one or two other{TimeOfDay == Dawn: early} travelers passing through.}| You find yourself in the courtyard next to the entrance gate. {TimeOfDay >= Dusk and TimeOfDay <= Night: The torchlight from the battlements casts a pleasant glow.}}
 +[Follow the road into town]
 //{TimeOfDay == Night: The light of {MetEdgar:Edgar's| the guard's} lamp quickly fades as you make your way up the steps, {Inventory!?Lantern:and in the dark you nearly take a tumble.}{Inventory?Lantern: but you have your own light to guide you.}}
-//Vugs: this functionality is gone I think in the new item system. Any way to passively use items? @Bas
-//Bas@Vugs: You can check wether the player has an item in inventory by checking "Inventory?ItemLantern" or "Inventory has ItemLantern". This could be used for passive/automatic item useage. Applied above.
-// This does not remove the item from inventory or use any Unity inventory UI. Which, if I understand you correctly, I believe is what you want in this case.
-// If you do want to remove the item from inventory manually, you can call "Item_Remove(item)". 
-// There is currently not a way to "use" an item via ink without breaking it, and I don't think we miss it at the moment? But if you do need that as some point (e.g. to fascilitate a durability system), that is something I could implement. 
+//Vugs: fix dit met een variable voor light source aan/uit
 ->EdanTownSquare
 +[Approach the guardhouse]
 -> Guardhouse

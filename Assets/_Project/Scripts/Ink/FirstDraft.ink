@@ -2,16 +2,22 @@
 INCLUDE System.ink
 INCLUDE Stories
 INCLUDE BasTest.ink
+INCLUDE EdanInn.ink
+
 
 // starting inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
+~ Party = (Player)
+
 -> Start
 
 === Start ===
     + [Proceed with Vugs' sequence]
-    -> CastleGatehouseCourtyard
-    + [Try Bas' Travel Example:]
+    -> EdanInn
+    + [Try Bas' Travel and party Example:]
     -> BasTravelTest
+    + [I wanna test the linebreaks]
+    -> lineBreakTest
     + [Proceed to Character Creation]
     -> Preamble
     

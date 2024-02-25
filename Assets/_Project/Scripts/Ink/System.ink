@@ -1,4 +1,5 @@
-// --------- Bas  ---------
+INCLUDE PartyDialogues.ink
+// --------- Bas ---------
 === Section_Top ===
 /* ---------------------------------
     # Custom Features
@@ -19,6 +20,9 @@
    ~ temp x = LIST_MIN(list) 
    ~ list -= x 
    ~ return x
+
+=== function came_from(-> x)
+	~ return TURNS_SINCE(x) == 0
 
   === Section_TrackKnowledge ===
   /* ---------------------------------
@@ -58,11 +62,16 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
 //Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
 // Bas: Absoluut, laat maar weten. 
 // Overigens is dit trouwens een voorbeeld van iets dat me misschien handig lijkt om in een andere file te defineren: jij zult wsl veel nieuwe knowledge chains aan moeten maken, en dan is het miss fijn als je niet steeds dit hele systeem document door hoef te spitten. (Idem voor items etc.)
+// Vugs: dit wordt nu al irritant idd nu ik er voor de eerste keer echt mee bezig ben xD
 LIST EdanCastleKnow = (none), Exists, IsCastleOnHill // wat is dit nou weer voor een verschikkelijke variabelnaam die ik heb gemaakt wtf
 LIST Edgar = (none), Exists, Name
 LIST Henry = (none), Exists, Name
 LIST Tomas = (none), Exists, Name
 LIST Eileen = (none), Exists, Name
+//I keep running into the issue that you can't give the same name to things that have already been used elsewhere, even in different functions or as the variable instead of the variable name. You seem to have fixed this, how?
+//LIST Alice = (none), Exists, Name
+LIST Rubert = (none), Exists, Name
+LIST Edie = (none), Exists, Name
     
  === Section_Extended ===
  /* ---------------------------------
@@ -80,6 +89,7 @@ LIST Eileen = (none), Exists, Name
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
 //@Vugs: thoughts on the above? Do you agree with these parts of day, or should Night be considered part of the next day or split up?
+//@Bas: This looks good to me! 
 
 VAR DaysPassed = 0
 
@@ -112,7 +122,9 @@ VAR DaysPassed = 0
 }
 
 
-
+=== Section_TrackWeather ===
+LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
+-> DONE
 
   === Section_TrackLocations ===
   /* ---------------------------------
@@ -120,8 +132,8 @@ VAR DaysPassed = 0
   ----------------------------------*/
   -> DONE
   // Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
-  
-LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath
+
+LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath // Vugs may add items to this list.
 
 ~ Locations = LIST_ALL(Locations)  
     
@@ -186,7 +198,7 @@ You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
 You need food to survive idiot.
 -> Death
 
-=== TravelingTo(targetLocation) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
+=== TravelingTo(targetLocation, ->targetScene) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
 ~ TargetLocation = targetLocation
 ~ temp OriginLocation = CurrentLocation
 ~ SetLocation(LOC_OnTheRoad)
@@ -228,32 +240,21 @@ You need food to survive idiot.
 {
 - SucceededRandomEvent:
         ~Print("Proceeding with traversal.")
-    -> _ArriveAt(TargetLocation)
+    ~_ArriveAt(TargetLocation)
+    ->targetScene
 - else:
         ~Print("Aborting traversal. Returning to previous location.")
-    -> _ArriveAt(OriginLocation)
+    ~_ArriveAt(OriginLocation)
 }
-=== _ArriveAt(location) === 
+-    ->->
+=== function _ArriveAt(location) === 
 ~SetLocation(location) // update curentlocation etc.
-{
-- location == LOC_ScotlandEntranceRoad:
-You arrive at scotland Entrance!
--> ScotlandEntranceRoad
-- location == LOC_EdanCastle:
-->  CastleEntrance
-- location == LOC_SampleCave:
--> SampleSampleCaveScene
-- location == LOC_SeaBreezePath:
--> SampleSeaBreesePathScene
 
-- else:
--> DONE// wsl willen we hier een of ander default. ik weet niet eens of deze "DONE"werkt, ik snap nog niet wanneer ik een DONE nodig heb vs een tunnel ("->->").
-}
 
 === RandomTravelEvent ===
 ->RandomEventsEdanArea->
 ~Print("A Random event happened!")
-->->
+- ->->
 /*Continue, or head back anyway?
     + [Continue]
         ->->
@@ -270,31 +271,22 @@ You arrive at scotland Entrance!
    // he map will consist of a ink knot that contains choices to unlocked locations. All of these will be caught by Unity and displayed as visual items on a map screen, which is opened and closed as the knot is accessed and left.
    // The first time the player learns of a location, it is added to the map. But, it is only made available to travel to after they've visited it once before. And, all travel is locked during dialogue sections.
 
-=== function AllowMap === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
-/*
-Unfortunately. the format for properly including this option is a bit esoteric as of the time of writing (2023-12-24). Brace yourself. It is as follows:
+=== AllowMap(-> returnTo) === // including this in the list of choices allows the player to open their map in order to travel to any applicable locations (and exit the current conversation)
 
-+  [{AllowMap()}] -> MapScreen(-> SceneToReturnTo) 
++  [\{UNITY:OpenMap\}] -> MapScreen(returnTo) //WITHOUT "()"
 
-"SceneToReturnTo" is the scene this choice is IN, i.e. the scene to return to after closing the map without traveling. 
-So you must copy past that whole line as a choice and replace the "SceneToReturnTo" bit with whatever knot you are making the choice from.
-*/
-
-\{UNITY:OpenMap\}
-
-=== MapScreen (-> returnTo) // the map knot. visit to open the map in unity. This knot should include all possible items on the player's map
-~ _OpenMap()
+=== MapScreen(-> returnTo) // the map knot. visit to open the map in unity. This knot should include all possible items on the player's map
+~ OpenMap()
 + { HasVisited(LOC_EdanCastle)} [{_MapChoice(LOC_EdanCastle)}] 
-    -> TravelingTo(->CastleEntrance)
+    -> TravelingTo(LOC_EdanCastle, ->ScotlandEntranceRoad)->returnTo
 + { HasVisited(LOC_SampleCave)} [{_MapChoice(LOC_SampleCave)}] 
-    -> TravelingTo(->SampleSampleCaveScene)
+    -> TravelingTo(LOC_SampleCave, ->SampleSampleCaveScene)->returnTo
 + { HasVisited(LOC_SeaBreezePath)} [{_MapChoice(LOC_SeaBreezePath)}] 
-    -> TravelingTo(->SampleSeaBreesePathScene)
+    -> TravelingTo(LOC_SeaBreezePath, ->SampleSeaBreesePathScene)->returnTo
 + [\{UNITY:CloseMap\}]    
+    \{UNITY:CloseMap()\}
+-     (done) -> returnTo
 
-\{UNITY:CloseMap()\}
-    -> returnTo
-    
 === function OpenMap() // call to open the map screen in unity
 ~ _OpenMap()
     
@@ -304,7 +296,7 @@ So you must copy past that whole line as a choice and replace the "SceneToReturn
 EXTERNAL _OpenMap()
     
 === function _MapChoice(destination) === // used to present an inky choice that will be represented visually on a map in unity. (in ink it simply lists as a normal choice)
-\{MapChoice({destination})\}
+\{MapChoice({destination})\
 
   === Section_TrackInventory ===
   /* ---------------------------------
@@ -313,11 +305,11 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword // existing items
+LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 
-LIST Affordances = weapon, tool, cooking, cutting, stabbing, food
+LIST Affordances = weapon, tool, cooking, cutting, stabbing, food // Vugs may add items to this list.
 
 ~ Affordances = LIST_ALL(Affordances) // Full list for Unity syncing. Note Bas: I should maybe prefix with underscore 
 
@@ -353,17 +345,14 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
 === function Item_Remove(item)
 ~ _Item_Remove(item)
 
-=== function Item_Consume() // remove item that was just used
+=== function Item_RemoveLastUsed() // remove item that was just used
 ~ Item_Remove(UsedItem)
 
-=== function Item_UseAndRemove(item)
-~ UsedItem = item
-~ Item_Consume()
   
   
   === Section_TrackParty ===
   /* ---------------------------------
-   ### System: 
+   ### System: Tracking party members and speaking to them, potentially triggering leave conditions
   ----------------------------------*/
   -> DONE
   // WIP
@@ -371,7 +360,48 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
    /* ---------------------------------
    #### List: Characters
    ----------------------------------*/
-LIST Party = (Player), Alice, Robert
+LIST PartyCandidates = Player, Alice, Robert // potential party members // Vugs may add items to this list.
+VAR Party = () // list of characters in party
+
+~ Party = PartyCandidates() // restrict to characters defined in list
+
+=== function Party_AddMember(member) // Add character to party
+    ~ Party += member
+//System: {member} joined the party.
+~Print("{member} joined the party.")
+    
+=== function Party_RemoveMember(member) // Add character to party
+    ~ Party -= member
+//System: {member} left the party.
+~Print("{member} left the party.")
+
+=== AllowPartyScreen(->returnTo) === // including this in the list of choices as a "thread statement" allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
++  [\{UNITY:OpenPartyScreen\}] -> PartyScreen(returnTo) //WITHOUT "()"
+
+=== function OpenPartyScreen() // call to open the map screen in unity
+~ _OpenPartyScreen()
+
+=== function _OpenPartyScreen() === // opens the map screen in unity
+\{UNITY:OpenPartyScreen()\}
+
+EXTERNAL _OpenPartyScreen()
+
+
+=== PartyScreen(-> returnTo) // the party knot. visit to open the party screen in unity. 
+~ _OpenPartyScreen()
+<- PartyDialogues(returnTo)
++ [\{UNITY:ClosePartyScreen\}]    
+    \{UNITY:ClosePartyScreen()\}
+-     (done) -> returnTo
+    
+
+    
+=== function _PartyChoice(character) === // used to present an inky choice that will be represented by a portrait in unity. in inky, it will just be an ormal option to click
+\{PartyChoice({character})\}
+
+
+
+
 
    === Section_TrackAffection ===
   /* ---------------------------------
@@ -385,9 +415,10 @@ LIST Party = (Player), Alice, Robert
 
 
 
+
 LIST Attitudes = devoted = 100, alligned = 75, friendly = 60, ambivalent = 50, begrudging = 40, hostile = 25, spiteful = 0
 
-=== function GetAttitude(value) ===
+=== function ConvertAttitude(value) ===
 {
 -   value >= LIST_VALUE(devoted):
     ~ return devoted
@@ -404,6 +435,7 @@ LIST Attitudes = devoted = 100, alligned = 75, friendly = 60, ambivalent = 50, b
 -   else:
     ~ return spiteful
 }
+
   
   
    /* ---------------------------------
@@ -414,7 +446,7 @@ VAR AffEdgar = 50
 VAR AffHenry = 50
 VAR AffAlice = 50
 VAR AffRobert = 50
-  
+VAR AffEdie = 50  
   
   
   === Section_Effects ===
@@ -600,8 +632,21 @@ VAR aglue = "\{aglue\}" // used to glue this to previous line
   // 
 
 
-=== function isAre(list)
+=== function IsAre(list)
 	{LIST_COUNT(list) == 1:is|are}
+
+=== function ListWithCommas(list, if_empty)
+    {LIST_COUNT(list):
+    - 2:
+            {LIST_MIN(list)} and {ListWithCommas(list - LIST_MIN(list), if_empty)}
+    - 1:
+            {list}
+    - 0:
+            {if_empty}
+    - else:
+              {LIST_MIN(list)}, {ListWithCommas(list - LIST_MIN(list), if_empty)}
+    }
+
 
 
 VAR PlayerName = "PlayerName"

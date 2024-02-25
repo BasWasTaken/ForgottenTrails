@@ -177,6 +177,8 @@ namespace VVGames.ForgottenTrails.InkConnections
                 //story.BindExternalFunction("AddInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have added item " + item)));
                 //story.BindExternalFunction("RemoveInUnity", (string item) => PerformInkFunction(() => Debug.Log("Would have removed item " + item)));
 
+                story.ObserveVariable("Party", (string varName, object newValue) => PerformInkFunction(() => Controller.InterfaceBroker.partyScreen.FetchPartyMembers(newValue as InkList)));
+
                 story.BindExternalFunction("PromptName", () => PerformInkFunction(() => Controller.PromptName()));
 
                 // hoewel de map meestal met knop wordt opengemaakt, moet het ook uit verhaal kunnen:
@@ -190,6 +192,8 @@ namespace VVGames.ForgottenTrails.InkConnections
                 });*/
 
                 // a close map function doesn't make sense, becausei nk only controls while it is being run! if it paused, it can't do anything.
+
+                story.BindExternalFunction("_OpenPartyScreen", () => PerformInkFunction(() => Controller.InterfaceBroker.OpenPartyScreen()));
             }
 
             private InkListItem ConvertListToItem(InkList inkList)

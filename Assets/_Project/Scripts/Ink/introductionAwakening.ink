@@ -9,7 +9,8 @@ You turn on your back, the small canvas tent that shields you from the elements 
 =Tent
 
 You decide to
-+  [{AllowMap()}] -> MapScreen(->Awakening.Tent) // dit moet toch meer consise kunnen...?
+<- AllowMap(->Tent)
+<- AllowPartyScreen(-> Tent)
 
 *(PackUpEarly)[...pack up]{aglue} pack up.
 Or you would, but the grumbling of your stomach tells you that it's not going to be a fun hike without something to eat.
@@ -26,7 +27,7 @@ You can find your belongings by clicking on the backpack icon on the right. You 
     **[{ItemChoice(cooking)}]
     You set up the small iron stakes and hang the pot on it, placing it nice and snug over the fire. Now, to put some food in. 
         ***[{ItemChoice(food)}]
-        {Item_Consume()}
+        {Item_RemoveLastUsed()}
         You drop the {UsedItem} into the pot, resulting in a satisfying sizzle. Good thing master Pedrál went through that herbology phase last semester, or you would have left them by the wayside in fear of poison.
         A few minutes of stirring and a sprinkle of salt later, your woodland meal is ready to eat. It's not something you'd serve to a king or worse, a mother-in-law, but your stomach is grateful for it nevertheless. 
         {Tent.PackUpEarly: |You can check your current hunger level on the right. As time passes, your need for food will increase. You wouldn't be the first adventurer to die of starvation, so keep an eye on it! [Vugs note: not yet implemented]}

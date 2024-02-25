@@ -1,13 +1,13 @@
 // --------- Shared ---------
 === RandomEventsEdanArea ===
 //To do: add event content
-{~->MerchantSiblings1|->Deer|->Downpour} // NOTE FROM BAS: ! removed the "!" because they were not working as intended, i.e., they wer not marking these options as once-only, they were just showing up as text. Maybe "once-only"(!) and "shuffle"(~) are not compatible?
+{~->MerchantSiblings1|->Deer|->Downpour} 
 
 // --------- Vugs  ---------
 === MerchantSiblings1 ===
 // Note from Bas: This is all happening on the location "ontheroad". I think this is fine but I don't know what your plans are with regards to what should and should not be a location. Like we discussed yesterday, I can imagine if events reach a certain length, and/or there are characters that we want to be able to return to, it might make sense to make a dedicated location for them that we divert into, instead of having it all happen "on the road". But we'll have to think on how exactly to do that. It will involve changing the "TargetLocation" variable to a new location, but I don't know if it needs anything else. 
 // Perhaps you could write/think of an example scenario where that would apply (such as a crumbling bridge or cave in) and then we can see what makes sense to us.
-~ Party += Alice
+~Party_AddMember(Alice) // Bas@Vugs: replaced "Party += Alice" with the "add" function".~ Party += Alice
 
 The road you're following steadily climbs a gentle hill. Gazing over the hilltop, you can see a small stream of smoke rising upward. 
 Once at the top, you spot the source: a cooking fire set by the roadside. A man seems to be stirring something in a pot, while a woman is tending to a horse that's lazily grazing on some grass. A wagon stands a little ways of the road, most likely the animal's burden. 
@@ -87,7 +87,7 @@ You open your mouth to speak, but before you get any words out Alice's humming t
 You decide not to break the silence. Whether she sees this as approval of her humming or another silence to fill you do not know. Regardless, she begins to add words to the song. 
 ->TravelersSong1A
 ==TravelersSong1A==
-~ _Music_Play(TabiNoTochuu, 1)
+~ Music_Play(TabiNoTochuu, 1)
 As I wander down
 this endless road,
 on a journey all alone.
@@ -108,8 +108,7 @@ and I sang along:
 there stands a tower made of gold,
 where a Northern queen blessed the moon 
 and received blackened keys threefold"
-//I don't think I understand how to stop the music lol
-~ _Music_Play(Music.none, 0)
+~ Music_Stop()
 
 Her song reaches a small crescendo, which she seemingly deems a good point to stop her performance. 
 
@@ -243,39 +242,172 @@ She shakes her head, "There are a few more verses{AffAlice >=50:." And with a wi
 TestDeer
 ->->
 
-=== Downpour ===
-VAR RemainingRain = 0 
-~ RemainingRain = RANDOM(0,3)
-//Add companion dependent dialogue
-As you're traveling, you start to notice dark clouds gathering overhead.
-*Press on
-    It's probably nothing. And even so, a little rain can't stop you, right?
-    ->CheckRain
-*Seek shelter
-    You decide not to risk getting drenched and find some cover.
--> CheckRain->Shelter
-
-= CheckRain
+VAR rainStart = -1
+VAR rainStop = -1
+=== function turnsTilRaining
+~temp turns = TURNS_SINCE(->Downpour) + ExtraTime
 {
--RemainingRain>0:
-    Sure enough, before too long it starts too rain.
--else:
-    Soon enough the dark clouds part away.
+-rainStart < turns && turns < rainStop:
+0 // return 0 meaning it is now raining
+- rainStart > turns:
+{rainStart-turns} // return turns remaining until rain starts
+- turns > rainStop:
+{rainStop-turns}// return how many turns ago the rain stopped
 }
-    ->->
 
-= Shelter
-~RemainingRain--
-~Time_Advance() // ToDo Bas: use new time advancement feature to improve this
+=== Downpour ===
+- (calc) //set raining false
+~ rainStart = RANDOM(0, 28) // determine rain start 
+~ rainStop = RANDOM(rainStart, rainStart+28) // determine rain end
+~Print("Randomly determined rain will start {rainStart} turns from now, and last {rainStop-rainStart} turns")
+- (tell)
+As you're traveling, you start to notice dark clouds gathering overhead.
 
+*(dontSeekShelter)[Press on]
+    {seekShelter:A|It's probably nothing. And even so, a} little rain can't stop you, right?
+    VAR shelterFound = false
+    -> pressOn
+*(seekShelter)[Seek shelter]
+    You decide not to risk getting drenched and find some cover. 
+    VAR shelterDistance = 0
+    ~ shelterDistance = RANDOM(0,2)
+    -> lookForShelter
+
+= pressOn
++ {turnsTilRaining>0} [stubbornly keep walking] You stubbornly keep walking.
+    ->checkTime->pressOn
++ {turnsTilRaining==0} [live with your decision] You stubbornly keep walking.
+    ->-> // escape!
++ {turnsTilRaining<0} [keep walking but now you're dry]
+    ->-> // escape!
+
+// now keep redirectinguntil the rain is passed or we give up, and at that point, continue out of the tunnel back to the travel
+VAR i = 0
+= checkTime
+{
+-i>7:
+~Time_Advance()
+~i=0
+- else:
+~i ++
+}
+-(describeWeather)
+{
+- turnsTilRaining>0:
+    Skies go {|ever} darker...
+- turnsTilRaining == 0:
+    {Sure enough, it starts too rain.|The rain pours on.}
+- turnsTilRaining<0:
+    {The rain lets up.|The air feels damp from the {recent|} rain.}
+}
+
+-(describeSituation)
+{
+- shelterFound:
+->WaitInShelter
+- seekShelter && !dontSeekShelter:
+->lookForShelter
+- else:
     {
-    -RemainingRain>0:
-        The rain pours on.
-        + [Sit and wait]
-        ->Shelter
-        + [Decide to start up again despite the rain.]
-        ->->
-    -else:
-        After waiting a while, the rain lets up and you proceed with your journey.
-        ->->
+    - seekShelter && dontSeekShelter:
+    (if only you had not given up on shelter)
+    - else:
+    (if only you had found shelter)
     }
+(describe whether you are wet or not.)
+}
+->-> // does this go to press on?
+
+
+= lookForShelter // go to checkrain
+{ 
+    - shelterDistance<=0:
+    -> findShelter
+    - else:
+    ~shelterDistance-=1
+    You {|still} can't find any decent cover to shield you from the rain {turnsTilRaining>0:looming overhead|drenching your clothes}
+}
+
++ [keep searching]
+    ->checkTime
++ [Give up and continue your journey]
+    ->dontSeekShelter // go to the press on option anyway
+    
+= findShelter
+~ shelterFound = true
+You {TURNS_SINCE(->seekShelter)>1:finally} find some shelther: (describe shelter)//REPLACE WITH ->naturalShelter
+- (inShelter)
+Grateful for the little cover you found, you{glue}
+- (rest)
+* (backpackoff) [Take of your backpack]
+    take of your pack{glue} ->rest
+* (comfortable)[Find a comfortable position]
+    ** {backpackoff}[Lie down on the soft moss]
+    lie down on the soft moss,{glue} ->rest
+    ** [Sit down against (a surface depending on the shelter)]
+    sit down, lean back,{glue}->rest
++ {comfortable}[rest your eyes]
+    and rest your eyes. ->checkTime
++ [Wait]
+    {|and} wait. ->checkTime
++ {!comfortable} [change your mind and continue your journey]
+    ->dontSeekShelter
+  
+= WaitInShelter
+You are in your shelter.
+    + {turnsTilRaining>=0}[continue waiting]
+        VAR ExtraTime = 0 
+        ++[wait just a few minutes]
+        ~ ExtraTime+=1
+        ->checkTime
+        ++[zone out for a while]
+        ~ ExtraTime+=RANDOM(3, 6)
+        ->checkTime
+        ++[take a nap]
+        ~ ExtraTime+=RANDOM(8, 36)
+        ->checkTime
+    * {turnsTilRaining>=0} [Give up and continue your journey]
+        ->dontSeekShelter
+    * {turnsTilRaining<0} [Gather your things and set out.]
+    After waiting a while, the rain lets up and you proceed with your journey.
+    - ->->
+// WIP UNDER THIS LINE ______
+
+
+    
+    
+
+
+
+
+
+    
+== naturalShelter
+//ToDO: make this dependent on environment
+{~->Overhang|->Leaves|->Cave}
+->->
+
+== Overhang
+VAR Shelter = ->Overhang
+A nearby mountainside offers a bit of dry soil by way of an overhang a few meters off the ground. It doesn't look like the most comfortable place to pass the time, but anything beats getting soaked. {turnsTilRaining<2:Feeling the clouds grow thicker, you quickly|You} make your way over to the rocky wall. 
+* [Enter]
+Taking care not to hit your head on the ceiling, which at points is rather closer to the ground then you hoped for, you squeeze your way into your dry haven. 
+{
+-LIST_COUNT(Party)>2:
+You help your companions in as well, although each subsequent fellow makes the room less and less comfortable.
+-LIST_COUNT(Party)>1:
+You help your companion in as well.
+- else:
+You are glad to be on your own here, as you doubt this place would have accomodated any more travelers.
+} 
+->->
+== Leaves
+~Shelter = ->Leaves
+Some big ol' trees provide some meager cover against the elements.
+//ToDoBas: elaborate
+->->
+== Cave
+~Shelter = ->Cave
+You find a cave to hide in.
+//ToDoBas: elaborate
+->->

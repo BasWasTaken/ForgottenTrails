@@ -2,18 +2,20 @@ using NaughtyAttributes;
 using System;
 using UnityEngine;
 
-namespace VVGames.ForgottenTrails.InkConnections.Travel
+namespace VVGames.ForgottenTrails.InkConnections.Party
 {
     /// <summary>
     /// <para>Base type object for ingame items.</para>
     /// </summary>
     [Serializable]
-    [CreateAssetMenu(fileName = "MapLocation", menuName = "Forgotten Trails/MapLocation")]
-    public class MapLocationDefinition : InkableObject
+    [CreateAssetMenu(fileName = "PartyMember", menuName = "Forgotten Trails/Party Member")]
+    public class PartyMemberSO : InkableObject
     {
         #region Fields
 
-        public string description = "";
+        public Sprite image;
+
+        public string description;
 
         #endregion Fields
 
@@ -22,7 +24,7 @@ namespace VVGames.ForgottenTrails.InkConnections.Travel
         [field: SerializeField, BoxGroup("Info")]
         public string CanonicalName { get; private set; }
 
-        public Ink.Runtime.InkListItem InkListItem { get; set; } // todo: add inklistitem
+        public Ink.Runtime.InkListItem InkListItem { get; set; }
 
         #endregion Properties
     }

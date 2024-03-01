@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VVGames.Common;
 using VVGames.ForgottenTrails.InkConnections.Items;
+using VVGames.ForgottenTrails.InkConnections.Party;
 using VVGames.ForgottenTrails.InkConnections.Travel;
 using VVGames.ForgottenTrails.UI;
 using static VVGames.ForgottenTrails.InkConnections.StoryController.InterfaceBroking.SCWaitingForChoiceState;
@@ -164,7 +165,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                 }
             }
 
-            public bool TryConverseMember(InkListItem member)
+            public bool TryConverseMember(PartyMemberSO member)
             {
                 Choice discoveredChoice = null;
                 foreach (KeyValuePair<string, HiddenChoice> keyValuePair in hiddenChoices)
@@ -173,7 +174,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                     {
                         string keyPhrase = keyValuePair.Key;
                         Choice potentialChoice = keyValuePair.Value.Choice;
-                        if (member.itemName == keyPhrase)
+                        if (member.CanonicalName == keyPhrase)
                         {
                             discoveredChoice = potentialChoice;
                             break;

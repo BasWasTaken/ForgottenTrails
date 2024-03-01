@@ -74,6 +74,9 @@ MonoBehaviour:
   - Items
   - Affordances
   - Locations
+  - PartyCandidates
+  menuScene: 00_MainMenu_Scene
+  newGameScene: 01_Demo_Gameplay_Scene
   possibleItems:
   - {fileID: 11400000, guid: 865e52f4ed133bb4dac347d686f281c7, type: 2}
   - {fileID: 11400000, guid: e8ed6563ee9717447a4696035d3e6547, type: 2}
@@ -85,6 +88,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3db0c11f6bef085488d1cded84be731b, type: 2}
   - {fileID: 11400000, guid: c510bc596b3598544aa097a90b02b206, type: 2}
   - {fileID: 11400000, guid: eef37ceb75104dd4eaef00bafad55a51, type: 2}
-  menuScene: 00_MainMenu_Scene
-  newGameScene: 01_Demo_Gameplay_Scene
+  possiblePartyMembers:
+  - {fileID: 11400000, guid: 9a9b45c34969cd44a9630b56afbbbf99, type: 2}
+  - {fileID: 11400000, guid: b53ca94b2ff15d54fa916674543e07dd, type: 2}
   <TextAsset>k__BackingField: {fileID: 4900000, guid: d393fd924f9849344ade71dc807dbafa, type: 3}

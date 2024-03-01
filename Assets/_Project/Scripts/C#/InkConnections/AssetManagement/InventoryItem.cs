@@ -9,7 +9,7 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
     /// <para>Base type object for ingame items.</para>
     /// </summary>
     [Serializable]
-    [CreateAssetMenu(fileName = "MapLocation", menuName = "Forgotten Trails/Inventory Item")]
+    [CreateAssetMenu(fileName = "InventoryItem", menuName = "Forgotten Trails/Inventory Item")]
     public class InventoryItem : InkableObject
     {
         #region Fields

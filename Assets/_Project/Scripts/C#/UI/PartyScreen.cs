@@ -1,10 +1,11 @@
 using Ink.Runtime;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VVGames.ForgottenTrails.InkConnections;
-
-//using VVGames.ForgottenTrails.InkConnections.Party;
+using VVGames.ForgottenTrails.InkConnections.Party;
 
 namespace VVGames.ForgottenTrails.UI
 {
@@ -17,7 +18,9 @@ namespace VVGames.ForgottenTrails.UI
 
         [Header("Prefab")]
         [SerializeField]
-        private Button PartyMemberButton; // ToDo: replace with container holding scriptable object so you can include a portrait, etc.
+        private Button PartyMemberButton;
+
+        private Dictionary<InkListItem, PartyMemberContainer> UnityParty = new();
 
         #endregion Fields
 
@@ -26,26 +29,78 @@ namespace VVGames.ForgottenTrails.UI
         public void FetchPartyMembers(InkList inkParty)
         {
             // destroy all buttons
-            foreach (Button button in GetComponentsInChildren<Button>())
+            for (int i = 0; i < UnityParty.Count; i++)
             {
-                Destroy(button.gameObject);
+
+                Destroy(UnityParty[UnityParty.Keys.ToArray()[i]].button.gameObject);
             }
+            UnityParty.Clear();
 
             // make new
 
             foreach (InkListItem member in inkParty.Keys)
             {
-                AddPartyMember(member);
+                //Debug.Log(item);
+                if (!UnityParty.ContainsKey(member))
+                {
+                    AddPartyMember(member);
+                }
             }
         }
 
-        public void AddPartyMember(InkListItem member)
+        public void AddPartyMember(InkListItem memberToAdd)
         {
-            Button obj = Instantiate(PartyMemberButton, transform);
-            obj.GetComponentInChildren<TextMeshProUGUI>().text = member.itemName;
-            obj.onClick.AddListener(() => StoryController.Instance.InterfaceBroker.TryConverseMember(member));
+            Debug.Log(memberToAdd.itemName);
+            Debug.Log(memberToAdd);
+            if (memberToAdd.itemName == "Player")
+            {
+                Debug.Log("Note: ik moet nog bedenken wat ik wil doen voor het speler karakter zelf. Player name inserten? Wait a minute, heeft het uberhaubt toegevoegde waarde om je eigen naam in te vullen?");
+                return;
+            }
+            else if (AssetManager.Instance.PartyMemberDictionary.TryGetValue(memberToAdd, out PartyMemberSO memberFromAssets))
+            {
+                Debug.Log("Found " + memberToAdd);
+                if (!UnityParty.ContainsKey(memberToAdd))
+                {
+                    Button obj = Instantiate(PartyMemberButton, transform);
+
+                    obj.GetComponentInChildren<TextMeshProUGUI>().text = memberFromAssets.CanonicalName;
+                    obj.onClick.AddListener(() => StoryController.Instance.InterfaceBroker.TryConverseMember(memberFromAssets));
+                    obj.GetComponent<Image>().sprite = memberFromAssets.image;
+
+                    UnityParty.Add(memberToAdd, new PartyMemberContainer(obj, memberFromAssets));
+                }
+                else
+                {
+                    //Debug.LogErrorFormat("item {0} already in party", item.itemName);
+                }
+            }
+            else
+            {
+                Debug.LogError(string.Format("Member \"{0}\" not recognised!", memberToAdd.itemName));
+            }
         }
 
         #endregion Public Methods
+    }
+
+    public class PartyMemberContainer
+    {
+        #region Fields
+
+        public Button button;
+        public PartyMemberSO definition;
+
+        #endregion Fields
+
+        #region Public Constructors
+
+        public PartyMemberContainer(Button button, PartyMemberSO definition)
+        {
+            this.button = button;
+            this.definition = definition;
+        }
+
+        #endregion Public Constructors
     }
 }

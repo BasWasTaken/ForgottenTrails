@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using VVGames.Common;
 using VVGames.ForgottenTrails.InkConnections.Items;
+using VVGames.ForgottenTrails.InkConnections.Party;
 using VVGames.ForgottenTrails.InkConnections.Travel;
 
 namespace VVGames.ForgottenTrails.InkConnections
@@ -41,6 +42,9 @@ namespace VVGames.ForgottenTrails.InkConnections
         [SerializeField]
         private List<MapLocationDefinition> possibleLocations = new();
 
+        [SerializeField]
+        private List<PartyMemberSO> possiblePartyMembers = new();
+
         #endregion Fields
 
         /* delete or ineed use list of folders to dssearch resources
@@ -59,8 +63,10 @@ namespace VVGames.ForgottenTrails.InkConnections
 
         #region Properties
 
-        public Dictionary<InkListItem, InventoryItem> LocationDictionary { get; } = new();
+        //public Dictionary<InkListItem, MapLocationDefinition> LocationDictionary { get; } = new(); // NOTE:: when is this every added to?
         public Dictionary<InkListItem, InventoryItem> ItemDictionary { get; } = new();
+
+        public Dictionary<InkListItem, PartyMemberSO> PartyMemberDictionary { get; } = new();
 
         [field: SerializeField]
         public TextAsset TextAsset { get; set; }
@@ -98,21 +104,23 @@ namespace VVGames.ForgottenTrails.InkConnections
                 {
                     if (inkListName == "Items")
                     {
-                        // Debug.Log("Found items list.");
                         items = listDefinition;
+                        Debug.LogFormat("Found items list as {0}", listDefinition);
                     }
                     else if (inkListName == "Affordances")
                     {
-                        //  Debug.Log("Found affordances list.");
                         affordances = listDefinition;
+                        Debug.LogFormat("Found affordances list as {0}", listDefinition);
                     }
                     else if (inkListName == "Locations")
                     {
                         locations = listDefinition;
+                        Debug.LogFormat("Found locations list as {0}", listDefinition);
                     }
                     else if (inkListName == "PartyCandidates")
                     {
                         partyCandidates = listDefinition;
+                        Debug.LogFormat("Found partycandidates list as {0}", listDefinition);
                     }
                     else
                     {
@@ -188,6 +196,10 @@ namespace VVGames.ForgottenTrails.InkConnections
             else if (!LocationsRecognised(locations))
             {
                 throw new Exception("Could not match up locations. \nLog:" + message);
+            }
+            else if (!PartyMembersRecognised(partyCandidates))
+            {
+                throw new Exception("Could not match up party members. \nLog:" + message);
             }
             else
             {
@@ -280,7 +292,7 @@ namespace VVGames.ForgottenTrails.InkConnections
 
         private bool LocationsRecognised(ListDefinition locations)
         {
-            LocationDictionary.Clear();
+            //LocationDictionary.Clear();
             Dictionary<string, MapLocationDefinition> TemporaryDictionary = new();
             foreach (MapLocationDefinition loc in possibleLocations)
             {
@@ -295,7 +307,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                 //Debug.Log(locations);
                 if (!locations.ContainsItemWithName(name))
                 {
-                    error += string.Format("\nLocation \"{0}\" not found in unity dictionary!", name);
+                    error += string.Format("\nLocation \"{0}\" not found in inky list!", name);
                 }
             }
 
@@ -306,6 +318,51 @@ namespace VVGames.ForgottenTrails.InkConnections
             else
             {
                 Debug.LogAssertion("LOCATIONS NOT MATCHED UP" + error);
+                return false;
+            }
+        }
+
+        private bool PartyMembersRecognised(ListDefinition partyMembers)
+        {
+            PartyMemberDictionary.Clear();
+            Dictionary<string, PartyMemberSO> TemporaryDictionary = new();
+            foreach (PartyMemberSO mem in possiblePartyMembers)
+            {
+                TemporaryDictionary.Add(mem.CanonicalName, mem);
+            }
+            string error = "";
+
+            // assert all party members from ink exist in unity
+            foreach (InkListItem inkListItem in partyMembers.items.Keys)
+            {
+                if (TemporaryDictionary.TryGetValue(inkListItem.itemName, out PartyMemberSO item))
+                {
+                    item.InkListItem = inkListItem;
+                    PartyMemberDictionary.Add(inkListItem, item);
+                }
+                else
+                {
+                    error += string.Format("\nMember \"{0}\" not found in unity dictionary!", inkListItem.itemName);
+                }
+            }
+            // assert all party members from unity exist in ink
+            foreach (var name in TemporaryDictionary.Keys)
+            {
+                //Debug.Log(name);
+                //Debug.Log(locations);
+                if (!partyMembers.ContainsItemWithName(name))
+                {
+                    error += string.Format("\nParty Member \"{0}\" not found in inky list!", name);
+                }
+            }
+
+            if (error == "")
+            {
+                return true;
+            }
+            else
+            {
+                Debug.LogAssertion("PARTYMEMBER CHARACTERS NOT MATCHED UP" + error);
                 return false;
             }
         }

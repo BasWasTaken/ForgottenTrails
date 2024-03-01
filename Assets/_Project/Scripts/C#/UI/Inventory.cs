@@ -25,6 +25,9 @@ namespace VVGames.ForgottenTrails.UI
 
         #region Public Methods
 
+        // note: zou dit problemen gevven met dat items in unity verwijderd  worden en de inventroy vervvolgens weer rechtgetrokken wordt naar hoe ie in ink is?
+        // eigenlijk zou deze functionaliteit in ink moeten zitten, niet?
+        // oh wacht dat is het ook, dit adden en removen gaat vgm puur om de knopjes.
         public void FetchItems(InkList inkInventory)
         {
             List<InkListItem> dummy = new();
@@ -57,7 +60,7 @@ namespace VVGames.ForgottenTrails.UI
                     ItemContainer obj = Instantiate(itemContainerPrefab, transform);
                     obj.Construct(inventoryItem);
                     inventoryItem.InkListItem = item;
-                    UnityInventory.Add(inventoryItem.InkListItem, obj);
+                    UnityInventory.Add(item, obj);
                 }
                 else
                 {

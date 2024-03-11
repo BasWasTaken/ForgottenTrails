@@ -269,6 +269,8 @@ namespace VVGames.ForgottenTrails.InkConnections
                 // this function is fired just after the storystatejson has been created from input. thus, the json in the input here hoeft als het goed is niet meer gebruikt te worden.
 
                 //Debug.Log("This is when the textpanel is set to the contents of inkdata: " + textPanel.text);
+
+                Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
                 InkList music = Controller.Story.state.variablesState["Music"] as InkList;
                 Controller.SetDresser.InkRequestAudio(music.maxItem.Key);
 
@@ -281,10 +283,22 @@ namespace VVGames.ForgottenTrails.InkConnections
                 InkList background = Controller.Story.state.variablesState["Background"] as InkList;
                 Controller.SetDresser.SetBackground(ConvertListToItem(background));
 
+                InkList portraits = Controller.Story.state.variablesState["Portraits"] as InkList;
+                Controller.SetDresser.SetSprites(portraits);
+
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
 
-                Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
+                Controller.InterfaceBroker.inventory.Init();
                 Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
+                Controller.InterfaceBroker.partyScreen.Init();
+                Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
+
+                Controller.InterfaceBroker.InGameMenu.pages.dataPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.settingsPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.inventoryPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.mapPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.journalPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.partyPage.gameObject.SetActive(false);
             }
 
             #endregion PrepScene

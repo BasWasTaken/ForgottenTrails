@@ -68,7 +68,7 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
 
         public void Inspect()
         {
-            StoryController.Instance.InterfaceBroker.book.RightPage.FeedText(definition.description + "\n" + "Worth: " + definition.coinValue);
+            StoryController.Instance.InterfaceBroker.inventory.Supplemental.FeedText(definition.description + "\n" + "Worth: " + definition.coinValue);
         }
 
         public void OnPointerMove(PointerEventData eventData)

@@ -18,10 +18,10 @@ namespace VVGames.ForgottenTrails.UI
         public Pages pages { get; set; }
 
         [field: SerializeField]
-        public Bookmarks markers { get; set; }
+        public Labels labels { get; set; }
 
         [field: SerializeField]
-        public RightPage RightPage { get; set; }
+        public SupplementalPage Supplemental { get; set; }
 
         #endregion Properties
 
@@ -29,7 +29,7 @@ namespace VVGames.ForgottenTrails.UI
 
         public void DropMenuState()
         {/*
-        Type menuType = typeof(SCBookMenuState);
+        Type menuType = typeof(SCInGameMenuState);
         var current = StoryController.Instance.StateMachine.CurrentState;
         Type currentType = current.GetType();
         if (menuType.IsAssignableFrom(currentType))
@@ -39,29 +39,104 @@ namespace VVGames.ForgottenTrails.UI
             StoryController.Instance.bookMenuState.ExitMenu();
         }
 
-        public void EnterSettingsState()
+        public void ToggleSettingsScreen()
         {
-            StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.settingsState);
+            if (StoryController.Instance.StateMachine.CurrentState != StoryController.Instance.settingsState)
+            {
+                StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.settingsState);
+            }
+            else
+            {
+                StoryController.Instance.StateMachine.DropState(StoryController.Instance.bookMenuState); //                StoryController.Instance.bookMenuState.ExitMenu();?
+            }
         }
 
-        public void EnterInventoryState()
+        public void ToggleInventoryScreen()
         {
-            StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.inventoryState);
+            if (StoryController.Instance.StateMachine.CurrentState != StoryController.Instance.inventoryState)
+            {
+                StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.inventoryState);
+            }
+            else
+            {
+                StoryController.Instance.StateMachine.DropState(StoryController.Instance.bookMenuState);
+            }
         }
 
-        public void EnterDataState()
+        public void ToggleDataScreen()
         {
-            StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.dataState);
+            if (StoryController.Instance.StateMachine.CurrentState != StoryController.Instance.dataState)
+            {
+                StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.dataState);
+            }
+            else
+            {
+                StoryController.Instance.StateMachine.DropState(StoryController.Instance.bookMenuState);
+            }
         }
 
-        public void EnterMapState()
+        public void ToggleMapScreen()
         {
-            StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.mapState);
+            if (StoryController.Instance.StateMachine.CurrentState != StoryController.Instance.mapState)
+            {
+                StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.mapState);
+            }
+            else
+            {
+                StoryController.Instance.StateMachine.DropState(StoryController.Instance.bookMenuState);
+            }
         }
 
-        public void EnterPartyState()
+        public void TogglePartyScreen()
         {
-            StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.partyState);
+            if (StoryController.Instance.StateMachine.CurrentState != StoryController.Instance.partyState)
+            {
+                StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.partyState);
+            }
+            else
+            {
+                StoryController.Instance.StateMachine.DropState(StoryController.Instance.bookMenuState);
+            }
+        }
+
+        public void ToggleJournalScreen()
+        {
+            if (StoryController.Instance.StateMachine.CurrentState != StoryController.Instance.journalState)
+            {
+                StoryController.Instance.StateMachine.TransitionToState(StoryController.Instance.journalState);
+            }
+            else
+            {
+                StoryController.Instance.StateMachine.DropState(StoryController.Instance.bookMenuState);
+            }
+        }
+
+        public void ToggleMenuScreen(StoryController.SCInGameMenuState menu)
+        {
+            if (menu.GetType() == typeof(StoryController.SCSettingsMenuState))
+            {
+                ToggleSettingsScreen();
+            }
+            else if (menu.GetType() == typeof(StoryController.SCInventoryMenuState))
+            {
+                ToggleInventoryScreen();
+            }
+            else if (menu.GetType() == typeof(StoryController.SCDataMenuState))
+            {
+                ToggleDataScreen();
+            }
+            else if (menu.GetType() == typeof(StoryController.SCMapMenuState))
+            {
+                ToggleMapScreen();
+            }
+            else if (menu.GetType() == typeof(StoryController.SCPartyMenuState))
+            {
+                TogglePartyScreen();
+            }
+            else if (menu.GetType() == typeof(StoryController.SCJournalMenuState))
+            {
+                ToggleJournalScreen();
+            }
         }
 
         #endregion Public Methods
@@ -78,13 +153,13 @@ namespace VVGames.ForgottenTrails.UI
             public RectTransform inventoryPage;
             public RectTransform partyPage;
             public RectTransform mapPage;
-            public RectTransform logPage;
+            public RectTransform journalPage;
 
             #endregion Fields
         }
 
         [Serializable]
-        public class Bookmarks
+        public class Labels
         {
             #region Fields
 
@@ -93,7 +168,7 @@ namespace VVGames.ForgottenTrails.UI
             public Image inventoryPageLabel;
             public Image partyPageLabel;
             public Image mapPageLabel;
-            public Image logMark;
+            public Image journalPageLabel;
 
             #endregion Fields
         }

@@ -24,13 +24,14 @@ namespace VVGames.ForgottenTrails.InkConnections
         internal SCWaitingForInputState waitingForInputState = new();
         internal SCWaitingForChoiceState waitingForChoiceState = new();
         internal SCWaitingForContinueState waitingForContinueState = new();
-        internal SCBookMenuState bookMenuState = new();
-        internal SCSettingsState settingsState = new();
-        internal SCDataState dataState = new();
-        internal SCInventoryState inventoryState = new();
-        internal SCMapState mapState = new();
-        internal SCPartyState partyState = new();
+        internal SCInGameMenuState bookMenuState = new();
+        internal SCSettingsMenuState settingsState = new();
+        internal SCDataMenuState dataState = new();
+        internal SCInventoryMenuState inventoryState = new();
+        internal SCMapMenuState mapState = new();
+        internal SCPartyMenuState partyState = new();
         internal SCSavingState savingState = new();
+        internal SCJournalMenuState journalState = new();
 
         private const string dataLabel = "BasicInkScript"; // DEPRECATED: labels are remaining artifact from when I thought there would be many different data objects
 
@@ -106,7 +107,7 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // I don't remember why this is here (as of 2024-01-11)
 
-            //book = FindFirstObjectByType<InGameMenuSwapper>();
+            //InGameMenu = FindFirstObjectByType<InGameMenuSwapper>();
             SetDresser.Assign();
             TextProducer.Assign();
             InterfaceBroker.Assign();
@@ -136,7 +137,8 @@ namespace VVGames.ForgottenTrails.InkConnections
             dataState,
             inventoryState,
             partyState,
-            mapState
+            mapState,
+            journalState
             );
         }
 

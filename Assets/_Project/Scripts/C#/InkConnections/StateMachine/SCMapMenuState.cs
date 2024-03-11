@@ -16,22 +16,14 @@ namespace VVGames.ForgottenTrails.InkConnections
 
         #region Classes
 
-        public class SCMapState : SCBookMenuState
+        public class SCMapMenuState : SCInGameMenuState
         {
-            // Inspector Properties
-
-            // Public Properties
-
-            // Private Properties
-
-            // Public Methods
-
             #region Public Methods
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.book.pages.mapPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.mapPageLabel.color = Color.clear;
+                Controller.InterfaceBroker.InGameMenu.pages.mapPage.gameObject.SetActive(true);
+                Controller.InterfaceBroker.InGameMenu.labels.mapPageLabel.color = Color.black;
                 foreach (var choice in Controller.Story.currentChoices)
                 {
                     if (choice.text == "{UNITY:OpenMap}")
@@ -61,7 +53,8 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.book.markers.mapPageLabel.color = Color.white;
+                Controller.InterfaceBroker.InGameMenu.pages.mapPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.labels.mapPageLabel.color = Color.white;
             }
 
             #endregion Public Methods

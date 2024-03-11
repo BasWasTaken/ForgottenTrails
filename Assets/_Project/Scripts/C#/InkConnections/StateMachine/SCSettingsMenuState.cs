@@ -1,5 +1,5 @@
-using VVGames.Common;
 using UnityEngine;
+using VVGames.Common;
 
 namespace VVGames.ForgottenTrails.InkConnections
 {
@@ -7,22 +7,14 @@ namespace VVGames.ForgottenTrails.InkConnections
     {
         #region Classes
 
-        public class SCSettingsState : SCBookMenuState
+        public class SCSettingsMenuState : SCInGameMenuState
         {
-            // Inspector Properties
-
-            // Public Properties
-
-            // Private Properties
-
-            // Public Methods
-
             #region Public Methods
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.book.pages.settingsPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.settingsPageLabel.color = Color.clear;
+                Controller.InterfaceBroker.InGameMenu.pages.settingsPage.gameObject.SetActive(true);
+                Controller.InterfaceBroker.InGameMenu.labels.settingsPageLabel.color = Color.black;
             }
 
             public override void OnUpdate()
@@ -32,12 +24,12 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             public override void OnExit()
             {
-                Controller.InterfaceBroker.book.markers.settingsPageLabel.color = Color.white;
+                Controller.InterfaceBroker.InGameMenu.pages.settingsPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.labels.settingsPageLabel.color = Color.white;
             }
 
             #endregion Public Methods
 
-            // Private Methods
         }
 
         #endregion Classes

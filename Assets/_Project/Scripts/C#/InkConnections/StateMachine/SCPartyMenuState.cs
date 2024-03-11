@@ -8,25 +8,14 @@ namespace VVGames.ForgottenTrails.InkConnections
     {
         #region Classes
 
-        /// <summary>
-        ///
-        /// </summary>
-        public class SCPartyState : SCBookMenuState
+        public class SCPartyMenuState : SCInGameMenuState
         {
-            // Inspector Properties
-
-            // Public Properties
-
-            // Private Properties
-
-            // Public Methods
-
             #region Public Methods
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.book.pages.partyPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.partyPageLabel.color = Color.clear;
+                Controller.InterfaceBroker.InGameMenu.pages.partyPage.gameObject.SetActive(true);
+                Controller.InterfaceBroker.InGameMenu.labels.partyPageLabel.color = Color.black;
                 Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
 
                 foreach (var choice in Controller.Story.currentChoices)
@@ -57,12 +46,13 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.book.markers.partyPageLabel.color = Color.white;
+
+                Controller.InterfaceBroker.InGameMenu.pages.partyPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.labels.partyPageLabel.color = Color.white;
             }
 
             #endregion Public Methods
 
-            // Private Methods
         }
 
         #endregion Classes

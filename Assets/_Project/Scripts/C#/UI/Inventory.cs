@@ -13,8 +13,6 @@ namespace VVGames.ForgottenTrails.UI
     {
         #region Fields
 
-        public InGameMenuSwapper book;
-
         [Header("Prefab")]
         [SerializeField]
         private ItemContainer itemContainerPrefab;

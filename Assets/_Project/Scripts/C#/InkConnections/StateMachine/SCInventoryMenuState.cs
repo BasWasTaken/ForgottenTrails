@@ -8,22 +8,15 @@ namespace VVGames.ForgottenTrails.InkConnections
     {
         #region Classes
 
-        public class SCInventoryState : SCBookMenuState
+        public class SCInventoryMenuState : SCInGameMenuState
         {
-            // Inspector Properties
-
-            // Public Properties
-
-            // Private Properties
-
-            // Public Methods
 
             #region Public Methods
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.book.pages.inventoryPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.inventoryPageLabel.color = Color.clear;
+                Controller.InterfaceBroker.InGameMenu.pages.inventoryPage.gameObject.SetActive(true);
+                Controller.InterfaceBroker.InGameMenu.labels.inventoryPageLabel.color = Color.black;
                 Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
             }
 
@@ -43,12 +36,12 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.book.markers.inventoryPageLabel.color = Color.white;
+                Controller.InterfaceBroker.InGameMenu.pages.inventoryPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.labels.inventoryPageLabel.color = Color.white;
             }
 
             #endregion Public Methods
 
-            // Private Methods
         }
 
         #endregion Classes

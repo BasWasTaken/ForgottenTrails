@@ -106,7 +106,7 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             transform.localPosition = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y); // I don't remember why this is here (as of 2024-01-11)
 
-            //book = FindFirstObjectByType<Book>();
+            //book = FindFirstObjectByType<InGameMenuSwapper>();
             SetDresser.Assign();
             TextProducer.Assign();
             InterfaceBroker.Assign();

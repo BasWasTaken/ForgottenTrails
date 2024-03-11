@@ -8,7 +8,7 @@ namespace VVGames.ForgottenTrails.UI
     /// <summary>
     /// <para>Summary not provided.</para>
     /// </summary>
-    public class Book : MonoBehaviour
+    public class InGameMenuSwapper : MonoBehaviour
     {
         #region Properties
 

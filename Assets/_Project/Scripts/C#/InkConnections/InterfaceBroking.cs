@@ -41,7 +41,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             public Button ButtonPrefab { get; internal set; }
 
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
-            public Book book { get; set; }
+            public InGameMenuSwapper book { get; set; }
 
             [field: SerializeField, BoxGroup("Scene References"), Required]
             public Image FloatingMarker { get; internal set; }

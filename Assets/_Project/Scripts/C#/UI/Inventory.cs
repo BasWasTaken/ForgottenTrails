@@ -13,7 +13,7 @@ namespace VVGames.ForgottenTrails.UI
     {
         #region Fields
 
-        public Book book;
+        public InGameMenuSwapper book;
 
         [Header("Prefab")]
         [SerializeField]

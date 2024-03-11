@@ -281,6 +281,9 @@ namespace VVGames.ForgottenTrails.InkConnections
                 InkList background = Controller.Story.state.variablesState["Background"] as InkList;
                 Controller.SetDresser.SetBackground(ConvertListToItem(background));
 
+                InkList portraits = Controller.Story.state.variablesState["Portraits"] as InkList;
+                Controller.SetDresser.SetSprites(portraits);
+
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
 
                 Controller.TextProducer.Init(input.CurrentText, input.HistoryText);

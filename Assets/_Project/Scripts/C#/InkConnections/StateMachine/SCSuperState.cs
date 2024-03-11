@@ -291,6 +291,13 @@ namespace VVGames.ForgottenTrails.InkConnections
                 Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
                 Controller.InterfaceBroker.partyScreen.Init();
                 Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
+
+                Controller.InterfaceBroker.InGameMenu.pages.dataPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.settingsPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.inventoryPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.mapPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.journalPage.gameObject.SetActive(false);
+                Controller.InterfaceBroker.InGameMenu.pages.partyPage.gameObject.SetActive(false);
             }
 
             #endregion PrepScene

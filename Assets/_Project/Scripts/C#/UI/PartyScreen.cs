@@ -30,7 +30,7 @@ namespace VVGames.ForgottenTrails.UI
         {
             for (int i = 0; i < transform.childCount; i++)
             {
-                Destroy(transform.GetChild(0));
+                Destroy(transform.GetChild(0).gameObject);
             }
         }
 

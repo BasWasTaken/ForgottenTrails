@@ -7,21 +7,12 @@ namespace VVGames.ForgottenTrails.InkConnections
     {
         #region Classes
 
-        public class SCBookMenuState : SCSuperState
+        public class SCInGameMenuState : SCSuperState
         {
-            // Inspector Properties
-
-            // Public Properties
-
-            // Private Properties
-
-            // Public Methods
-
             #region Public Methods
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.inventory.book.Slide.Displace();
             }
 
             public override void OnUpdate()
@@ -30,6 +21,10 @@ namespace VVGames.ForgottenTrails.InkConnections
                 if (Input.GetKeyUp(KeyCode.Escape))
                 {
                     ExitMenu();
+                }
+                if (Controller.StateMachine.CurrentState == Machine.KnownStates[typeof(SCInGameMenuState)]) // "this"
+                {
+                    ExitMenu(); // exit menu if there is no menu actually active except for this empty menu container
                 }
             }
 
@@ -51,17 +46,12 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-
-                Controller.InterfaceBroker.inventory.book.RightPage.Clear();
-                Controller.InterfaceBroker.inventory.book.Slide.Replace();
             }
-
-            // Private Methods
 
             public void ExitMenu()
             {
                 //Debug.LogFormat("is {0}, a bookmenustate?", this); // simply "this" does not seem to work
-                Controller.StateMachine.DropState(Machine.KnownStates[typeof(SCBookMenuState)]); // the state to drop from may be a child but not a parent
+                Controller.StateMachine.DropState(Machine.KnownStates[typeof(SCInGameMenuState)]); // the state to drop from may be a child but not a parent
             }
 
             #endregion Public Methods

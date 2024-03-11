@@ -1,7 +1,8 @@
 using TMPro;
 using UnityEngine;
+[RequireComponent(typeof(TMPro.TextMeshProUGUI))]
 
-public class RightPage : MonoBehaviour
+public class SupplementalPage : MonoBehaviour
 {
     private TMPro.TextMeshProUGUI text;
 

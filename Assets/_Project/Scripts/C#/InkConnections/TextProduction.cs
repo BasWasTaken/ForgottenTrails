@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -23,7 +24,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             [SerializeField]
             internal TextSpeed _textSpeedPreset;
 
-            internal int maxVis = 20;
+            internal int maxVis = 5;
 
             private StoryController Controller;
 
@@ -113,10 +114,6 @@ namespace VVGames.ForgottenTrails.InkConnections
             }
 
             [field: SerializeField, BoxGroup("Scene References"), Required]
-            [Tooltip("Panel to collect overflow text.")]
-            internal TextMeshProUGUI OverFlowTextBox { get; set; }
-
-            [field: SerializeField, BoxGroup("Scene References"), Required]
             [Tooltip("Panel to display previous text.")]
             internal TextMeshProUGUI HistoryTextBox { get; set; }
 
@@ -164,6 +161,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                 CurrentText = cur;
                 VisibleCharacters = cur.Length;
                 PreviousText = his;
+                StoryController.Instance.StartCoroutine(SetMaxLines());
             }
 
             internal void Spd(float speed)
@@ -171,7 +169,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                 TextSpeedMod = speed;
             }
 
-            internal int SetMaxLines()
+            internal IEnumerator SetMaxLines()
             {
                 string backup = Controller.TextProducer.CurrentText;
                 Controller.TextProducer.CurrentText = "";
@@ -179,12 +177,13 @@ namespace VVGames.ForgottenTrails.InkConnections
                 while (!Controller.TextProducer.TextBox.isTextOverflowing)
                 {
                     maxVis++;
-                    Controller.TextProducer.CurrentText += '\n';
+                    Controller.TextProducer.CurrentText += "test\n";
                     if (maxVis > 1000) break;
+                    yield return new WaitForEndOfFrame();
                 }
                 Controller.TextProducer.CurrentText = backup;
                 Debug.Log(string.Format("fitted {0} lines in the text box!", maxVis));
-                return maxVis;
+                yield return maxVis;
             }
 
             #endregion Internal Methods

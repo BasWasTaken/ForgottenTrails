@@ -89,7 +89,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                                      "OpenMap" +
                                      "}")
                             {
-                                //Controller.InterfaceBroker.book.markers.mapMark.GetComponent<Button>().interactable = true; // allow the use of the map button
+                                //Controller.InterfaceBroker.book.markers.mapPageLabel.GetComponent<Button>().interactable = true; // allow the use of the map button
                                 // nee, ik denk te moeilijk! dit hoeft niet de knop te enabelen, gewoon wanneer dit er is kan de speler als het goed is o pde knop drukken en gaan reizen, maar hij kan altidj drukken.
                                 Debug.Log("Info: Map Travel Available (Bas has not yet put in a notification or whatever)");
                             }

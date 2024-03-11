@@ -23,7 +23,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             public override void OnEnter()
             {
                 Controller.InterfaceBroker.book.pages.inventoryPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.inventoryMark.color = Color.clear;
+                Controller.InterfaceBroker.book.markers.inventoryPageLabel.color = Color.clear;
                 Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
             }
 
@@ -43,7 +43,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.book.markers.inventoryMark.color = Color.white;
+                Controller.InterfaceBroker.book.markers.inventoryPageLabel.color = Color.white;
             }
 
             #endregion Public Methods

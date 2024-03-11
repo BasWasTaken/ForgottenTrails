@@ -31,7 +31,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             public override void OnEnter()
             {
                 Controller.InterfaceBroker.book.pages.mapPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.mapMark.color = Color.clear;
+                Controller.InterfaceBroker.book.markers.mapPageLabel.color = Color.clear;
                 foreach (var choice in Controller.Story.currentChoices)
                 {
                     if (choice.text == "{UNITY:OpenMap}")
@@ -61,7 +61,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.book.markers.mapMark.color = Color.white;
+                Controller.InterfaceBroker.book.markers.mapPageLabel.color = Color.white;
             }
 
             #endregion Public Methods

@@ -26,7 +26,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             public override void OnEnter()
             {
                 Controller.InterfaceBroker.book.pages.partyPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.partyMark.color = Color.clear;
+                Controller.InterfaceBroker.book.markers.partyPageLabel.color = Color.clear;
                 Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
 
                 foreach (var choice in Controller.Story.currentChoices)
@@ -57,7 +57,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-                Controller.InterfaceBroker.book.markers.partyMark.color = Color.white;
+                Controller.InterfaceBroker.book.markers.partyPageLabel.color = Color.white;
             }
 
             #endregion Public Methods

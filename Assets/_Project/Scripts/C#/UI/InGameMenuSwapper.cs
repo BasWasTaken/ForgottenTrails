@@ -19,6 +19,7 @@ namespace VVGames.ForgottenTrails.UI
 
         [field: SerializeField]
         public Bookmarks markers { get; set; }
+
         [field: SerializeField]
         public RightPage RightPage { get; set; }
 
@@ -72,11 +73,12 @@ namespace VVGames.ForgottenTrails.UI
         {
             #region Fields
 
-            public RectTransform settingPage;
+            public RectTransform settingsPage;
             public RectTransform dataPage;
             public RectTransform inventoryPage;
             public RectTransform partyPage;
             public RectTransform mapPage;
+            public RectTransform logPage;
 
             #endregion Fields
         }
@@ -86,11 +88,12 @@ namespace VVGames.ForgottenTrails.UI
         {
             #region Fields
 
-            public Image settingMark;
-            public Image dataMark;
-            public Image inventoryMark;
-            public Image partyMark;
-            public Image mapMark;
+            public Image settingsPageLabel;
+            public Image dataPageLabel;
+            public Image inventoryPageLabel;
+            public Image partyPageLabel;
+            public Image mapPageLabel;
+            public Image logMark;
 
             #endregion Fields
         }

@@ -21,8 +21,8 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             public override void OnEnter()
             {
-                Controller.InterfaceBroker.book.pages.settingPage.SetAsLastSibling();
-                Controller.InterfaceBroker.book.markers.settingMark.color = Color.clear;
+                Controller.InterfaceBroker.book.pages.settingsPage.SetAsLastSibling();
+                Controller.InterfaceBroker.book.markers.settingsPageLabel.color = Color.clear;
             }
 
             public override void OnUpdate()
@@ -32,7 +32,7 @@ namespace VVGames.ForgottenTrails.InkConnections
 
             public override void OnExit()
             {
-                Controller.InterfaceBroker.book.markers.settingMark.color = Color.white;
+                Controller.InterfaceBroker.book.markers.settingsPageLabel.color = Color.white;
             }
 
             #endregion Public Methods

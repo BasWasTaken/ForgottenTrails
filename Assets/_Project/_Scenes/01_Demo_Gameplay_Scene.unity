@@ -1334,6 +1334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 260687647}
   - component: {fileID: 260687648}
+  - component: {fileID: 260687649}
   m_Layer: 5
   m_Name: Menus
   m_TagString: Untagged
@@ -1389,6 +1390,33 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &260687649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260687646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e75586859f0c9b49ac98db763178933, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <pages>k__BackingField:
+    settingsPage: {fileID: 0}
+    dataPage: {fileID: 1773213213}
+    inventoryPage: {fileID: 1375451937}
+    partyPage: {fileID: 189748203}
+    mapPage: {fileID: 268175080}
+    logPage: {fileID: 1511409937}
+  <markers>k__BackingField:
+    settingsPageLabel: {fileID: 1621936445}
+    dataPageLabel: {fileID: 1716337885}
+    inventoryPageLabel: {fileID: 1181689802}
+    partyPageLabel: {fileID: 376688487}
+    mapPageLabel: {fileID: 915649941}
+    logMark: {fileID: 2137261888}
+  <RightPage>k__BackingField: {fileID: 1654183295}
 --- !u!1 &261469451
 GameObject:
   m_ObjectHideFlags: 0
@@ -1407,7 +1435,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &261469452
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1426,7 +1454,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -33, y: -25.794}
+  m_AnchoredPosition: {x: -33, y: -25.793945}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &261469453
@@ -1473,7 +1501,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: DropMenuState
         m_Mode: 1
@@ -1670,8 +1698,6 @@ GameObject:
   - component: {fileID: 275361435}
   - component: {fileID: 275361437}
   - component: {fileID: 275361436}
-  - component: {fileID: 275361438}
-  - component: {fileID: 275361440}
   - component: {fileID: 275361441}
   m_Layer: 5
   m_Name: MenuPages
@@ -1744,45 +1770,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 275361434}
   m_CullTransparentMesh: 1
---- !u!114 &275361438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 275361434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92130e48c9cc27946b369e5fa40684eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  direction: {x: 0, y: -1}
-  rectTransform: {fileID: 275361435}
---- !u!114 &275361440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 275361434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e75586859f0c9b49ac98db763178933, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <pages>k__BackingField:
-    settingPage: {fileID: 192848685}
-    dataPage: {fileID: 1773213213}
-    inventoryPage: {fileID: 1375451937}
-    partyPage: {fileID: 189748203}
-    mapPage: {fileID: 268175080}
-  <markers>k__BackingField:
-    settingMark: {fileID: 1621936445}
-    dataMark: {fileID: 1716337885}
-    inventoryMark: {fileID: 1181689802}
-    partyMark: {fileID: 376688487}
-    mapMark: {fileID: 915649941}
-  <RightPage>k__BackingField: {fileID: 1654183295}
 --- !u!114 &275361441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2360,7 +2347,7 @@ GameObject:
   - component: {fileID: 376688487}
   - component: {fileID: 376688486}
   m_Layer: 5
-  m_Name: Party Label
+  m_Name: Party Screen  Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2380,7 +2367,7 @@ RectTransform:
   m_Children:
   - {fileID: 1985791990}
   m_Father: {fileID: 1702260506}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2431,7 +2418,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: EnterPartyState
         m_Mode: 1
@@ -2531,7 +2518,6 @@ GameObject:
   m_Component:
   - component: {fileID: 497693523}
   - component: {fileID: 497693525}
-  - component: {fileID: 497693524}
   m_Layer: 5
   m_Name: GUI
   m_TagString: Untagged
@@ -2562,36 +2548,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &497693524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497693522}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.39215687, g: 0.19607843, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 175aacc7a69905c4e91c2b213a197716, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &497693525
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2962,7 +2918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917fd659e780df1449d84aca1e27a079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  book: {fileID: 275361440}
+  book: {fileID: 0}
   itemContainerPrefab: {fileID: 1472122517207343234, guid: 83ec83b52f935c040bae5aac53527027, type: 3}
 --- !u!1 &531542275
 GameObject:
@@ -3412,7 +3368,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: DropMenuState
         m_Mode: 1
@@ -3650,7 +3606,7 @@ GameObject:
   - component: {fileID: 915649941}
   - component: {fileID: 915649940}
   m_Layer: 5
-  m_Name: Map Label
+  m_Name: Map Screen Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3670,7 +3626,7 @@ RectTransform:
   m_Children:
   - {fileID: 1365466870}
   m_Father: {fileID: 1702260506}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3721,7 +3677,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: EnterMapState
         m_Mode: 1
@@ -4997,7 +4953,7 @@ GameObject:
   - component: {fileID: 1181689802}
   - component: {fileID: 1181689801}
   m_Layer: 5
-  m_Name: Inventory Label
+  m_Name: Inventory Screen Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5068,7 +5024,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: EnterInventoryState
         m_Mode: 1
@@ -6865,7 +6821,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1511409937}
   m_Layer: 5
-  m_Name: Scroll
+  m_Name: Journal Page
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7253,30 +7209,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1206258460}
     m_Modifications:
-    - target: {fileID: 1560850153, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1560850153, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-      propertyPath: m_MinWidth
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1560850153, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-      propertyPath: m_FlexibleWidth
-      value: 2000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1560850153, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-      propertyPath: m_FlexibleHeight
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1560850153, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-      propertyPath: m_PreferredWidth
-      value: 690
-      objectReference: {fileID: 0}
-    - target: {fileID: 1560850153, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
-      propertyPath: m_PreferredHeight
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 8404248775511915674, guid: a79b4e27ffade3242a547ed86da0b8d7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7552,7 +7484,7 @@ GameObject:
   - component: {fileID: 1621936445}
   - component: {fileID: 1621936444}
   m_Layer: 5
-  m_Name: Settings Label
+  m_Name: Settings Screen Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7623,7 +7555,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: EnterSettingsState
         m_Mode: 1
@@ -7946,8 +7878,8 @@ RectTransform:
   - {fileID: 1621936443}
   - {fileID: 1716337883}
   - {fileID: 1181689800}
-  - {fileID: 915649939}
   - {fileID: 376688485}
+  - {fileID: 915649939}
   - {fileID: 2137261886}
   m_Father: {fileID: 260687647}
   m_RootOrder: 0
@@ -8151,7 +8083,7 @@ GameObject:
   - component: {fileID: 1716337885}
   - component: {fileID: 1716337884}
   m_Layer: 5
-  m_Name: Save Label
+  m_Name: Data Screen Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8222,7 +8154,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: EnterDataState
         m_Mode: 1
@@ -8671,141 +8603,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &1778654250
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1778654251}
-  - component: {fileID: 1778654253}
-  - component: {fileID: 1778654252}
-  m_Layer: 5
-  m_Name: OverFlow
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1778654251
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1778654250}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1908123727}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 644.95, y: -0.0021362}
-  m_SizeDelta: {x: 630.1, y: 1081.3}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1778654252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1778654250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 975ac60ce9333754da89a67e8aeaf275, type: 2}
-  m_sharedMaterial: {fileID: -2803204394490697467, guid: 975ac60ce9333754da89a67e8aeaf275, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4290117887
-  m_fontColor: {r: 1, g: 0, b: 0.71341753, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 28
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 10
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 3
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 6, y: 24, z: 6, w: 6}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &1778654253
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1778654250}
-  m_CullTransparentMesh: 1
 --- !u!1 &1870545957
 GameObject:
   m_ObjectHideFlags: 0
@@ -9046,7 +8843,6 @@ GameObject:
   - component: {fileID: 1908123729}
   - component: {fileID: 1908123728}
   - component: {fileID: 1908123731}
-  - component: {fileID: 1908123730}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -9089,7 +8885,6 @@ RectTransform:
   m_Children:
   - {fileID: 45795607}
   - {fileID: 497693523}
-  - {fileID: 1778654251}
   m_Father: {fileID: 2009679605}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9138,36 +8933,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!114 &1908123730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908123722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 2
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1908123731
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9393,7 +9158,7 @@ MonoBehaviour:
     <AutoAdvance>k__BackingField: 0
     <RequireSpaceToContinue>k__BackingField: 0
     <StillPauseWhileSkipping>k__BackingField: 1
-    <OverFlowTextBox>k__BackingField: {fileID: 1778654252}
+    <OverFlowTextBox>k__BackingField: {fileID: 0}
     <HistoryTextBox>k__BackingField: {fileID: 2084113306}
     <Pauses>k__BackingField: {fileID: 11400000, guid: 83cbd8cda1b9e2344b5a412c57f5020d, type: 2}
     <TextBox>k__BackingField: {fileID: 348379362}
@@ -9406,7 +9171,7 @@ MonoBehaviour:
     inventory: {fileID: 530457801}
     partyScreen: {fileID: 1376392224}
     <ButtonPrefab>k__BackingField: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
-    <book>k__BackingField: {fileID: 275361440}
+    <book>k__BackingField: {fileID: 0}
     <FloatingMarker>k__BackingField: {fileID: 531542277}
     <AdvanceDialogueDelay>k__BackingField: 0.4
     <SkipDelay>k__BackingField: 0.2
@@ -9686,7 +9451,7 @@ GameObject:
   - component: {fileID: 2137261888}
   - component: {fileID: 2137261887}
   m_Layer: 5
-  m_Name: Journal Label
+  m_Name: Journal Screen Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9757,7 +9522,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275361440}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: EnterPartyState
         m_Mode: 1

@@ -2167,7 +2167,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 3
+  m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -2185,7 +2185,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 6, y: 24, z: 6, w: 6}
+  m_margin: {x: 6, y: 4.948143, z: 6, w: 13.0191345}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -8896,7 +8896,7 @@ MonoBehaviour:
     TPStatus: 0
     _textSpeedPreset: 48
     <AutoAdvance>k__BackingField: 0
-    <RequireSpaceToContinue>k__BackingField: 0
+    <RequireSpaceToContinue>k__BackingField: 1
     <StillPauseWhileSkipping>k__BackingField: 1
     <HistoryTextBox>k__BackingField: {fileID: 2084113306}
     <Pauses>k__BackingField: {fileID: 11400000, guid: 83cbd8cda1b9e2344b5a412c57f5020d, type: 2}

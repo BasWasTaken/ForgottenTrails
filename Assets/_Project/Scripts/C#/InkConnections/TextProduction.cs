@@ -113,10 +113,6 @@ namespace VVGames.ForgottenTrails.InkConnections
             }
 
             [field: SerializeField, BoxGroup("Scene References"), Required]
-            [Tooltip("Panel to collect overflow text.")]
-            internal TextMeshProUGUI OverFlowTextBox { get; set; }
-
-            [field: SerializeField, BoxGroup("Scene References"), Required]
             [Tooltip("Panel to display previous text.")]
             internal TextMeshProUGUI HistoryTextBox { get; set; }
 

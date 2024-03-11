@@ -20,9 +20,6 @@ namespace VVGames.ForgottenTrails.UI
         [field: SerializeField]
         public Labels labels { get; set; }
 
-        [field: SerializeField]
-        public SupplementalPage Supplemental { get; set; }
-
         #endregion Properties
 
         #region Public Methods

@@ -26,12 +26,19 @@ namespace VVGames.ForgottenTrails.UI
 
         #region Public Methods
 
+        public void Init()
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Destroy(transform.GetChild(0));
+            }
+        }
+
         public void FetchPartyMembers(InkList inkParty)
         {
             // destroy all buttons
             for (int i = 0; i < UnityParty.Count; i++)
             {
-
                 Destroy(UnityParty[UnityParty.Keys.ToArray()[i]].button.gameObject);
             }
             UnityParty.Clear();

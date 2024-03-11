@@ -9,7 +9,6 @@ namespace VVGames.ForgottenTrails.InkConnections
 
         public class SCInGameMenuState : SCSuperState
         {
-
             #region Public Methods
 
             public override void OnEnter()
@@ -23,7 +22,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                 {
                     ExitMenu();
                 }
-                if (Controller.StateMachine.CurrentState == Machine.KnownStates[typeof(SCInGameMenuState)]) // "this" 
+                if (Controller.StateMachine.CurrentState == Machine.KnownStates[typeof(SCInGameMenuState)]) // "this"
                 {
                     ExitMenu(); // exit menu if there is no menu actually active except for this empty menu container
                 }
@@ -47,10 +46,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                         break;
                     }
                 }
-
-                Controller.InterfaceBroker.InGameMenu.Supplemental.Clear();
             }
-
 
             public void ExitMenu()
             {

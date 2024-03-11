@@ -287,7 +287,10 @@ namespace VVGames.ForgottenTrails.InkConnections
                 Controller.TextProducer.Spd((float)Controller.Story.state.variablesState["Speed"]);
 
                 Controller.TextProducer.Init(input.CurrentText, input.HistoryText);
+                Controller.InterfaceBroker.inventory.Init();
                 Controller.InterfaceBroker.inventory.FetchItems(Controller.Story.state.variablesState["Inventory"] as InkList);
+                Controller.InterfaceBroker.partyScreen.Init();
+                Controller.InterfaceBroker.partyScreen.FetchPartyMembers(Controller.Story.state.variablesState["Party"] as InkList);
             }
 
             #endregion PrepScene

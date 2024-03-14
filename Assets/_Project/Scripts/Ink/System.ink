@@ -327,8 +327,8 @@ VAR Inventory = () // list of items the player has.
 === function Item_Add(item) // Add item to inventory.
     ~ Inventory += item
 
-=== function ItemChoice(itemOrAffordance) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal). 
-\{ItemChoice({itemOrAffordance})\}
+=== function ItemChoice(itemOrAffordances) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal). 
+\{ItemChoice({itemOrAffordances})\} 
 
 VAR UsedItem = () // container for unity to tell ink what item it just used
 ~ UsedItem = Items()

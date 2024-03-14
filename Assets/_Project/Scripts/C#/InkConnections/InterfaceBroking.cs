@@ -104,7 +104,55 @@ namespace VVGames.ForgottenTrails.InkConnections
                             break;
                         }
                         else
-                        {
+                        { // get one or more affordances
+                          // split string into multiple
+
+
+                            // start copypaste
+                            string input = "Hello|world|this|is|a|test";
+
+                            // Split the input string using the '|' separator
+                            string[] substrings = input.Split('|');
+
+                            // Output each substring
+                            foreach (string substring in substrings)
+                            {
+                                Console.WriteLine(substring);
+                            }
+
+                            // Split the input string using the keyword "is"
+                            substrings = input.Split(new string[] { "is" }, StringSplitOptions.None);
+
+                            // Output each substring
+                            foreach (string substring in substrings)
+                            {
+                                Console.WriteLine(substring);
+                            }
+                            string input = "Hello|world|this|is|a|test";
+
+                            // Split the input string using the '|' separator
+                            string[] substrings = input.Split('|');
+
+                            // Output each substring
+                            foreach (string substring in substrings)
+                            {
+                                Console.WriteLine(substring);
+                            }
+
+                            // Split the input string using the keyword "is"
+                            substrings = input.Split(new string[] { "is" }, StringSplitOptions.None);
+
+                            // Output each substring
+                            foreach (string substring in substrings)
+                            {
+                                Console.WriteLine(substring);
+                            }
+
+
+
+                            // end copypaste
+
+
                             foreach (Affordance trait in item.Affordaces)
                             {
                                 if (trait.ToString() == keyPhrase)

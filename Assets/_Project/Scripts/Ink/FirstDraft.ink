@@ -20,6 +20,8 @@ INCLUDE EdanInn.ink
     -> lineBreakTest
     + [Proceed to Character Creation]
     -> Preamble
+    + [Give me item examples]
+    -> ItemUses
     
 // --------- Vugs  ---------
     

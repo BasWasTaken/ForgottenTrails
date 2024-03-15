@@ -62,3 +62,12 @@ You're on a sea breeze path now! Whoo!
 === blahblah
 test
 -> DONE
+
+
+=== ItemUses
+test, use an item
+ *[{ItemChoice("weapon&cutting")}]
+ you used an item
+
+
+-> DONE

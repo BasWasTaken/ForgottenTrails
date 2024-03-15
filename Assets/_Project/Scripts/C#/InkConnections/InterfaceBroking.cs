@@ -105,37 +105,19 @@ namespace VVGames.ForgottenTrails.InkConnections
                         }
                         else
                         { // get one or more affordances
-                          // split string into multiple
-
-                            // start copypaste
-                            string input = "Hello|world|this|is|a|test";
-
-                            // Split the input string using the '|' separator
-                            string[] substrings = input.Split('|');
+                            // Split the input string using the '&' separator
+                            string[] substrings = keyPhrase.Split('&');
 
                             // Output each substring
                             foreach (string substring in substrings)
                             {
-                                Console.WriteLine(substring);
-                            }
-
-                            // Split the input string using the keyword "is"
-                            substrings = input.Split(new string[] { "is" }, StringSplitOptions.None);
-
-                            // Output each substring
-                            foreach (string substring in substrings)
-                            {
-                                Console.WriteLine(substring);
-                            }
-
-                            // end copypaste
-
-                            foreach (Affordance trait in item.Affordaces)
-                            {
-                                if (trait.ToString() == keyPhrase)
+                                foreach (Affordance trait in item.Affordaces)
                                 {
-                                    discoveredChoice = potentialChoice;
-                                    break;
+                                    if (trait.ToString() == substring)
+                                    {
+                                        discoveredChoice = potentialChoice;
+                                        break;
+                                    }
                                 }
                             }
                         }

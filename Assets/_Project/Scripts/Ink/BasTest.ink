@@ -66,8 +66,14 @@ test
 
 === ItemUses
 test, use an item
- *[{ItemChoice("weapon&cutting")}]
- you used an item
+ *[{ItemChoice(EdanInnRoomKey1)}]
+ ewas
+    -> blahblah
+ *[{ItemChoice("weapon&heavy")}]
+ qwer
+    -> blahblah
+    
+
 
 
 -> DONE

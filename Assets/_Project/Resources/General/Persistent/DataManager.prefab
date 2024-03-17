@@ -72,7 +72,6 @@ MonoBehaviour:
   - Background
   - Portraits
   - Items
-  - Affordances
   - Locations
   - PartyCandidates
   menuScene: 00_MainMenu_Scene
@@ -84,6 +83,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b4531b50a08aa704cafeca8a5a5604ab, type: 2}
   - {fileID: 11400000, guid: 91bc0009517c7c248ac09b279b8aee36, type: 2}
   - {fileID: 11400000, guid: 4e3f9c270e35e2b4da8582591b3496ae, type: 2}
+  - {fileID: 11400000, guid: 1f10ab1912f7e19459fcbf69e2db16dd, type: 2}
+  - {fileID: 11400000, guid: 30329abdb2f4460408f17018c7d4f504, type: 2}
+  - {fileID: 11400000, guid: b1a0649fdc37f9c4a9aaddcad38b3c91, type: 2}
+  - {fileID: 11400000, guid: 9e914389421418a459eb9488f1a31ffe, type: 2}
   possibleLocations:
   - {fileID: 11400000, guid: 3db0c11f6bef085488d1cded84be731b, type: 2}
   - {fileID: 11400000, guid: c510bc596b3598544aa097a90b02b206, type: 2}
@@ -91,4 +94,5 @@ MonoBehaviour:
   possiblePartyMembers:
   - {fileID: 11400000, guid: 9a9b45c34969cd44a9630b56afbbbf99, type: 2}
   - {fileID: 11400000, guid: b53ca94b2ff15d54fa916674543e07dd, type: 2}
+  - {fileID: 11400000, guid: caec4f451a3bfe143b5d999c1e398618, type: 2}
   <TextAsset>k__BackingField: {fileID: 4900000, guid: d393fd924f9849344ade71dc807dbafa, type: 3}

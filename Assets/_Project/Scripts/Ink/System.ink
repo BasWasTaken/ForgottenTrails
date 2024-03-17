@@ -309,12 +309,6 @@ LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoom
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 
-LIST Affordances = weapon, tool, cooking, cutting, stabbing, food // Vugs may add items to this list.
-
-~ Affordances = LIST_ALL(Affordances) // Full list for Unity syncing. Note Bas: I should maybe prefix with underscore 
-
-// NOTE BAS: Wait, why do I do that? Check this later. Volgens mij moet ik helemaal niet hier "List all" moeten gebruiken, dat kan ook gewoon vanuit code in unity... En de lijst is hier al gewoon gedefineerd als zo'n lijst.
-
 // rations and money are currently not in inventory sytem:
 VAR TravelRations = 107
 

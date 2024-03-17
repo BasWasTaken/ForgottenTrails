@@ -62,3 +62,18 @@ You're on a sea breeze path now! Whoo!
 === blahblah
 test
 -> DONE
+
+
+=== ItemUses
+test, use an item
+ *[{ItemChoice(EdanInnRoomKey1)}]
+ you open the door with your key
+    -> blahblah
+ *[{ItemChoice("tool&thin")}]
+ you lockpick the door
+    -> blahblah
+    
+
+
+
+-> DONE

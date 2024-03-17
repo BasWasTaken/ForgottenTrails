@@ -94,7 +94,6 @@ namespace VVGames.ForgottenTrails.InkConnections
             Story story = new(TextAsset.text);
 
             ListDefinition items = null;
-            ListDefinition affordances = null;
             ListDefinition locations = null;
             ListDefinition partyCandidates = null;
             foreach (string inkListName in InkListNames)
@@ -106,11 +105,6 @@ namespace VVGames.ForgottenTrails.InkConnections
                     {
                         items = listDefinition;
                         Debug.LogFormat("Found items list as {0}", listDefinition);
-                    }
-                    else if (inkListName == "Affordances")
-                    {
-                        affordances = listDefinition;
-                        Debug.LogFormat("Found affordances list as {0}", listDefinition);
                     }
                     else if (inkListName == "Locations")
                     {
@@ -181,7 +175,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             if (error == "") message = "Succesfully fetched InkLists." + noError;
             else message = "ERROR IN ATTEMPTING TO LIST ASSETS" + error;
 
-            if (items == null | affordances == null | locations == null | partyCandidates == null)
+            if (items == null | locations == null | partyCandidates == null)
             {
                 throw new NullReferenceException("one of the expected inklists was not set to be searched. \nLog:" + message);
             }
@@ -189,9 +183,9 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 throw new Exception(message);
             }
-            else if (!ItemListsKnown(items, affordances))
+            else if (!ItemListsKnown(items))
             {
-                throw new Exception("Could not match up items or affordances. \nLog:" + message);
+                throw new Exception("Could not match up items. \nLog:" + message);
             }
             else if (!LocationsRecognised(locations))
             {
@@ -234,7 +228,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             return relativePath;
         }
 
-        private bool ItemListsKnown(ListDefinition items, ListDefinition affordances)
+        private bool ItemListsKnown(ListDefinition items)
         {
             ItemDictionary.Clear();
             Dictionary<string, InventoryItem> TemporaryDictionary = new();
@@ -261,31 +255,13 @@ namespace VVGames.ForgottenTrails.InkConnections
             }
             // assert all afforances are same
 
-            // assert all affordances from ink exist in unity
-            foreach (InkListItem affordance in affordances.items.Keys)
-            {
-                if (!Enum.IsDefined(typeof(Affordance), affordance.itemName))
-                {
-                    error += string.Format("\nAffordance \"{0}\" not present in unity enum definition!", affordance);
-                }
-            }
-
-            // assert all affordances from unity exist in ink
-            foreach (string affordance in Enum.GetNames(typeof(Affordance)))
-            {
-                if (!affordances.ContainsItemWithName(affordance))
-                {
-                    error += string.Format("\nAffordance \"{0}\" not present in ink list!", affordance);
-                }
-            }
-
             if (error == "")
             {
                 return true;
             }
             else
             {
-                Debug.LogAssertion("ITEMS OR AFFORDANCES NOT MATCHED UP" + error);
+                Debug.LogAssertion("ITEMS NOT MATCHED UP" + error);
                 return false;
             }
         }

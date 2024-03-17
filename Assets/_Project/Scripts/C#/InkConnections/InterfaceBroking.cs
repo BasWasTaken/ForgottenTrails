@@ -116,7 +116,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                                 if (!item.ContainsAffordance(affordance))
                                 {
                                     //matchAllAffordances = false;
-                                    Debug.Log("Nope, that item doesn't work!");
+                                    Debug.Log("Nope, that item doesn't work! It's not " + affordance);
                                     return false;
                                 }
                             }

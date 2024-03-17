@@ -63,7 +63,7 @@ Once at the top, you spot the source: a cooking fire set by the roadside. A man 
         //This is going to provide issues. Discuss for meeting.
 =UnprovokedAttackMerchants(->returnTo)
 //How to account for multiple traits? Say, weapon and ranged/melee?
-+[{ItemChoice(weapon)}]
++[{ItemChoice("weapon")}]
 Your hand drifts to your weapon. For a moment you hesitate
     ++and you think the better of it. 
     ->returnTo 

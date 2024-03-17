@@ -101,6 +101,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                         if (item.CanonicalName == keyPhrase)
                         {
                             discoveredChoice = potentialChoice;
+                            Debug.LogFormat("Found exact match: {0} == {1}", item, keyPhrase);
                             break;
                         }
                         else
@@ -109,20 +110,27 @@ namespace VVGames.ForgottenTrails.InkConnections
                             string[] affordances = keyPhrase.Split('&');
 
                             // Output each affordance
-                            bool matchAllAffordances = true;
+                            List<bool> HasAffordances = new();
+                            string values = "";
                             foreach (string affordance in affordances) // for each affordance we need,
                             {
                                 // see if the item has it.
-                                if (!item.ContainsAffordance(affordance))
+                                if (item.ContainsAffordance(affordance))
                                 {
-                                    matchAllAffordances = false;
-                                    Debug.Log("Nope, that item doesn't work! It's not " + affordance);
-                                    return false;
+                                    HasAffordances.Add(true);
+                                    values += affordance + '&';
+                                }
+                                else
+                                {
+                                    HasAffordances.Add(false);
+                                    string addendum = "It's not " + affordance;
+                                    break;
                                 }
                             }
-                            if (matchAllAffordances)
+                            if (!HasAffordances.Contains(false))
                             {
                                 discoveredChoice = potentialChoice;
+                                Debug.LogFormat("found item that is {0}", values);
                                 break;
                             }
                         }
@@ -137,6 +145,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                     newList.AddItem(item.InkListItem);
                     Controller.Story.variablesState["UsedItem"] = newList;
                     OnClickChoiceButton(discoveredChoice);
+                    Debug.LogFormat("used item {0} for choice {1}", item.name, discoveredChoice.text);
                     return true;
                 }
                 else

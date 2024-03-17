@@ -55,8 +55,14 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
         public bool ContainsAffordance(string affordanceNeeded)
         {
             Affordance processed;
-            Enum.TryParse(affordanceNeeded, out processed);
-            return ContainsAffordance(processed);
+            if (Enum.TryParse(affordanceNeeded, out processed))
+            {
+                return ContainsAffordance(processed);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion Public Methods

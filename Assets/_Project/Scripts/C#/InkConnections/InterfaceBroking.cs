@@ -106,20 +106,24 @@ namespace VVGames.ForgottenTrails.InkConnections
                         else
                         { // get one or more affordances
                             // Split the input string using the '&' separator
-                            string[] substrings = keyPhrase.Split('&');
+                            string[] affordances = keyPhrase.Split('&');
 
-                            // Output each substring
-                            foreach (string substring in substrings)
+                            // Output each affordance
+                            //bool matchAllAffordances = true;
+                            foreach (string affordance in affordances) // for each affordance we need,
                             {
-                                foreach (Affordance trait in item.Affordaces)
+                                // see if the item has it.
+                                if (!item.ContainsAffordance(affordance))
                                 {
-                                    if (trait.ToString() == substring)
-                                    {
-                                        discoveredChoice = potentialChoice;
-                                        break;
-                                    }
+                                    //matchAllAffordances = false;
+                                    Debug.Log("Nope, that item doesn't work!");
+                                    return false;
                                 }
                             }
+                            //if (matchAllAffordances)
+                            //{
+                            // continue
+                            //}
                         }
                     }
                     // else not item, so need not be considered.

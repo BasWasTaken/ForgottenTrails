@@ -109,21 +109,22 @@ namespace VVGames.ForgottenTrails.InkConnections
                             string[] affordances = keyPhrase.Split('&');
 
                             // Output each affordance
-                            //bool matchAllAffordances = true;
+                            bool matchAllAffordances = true;
                             foreach (string affordance in affordances) // for each affordance we need,
                             {
                                 // see if the item has it.
                                 if (!item.ContainsAffordance(affordance))
                                 {
-                                    //matchAllAffordances = false;
+                                    matchAllAffordances = false;
                                     Debug.Log("Nope, that item doesn't work! It's not " + affordance);
                                     return false;
                                 }
                             }
-                            //if (matchAllAffordances)
-                            //{
-                            // continue
-                            //}
+                            if (matchAllAffordances)
+                            {
+                                discoveredChoice = potentialChoice;
+                                break;
+                            }
                         }
                     }
                     // else not item, so need not be considered.

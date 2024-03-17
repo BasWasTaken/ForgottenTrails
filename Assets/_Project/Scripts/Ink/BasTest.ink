@@ -67,10 +67,10 @@ test
 === ItemUses
 test, use an item
  *[{ItemChoice(EdanInnRoomKey1)}]
- ewas
+ you open the door with your key
     -> blahblah
- *[{ItemChoice("weapon&heavy")}]
- qwer
+ *[{ItemChoice("tool&thin")}]
+ you lockpick the door
     -> blahblah
     
 

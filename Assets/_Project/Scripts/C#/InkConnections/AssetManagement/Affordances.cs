@@ -7,7 +7,10 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
         cutting,
         stabbing,
         cooking,
-        food
+        food,
+        heavy,
+        blunt,
+        thin
         //vul aan
     }
 }

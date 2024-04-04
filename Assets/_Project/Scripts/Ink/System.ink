@@ -61,18 +61,19 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
    ----------------------------------*/
 //Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
 // Bas: Absoluut, laat maar weten. 
-// Overigens is dit trouwens een voorbeeld van iets dat me misschien handig lijkt om in een andere file te defineren: jij zult wsl veel nieuwe knowledge chains aan moeten maken, en dan is het miss fijn als je niet steeds dit hele systeem document door hoef te spitten. (Idem voor items etc.)
-// Vugs: dit wordt nu al irritant idd nu ik er voor de eerste keer echt mee bezig ben xD
+// WIP: Movev to different file
 LIST EdanCastleKnow = (none), Exists, IsCastleOnHill // wat is dit nou weer voor een verschikkelijke variabelnaam die ik heb gemaakt wtf
 LIST Edgar = (none), Exists, Name
 LIST Henry = (none), Exists, Name
 LIST Tomas = (none), Exists, Name
 LIST Eileen = (none), Exists, Name
 //I keep running into the issue that you can't give the same name to things that have already been used elsewhere, even in different functions or as the variable instead of the variable name. You seem to have fixed this, how?
+// I have no idea.
 //LIST Alice = (none), Exists, Name
 LIST Rubert = (none), Exists, Name
 LIST Edie = (none), Exists, Name
-    
+
+	
  === Section_Extended ===
  /* ---------------------------------
     ## Custom Utility

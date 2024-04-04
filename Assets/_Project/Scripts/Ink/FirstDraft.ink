@@ -22,6 +22,8 @@ INCLUDE EdanInn.ink
     -> Preamble
     + [Give me item examples]
     -> ItemUses
+    + [To Bas' writings]
+    -> JustStartWriting
     
 // --------- Vugs  ---------
     

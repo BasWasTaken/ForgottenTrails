@@ -94,6 +94,7 @@ LIST PoliceAwareness = (none), rumors, spotted, identified
 === Antecedent
 VAR Time = 0
 VAR Attempts=0
+// only show on first visit?
 The gem feels heavy in your hands. That shouldn't have surprised you. It's a giant gem. Of course it's heavy. But its weight made it real in a way it wasn't before.
 You've worked so much to get here. You've been planning this for so long. But now it's finally in front of you, and all you have to do know is escape.
 ESCAPE!
@@ -102,6 +103,11 @@ You don't hear any alarms yet. Still, that doesn't mean it's safe to assume you'
 First things first. As you put the gem away in your pack, your head swivels around and you consider your potential exists: <>
 - (l00)
     {|you see }the main entrance, the back door, and the vents above you.
+    <- MainEntrance
+    <- BackDoor
+    <- Vent
+    -> DONE
+== MainEntrance
     + The main entrance[...]
     ~ Time += 1
     <> consists of a set of heavy-looking double doors, sealed shut.
@@ -109,48 +115,57 @@ First things first. As you put the gem away in your pack, your head swivels arou
         ~ Doors = blasted
         Note door is broken and describe exit.# WIP 
         -> EscapeFromFront
-        + + [Pick the lock]
+        + + {Doors == closed}[Pick the lock]
+        VAR foundLock = false
         Steeling yourself, you take of your pack and take out your lockpicking set. Glancing at the lock, you estimate the lock's size to be about a 3. You take out the appropriate rod along with the pryer, and turn to the door. // the size of the lock could be randomized and maybe the esitmate could be wrong if hurried
-        - (LockPicking)
+            -> LockPicking
+        + + {Doors == unlocked} Peek through the doors.
+        -> FrontPeek
+        + + {Doors >= unlocked} Exit through the doors.
+        -> EscapeFromFront
+        + + [Return]
+            -> Antecedent.l00
+= LockPicking
         You decide to 
-        * * * <> carefully pick the lock.
+        * * * {Doors == closed && !foundLock} <> carefully feel the lock.
             ~ Time += 5
-            You take a breath, and carefully set to work. You successfully pick the lock.# WIP
-            ~ Doors = unlocked
-            -> EscapeFromFront
-        + + + <> force the lock hastily.
+            You take a breath, and carefully set to work. You soon find the right pin for the lock.
+            ~ foundLock = true
+            -> LockPicking
+        + + + <> try to force the lock.
             ~ Attempts ++
             ~ Time += 2
-            Hurriedly, you try to force the lock.
+            {foundLock: having found the purchase |hurriedly, }you try to force the lock.
             {
-            - RANDOM(1,10-Attempts)==1:            
+            - foundLock || RANDOM(1,10-Attempts)==1:
                 The pick clicks into place. The door opens.
                 ~ Doors = unlocked
-                -> EscapeFromFront
+                -> MainEntrance
             - RANDOM(1,100-Attempts*10)==1:
                 The lock breaks from the force.
                 ~ Doors = broken
             - else:
                 But the door does not give way.
-                -> LockPicking
-            } [Click!]
+                ->LockPicking
+            } 
         -> DONE
-        // why is this not showing up?
+        + + [Return]
+            -> Antecedent.l00
+== BackDoor
     + [The back door...]
     Yada
-        ++ [Return]
-        -> l00 
-    
+    -> DONE
+== Vent
     + [The vents...]
     Yada
-        ++ [Return]
-        -> l00 
+    -> DONE
 
 
 // make a conditional choice for if you know the secret entrance
 
 // todo: replace these options below by point by point choices, giving multiple options. each one impacts the state of things for next time.
 // tip: for help with the nested structure, open ink's crime scene example.
+== WIP
 + [Blast open the door, kill the guards, steal a car, and drive off before they know what hit them.]
 ~ GuardA = dead
 ~ GuardB = dead

@@ -80,7 +80,91 @@ LIST Edie = (none), Exists, Name
  ----------------------------------*/
  -> DONE
  // The following is not official Ink utility: they are functions and lists we build for this project.
- 
+  
+  === Section_Random ===
+ /* ---------------------------------
+    ### Customized Randomiser Function
+ ----------------------------------*/
+ -> DONE
+ // The following is not official Ink utility: they are functions and lists we build for this project.
+
+=== function D(X) === // roll with a die of X sides
+VAR result = 0
+~result = RANDOM(1,X)
+~Print(result)
+~ return result
+
+=== function D6() ===
+~ return D(6)
+
+=== function D20() ===
+~ return D(20)
+
+=== function D100() ===
+~ return D(100)
+
+=== function CheckFlat(odds) === //input the chance to succeed from 0-100% as odds.
+VAR threshold = 101
+~threshold-=odds
+VAR roll = 0
+~roll = D100()
+{
+- roll - odds*2 > 0:
+    ~return 2
+- roll - odds > 0:
+    ~return 1
+- else:
+    ~return 0
+}
+
+=== function CheckSimple(odds, boon, boonX) === // additionally input a variable to use as a boost
+~odds += boon * boonX
+~return CheckFlat(odds)// same as doing a flat roll with higher odds (thus a lower threshold)
+
+//could also write skillroll as D100() + skill - threshold 
+
+=== function Check(odds, boon, boonX, bane, baneX) === // additionally input a variable to use as a hinderance
+~ odds -= bane * baneX
+~return CheckSimple(odds, boon, boonX) // same as doing a skill roll with lower odds (i.e. a higher threshold)
+
+
+// REMOVE: Bas' scribbles on rolls:
+/* 
+base: RANDOM(1,100)<=50. Means: 50% chance of making it.
+RANDOM(1,100)<=25 has a 25% chance, RANDOM(1,100)<=75 is 75%, and so on.
+
+So could make a function that takes a chacne cutoff vvariable and puts it into a random function.
+
+further: helping or mitigating performers
+
+a variable and a multiplier.
+
+positive or negative makes +1 or -1, 
+and a number makes the size.
+e.g. 
+RANDOM(1,100)+A<=50+B. A makes the roll higher, B makes the threshold higher. 
+A and B are: both defined as: +/- 1 * [a variable] * [a modifier]
+
+So, the full formula would be:
+The equation is (RANDOM(1,100)+A*B*C) <= (Cutoff + D*E*F)
+To get the odds: (RANDOM(1,100)+A*B*C) - (Cutoff + D*E*F)
+
+ohh, adding a minimum boost is just like adding to the 1. and adding a threshold is like adding to the 100?
+
+Yeah normally you would just do RANDOM(1,100) for a 1& chance, but then if you wanna boost it you can: 20, 100 has a 80 percent chance I think? 99, 100 has a 50% chance. so that doesn't quite owkr.
+
+Well but since RANDOM(1,100) will output one number and we are then adding a fixed boost, that is equivalent to RANDOM(1+boost,100). but I suppose the function might complain if the first number is biggest.
+So, anyway, something can either affect the skill or the difficulty. Let's play with that.
+
+
+Nee adding stuff to the A does not make sense as a boost, because we're going for low numbers. So it should be a minus isntead. the logic on the left side is reversed vs the right
+*/ 
+
+
+// critical if you clear it twice over? 
+
+// i keep confusing threshold and clear chance. a threshold of 90% means a clearchacne of 10.
+
   === Section_TrackTime ===
   /* ---------------------------------
    ### System: Looping Time of Day.
@@ -89,8 +173,6 @@ LIST Edie = (none), Exists, Name
   
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
-//@Vugs: thoughts on the above? Do you agree with these parts of day, or should Night be considered part of the next day or split up?
-//@Bas: This looks good to me! 
 
 VAR DaysPassed = 0
 

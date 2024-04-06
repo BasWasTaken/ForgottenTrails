@@ -127,44 +127,6 @@ VAR roll = 0
 ~ odds -= bane * baneX
 ~return CheckSimple(odds, boon, boonX) // same as doing a skill roll with lower odds (i.e. a higher threshold)
 
-
-// REMOVE: Bas' scribbles on rolls:
-/* 
-base: RANDOM(1,100)<=50. Means: 50% chance of making it.
-RANDOM(1,100)<=25 has a 25% chance, RANDOM(1,100)<=75 is 75%, and so on.
-
-So could make a function that takes a chacne cutoff vvariable and puts it into a random function.
-
-further: helping or mitigating performers
-
-a variable and a multiplier.
-
-positive or negative makes +1 or -1, 
-and a number makes the size.
-e.g. 
-RANDOM(1,100)+A<=50+B. A makes the roll higher, B makes the threshold higher. 
-A and B are: both defined as: +/- 1 * [a variable] * [a modifier]
-
-So, the full formula would be:
-The equation is (RANDOM(1,100)+A*B*C) <= (Cutoff + D*E*F)
-To get the odds: (RANDOM(1,100)+A*B*C) - (Cutoff + D*E*F)
-
-ohh, adding a minimum boost is just like adding to the 1. and adding a threshold is like adding to the 100?
-
-Yeah normally you would just do RANDOM(1,100) for a 1& chance, but then if you wanna boost it you can: 20, 100 has a 80 percent chance I think? 99, 100 has a 50% chance. so that doesn't quite owkr.
-
-Well but since RANDOM(1,100) will output one number and we are then adding a fixed boost, that is equivalent to RANDOM(1+boost,100). but I suppose the function might complain if the first number is biggest.
-So, anyway, something can either affect the skill or the difficulty. Let's play with that.
-
-
-Nee adding stuff to the A does not make sense as a boost, because we're going for low numbers. So it should be a minus isntead. the logic on the left side is reversed vs the right
-*/ 
-
-
-// critical if you clear it twice over? 
-
-// i keep confusing threshold and clear chance. a threshold of 90% means a clearchacne of 10.
-
   === Section_TrackTime ===
   /* ---------------------------------
    ### System: Looping Time of Day.

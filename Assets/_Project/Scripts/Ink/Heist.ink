@@ -19,8 +19,8 @@ VAR TimeSpent = 0
 === function ReadTime(minutes)
     ~ return "{TimeSpent/60} o\' clock"
 
-VAR Alfons = "alive"
-VAR Bernard = "alive"
+VAR Alfons = "mobile"
+VAR Bernard = "mobile"
 VAR Charles = "asleep"
 
 === tunnel_as_thread(-> tunnel, -> ret )
@@ -58,8 +58,60 @@ VAR Charles = "asleep"
 - (top)
     You see the main entrance {SearchRoom:the back door, and the vents above you| and the back door}.
     +   The main entrance[...] consists of a set of heavy-looking double doors, sealed shut.
+        VAR Doors = "locked"
         ~ SpendTime(1)
-        ++  [Travel to Main Hall] // This option should be shown after having picked the lock or broken it down. (See below)
+        ++  (blastFrontDoor)[Blast the door open]
+            ~ SpendTime(3)
+            ~Doors = "blasted"
+            VAR MainGuards = "Alerted"
+            You kick the door down or explode it or something. 
+            -> Main_Hall
+        ++ {Doors == "locked"}[Pick the lock]
+            HIER VERDER:/*
+            
+            
+        VAR foundLock = false
+        Steeling yourself, you take of your pack and take out your lockpicking set. Glancing at the lock, you estimate the lock's size to be about a 3. You take out the appropriate rod along with the pryer, and turn to the door. // the size of the lock could be randomized and maybe the esitmate could be wrong if hurried
+            -> LockPicking
+        * * {Doors == unlocked} [Peek through the doors.]
+        ~ Time += 1
+            Beyond the doors are two guards. They don't seem to have noticed you. Beyond them it's a busy street.
+            -> MainEntrance
+        + + {Doors >= unlocked} Exit through the doors.
+        ~ Time += 5
+        -> EscapeFromFront
+        + + [Return]
+            -> Antecedent.l00
+= LockPicking
+        You decide to 
+        * * * {Doors == locked && !foundLock} <> carefully feel the lock.
+            ~ Time += 5
+            You take a breath, and carefully set to work. You soon find the right pin for the lock.
+            ~ foundLock = true
+            -> LockPicking
+        + + + <> try to force the lock.
+            ~ Attempts ++
+            ~ Time += 2
+            {foundLock: having found the purchase |hurriedly, }you try to force the lock.
+            {
+            - foundLock || RANDOM(1,100)<=60-Attempts*10:
+                The pick clicks into place. The door opens.
+                ~ Doors = unlocked
+                -> MainEntrance
+            - RANDOM(1,100)<=90-Attempts*20:
+                The lock breaks from the force.
+                ~ Doors = stuck
+            - else:
+                But the door does not give way.
+                ->LockPicking
+            } 
+        -> DONE
+        + + [Return]
+            -> Antecedent.l00*/
+            
+            
+            
+        ++  {Doors=="blasted"}{Doors=="open"}[Travel to Main Hall] // This option should be shown after having picked the lock or broken it down. (See below)
             ~ SpendTime(2)
             -> Main_Hall
         ++  [return]
@@ -77,6 +129,12 @@ VAR Charles = "asleep"
         {Central_Room<2:->Description->|Good thing, too: }You spot some things you didn't before, such as the vent above.
         -> top
 
+
+    
+== CentralRoomChase
+    WIP
+    -> DONE
+
 == Description
     This room do be central.
 -    ->-> 
@@ -84,24 +142,90 @@ VAR Charles = "asleep"
 === Main_Hall
     {Main_Hall>1:->top} // Skip intro if seen already.
     \[Main Hall Description Here.\]
+    {Doors == "blasted":
+    The two guards beyond it immediately turn around to face you. 
+    -else:
+    There are two guards here, chatting with each other. They do not seem to have noticed you.
+    }
 - (top)
-    +   [Avoid Guards]
-        ~ SpendTime(10)
-        -> Front_Street
-    *   [Attack Guards]
-        **  [Kill them]
-            ~ Alfons = "dead"
-            ~ Bernard = "dead"
+    {Doors == "blasted" && (Alfons == "mobile" || Bernard == "mobile"):
+    +   [Face them head on.]
+        -> MainHallCombat
+    +   [Turn around and run.]
+        -> CentralRoomChase // en daar een beschrijving afhankelijk van waar je vandaan komt
+    -else:
+    +   [Sneak into the room]
+        ~ SpendTime(3)
+        ++  [Avoid the Guards and exit the building]
+            ~ SpendTime(10)
+            -> Front_Street
+        ++  [Sneak up to the guards]
+            VAR stealthApproach = true
             ~ SpendTime(2)
-            -> Front_Street
-        **  [Knock 'em out] // And tie them up for extra time but more security?
-            ~ Alfons = "knockedOut"
-            ~ Bernard = "knockedOut" 
-            ~ SpendTime(5)
-            -> Front_Street
+            -> MainHallCombat
+    +   [Attack the guards]
+        ~ MainGuards = "Alerted"
+        -> MainHallCombat
     +   [Travel to Central Room]
         ~ SpendTime(2)
         -> Central_Room
+    }
+
+== MainHallCombat
+    {
+    - Doors=="blasted":
+    The guards are panicked. They'll go down easily.
+    ~SpendTime(2)
+    - stealthApproach:
+    The guards obviously have no clue you're coming.
+    ~SpendTime(3)
+    - else:
+    The guards take out their batons and assume defensive positions. This will not be easy.
+    ~SpendTime(10)
+    }
+    *   [Attack Guards]
+        You consider before you strike. Should you take care not to kill these two, or forego such kindness?
+        **  [Kill them]
+            ~ Alfons = "dead"
+            ~ Bernard = "dead"
+            -> aftermath
+        **  [Knock 'em out] // And tie them up for extra time but more security?
+            ~ Alfons = "knockedOut"
+            ~ Bernard = "knockedOut" 
+            ~ SpendTime(5) // avoiding lethal blows takes some more time.
+            -> aftermath
+    *   [Reconsider. Turn back.]
+        {stealthApproach:->Central_Room|->CentralRoomChase}
+- (aftermath)
+    {
+    - Doors=="blasted":
+    The guards are panicked. They went down easily. But that definitely blew any chance of going unnoticed.
+    ~SpendTime(2)
+    - stealthApproach:
+    The guards are caught of guard. You swiftly take them out.
+    ~SpendTime(3)
+    - else:
+    The guards put up a good fight. It takes you longer than you would have liked.
+    ~SpendTime(10)
+    }
+    Hide evidence?
+    +   [Y] 
+        After cleaning up the evidence of the struggle, y<>
+        # The bodies are cleaned up. remember to take this into account with the investigation.
+        ~SpendTime(15)
+        -> exit
+    +   [N]
+        Y<>
+        # The fight scene is NOT cleaned up. remember to take this into account with the investigation.
+        -> exit
+- (exit)
+    ou quickly slip outside.
+    -> Front_Street
+    
+    
+== MainHallChase
+    WIP
+    -> DONE
 
 === Front_Street
     \[Intro text here.\]
@@ -255,55 +379,7 @@ LIST PoliceAwareness = (none), rumors, spotted, identified
     }
 == MainEntrance
     {caught:->Caught}
-        + + (blaste)[Blast the door open]
-        ~ Time += 3
-        ~ Doors = blasted
-        ~ GuardA = alerted
-        ~ GuardB = alerted
-        You kick the door down or explode it or something. The two guards beyond it immediately turn around to face you. 
-        + + + [Face them.]
-        ->EscapeFromFront
-        + + + [Turn around and run.]
-        -> Antecedent.l00
-        + + {Doors == locked}[Pick the lock]
-        VAR foundLock = false
-        Steeling yourself, you take of your pack and take out your lockpicking set. Glancing at the lock, you estimate the lock's size to be about a 3. You take out the appropriate rod along with the pryer, and turn to the door. // the size of the lock could be randomized and maybe the esitmate could be wrong if hurried
-            -> LockPicking
-        * * {Doors == unlocked} [Peek through the doors.]
-        ~ Time += 1
-            Beyond the doors are two guards. They don't seem to have noticed you. Beyond them it's a busy street.
-            -> MainEntrance
-        + + {Doors >= unlocked} Exit through the doors.
-        ~ Time += 5
-        -> EscapeFromFront
-        + + [Return]
-            -> Antecedent.l00
-= LockPicking
-        You decide to 
-        * * * {Doors == locked && !foundLock} <> carefully feel the lock.
-            ~ Time += 5
-            You take a breath, and carefully set to work. You soon find the right pin for the lock.
-            ~ foundLock = true
-            -> LockPicking
-        + + + <> try to force the lock.
-            ~ Attempts ++
-            ~ Time += 2
-            {foundLock: having found the purchase |hurriedly, }you try to force the lock.
-            {
-            - foundLock || RANDOM(1,100)<=60-Attempts*10:
-                The pick clicks into place. The door opens.
-                ~ Doors = unlocked
-                -> MainEntrance
-            - RANDOM(1,100)<=90-Attempts*20:
-                The lock breaks from the force.
-                ~ Doors = stuck
-            - else:
-                But the door does not give way.
-                ->LockPicking
-            } 
-        -> DONE
-        + + [Return]
-            -> Antecedent.l00
+        
 
 
 == EscapeFromFront

@@ -323,6 +323,10 @@
 
 === Police_Investigation
     The police arrive and search the place for evidence...
+    # Check whether the player attacked any guards, and if so, if they hid the evidence.
+    # consider the route the player took and how many rooms they entered. how long did they linger, etc
+    # how loud was the player?
+    # how aggregous were the actions?  how vindictvie would the police be?
     WIP
 // consider the police and see what evidence the police have.
 // treat it as if an investigation and see how much they can find
@@ -334,6 +338,7 @@
     So, the next time the player would return to the scene, they could expect..:
     WIP. 
     # describe verbally what consequences could occur next time the player crosses here.
+    # if you entered through the vents, they might be barred now, etc.
     -> END
 
 === GameOver

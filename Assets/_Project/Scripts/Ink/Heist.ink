@@ -1,6 +1,6 @@
 // --------- Bas  ---------
 // Utility
-VAR TimeSpent = 0
+    VAR TimeSpent = 0
 === function SpendTime(minutes)
     ~ TimeSpent += minutes
     
@@ -8,7 +8,7 @@ VAR TimeSpent = 0
     ~ Print("It is now roughly {ReadTime(TimeSpent)}. You have spent {TimeSpent} minutes during your heist.")
     {
     - TimeSpent > 360:
-        -> Time
+        -> GameOver.Time
     - TimeSpent > 60:
         WIP
     - TURNS_SINCE(->Sirens)>5 && !Police_Raid && TimeSpent > RANDOM(10,25):
@@ -19,16 +19,22 @@ VAR TimeSpent = 0
 === function ReadTime(minutes)
     ~ return "{TimeSpent/60} o\' clock"
 
-VAR Alfons = "mobile"
-VAR Bernard = "mobile"
-VAR Charles = "asleep"
-
 === tunnel_as_thread(-> tunnel, -> ret )
-- (top) 
+    -   (top) 
     ~ temp preTurnCount = TURNS_SINCE(-> Start)
-   -> tunnel -> 
-   {preTurnCount == TURNS_SINCE(-> Start): -> DONE }  -> ret
+    -> tunnel -> 
+    {preTurnCount == TURNS_SINCE(-> Start): -> DONE }  -> ret
 
+
+=== function back(->scene)
+    {seen_very_recently(scene):back |}
+
+
+    VAR Alfons = "mobile"
+    VAR Bernard = "mobile"
+    VAR Charles = "asleep"
+    
+    LIST evidence = (ventOpened),mainHallFight
 // Story
 // TODO: 
 // 1) Encorporate what you have at bottom
@@ -41,266 +47,283 @@ VAR Charles = "asleep"
     -> Central_Room
 
 === Central_Room
-    {
-    - Central_Room==1:
-        The gem feels heavy in your hands. That shouldn't have surprised you. It's a giant gem. Of course it's heavy. But its weight made it real in a way it wasn't before.
-        You've worked so much to get here. You've been planning this for so long. But now it's finally in front of you, and all you have to do know is escape.
-        ESCAPE!
-        The single word is enough to startle you out of your stupor. If this goes well, you'll have plenty of time to admire the jewel later. IF this goes well. And that will be decided by one thing and one thing only: whether you get out of this mess unscaved. 
-        You don't hear any alarms yet. Still, that doesn't mean it's safe to assume you'll have a quiet night. Honestly, it'd be a miracle if no-one saw you on the rooftops. Best to assume "help" is on the way.
-        First things first. As you put the gem away in your pack, your head swivels around and you consider your potential exists:
-    - Central_Room==2 && !SearchRoom:
-        \[You haven't taken the room in before. Now you do.\]
-        -> Description ->
-    - else:
-        \[You're in the Central Room.\]
-    } 
-- (top)
+{
+- Central_Room==1:
+    The gem feels heavy in your hands. That shouldn't have surprised you. It's a giant gem. Of course it's heavy. But its weight made it real in a way it wasn't before.
+    You've worked so much to get here. You've been planning this for so long. But now it's finally in front of you, and all you have to do know is escape.
+    ESCAPE!
+    The single word is enough to startle you out of your stupor. If this goes well, you'll have plenty of time to admire the jewel later. IF this goes well. And that will be decided by one thing and one thing only: whether you get out of this mess unscaved. 
+    You don't hear any alarms yet. Still, that doesn't mean it's safe to assume you'll have a quiet night. Honestly, it'd be a miracle if no-one saw you on the rooftops. Best to assume "help" is on the way.
+    First things first. As you put the gem away in your pack, your head swivels around and you consider your potential exists:
+- Central_Room==2 && !SearchRoom:
+    \[You haven't taken the room in before. Now you do.\]
+    -> Description ->
+- else:
+    \[You're in the Central Room.\]
+} 
+    - (top)
     You see the main entrance {SearchRoom:the back door, and the vents above you| and the back door}.
-    +   The main entrance[...] consists of a set of heavy-looking double doors, sealed shut.
+    + The main entrance[...] consists of a set of heavy-looking double doors, sealed shut.
         VAR Doors = "locked"
         ~ SpendTime(1)
-        ++  (blastFrontDoor)[Blast the door open]
+        ++ (blastFrontDoor)[Kick in the door]
             ~ SpendTime(3)
             ~Doors = "blasted"
-            VAR MainGuards = "Alerted"
+            ~temp MainGuards = "alerted"
             You kick the door down or explode it or something. 
-            -> Main_Hall
+            
         ++ {Doors == "locked"}[Pick the lock]
-            HIER VERDER:/*
-            
-            
-        VAR foundLock = false
-        Steeling yourself, you take of your pack and take out your lockpicking set. Glancing at the lock, you estimate the lock's size to be about a 3. You take out the appropriate rod along with the pryer, and turn to the door. // the size of the lock could be randomized and maybe the esitmate could be wrong if hurried
-            -> LockPicking
-        * * {Doors == unlocked} [Peek through the doors.]
-        ~ Time += 1
-            Beyond the doors are two guards. They don't seem to have noticed you. Beyond them it's a busy street.
-            -> MainEntrance
-        + + {Doors >= unlocked} Exit through the doors.
-        ~ Time += 5
-        -> EscapeFromFront
-        + + [Return]
-            -> Antecedent.l00
-= LockPicking
-        You decide to 
-        * * * {Doors == locked && !foundLock} <> carefully feel the lock.
-            ~ Time += 5
-            You take a breath, and carefully set to work. You soon find the right pin for the lock.
-            ~ foundLock = true
-            -> LockPicking
-        + + + <> try to force the lock.
-            ~ Attempts ++
-            ~ Time += 2
-            {foundLock: having found the purchase |hurriedly, }you try to force the lock.
-            {
-            - foundLock || RANDOM(1,100)<=60-Attempts*10:
-                The pick clicks into place. The door opens.
-                ~ Doors = unlocked
-                -> MainEntrance
-            - RANDOM(1,100)<=90-Attempts*20:
-                The lock breaks from the force.
-                ~ Doors = stuck
-            - else:
-                But the door does not give way.
-                ->LockPicking
-            } 
-        -> DONE
-        + + [Return]
-            -> Antecedent.l00*/
-            
-            
-            
-        ++  {Doors=="blasted"}{Doors=="open"}[Travel to Main Hall] // This option should be shown after having picked the lock or broken it down. (See below)
-            ~ SpendTime(2)
-            -> Main_Hall
-        ++  [return]
+            Steeling yourself, you take of your pack and take out your lockpicking set. Glancing at the lock, you estimate the lock's size to be about a 3. You take out the appropriate rod along with the pryer, and turn to the door.
+            -> LockPicking ->
+        ** {Doors != "locked" && Doors!="blasted"}/*like maybe it was broken open with a breekijzer*/ [Peek through the doorcrack.]
+            ~ SpendTime(1)
+            Beyond the doors are two guards. They don't seem to have noticed you. Beyond them is the open streets. // doesn't really make sense, ok for now
+                
+        ++ {Doors=="blasted"||Doors=="open"||Doors=="unlocked"}[Travel {back(->Main_Hall)}to Main Hall] // This option should be shown after having picked the lock or broken it down. (See below)
+                ~ SpendTime(2)
+        -- -> Main_Hall
+        ++ [return]
             -> top
-    +   [Travel to Back Room] // This option is chosen after having broken it down or checked the lock.
-        ~ SpendTime(2)
-        -> Back_Room
-    +   {SearchRoom}[Travel to Vents] // After climbing back up to it.
-        ~ SpendTime(3)
-        -> Central_Vents
-    *   (SearchRoom)[Look around the room]
+    + The back doors[...] are there too.
+        ~ SpendTime(1)
+        ++ [Travel {back(->Back_Room)}to Back Room] // This option is chosen after having broken it down or checked the lock.
+            ~ SpendTime(2)
+        -- -> Back_Room
+        ++ [return]
+            -> top
+    + {SearchRoom}The vents[...] hang above you. 
+        ~ SpendTime(1)
+        ++ {evidence?ventOpened}[Travel {back(->Central_Vents)}to Vents]
+            ~ SpendTime(3)
+        ++ {evidence?ventOpened}[Shut the vent cover]
+            ~ SpendTime(1)
+            ~evidence-= ventOpened
+            You closed the vent{| again}.
+            ->top
+        ++ {!(evidence?ventOpened)}[Open the vent cover]
+            ~ SpendTime(1)
+            ~evidence+= ventOpened
+            You opened the vent again.
+            ->top
+        -- -> Central_Vents
+        ++ [return]
+            -> top
+    * (SearchRoom)[Look around the room]
         You look around the room again.
         ~ SpendTime(1)
         You take another careful look around you to take in the room you're in.
-        {Central_Room<2:->Description->|Good thing, too: }You spot some things you didn't before, such as the vent above.
+        {Central_Room<2:->Description->|Good thing, too: }You spot some things you didn't before, such as the vent above. You actually used this to enter but completely forgot about them.
         -> top
 
-
+== LockPicking
+    VAR foundLock = false
+    VAR Attempts = -1
+            --- (topLock)
+            You decide to
+            *** {Doors == "locked" && !foundLock} <> carefully feel the lock.
+                ~ SpendTime(5)
+                You take a breath, and carefully set to work. You soon find the right pin for the lock.
+                ~ foundLock = true
+                -> topLock
+            +++ <> {foundLock: |blindly try to} force open the lock.
+                ~ Attempts ++
+                ~ SpendTime(2)
+                {foundLock: having found the purchase |hurriedly, }you try to force the lock.
+{
+- foundLock || CheckSimple(25,Attempts,10): //skill throw
+            The pick clicks into place. The door opens.
+            ~ Doors = "unlocked"
+            // do i need to make all the door interactions a whole own scene...? that seems absurd.
+            ->->
+- !Check(75,0,1,Attempts,20): // saving throw: notice the "!"
+            The lock breaks from the force. You can't pick it anymore.
+            ~ Doors = "busted"
+            ->->
+- else:
+            But the door does not give way.
+            ->topLock->
+} 
     
 == CentralRoomChase
     WIP
     -> DONE
 
 == Description
-    This room do be central.
--    ->-> 
+    WIP
+    - ->-> 
 
 === Main_Hall
-    {Main_Hall>1:->top} // Skip intro if seen already.
-    \[Main Hall Description Here.\]
-    {Doors == "blasted":
-    The two guards beyond it immediately turn around to face you. 
+    {Main_Hall==1:\[Main Hall Description Here.\]} // first time description
+{
+-(Alfons == "mobile" || Bernard == "mobile"):
+    {
+    -Doors == "blasted":// if coming straight from the breach entry
+        The two guards in the room immediately turn around to face you. 
+        -> breach
     -else:
-    There are two guards here, chatting with each other. They do not seem to have noticed you.
+        There are two guards here, chatting with each other. They do not seem to have noticed you.
+        -> top
     }
-- (top)
-    {Doors == "blasted" && (Alfons == "mobile" || Bernard == "mobile"):
-    +   [Face them head on.]
-        -> MainHallCombat
-    +   [Turn around and run.]
-        -> CentralRoomChase // en daar een beschrijving afhankelijk van waar je vandaan komt
-    -else:
-    +   [Sneak into the room]
+    The guards {Alfons=="dead":' corpses} {evidence?"mainHallFight":lie still on the floor.|are cropped up in the corner.}
+    -> top
+- else:
+    -> bottom
+}
+    -> top
+    - (top)
+    + {(Alfons == "mobile" || Bernard == "mobile")}[Sneak into the room]
         ~ SpendTime(3)
-        ++  [Avoid the Guards and exit the building]
+        ++ {(Alfons == "mobile" || Bernard == "mobile")}[Avoid the Guards]
             ~ SpendTime(10)
-            -> Front_Street
-        ++  [Sneak up to the guards]
-            VAR stealthApproach = true
+            //->bottom
+        ++ {(Alfons == "mobile" || Bernard == "mobile")}[Sneak up to the guards]
+            VAR stealthApproach = true // seen this scene
             ~ SpendTime(2)
-            -> MainHallCombat
-    +   [Attack the guards]
-        ~ MainGuards = "Alerted"
-        -> MainHallCombat
-    +   [Travel to Central Room]
+            -> MainHallCombat->//bottom
+    + {(Alfons == "mobile" || Bernard == "mobile")}[Attack the guards]
+        ~ temp MainGuards = "Alerted"
+        -> MainHallCombat->//bottom
+
+    - (breach)
+    + [Face them head on.]
+        -> MainHallCombat->//bottom
+    + [Turn around and run.]
+        -> CentralRoomChase // en daar een beschrijving afhankelijk van waar je vandaan komt
+
+    - (bottom) // catch the avoid option above, or options where combat is avoided altogether because guards died in a previous visit to this scene.
+    + [Travel {back(->Front_Street)}outside]
+        You quickly slip outside.
+        -> Front_Street
+    + [Travel {back(->Central_Room)}to Central Room]
         ~ SpendTime(2)
         -> Central_Room
-    }
 
 == MainHallCombat
-    {
-    - Doors=="blasted":
+{
+- Doors=="blasted":
     The guards are panicked. They'll go down easily.
     ~SpendTime(2)
-    - stealthApproach:
+- stealthApproach:
     The guards obviously have no clue you're coming.
     ~SpendTime(3)
-    - else:
+- else:
     The guards take out their batons and assume defensive positions. This will not be easy.
     ~SpendTime(10)
-    }
-    *   [Attack Guards]
+}
+    * [Attack Guards]
         You consider before you strike. Should you take care not to kill these two, or forego such kindness?
-        **  [Kill them]
+        ** [Kill them]
             ~ Alfons = "dead"
             ~ Bernard = "dead"
             -> aftermath
-        **  [Knock 'em out] // And tie them up for extra time but more security?
+        ** [Knock 'em out] // And tie them up for extra time but more security?
             ~ Alfons = "knockedOut"
             ~ Bernard = "knockedOut" 
             ~ SpendTime(5) // avoiding lethal blows takes some more time.
             -> aftermath
-    *   [Reconsider. Turn back.]
+    * [Reconsider. Turn back.]
         {stealthApproach:->Central_Room|->CentralRoomChase}
-- (aftermath)
-    {
-    - Doors=="blasted":
+    - (aftermath)
+{
+- Doors=="blasted":
     The guards are panicked. They went down easily. But that definitely blew any chance of going unnoticed.
     ~SpendTime(2)
-    - stealthApproach:
+- stealthApproach:
     The guards are caught of guard. You swiftly take them out.
     ~SpendTime(3)
-    - else:
+- else:
     The guards put up a good fight. It takes you longer than you would have liked.
     ~SpendTime(10)
-    }
+}
+    ~ evidence += mainHallFight
     Hide evidence?
-    +   [Y] 
-        After cleaning up the evidence of the struggle, y<>
+    * [Y] 
+        You clean up the aftermath of the struggle.
         # The bodies are cleaned up. remember to take this into account with the investigation.
+        ~evidence-= "mainHallFight"
         ~SpendTime(15)
-        -> exit
-    +   [N]
-        Y<>
+       ->->
+    + [N]
+        No time to play concierge.
         # The fight scene is NOT cleaned up. remember to take this into account with the investigation.
-        -> exit
-- (exit)
-    ou quickly slip outside.
-    -> Front_Street
-    
+       ->->
     
 == MainHallChase
     WIP
     -> DONE
 
 === Front_Street
-    \[Intro text here.\]
-- (top)
+    \[Description of front streets here.\]
+    - (top)
     <- Street_Options
-    +   [Go back inside]
+    + [Go back inside]
         ~ SpendTime(2)
         -> Main_Hall
 
 === Back_Room
-    {
-    -   Back_Room==1:
+{
+- Back_Room==1:
         There is a sleeping guard here.
-    -   Charles=="asleep":
+- Charles=="asleep":
         The guard is still sleeping.
-    -   Charles=="dead":
+- Charles=="dead":
         The guard is where you left him.
-    }
-- (top)
-    *   {Charles!="dead"}[Quickly Kill the Guard]
-        **  [Kill them]
-            ~ Alfons = "dead"
-            ~ Bernard = "dead"
+}
+    - (top)
+    * {Charles!="dead"}[Quickly take him out]
+        ** [Slit his throat]
             ~ SpendTime(2)
-            -> Front_Street
-        **  [Knock 'em out] // And tie them up for extra time but more security?
-            ~ Alfons = "knockedOut"
-            ~ Bernard = "knockedOut" 
+            ~ Charles = "dead" 
+        ** [Choke him out] // And tie them up for extra time but more security?
+            ~ Charles = "knockedOut" 
             ~ SpendTime(5)
-            -> Front_Street
-    +   {Charles!="dead"}[Leave the Guard be and sneak by]
+    + {Charles=="asleep"}[Leave the Guard be and sneak by]
         ~ SpendTime(4)
-        -> Back_Street
-    +   {Charles=="dead"}[Make your way out.]
+    + {Charles=="dead"||Charles=="knockedOut"}[Simply walk {back(->Back_Street)}out.]
         ~ SpendTime(1)
-        -> Back_Street
-    + [Travel to Central Room]
+        - -> Back_Street
+    + [Travel {back(->Central_Room)}to Central Room]
         ~ SpendTime(2)
         -> Central_Room
 
 === Back_Street
     \[Intro text here.\]
-- (top)
+    - (top)
     <- Street_Options
-    +   [Go back inside]
+    + [Go back inside]
         ~ SpendTime(2)
         -> Back_Room
-    -> DONE
+    //-> DONE
 
 === Central_Vents
     WIP
     -> DONE
 
 === Street_Options
-    *   [Quick & Dirty]
+    * [Quick & Dirty]
         ~ SpendTime(20)
         You steal a car and high-tale it outta there. You ditch the car at the harbor.
         -> Escape
-    *   [Careful & Slow]
+    * [Careful & Slow]
         You stay on foot and stick to dimly lit alleyways. After a while, you safely make it to shore.
         ~ SpendTime(60)
         -> Escape
 
 === Sirens
     In the distance, you can hear sirens. Seems someone tipped off the local law enforcement.
--   ->->
+    - ->->
 
 === Police_Raid
     WIP. A chase goes here, likely fathal but the player might escape.
--   ->->
+    - ->->
 
 === Escape
     You escaped! But what consequences have you wrought..?
     -> Police_Investigation
+
 === Police_Investigation
+    The police arrive and search the place for evidence...
+    WIP
 // consider the police and see what evidence the police have.
 // treat it as if an investigation and see how much they can find
 // more rooms to be in increases chacne of witnesses, more actions increases vivor of search etc.
@@ -308,15 +331,20 @@ VAR Charles = "asleep"
     -> Consequent
 
 === Consequent
-    WIP
+    So, the next time the player would return to the scene, they could expect..:
+    WIP. 
+    # describe verbally what consequences could occur next time the player crosses here.
     -> END
 
 === GameOver
     Game Over.
     -> END
-== Time
-    Time's Up.
-    -> GameOver
+    -- (Time)
+        Time's Up.
+        -> GameOver
+    -- (Caught)
+        Police catch you.
+        -> GameOver
 /*
 
 //LIST Rooms = centralRoom, mainHall, backRoom, ventsCentral, ventsMain, ventsBack, ceiling, street, alleyg
@@ -348,75 +376,6 @@ VAR Collected = 0
 
 /*/*
 
-LIST Doors = (locked), stuck, unlocked, open, blasted
-
-LIST PoliceAwareness = (none), rumors, spotted, identified
-
-
- <>
-- (l00)
-    
-    - GuardA==alerted or GuardB == alerted or GuardC == alerted:
-        + [Flee toward the main entrance.]
-            ~ Time += 1
-            -> MainEntrance
-        + [Flee toward the back door.]
-            ~ Time += 1
-            -> BackDoor
-        + [Flee into the vent.]
-            ~ Time += 1
-            -> Vent
-    - else:
-        + The main entrance[...] consists of a set of heavy-looking double doors, sealed shut.
-            ~ Time += 1
-            -> MainEntrance
-        + [The back door...]
-            ~ Time += 1
-            -> BackDoor
-        + [The vent...]
-            ~ Time += 1
-            -> Vent
-    }
-== MainEntrance
-    {caught:->Caught}
-        
-
-
-== EscapeFromFront
-    * {GuardA<incapasitated || GuardB <incapasitated} [Attack the guards]
-    * * [Kill them stone dead.]
-        -> AttackFrontGuards(true)
-    * * [Just make them take a little nap.]
-        -> AttackFrontGuards(false)
-    * {(GuardA<incapasitated || GuardB <incapasitated) && !MainEntrance.blaste} [Avoid the guards]
-        {RANDOM(1,100)<=10+Time*10:
-        ~ Time +=15
-        Sneaky sneaky! You think made it out without being seen.
-        - else:
-            Sneak fail! You were spotted. 
-        }
-        -> DONE
-    + {GuardA>undisturbed && GuardB > undisturbed}
-    -> WIP
-= AttackFrontGuards(lethal)
-    Boom, pow, boom, pow.
-    {lethal:
-        ~ Time+=5
-        You fuckin killed those guards so hard dude.
-        ~GuardA = dead
-        ~GuardB = dead
-    - else:
-        ~ Time+=10
-        Sleepy time.
-        ~GuardA = incapasitated
-        ~GuardB = incapasitated
-    }
-        -> GetawayFront
-
-
-
-// todo: replace these options below by point by point choices, giving multiple options. each one impacts the state of things for next time.
-// tip: for help with the nested structure, open ink's crime scene example.
 
 
 

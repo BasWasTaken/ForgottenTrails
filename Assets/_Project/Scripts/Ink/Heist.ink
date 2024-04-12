@@ -6,16 +6,16 @@
     
 === CheckTime(->ret)
     ~ Print("It is now roughly {ReadTime(TimeSpent)}. You have spent {TimeSpent} minutes during your heist.")
-    {
+{
     - TimeSpent > 360:
         -> GameOver.Time
     - TimeSpent > 60:
-        WIP
+        You have spent an hour in your escape.
     - TURNS_SINCE(->Sirens)>5 && !Police_Raid && TimeSpent > RANDOM(10,25):
         -> Police_Raid ->
     - !Sirens && TimeSpent > RANDOM(7,15):
         -> Sirens ->
-    }
+}
 === function ReadTime(minutes)
     ~ return "{TimeSpent/60} o\' clock"
 
@@ -146,10 +146,12 @@
     
 == CentralRoomChase
     WIP
+#WIP
     -> DONE
 
 == Description
     WIP
+#WIP
     - ->-> 
 
 === Main_Hall
@@ -249,6 +251,8 @@
        ->->
     
 == MainHallChase
+#WIP 
+// need to make other chases too
     WIP
     -> DONE
 
@@ -297,6 +301,7 @@
 
 === Central_Vents
     WIP
+#WIP
     -> DONE
 
 === Street_Options
@@ -314,6 +319,7 @@
     - ->->
 
 === Police_Raid
+#WIP
     WIP. A chase goes here, likely fathal but the player might escape.
     - ->->
 
@@ -322,11 +328,19 @@
     -> Police_Investigation
 
 === Police_Investigation
-    The police arrive and search the place for evidence...
-    # Check whether the player attacked any guards, and if so, if they hid the evidence.
+    The police {Police_Raid): |arrive and }search the place for evidence...
+    The report is as follows:
+{Alfons=="dead"||Alfons=="knockedOut": 
+    Two guards found {Alfons=="dead":murdered|incapacitated} in the main hall. 
+# WIP note that evidence was either proclured from witnesses if time, the guards alive, or evidence in the room? and say there was a struggle. indicates there was 
+}
+{Charles=="dead"||Charles=="knockedOut":
+    One guard found {Charles=="dead":murdered|incapacitated} in the back room. 
+}
     # consider the route the player took and how many rooms they entered. how long did they linger, etc
     # how loud was the player?
     # how aggregous were the actions?  how vindictvie would the police be?
+    # check if there are prints on where attacked?
     WIP
 // consider the police and see what evidence the police have.
 // treat it as if an investigation and see how much they can find

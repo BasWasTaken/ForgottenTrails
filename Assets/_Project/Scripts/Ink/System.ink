@@ -62,6 +62,9 @@ VAR buffer = -> seen_this_scene
 === function init_sceneStart(-> link)
 ~ sceneStart = link
 
+=== function seen(->x)
+    ~ return x
+
 === function seen_very_recently(-> x)
     ~ return TURNS_SINCE(x) >= 0 && TURNS_SINCE(x) <= 3
     

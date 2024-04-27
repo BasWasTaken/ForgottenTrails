@@ -1,20 +1,50 @@
 // --------- Bas  ---------
 // Utility
     VAR TimeSpent = 0
+    VAR TimePoliceCalled = 0 
 === function SpendTime(minutes)
     ~ TimeSpent += minutes
+{
+- Chase:
+    ~ ChaseSpace -= minutes // while you are busy, the chasers are closing in
+    ~ ChaseSpace += 3 // however for fairness, it takes them 3 time to do so
+    // so every time you spend time, geain some distance if its short (<3), stay neutral if 3, and lose ground if it's long (>3)
+    // so, each time the player does something, they gain 3 each roung but also spend at least 1, so you actually gain 2, or 1 if you spend 2 time. If you spend 3, you stay neutral, and if you spend above 3, you lose the difference.
+}
+    
+VAR ExtraChance = true
     
 === CheckTime(->ret)
-    ~ Print("It is now roughly {ReadTime(TimeSpent)}. You have spent {TimeSpent} minutes during your heist.")
+    ~ Print("It is now roughly {ReadTime(TimeSpent)}. You have spent {TimeSpent} minutes during your chasers.")
 {
-    - TimeSpent > 360:
-        -> GameOver.Time
-    - TimeSpent > 60:
-        You have spent an hour in your escape.
-    - TURNS_SINCE(->Sirens)>5 && !Police_Raid && TimeSpent > RANDOM(10,25):
-        -> Police_Raid ->
-    - !Sirens && TimeSpent > RANDOM(7,15):
-        -> Sirens ->
+- Chase:
+    {
+    - ChaseSpace<=0:
+        {
+        -ExtraChance && ChaseSpace>-2:
+            ~ ExtraChance=false
+            You know the {chasers()} have caught up. You know it's futile. But you keep running. // the player is actually at 0, but we're giving them 1 more shot out of leniancy. if they can grow the distance and escape now, lucky them. if they don't gain any time next round, it's done.
+        - else: //either the player already used their second chance, or they were lagging back so much that they can no longer catch up anyway.
+            But before you can make your move, you feel your neck hairs stand on end moments before you feel a weight on your back as you hear "That's as far as you go! Don't move another step."
+        -> GameOver.Caught 
+        }
+    - ChaseSpace==1: 
+        You can feel the {chasers()} are right behind you now.
+        # The player now has 1 space left. If the player next chooses a move even 1 above 3, they lose.
+    - else: 
+        The {chasers()} are {|still} on your heels. //Getting closer or less close, but I don't know that.
+    }
+}
+{
+- TimeSpent > 360:
+    -> GameOver.Time
+- TimeSpent > 60:
+    You have spent an hour in your escape.
+- TURNS_SINCE(->Sirens)>5 && !Police_Raid && (TimeSpent - TimePoliceCalled) > RANDOM(10,15):
+    -> Police_Raid ->
+- !Sirens && TimeSpent > RANDOM(7,15):
+    ~ TimePoliceCalled = TimeSpent
+    -> Sirens ->
 }
 === function ReadTime(minutes)
     ~ return "{TimeSpent/60} o\' clock"
@@ -35,10 +65,16 @@
     VAR Charles = "asleep"
     
     LIST evidence = (ventOpened),mainHallFight
-// Story
-// TODO: 
-// 1) Encorporate what you have at bottom
-// 2) Rewrite to take into account when guards spot and chase you.
+
+=== function chasers
+{
+- Police_Raid && (Alfons == "mobile" || Bernard == "mobile" || Charles == "mobile"):
+    police & guards
+- Police_Raid:
+    police
+- else:
+    guards
+}
 
 === JustStartWriting
     -> Antecedent
@@ -145,9 +181,8 @@
 } 
     
 == CentralRoomChase
-    WIP
-#WIP
-    -> DONE
+    The {chasers()} are hot on your heels as you dart into the central room.
+    -> Central_Room
 
 == Description
     WIP
@@ -155,12 +190,12 @@
     - ->-> 
 
 === Main_Hall
-    {Main_Hall==1:\[Main Hall Description Here.\]} // first time description
+    {Main_Hall==1:The main hall is a grand foyer lush with paintings, vases on half-pillars, and velvet ropes and carpes leading the way from the front door toward the centrall room.} // first time description
 {
 -(Alfons == "mobile" || Bernard == "mobile"):
     {
     -Doors == "blasted":// if coming straight from the breach entry
-        The two guards in the room immediately turn around to face you. 
+        You don't have much time to appreciate the room, though. The two guards in the room immediately turn around to face you. 
         -> breach
     -else:
         There are two guards here, chatting with each other. They do not seem to have noticed you.
@@ -190,6 +225,7 @@
     + [Face them head on.]
         -> MainHallCombat->//bottom
     + [Turn around and run.]
+        You take advantage of their momentary stupor and shoot of back into the central room.
         -> CentralRoomChase // en daar een beschrijving afhankelijk van waar je vandaan komt
 
     - (bottom) // catch the avoid option above, or options where combat is avoided altogether because guards died in a previous visit to this scene.
@@ -250,11 +286,9 @@
         # The fight scene is NOT cleaned up. remember to take this into account with the investigation.
        ->->
     
-== MainHallChase
-#WIP 
-// need to make other chases too
-    WIP
-    -> DONE
+== MainHallChase 
+    The {chasers()} are hot on your heels as you dart into the main hall.
+    -> Main_Hall
 
 === Front_Street
     \[Description of front streets here.\]
@@ -267,20 +301,27 @@
 === Back_Room
 {
 - Back_Room==1:
-        There is a sleeping guard here.
-- Charles=="asleep":
+        There is a {Charles=="asleep":sleeping |sleepy-looking }guard here.
+- Charles=="asleep" && !Chase:
         The guard is still sleeping.
 - Charles=="dead":
         The guard is where you left him.
 }
     - (top)
-    * {Charles!="dead"}[Quickly take him out]
+    * {Charles=="mobile"}[Take him out]
+        ** [Kill him]
+            ~ SpendTime(3)
+            ~ Charles = "dead" 
+        ** [Choke him out] // And tie them up for extra time but more security?
+            ~ Charles = "knockedOut" 
+            ~ SpendTime(6)
+    * {Charles!="mobile"}[Quickly take him out]
         ** [Slit his throat]
             ~ SpendTime(2)
             ~ Charles = "dead" 
         ** [Choke him out] // And tie them up for extra time but more security?
             ~ Charles = "knockedOut" 
-            ~ SpendTime(5)
+            ~ SpendTime(3)
     + {Charles=="asleep"}[Leave the Guard be and sneak by]
         ~ SpendTime(4)
     + {Charles=="dead"||Charles=="knockedOut"}[Simply walk {back(->Back_Street)}out.]
@@ -289,7 +330,11 @@
     + [Travel {back(->Central_Room)}to Central Room]
         ~ SpendTime(2)
         -> Central_Room
-
+        
+== BackRoomChase
+    The {chasers()} are hot on your heels as you dart into the back room.
+    -> Back_Room
+    
 === Back_Street
     \[Intro text here.\]
     - (top)
@@ -300,9 +345,8 @@
     //-> DONE
 
 === Central_Vents
-    WIP
-#WIP
-    -> DONE
+    # To prevent this sequence form becoming overlong, the vents just immediately take you to a consequence-free escape. Go you!
+    -> Escape
 
 === Street_Options
     * [Quick & Dirty]
@@ -319,8 +363,31 @@
     - ->->
 
 === Police_Raid
-#WIP
-    WIP. A chase goes here, likely fathal but the player might escape.
+    Countless tires screech to a halt outside. The sirens, having grown louder relentlessly, now stop their approach. Numerous doors open & close, indistinct orders are being shouted and more footsteps than you can count approach the building.
+    The police have arrived. 
+    * [Shit.]
+    In a minute, the cops will have surrounded you. If they perceive you as a threat they will likely immediately open fire on you.
+    Given your current situation, you decide the only course of action afforded to you is to...
+    * [Surrender]
+        You know when you're beat. Better to play along and be locked up, biding your chance to escape and try again another day, than to be shot here and have it all end. You take a last look at the gem you risked so much for...
+        What a marvel.
+        You throw your hands up as the guards enter the room.
+        -> GameOver.Caught
+    * [Hide]
+        This needs to lead into either an option for surprise attack or escape attempt. If the hiding place is good enough.
+        #WIP
+        -> DONE
+    * [Wait by a door and attack the first cop who enters your room.]
+        This probably just leads the player to get shot and/or caught and put in jail.
+        -> GameOver.Caught
+    * [Run & Continue your escape]
+        Fuck it. You've come this far, you've dug yourself this deep. The only way out is through.
+    You hear the sound of doors breaking down and glass shattering. It's now or never.
+    VAR Chase = true // Enter chase mode. 
+    {Charles=="asleep":
+        ~Charles="mobile" // this wakes charles up
+    }
+    VAR ChaseSpace = 5
     - ->->
 
 === Escape

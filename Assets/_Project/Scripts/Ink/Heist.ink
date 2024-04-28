@@ -7,9 +7,6 @@
 {
 - Chase:
     ~ ChaseSpace -= minutes // while you are busy, the chasers are closing in
-    ~ ChaseSpace += 3 // however for fairness, it takes them 3 time to do so
-    // so every time you spend time, geain some distance if its short (<3), stay neutral if 3, and lose ground if it's long (>3)
-    // so, each time the player does something, they gain 3 each roung but also spend at least 1, so you actually gain 2, or 1 if you spend 2 time. If you spend 3, you stay neutral, and if you spend above 3, you lose the difference.
 }
     
 VAR ExtraChance = true
@@ -23,8 +20,8 @@ VAR ExtraChance = true
         {
         -ExtraChance && ChaseSpace>-2:
             ~ ExtraChance=false
-            You know the {chasers()} have caught up. You know it's futile. But you keep running. // the player is actually at 0, but we're giving them 1 more shot out of leniancy. if they can grow the distance and escape now, lucky them. if they don't gain any time next round, it's done.
-        - else: //either the player already used their second chance, or they were lagging back so much that they can no longer catch up anyway.
+            You know the {chasers()} have caught up. You know it's futile. But you keep running. 
+        - else: 
             But before you can make your move, you feel your neck hairs stand on end moments before you feel a weight on your back as you hear "That's as far as you go! Don't move another step."
         -> GameOver.Caught 
         }
@@ -64,7 +61,7 @@ VAR ExtraChance = true
     VAR Bernard = "mobile"
     VAR Charles = "asleep"
     
-    LIST evidence = (ventOpened),mainHallFight
+    LIST evidence = (ventOpened),(gemMissing),mainHallFight,GTA
 
 === function chasers
 {
@@ -83,6 +80,9 @@ VAR ExtraChance = true
     -> Central_Room
 
 === Central_Room
+    ~ ChaseSpace += 3 // you make some leeway
+    -> CheckTime(->enter)
+    - (enter)
 {
 - Central_Room==1:
     The gem feels heavy in your hands. That shouldn't have surprised you. It's a giant gem. Of course it's heavy. But its weight made it real in a way it wasn't before.
@@ -190,6 +190,9 @@ VAR ExtraChance = true
     - ->-> 
 
 === Main_Hall
+    ~ ChaseSpace += 3 // you make some leeway if in chase
+    -> CheckTime(->enter)
+    - (enter)
     {Main_Hall==1:The main hall is a grand foyer lush with paintings, vases on half-pillars, and velvet ropes and carpes leading the way from the front door toward the centrall room.} // first time description
 {
 -(Alfons == "mobile" || Bernard == "mobile"):
@@ -299,6 +302,9 @@ VAR ExtraChance = true
         -> Main_Hall
 
 === Back_Room
+    ~ ChaseSpace += 3 // you make some leeway if in chase
+    -> CheckTime(->enter)
+    - (enter)
 {
 - Back_Room==1:
         There is a {Charles=="asleep":sleeping |sleepy-looking }guard here.
@@ -336,6 +342,9 @@ VAR ExtraChance = true
     -> Back_Room
     
 === Back_Street
+    ~ ChaseSpace += 3 // you make some leeway if in chase
+    -> CheckTime(->enter)
+    - (enter)
     \[Intro text here.\]
     - (top)
     <- Street_Options
@@ -345,6 +354,9 @@ VAR ExtraChance = true
     //-> DONE
 
 === Central_Vents
+    ~ ChaseSpace += 3 // you make some leeway if in chase
+    -> CheckTime(->enter)
+    - (enter)
     # To prevent this sequence form becoming overlong, the vents just immediately take you to a consequence-free escape. Go you!
     -> Escape
 
@@ -352,6 +364,7 @@ VAR ExtraChance = true
     * [Quick & Dirty]
         ~ SpendTime(20)
         You steal a car and high-tale it outta there. You ditch the car at the harbor.
+        ~ evidence+=GTA
         -> Escape
     * [Careful & Slow]
         You stay on foot and stick to dimly lit alleyways. After a while, you safely make it to shore.
@@ -368,14 +381,18 @@ VAR ExtraChance = true
     * [Shit.]
     In a minute, the cops will have surrounded you. If they perceive you as a threat they will likely immediately open fire on you.
     Given your current situation, you decide the only course of action afforded to you is to...
-    * [Surrender]
+    * [Forfeit the gem & Surrender]
         You know when you're beat. Better to play along and be locked up, biding your chance to escape and try again another day, than to be shot here and have it all end. You take a last look at the gem you risked so much for...
         What a marvel.
         You throw your hands up as the guards enter the room.
         -> GameOver.Caught
-    * [Hide]
-        This needs to lead into either an option for surprise attack or escape attempt. If the hiding place is good enough.
+    * [Forfeit the gem & Hide]
+        ~ evidence-=gemMissing
+        You have one last desparate play left. You drop the gem where you stand, and<>
+    * [Hide] You<>
+        - (hide) enter the nearest vent bide your time.
         #WIP
+        Need options to fight or flight.
         -> DONE
     * [Wait by a door and attack the first cop who enters your room.]
         This probably just leads the player to get shot and/or caught and put in jail.
@@ -397,19 +414,66 @@ VAR ExtraChance = true
 === Police_Investigation
     The police {Police_Raid): |arrive and }search the place for evidence...
     The report is as follows:
+    Friday, at midnight, {Police_Raid:the suspect|an unknown suspect} entered the building {evidence^ventOpened:through a rooftop vent and exited into the central room|through unknown means}. The casing of one "magnus gem" was destroyed, after which the gem was taken. 
+{
+-Doors == "blasted":
+    The doors to the main hall were found demolished.
+-Doors != "locked":
+    The lock of the doors to the main hall were tampered with.
+}
 {Alfons=="dead"||Alfons=="knockedOut": 
-    Two guards found {Alfons=="dead":murdered|incapacitated} in the main hall. 
-# WIP note that evidence was either proclured from witnesses if time, the guards alive, or evidence in the room? and say there was a struggle. indicates there was 
+    {
+    -evidence^mainHallFight:
+        Two guards are currently missing.
+    -else:
+        Two guards found {Alfons=="dead":murdered|incapacitated} in the main hall.
+    } 
 }
 {Charles=="dead"||Charles=="knockedOut":
-    One guard found {Charles=="dead":murdered|incapacitated} in the back room. 
+    One guard found {Charles=="dead":murdered|strangled} in the back room. 
+}
+    Charges:
+    /- Breaking & Entering
+{
+- evidence?gemMissing:
+    /- Theft.
+- else:
+    /- Attempted theft.
+}
+{
+- evidence?mainHallFight:
+    {
+    - Alfons == "dead":
+    /- Two accounts of manslaughter.
+    - Alfons == "knockedOut":
+    /- Two accounts of assault.
+    }
+}
+{
+- Alfons == "dead":
+    /- Murder.
+- Alfons == "knockedOut":
+    /- Assault.
+}
+{
+- Doors=="blasted":
+    /- Destruction of private property
+- Doors=="busted":
+    /- Damaging private property
+}
+{
+- evidence?GTA:
+    /- Grand Theft Auto
+}
+{
+- Police_Raid:
+    /- Resisting Arrest
 }
     # consider the route the player took and how many rooms they entered. how long did they linger, etc
     # how loud was the player?
     # how aggregous were the actions?  how vindictvie would the police be?
     # check if there are prints on where attacked?
     WIP
-// consider the police and see what evidence the police have.
 // treat it as if an investigation and see how much they can find
 // more rooms to be in increases chacne of witnesses, more actions increases vivor of search etc.
 // remember to involve cameras somehow too

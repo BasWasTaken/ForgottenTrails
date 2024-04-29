@@ -2,6 +2,7 @@
 // Utility
     VAR TimeSpent = 0
     VAR TimePoliceCalled = 0 
+    VAR Chase = false
 === function SpendTime(minutes)
     ~ TimeSpent += minutes
 {
@@ -11,7 +12,7 @@
     
 VAR ExtraChance = true
     
-=== CheckTime(->ret)
+=== CheckTime
     ~ Print("It is now roughly {ReadTime(TimeSpent)}. You have spent {TimeSpent} minutes during your chasers.")
 {
 - Chase:
@@ -43,6 +44,7 @@ VAR ExtraChance = true
     ~ TimePoliceCalled = TimeSpent
     -> Sirens ->
 }
+    - ->->
 === function ReadTime(minutes)
     ~ return "{TimeSpent/60} o\' clock"
 
@@ -61,7 +63,7 @@ VAR ExtraChance = true
     VAR Bernard = "mobile"
     VAR Charles = "asleep"
     
-    LIST evidence = (ventOpened),(gemMissing),mainHallFight,GTA
+    LIST evidence = (ventOpened),(gemMissing),mainHallFight,GTA,witnesses
 
 === function chasers
 {
@@ -81,8 +83,8 @@ VAR ExtraChance = true
 
 === Central_Room
     ~ ChaseSpace += 3 // you make some leeway
-    -> CheckTime(->enter)
-    - (enter)
+    -> CheckTime->//(->enter)
+    //- (enter)
 {
 - Central_Room==1:
     The gem feels heavy in your hands. That shouldn't have surprised you. It's a giant gem. Of course it's heavy. But its weight made it real in a way it wasn't before.
@@ -106,6 +108,7 @@ VAR ExtraChance = true
             ~ SpendTime(3)
             ~Doors = "blasted"
             ~temp MainGuards = "alerted"
+            ~evidence+=witnesses
             You kick the door down or explode it or something. 
             
         ++ {Doors == "locked"}[Pick the lock]
@@ -148,7 +151,7 @@ VAR ExtraChance = true
         You look around the room again.
         ~ SpendTime(1)
         You take another careful look around you to take in the room you're in.
-        {Central_Room<2:->Description->|Good thing, too: }You spot some things you didn't before, such as the vent above. You actually used this to enter but completely forgot about them.
+        {Central_Room<2:->Description->|Good thing, too: }You spot some things you didn't before, such as the vent above. You actually used this to enter the room, but somehow completely forgot about them.
         -> top
 
 == LockPicking
@@ -181,18 +184,18 @@ VAR ExtraChance = true
 } 
     
 == CentralRoomChase
+    ~Chase=true
     The {chasers()} are hot on your heels as you dart into the central room.
     -> Central_Room
 
 == Description
-    WIP
-#WIP
+    [It's a big round room.]
     - ->-> 
 
 === Main_Hall
     ~ ChaseSpace += 3 // you make some leeway if in chase
-    -> CheckTime(->enter)
-    - (enter)
+    -> CheckTime->//(->enter)
+    //- (enter)
     {Main_Hall==1:The main hall is a grand foyer lush with paintings, vases on half-pillars, and velvet ropes and carpes leading the way from the front door toward the centrall room.} // first time description
 {
 -(Alfons == "mobile" || Bernard == "mobile"):
@@ -215,7 +218,7 @@ VAR ExtraChance = true
         ~ SpendTime(3)
         ++ {(Alfons == "mobile" || Bernard == "mobile")}[Avoid the Guards]
             ~ SpendTime(10)
-            //->bottom
+            ->bottom
         ++ {(Alfons == "mobile" || Bernard == "mobile")}[Sneak up to the guards]
             VAR stealthApproach = true // seen this scene
             ~ SpendTime(2)
@@ -242,12 +245,14 @@ VAR ExtraChance = true
 == MainHallCombat
 {
 - Doors=="blasted":
+    ~evidence+=witnesses
     The guards are panicked. They'll go down easily.
     ~SpendTime(2)
 - stealthApproach:
     The guards obviously have no clue you're coming.
     ~SpendTime(3)
 - else:
+    ~evidence+=witnesses
     The guards take out their batons and assume defensive positions. This will not be easy.
     ~SpendTime(10)
 }
@@ -256,6 +261,7 @@ VAR ExtraChance = true
         ** [Kill them]
             ~ Alfons = "dead"
             ~ Bernard = "dead"
+            ~evidence-=witnesses//dit is niet helemaal netjes want het haalt alle witnesses weg, ook any other, dus dit zou je eigenlijk met losse witness parameters moeten opvangen, maar daar heb ik voor zo'n klein avontuurtje geen zin in.
             -> aftermath
         ** [Knock 'em out] // And tie them up for extra time but more security?
             ~ Alfons = "knockedOut"
@@ -267,7 +273,7 @@ VAR ExtraChance = true
     - (aftermath)
 {
 - Doors=="blasted":
-    The guards are panicked. They went down easily. But that definitely blew any chance of going unnoticed.
+    The guards were panicked. They went down easily. But that definitely blew any chance of going unnoticed.
     ~SpendTime(2)
 - stealthApproach:
     The guards are caught of guard. You swiftly take them out.
@@ -290,6 +296,7 @@ VAR ExtraChance = true
        ->->
     
 == MainHallChase 
+    ~Chase=true
     The {chasers()} are hot on your heels as you dart into the main hall.
     -> Main_Hall
 
@@ -303,8 +310,8 @@ VAR ExtraChance = true
 
 === Back_Room
     ~ ChaseSpace += 3 // you make some leeway if in chase
-    -> CheckTime(->enter)
-    - (enter)
+    -> CheckTime->//(->enter)
+    //- (enter)
 {
 - Back_Room==1:
         There is a {Charles=="asleep":sleeping |sleepy-looking }guard here.
@@ -315,9 +322,11 @@ VAR ExtraChance = true
 }
     - (top)
     * {Charles=="mobile"}[Take him out]
+        ~evidence+=witnesses
         ** [Kill him]
             ~ SpendTime(3)
             ~ Charles = "dead" 
+            ~evidence-=witnesses//dit is niet helemaal netjes want het haalt alle witnesses weg, ook any other, dus dit zou je eigenlijk met losse witness parameters moeten opvangen, maar daar heb ik voor zo'n klein avontuurtje geen zin in.
         ** [Choke him out] // And tie them up for extra time but more security?
             ~ Charles = "knockedOut" 
             ~ SpendTime(6)
@@ -343,8 +352,8 @@ VAR ExtraChance = true
     
 === Back_Street
     ~ ChaseSpace += 3 // you make some leeway if in chase
-    -> CheckTime(->enter)
-    - (enter)
+    -> CheckTime->//(->enter)
+    //- (enter)
     \[Intro text here.\]
     - (top)
     <- Street_Options
@@ -355,14 +364,17 @@ VAR ExtraChance = true
 
 === Central_Vents
     ~ ChaseSpace += 3 // you make some leeway if in chase
-    -> CheckTime(->enter)
-    - (enter)
+    -> CheckTime->//(->enter)
+    //- (enter)
     # To prevent this sequence form becoming overlong, the vents just immediately take you to a consequence-free escape. Go you!
-    -> Escape
+    Continue on this route?
+    * [Y]
+        -> Escape
 
 === Street_Options
     * [Quick & Dirty]
         ~ SpendTime(20)
+        ~evidence+=witnesses
         You steal a car and high-tale it outta there. You ditch the car at the harbor.
         ~ evidence+=GTA
         -> Escape
@@ -400,7 +412,7 @@ VAR ExtraChance = true
     * [Run & Continue your escape]
         Fuck it. You've come this far, you've dug yourself this deep. The only way out is through.
     You hear the sound of doors breaking down and glass shattering. It's now or never.
-    VAR Chase = true // Enter chase mode. 
+    ~ Chase = true // Enter chase mode. 
     {Charles=="asleep":
         ~Charles="mobile" // this wakes charles up
     }
@@ -412,9 +424,9 @@ VAR ExtraChance = true
     -> Police_Investigation
 
 === Police_Investigation
-    The police {Police_Raid): |arrive and }search the place for evidence...
+    The police {Police_Raid: |arrive and }search the place for evidence...
     The report is as follows:
-    Friday, at midnight, {Police_Raid:the suspect|an unknown suspect} entered the building {evidence^ventOpened:through a rooftop vent and exited into the central room|through unknown means}. The casing of one "magnus gem" was destroyed, after which the gem was taken. 
+    Friday, at midnight, {Police_Raid:the suspect|an unknown suspect} entered the building {evidence^ventOpened:through a rooftop vent|through unknown means}. The casing of one "magnus gem" was destroyed, after which the gem was taken. 
 {
 -Doors == "blasted":
     The doors to the main hall were found demolished.
@@ -469,21 +481,36 @@ VAR ExtraChance = true
 - Police_Raid:
     /- Resisting Arrest
 }
-    # consider the route the player took and how many rooms they entered. how long did they linger, etc
-    # how loud was the player?
-    # how aggregous were the actions?  how vindictvie would the police be?
-    # check if there are prints on where attacked?
-    WIP
-// treat it as if an investigation and see how much they can find
-// more rooms to be in increases chacne of witnesses, more actions increases vivor of search etc.
-// remember to involve cameras somehow too
+    ~Print("If we were to develop these scenes, we could also:<br>-track how often the player made a loud noise, speeding up detection. <br>-consider the route the player took and cameras or witnesses that spotted them.<br>-tally how aggregous all these crimes were and thus how vindictive the police would be in their pursuit.<br>-go so far as to consider finger prints, which objects were touched or moved etc.")
     -> Consequent
 
 === Consequent
     So, the next time the player would return to the scene, they could expect..:
-    WIP. 
-    # describe verbally what consequences could occur next time the player crosses here.
-    # if you entered through the vents, they might be barred now, etc.
+{ 
+- Doors == "open":
+    /- Improved locks.
+}
+{ 
+- Doors == "blasted":
+    /- Reinforced doorframes.
+}
+{ 
+- Alfons == "dead" || Alfons == "knockedOut" || Charles == "dead" || Charles == "knockedOut":
+    /- Guards to be more heavily armed.
+}
+{ 
+- evidence?ventOpened:
+    /- The vents to be barred.
+}
+{
+-evidence?witnesses:
+    /- There to be wanted posters put up, and to be recognised on sight.
+-else:
+    /- The place to have installed more cameras or hired more guards, to spot intruders better.
+}
+    /- And more...
+    
+    Thanks for playing!
     -> END
 
 === GameOver
@@ -495,36 +522,6 @@ VAR ExtraChance = true
     -- (Caught)
         Police catch you.
         -> GameOver
-/*
-
-//LIST Rooms = centralRoom, mainHall, backRoom, ventsCentral, ventsMain, ventsBack, ceiling, street, alleyg
-
-VAR CentralRoom = 0
-VAR MainHall = (Alfons, Bernard)
-
-LIST AliveStates = alive, responsive, awake, mobile // ascending; if x, is also all under x. incremental / superseding
-
-//LIST PatrolStates = active, alert, aware, engaged // ascending; if x, is also all under x.
-
-// should i make a function to split those states..?
-VAR Alfons = mobile//(mobile, active, mainHall)
-VAR Bernard = mobile//(mobile, active, mainHall)
-VAR Charles = responsive//(responsive, active, backRoom) //sleeping 
-
-LIST LockDown = _Rooms // list of locations not safe to travel to 
-~LockDown=()
-
-/*
-=== function GuardsInRoom(room)
-VAR Collected = 0
-
-{Alfons^room: Collected += Alfons} // oef dit is een stuk minder mooi dan het zou zijn in c#- ik mis echt de looping logica
-{Bernard^room: Collected += Bernard}
-{Charles^room: Collected += Charles}
-~ return Collected
-*/
-
-/*/*
 
 
 

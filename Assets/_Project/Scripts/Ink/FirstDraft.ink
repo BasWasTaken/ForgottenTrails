@@ -1,9 +1,7 @@
 // --------- Shared  ---------
 INCLUDE System.ink
 INCLUDE Stories
-INCLUDE BasTest.ink
-INCLUDE EdanInn.ink
-INCLUDE Heist.ink
+
 
 
 
@@ -16,15 +14,18 @@ VAR DEBUG = true
 {DEBUG:
 	IN DEVELOPER MODE!
     + [Proceed with Vugs' sequence]
-    -> EdanInn
+        -> EdanInn
     + [Try Bas' Travel and party Example:]
-    -> BasTravelTest
+        -> BasTravelTest
     + [I wanna test the linebreaks]
-    -> lineBreakTest
+        -> lineBreakTest
     + [Give me item examples]
-    -> ItemUses
+        -> ItemUses
     + [To Bas' writings]
-    -> JustStartWriting
+        ++ [Heist]
+            -> Antecedent
+        ++ [Puzzle]
+            -> InventoryPuzzleWelcome
     + [Proceed to Character Creation]
     -> Start
 - else:

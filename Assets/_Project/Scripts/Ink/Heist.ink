@@ -75,9 +75,6 @@ VAR ExtraChance = true
     guards
 }
 
-=== JustStartWriting
-    -> Antecedent
-
 === Antecedent
     -> Central_Room
 

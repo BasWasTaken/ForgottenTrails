@@ -9,3 +9,7 @@ INCLUDE RandomEvents.ink
 INCLUDE Edan.ink
 INCLUDE introductionAwakening.ink
 INCLUDE SouthernRoads.ink
+INCLUDE BasTest.ink
+INCLUDE EdanInn.ink
+INCLUDE Heist.ink
+INCLUDE InventoryPuzzle.ink

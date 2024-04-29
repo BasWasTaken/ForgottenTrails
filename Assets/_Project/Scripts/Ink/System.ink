@@ -23,6 +23,72 @@ INCLUDE PartyDialogues.ink
 
 === function came_from(-> x)
 	~ return TURNS_SINCE(x) == 0
+	
+/*
+	Tests if the flow has reached a particular gather "this scene". This is an extension of "seen_more_recently_than", but it's so useful it's worth having separately.
+
+	Usage: 
+
+	// define where the start of the scene is
+	~ sceneStart = -> start_of_scene
+
+	- (start_of_scene)
+		"Welcome!"
+
+	- (opts)	
+		<- cough_politely(-> opts)
+
+		*	{ seen_this_scene(-> cough_politely.cough) }
+			"Hello!"
+		
+		+	{ not seen_this_scene(-> cough_politely.cough) }
+			["Hello!"]
+			I try to speak, but I can't get the words out!
+			-> opts
+
+
+		
+	=== cough_politely(-> go_to)
+		*	(cough) [Cough politely]
+			I clear my throat. 
+			-> go_to
+		
+*/
+
+
+VAR sceneStart = -> seen_this_scene 
+VAR buffer = -> seen_this_scene
+
+=== function init_sceneStart(-> link)
+~ sceneStart = link
+
+=== function seen(->x)
+    ~ return x
+
+=== function seen_very_recently(-> x)
+    ~ return TURNS_SINCE(x) >= 0 && TURNS_SINCE(x) <= 3
+    
+=== function seen_this_scene(-> link)
+	{  sceneStart == -> seen_this_scene:
+		[ERROR] - you need to initialise the sceneStart variable before using "seen_this_scene"!
+		~ return false
+	}
+	~ buffer = sceneStart
+	~ sceneStart = -> seen_this_scene 
+	~ return seen_more_recently_than(link, sceneStart)
+	
+
+=== function seen_more_recently_than(-> link, -> marker)
+	{ TURNS_SINCE(link) >= 0: 
+        { TURNS_SINCE(marker) == -1: 
+            ~ return true 
+        } 
+        ~ return TURNS_SINCE(link) < TURNS_SINCE(marker) 
+    }
+    ~ return false 
+
+
+
 
   === Section_TrackKnowledge ===
   /* ---------------------------------
@@ -61,25 +127,75 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
    ----------------------------------*/
 //Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
 // Bas: Absoluut, laat maar weten. 
-// Overigens is dit trouwens een voorbeeld van iets dat me misschien handig lijkt om in een andere file te defineren: jij zult wsl veel nieuwe knowledge chains aan moeten maken, en dan is het miss fijn als je niet steeds dit hele systeem document door hoef te spitten. (Idem voor items etc.)
-// Vugs: dit wordt nu al irritant idd nu ik er voor de eerste keer echt mee bezig ben xD
+// WIP: Movev to different file
 LIST EdanCastleKnow = (none), Exists, IsCastleOnHill // wat is dit nou weer voor een verschikkelijke variabelnaam die ik heb gemaakt wtf
 LIST Edgar = (none), Exists, Name
 LIST Henry = (none), Exists, Name
 LIST Tomas = (none), Exists, Name
 LIST Eileen = (none), Exists, Name
 //I keep running into the issue that you can't give the same name to things that have already been used elsewhere, even in different functions or as the variable instead of the variable name. You seem to have fixed this, how?
+// I have no idea.
 //LIST Alice = (none), Exists, Name
 LIST Rubert = (none), Exists, Name
 LIST Edie = (none), Exists, Name
-    
+
+
+
+
+	
  === Section_Extended ===
  /* ---------------------------------
     ## Custom Utility
  ----------------------------------*/
  -> DONE
  // The following is not official Ink utility: they are functions and lists we build for this project.
- 
+  
+  === Section_Random ===
+ /* ---------------------------------
+    ### Customized Randomiser Function
+ ----------------------------------*/
+ -> DONE
+ // The following is not official Ink utility: they are functions and lists we build for this project.
+
+=== function D(X) === // roll with a die of X sides
+VAR result = 0
+~result = RANDOM(1,X)
+~Print(result)
+~ return result
+
+=== function D6() ===
+~ return D(6)
+
+=== function D20() ===
+~ return D(20)
+
+=== function D100() ===
+~ return D(100)
+
+=== function CheckFlat(odds) === //input the chance to succeed from 0-100% as odds.
+VAR threshold = 101
+~threshold-=odds
+VAR roll = 0
+~roll = D100()
+{
+- roll - odds*2 > 0:
+    ~return 2
+- roll - odds > 0:
+    ~return 1
+- else:
+    ~return 0
+}
+
+=== function CheckSimple(odds, boon, boonX) === // additionally input a variable to use as a boost
+~odds += boon * boonX
+~return CheckFlat(odds)// same as doing a flat roll with higher odds (thus a lower threshold)
+
+//could also write skillroll as D100() + skill - threshold 
+
+=== function Check(odds, boon, boonX, bane, baneX) === // additionally input a variable to use as a hinderance
+~ odds -= bane * baneX
+~return CheckSimple(odds, boon, boonX) // same as doing a skill roll with lower odds (i.e. a higher threshold)
+
   === Section_TrackTime ===
   /* ---------------------------------
    ### System: Looping Time of Day.
@@ -88,8 +204,6 @@ LIST Edie = (none), Exists, Name
   
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
-//@Vugs: thoughts on the above? Do you agree with these parts of day, or should Night be considered part of the next day or split up?
-//@Bas: This looks good to me! 
 
 VAR DaysPassed = 0
 

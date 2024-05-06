@@ -26,7 +26,7 @@ Allows tracking of what the player has observed throughout the game, using disti
 
 - **KnowledgeState:** This variable serves as a list containing all acquired knowledge.
 - **Knows(fact):** Check if a fact is present in the knowledge state.
-- **KnowledgeStateBetween(factX, factY):** Check if the knowledge state is between two specific points.
+- **KnowsAbout(subject):** Check if ANY of the facts associated with a given subject are present in the knowledge state.
 - **Learn(facts):** Learn a new fact and add it to the knowledge state.
 
 ## Custom Utility

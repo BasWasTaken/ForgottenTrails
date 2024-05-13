@@ -1,0 +1,19 @@
+=== SeaBreezePath ===
+~SetLocation(LOC_SeaBreezePath)
+{PreviousLocation == LOC_EdinburghCrossroads:
+You travel along the road. You pick up a hint of salt on the breeze. In the distance, you can see the ocean. 
+*[Continue on]
+->RuinedCoast
+*[Head back]
+You decide to turn around. 
+->EdinburghCrossroads
+}
+
+{PreviousLocation == LOC_RuinedCoast:
+//You travel along the road. The ocean wind blowing at your back. In the distance, you can see {Knows(EdanCastleKnow.IsCastleOnHill):Edan Castle|a castle on a hilltop}. 
+*[Continue on]
+->EdinburghCrossroads
+*[Head back]
+You decide to turn around. 
+->RuinedCoast
+}

@@ -26,3 +26,4 @@ INCLUDE BasTestBackup.ink
 INCLUDE Dev Mode.ink
 INCLUDE InventoryPuzzle.ink
 INCLUDE BasTest.ink
+INCLUDE Heist.ink

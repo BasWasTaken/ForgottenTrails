@@ -16,7 +16,7 @@ As you reach to pick it up, a reflection stares back at you.
 *(MirrorN)[Leave it be]
 If he left it behind then that is his problem. But as you stand up you cannot help but notice your reflection in the glass.
 -> Opening.CharCreation0
-*{DEBUG == true}[I'm a developer, skip me past the creation.]
+*[I'm a developer, skip me past the creation.]
 ~ PlayerName = "Developer"
 -> Awakening
 

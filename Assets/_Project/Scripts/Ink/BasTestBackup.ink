@@ -1,3 +1,4 @@
+/*
 // --------- Bas  ---------
 === BasTravelTest ===
 ~Party_AddMember(Alice)
@@ -72,6 +73,6 @@ test, use an item
  *[{ItemChoice("tool&thin")}]
  you lockpick the door
     -> blahblah
-    
+*/
 
 

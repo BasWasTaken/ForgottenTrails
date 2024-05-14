@@ -42,8 +42,8 @@ At the center of the crossing you spot a decorated boulder: a Waystone.
 You decide to take the North road{PreviousLocation == LOC_EdinburghCastleEntrance: and go and go back the way you came.|  leading to {KnowsAbout(EdanCastleKnowState):Edan Castle |the Hilltop Castle.}}
 ->RoadToEdanCastle
 +[Take the East Road]
-Sorry buddy, no content East yet!
-->EdinburghCrossroads.Crossing
+You decide to follow the road east. 
+->SeaBreezePath
 +[Take the South Road]
 You decide to {PreviousLocation ? ScotlandEntranceRoad:go back the way you came.|take the Southern Road.}
 ->ScotlandEntranceRoad

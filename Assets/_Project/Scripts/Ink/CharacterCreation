@@ -1,7 +1,4 @@
 // --------- Vugs ---------
-=== Preamble ===
--> Opening
-
 ===Opening===
 ~ FadeToImage(BG_VaultLibrary, 1)
 ~ SetLocation(LOC_DreamState)

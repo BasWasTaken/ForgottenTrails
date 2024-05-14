@@ -600,7 +600,7 @@ EXTERNAL _FadeToColor(string, float)
    // NOTE: I have to test whether this allows explicit ordering
    
    
-LIST Portraits = (none), Alice1, Robert2
+LIST Portraits = (none), Alice1, Robert1
 === function Portraits_Set(images)
 ~ Portraits = images
 <<i>Unity now shows {images}</i>> 

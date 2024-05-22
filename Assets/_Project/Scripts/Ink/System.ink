@@ -99,8 +99,16 @@ VAR buffer = -> seen_this_scene
   
 VAR KnowledgeState = () // VAR that will serve as list containing all acquired knowledge
 
-=== function Knows (fact) // check if fact is present in knowledge state, i.e. is it known information?
+=== function Knows(fact) // check if fact is present in knowledge state, i.e. is it known information?
    ~ return KnowledgeState ? fact 
+   
+=== function Learn(facts)  // used to "learn" a fact   
+    ~ KnowledgeState += facts
+    
+=== function KnowsAbout(subject)
+    ~ return KnowledgeState ^ subject // see if any overlap between subject and knowledge base
+
+/* This function simplified on 2024-05-06 as part of the pivot awai from incremental knowledge states. We are opting instead for the ability to use nonlineair logic (as in a player can Know A, not B, as well as B, not A) and estimate that the paradoxical results (not knowing A before B when that is nonsensical) are mitigatable by manual additions. Should we see that we often have to manually learn a lot of steps to prevent paradoxes and/or not really benefit from the nonlineair knowledge states, we can reinstate the following logic.:
 
 === function KnowledgeStateBetween(factX, factY) // used to check if knowledge state is between two specific points, i.e. does the player know x, but also not know y?
    ~ return KnowledgeState? factX && not (KnowledgeState ^ factY)
@@ -121,28 +129,22 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
     - else:
       ~ return false || Learn(facts) 
     }	
+*/
     
    /* ---------------------------------
    #### List of Knowledge Chains
    ----------------------------------*/
-//Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
-// Bas: Absoluut, laat maar weten. 
 // WIP: Movev to different file
-LIST EdanCastleKnow = (none), Exists, IsCastleOnHill // wat is dit nou weer voor een verschikkelijke variabelnaam die ik heb gemaakt wtf
-LIST Edgar = (none), Exists, Name
-LIST Henry = (none), Exists, Name
-LIST Tomas = (none), Exists, Name
-LIST Eileen = (none), Exists, Name
-//I keep running into the issue that you can't give the same name to things that have already been used elsewhere, even in different functions or as the variable instead of the variable name. You seem to have fixed this, how?
-// I have no idea.
-//LIST Alice = (none), Exists, Name
-LIST Rubert = (none), Exists, Name
-LIST Edie = (none), Exists, Name
+LIST EdanCastleKnowState = Reputation, Location, Name 
 
+LIST EdgarKnowState = Reputation, Face, Name
+LIST HenryKnowState = Reputation, Face, Name
+LIST TomasKnowState = Reputation, Face, Name
+LIST EileenKnowState = Reputation, Face, Name
+LIST AliceKnowState = Reputation, Face, Name
+LIST RobertKnowState = Reputation, Face, Name
+LIST EdieKnowState = Reputation, Face, Name
 
-
-
-	
  === Section_Extended ===
  /* ---------------------------------
     ## Custom Utility
@@ -240,7 +242,7 @@ VAR DaysPassed = 0
 LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
 -> DONE
 
-  === Section_TrackLocations ===
+=== Section_TrackLocations ===
   /* ---------------------------------
    ### System: Tracks Locations Player visited
   ----------------------------------*/
@@ -419,7 +421,7 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey // existing items // Vugs may add items to this list.
+LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 

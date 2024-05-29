@@ -1,7 +1,7 @@
 // --------- Shared ---------
 === RandomEventsEdanArea ===
 //To do: add event content
-{~->MerchantSiblings1|->Deer|->Downpour} 
+{~->MerchantSiblings1|->Deer|->Downpour | ->FindRations} 
 
 // --------- Vugs  ---------
 === MerchantSiblings1 ===
@@ -238,6 +238,19 @@ She shakes her head, "There are a few more verses{AffAlice >=50:." And with a wi
     
     
 // --------- Bas ---------
+=== FindRations ===
+    You come across a field where you notice numerous animal tracks and dropppings. It seems like much game took to living around these parts, meaning this might be a goood opportunity for some hunting to top up your rations- and more to the point, enjoy something other than dried jerky for once.
+    * [Take the time to hunt some game.]
+        ~Time_Advance()
+        You take some time to hunt small game. After a few hours you have decent bit of meat to go around. You light a fire and decide to each have some freshly cooked meat and preserve the rest for later consumption. 
+        ~TravelRations+=2*LIST_COUNT(Party)
+        ->->
+
+    * [We don't have the time or energy for a hunting expedition right now.]
+        text text
+        ->->
+
+
 === Deer ===
 TestDeer
 ->->

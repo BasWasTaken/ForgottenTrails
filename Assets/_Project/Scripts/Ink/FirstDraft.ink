@@ -5,6 +5,8 @@
 //Story Ink files that need to be included can be further defined in Stories.ink
 INCLUDE System.ink
 INCLUDE Stories
+INCLUDE EdanPrison.ink
+
 
 //Set inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)

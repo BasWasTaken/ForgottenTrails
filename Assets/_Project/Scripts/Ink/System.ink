@@ -249,7 +249,7 @@ LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thund
   -> DONE
   // Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
 
-LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath // Vugs may add items to this list.
+LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath, LOC_EdanCastlePrison // Vugs may add items to this list.
 
 ~ Locations = LIST_ALL(Locations)  
     

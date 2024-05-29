@@ -15,6 +15,7 @@ You take out your fishing rod and cast your line into the water.
 //Remaining weather to receive flavour text: LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
 
 //Variables used
+LIST FishingWaters = FISH_FirthofForth, FISH_EdanWell
 VAR FishSize = -1
 ~ FishSize = RANDOM(0, 100)
 VAR FishNibble = -1
@@ -24,11 +25,11 @@ VAR RodPull = 0
 VAR ReelIn = 0
 
 {
--FishSize > 0 && FishSize <= 30 && CurrentLocation == LOC_RuinedCoast:
+-FishSize > 0 && FishSize <= 30 && FishingWaters == FISH_FirthofForth:
     ~FishType = Whiting
--FishSize > 29 && FishSize <= 80 && CurrentLocation == LOC_RuinedCoast:
+-FishSize > 29 && FishSize <= 80 && FishingWaters == FISH_FirthofForth:
     ~FishType = SeaTrout
--FishSize > 79 && FishSize <= 100 && CurrentLocation == LOC_RuinedCoast:
+-FishSize > 79 && FishSize <= 100 && FishingWaters == FISH_FirthofForth:
     ~FishType = AtlanticCod    
 }
 
@@ -71,7 +72,5 @@ VAR ReelIn = 0
 ===Bite===
 
 You've caught a {FishType}!
-
-//I forgot how to redirect to the previous/current/next destination like with the travel system. Could you show me how? 
-
 ->DONE
+//I forgot how to redirect to the previous/current/next destination like with the travel system. Could you show me how? 

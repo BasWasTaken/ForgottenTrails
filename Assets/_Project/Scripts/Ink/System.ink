@@ -322,7 +322,7 @@ You need food to survive idiot.
 - TravelRations == 0: // check if rations left
     -> Starvation
 - TravelRations < LowRationsLimit: // check if low on rations
-    ~ TravelRations-- // eat the rations
+    ~ TravelRations-=1*LIST_COUNT(Party)  // each party member eats some rations
     -> InsertComplaint
 - else:
     ~ TravelRations-- // eat the rations

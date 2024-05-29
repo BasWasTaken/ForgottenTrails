@@ -303,31 +303,31 @@ VAR RollRandomEvents = true // wether or not to roll for random events during tr
 
 VAR SucceededRandomEvent = false // boolean to check after travel event
 
-VAR LowRationsLimit = 9 // amount of rations that causes party to complain if you go under it.
+VAR LowRationsLimit = 3 // amount of rations that causes party to complain if you go under it.
 
 
 === InsertComplaint === // the complaint scene to insert on low rations
-You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
-->->
+    You {LIST_COUNT(Party)>1:and your party} are growing {|ever more } wary of the low amount of remaining rations.
+    ->->
 
 === Starvation ===
-You need food to survive idiot.
--> Death
+    You look at the meager rations still laft in your packs.
+    // TODO: incldue fail forward here
+    // if you do have a non-0 amount of rations left, you can divvy them out. everyone who did not get a portion grows more hungry. and then as some point they should just die or go of by themselves i guess?
+    ->->
 
 === TravelingTo(targetLocation, ->targetScene) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
 ~ TargetLocation = targetLocation
 ~ temp OriginLocation = CurrentLocation
 ~ SetLocation(LOC_OnTheRoad)
 {
-- TravelRations == 0: // check if rations left
-    -> Starvation
-- TravelRations < LowRationsLimit: // check if low on rations
-    ~ TravelRations-=1*LIST_COUNT(Party)  // each party member eats some rations
-    -> InsertComplaint
-- else:
-    ~ TravelRations-- // eat the rations
-    You eat yummy rations.
+- TravelRations < LIST_COUNT(Party): // if not enough rations left to feed everyone
+    -> Starvation -> //grow more hungry
+- TravelRations < LowRationsLimit * LIST_COUNT(Party): // check if low on rations
+    -> InsertComplaint -> // grow more wary
 } 
+    ~ TravelRations-=1*LIST_COUNT(Party)  // each party member eats some rations
+    You {LIST_COUNT(Party)>1:all }eat rations.
 
 ~ temp Encounter = false // default to false
 

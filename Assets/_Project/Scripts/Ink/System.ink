@@ -249,7 +249,7 @@ VAR DaysPassed = 0
 LIST Weather = ClearSkies, LightClouds, ThickClouds, (LightRain), HeavyRain, Thunderstorm
 
 === function ChangeWeather() ===
-Print(Weather)
+~Print(Weather)
 ~ temp current = LIST_VALUE(Weather)
 //~Print(current)
 ~ temp 3StepCutOff = 20 // chance to move 3 steps

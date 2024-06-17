@@ -207,7 +207,7 @@ VAR roll = 0
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
 
-LIST DayOfTheWeek = 
+LIST DayOfTheWeek = (Monday), Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 
 VAR DaysPassed = 0
 
@@ -242,7 +242,8 @@ VAR DaysPassed = 0
 
 === Section_TrackWeather ===
 LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
--> DONE
+//@Bas hier graag een functie om het weer te genereren schrijven! 
+->DONE
 
 === Section_TrackLocations ===
   /* ---------------------------------

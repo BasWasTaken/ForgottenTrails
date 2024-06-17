@@ -15,12 +15,14 @@ INCLUDE DraftPieces.ink
 
 //Set party
 ~ Party = (Player)
+
 ->Start
 
 //Set debug variable
 VAR DEBUG = false
 
 === Start ===
+~ChangeWeather()
 Do you want to toggle developer mode?
 +[Yes]
 -> DeveloperModeToggle

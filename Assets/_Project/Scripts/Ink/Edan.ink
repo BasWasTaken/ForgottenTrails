@@ -34,10 +34,10 @@ As you crest the hilltop a gatehouse comes into view. Its stones are worn, ancie
 = CastleEntranceFirstApproach
 You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the archway, barring the way forward. As you stand before them a small latch is opened to reveal two {TimeOfDay == Dawn: tired blue eyes} crowned by a pair of bushy eyebrows{CastleEntranceFirst.joke: that are frowning in disaproval}.
 
-{CastleEntranceFirst.joke: The man sighs, "Look {lad}, I appreciate your attempt at a joke -Gods know we could use some more humor out here- but on a bad day behaviour like that could get you killed. I've heard stories of wraiths speaking, wouldn't want to accidentally think you're one." | "Welcome to the castle {lad}, safest place in the North!" The man's eyes smile, most likely along with his mouth that's still hidden behind the door, "Sorry for all the precaution, can't be too careful with them wraiths out there."}
+{CastleEntranceFirst.joke: The man sighs, "Look {lad}, I appreciate your attempt at a joke -Gods know we could use some more humor out here- but on a bad day behaviour like that could get you killed. We've had a run in with a wraith only yesterday, hence the closed door policy." | "Welcome to the castle {lad}, safest place in the North!" The man's eyes smile, most likely along with his mouth that's still hidden behind the door, "Sorry for all the precaution, we've had a run in with a wraith only yesterday. Have to make sure there aren't any stragglers!"}
 *"Could you let me in?"
     {CastleEntranceFirst.joke: "Alright, just behave would ye?" | "Of course {lad}, just a moment."}
-    The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man holds it open for you with one hand while leaning on a spear with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
+    The man steps back and swings the latch shut. You hear the rustling of keys and the clunky rattling of locks, followed by a single door being opened inward. The man holds it open for you with one hand while leaning on a halberd with the other. He's an old sort, nearing his fifties, but broadchested and with seemingly a strong arm. 
     
     As you step inside the man shuts the door behind you, taking great care to put the locks back into place. 
     ~SetLocation(LOC_EdanCastleGatehouse)
@@ -48,6 +48,8 @@ You bring yourself nearer to the gatehouse. Two wooden doors are set beneath the
         **(ignored)Say nothing and keep walking
         ->CastleGatehouseCourtyard
 *"Wraiths?"
+"Aye, wraiths." he says. When a short pause lets him know you don't know what that means his eyes widen. "You don't know about wraiths? {lad}, have you been living under a rock all your years? 
+*"You had an incident?"
 *"Do you often have to kill creatures gently walking up to the door?"
 
 = CastleEntranceReturnVisit

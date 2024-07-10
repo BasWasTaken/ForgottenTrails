@@ -5,7 +5,7 @@
 
  ----------------------------------*/
 //Introduction Ink files
-INCLUDE CharacterCreation
+INCLUDE CharacterCreation.ink
 INCLUDE introductionAwakening.ink
 
 //Edan Ink files

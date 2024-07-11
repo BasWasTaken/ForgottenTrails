@@ -1,8 +1,8 @@
 === RuinedCoast ===
 ~SetLocation(LOC_RuinedCoast)
-You find yourself at the shoreline. It's a broken affair; what must once have been some sort of harbour has been almost completely swallowed by the sea. The remaining structures have sunken into the ground, causing them to stand at odd angles. A lone quay still stand upright in defiance of the elements, but you fear that if you put any weight on it that too will dissappear beneath the waves. 
+You find yourself at the coastline. It's a broken affair; what must once have been some sort of harbour has been almost completely swallowed by the sea. The remaining structures have sunken into the ground, causing them to stand at odd angles. A lone quay still stand upright in defiance of the elements, but you fear that if you put any weight on it that too will dissappear beneath the waves. 
 
-As your gaze follows the coast in a Northerly direction, you see a large but dilapidated building stand at the water's edge. Looking to the South-East, you see little but jagged rocks being battered by the waves. 
+As your gaze follows the coast in a Northerly direction, you see a large and overgrown ruin stand at the water's edge. Looking to the South-East, you see little but jagged rocks being battered by the waves. 
 ->RuinedCoastChoices1
 
 =RuinedCoastChoices1
@@ -21,7 +21,7 @@ As your gaze follows the coast in a Northerly direction, you see a large but dil
 ->SeaBreezePath
 +[Explore to the South-East]
 ->RuinedCoastSouth
-+[Walk towards the Northern building]
++[Explore the Northern ruins]
 ->AbandonedShoppingMall
 +[{ItemChoice("fishing")}]
 ~FishingWaters = FISH_FirthofForth
@@ -31,4 +31,5 @@ As your gaze follows the coast in a Northerly direction, you see a large but dil
 =RuinedCoastSouth
 ->END
 = AbandonedShoppingMall
+
 ->END

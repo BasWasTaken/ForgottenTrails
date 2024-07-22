@@ -207,6 +207,8 @@ VAR roll = 0
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
 
+LIST DayOfTheWeek = (Monday), Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+
 VAR DaysPassed = 0
 
 === function Time_Advance() // used to progress time 1 or loop back around and progress dayspasse 1.
@@ -239,8 +241,59 @@ VAR DaysPassed = 0
 
 
 === Section_TrackWeather ===
-LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
--> DONE
+  /* ---------------------------------
+   ### System: Tracks Weather conditions
+  ----------------------------------*/
+->DONE
+
+LIST Weather = ClearSkies, LightClouds, ThickClouds, (LightRain), HeavyRain, Thunderstorm
+
+=== function ChangeWeather() ===
+~Print(Weather)
+~ temp current = LIST_VALUE(Weather)
+//~Print(current)
+~ temp 3StepCutOff = 20 // chance to move 3 steps
+~ temp 2StepCutOff = 50 // chance to move at least 2 steps
+~ temp 1StepCutOff = 70 // chance to move at least 1 step
+
+~ temp check = D100() // generate number
+
+~ temp change = 0
+{ 
+- check>=101-3StepCutOff: //is roll high enough for 3rd cutoff?
+    ~ change = 3
+- check>=101-2StepCutOff: //is roll high enough for 2nd cutoff?
+    ~ change = 2
+- check>=101-1StepCutOff: //is roll high enough for 1st cutoff?
+    ~ change = 1
+}
+
+{
+-RANDOM(0,1) == 0: // flip a coin, if heads...
+    ~change = change *-1 // change direction of change
+}
+
+
+~Print(change + " steps!")
+
+~ temp potentialNew = current + change 
+// check if within range, else clamp
+{
+- potentialNew < 0:
+    ~Print("too low- capping at 0")
+    ~Weather = LIST_MIN(LIST_ALL(Weather))
+- potentialNew > LIST_COUNT(LIST_ALL(Weather)):
+    ~Print("too high- capping at max")
+    ~Weather = LIST_MAX(LIST_ALL(Weather))
+- else:
+    ~Weather += change
+}
+
+
+~Print(Weather)
+
+
+
 
 === Section_TrackLocations ===
   /* ---------------------------------
@@ -249,7 +302,7 @@ LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thund
   -> DONE
   // Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
 
-LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath // Vugs may add items to this list.
+LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath, LOC_EdanCastlePrison // Vugs may add items to this list.
 
 ~ Locations = LIST_ALL(Locations)  
     
@@ -303,31 +356,31 @@ VAR RollRandomEvents = true // wether or not to roll for random events during tr
 
 VAR SucceededRandomEvent = false // boolean to check after travel event
 
-VAR LowRationsLimit = 9 // amount of rations that causes party to complain if you go under it.
+VAR LowRationsLimit = 3 // amount of rations that causes party to complain if you go under it.
 
 
 === InsertComplaint === // the complaint scene to insert on low rations
-You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
-->->
+    You {LIST_COUNT(Party)>1:and your party} are growing {|ever more } wary of the low amount of remaining rations.
+    ->->
 
 === Starvation ===
-You need food to survive idiot.
--> Death
+    You look at the meager rations still laft in your packs.
+    // TODO: incldue fail forward here
+    // if you do have a non-0 amount of rations left, you can divvy them out. everyone who did not get a portion grows more hungry. and then as some point they should just die or go of by themselves i guess?
+    ->->
 
 === TravelingTo(targetLocation, ->targetScene) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
 ~ TargetLocation = targetLocation
 ~ temp OriginLocation = CurrentLocation
 ~ SetLocation(LOC_OnTheRoad)
 {
-- TravelRations == 0: // check if rations left
-    -> Starvation
-- TravelRations < LowRationsLimit: // check if low on rations
-    ~ TravelRations-- // eat the rations
-    -> InsertComplaint
-- else:
-    ~ TravelRations-- // eat the rations
-    You eat yummy rations.
+- TravelRations < LIST_COUNT(Party): // if not enough rations left to feed everyone
+    -> Starvation -> //grow more hungry
+- TravelRations < LowRationsLimit * LIST_COUNT(Party): // check if low on rations
+    -> InsertComplaint -> // grow more wary
 } 
+    ~ TravelRations-=1*LIST_COUNT(Party)  // each party member eats some rations
+    You {LIST_COUNT(Party)>1:all }eat rations.
 
 ~ temp Encounter = false // default to false
 
@@ -421,7 +474,7 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod // existing items // Vugs may add items to this list.
+LIST Items = Knife, Pot, Rope, Lantern, Torch, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 

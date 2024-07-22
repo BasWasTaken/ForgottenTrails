@@ -4,19 +4,27 @@
 //Set core Ink files
 //Story Ink files that need to be included can be further defined in Stories.ink
 INCLUDE System.ink
-INCLUDE Stories
+INCLUDE Stories.ink
+INCLUDE DraftPieces.ink
+INCLUDE ItemStates.ink
+
+
+
+
 
 //Set inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
 
 //Set party
 ~ Party = (Player)
+
 ->Start
 
 //Set debug variable
 VAR DEBUG = false
 
 === Start ===
+~ChangeWeather()
 Do you want to toggle developer mode?
 +[Yes]
 -> DeveloperModeToggle

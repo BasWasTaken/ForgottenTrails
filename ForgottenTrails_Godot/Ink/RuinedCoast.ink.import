@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dvc5eeohpqi5t"
+path="res://.godot/imported/RuinedCoast.ink-6c09c0507bf4e9a59ee3e861e0790f93.res"
+
+[deps]
+
+source_file="res://Ink/RuinedCoast.ink"
+dest_files=["res://.godot/imported/RuinedCoast.ink-6c09c0507bf4e9a59ee3e861e0790f93.res"]
+
+[params]
+
+is_main_file=false
+compress=true

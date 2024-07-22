@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://d3afwp88eljyw"
+path="res://.godot/imported/InventoryPuzzle.ink-076195ce4f3cea50ed69809bbc728052.res"
+
+[deps]
+
+source_file="res://Ink/InventoryPuzzle.ink"
+dest_files=["res://.godot/imported/InventoryPuzzle.ink-076195ce4f3cea50ed69809bbc728052.res"]
+
+[params]
+
+is_main_file=false
+compress=true

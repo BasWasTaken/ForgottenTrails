@@ -46,7 +46,46 @@ No {TimeOfDay >= Dusk and TimeOfDay <= Night:moonlight|daylight} can find its wa
 =CoastalRuinsB2CorridorMiddle
 {LightSource == 1:You move further down the hallway. You pass what appear to be doorways, but they are blocked by either debris or metal sheets. Noticeably, the doorways alternate with large window frames. Most of these are shuttered by metal. However, the next window frame on your left seems to be open.|By keeping your hand against the wall, you manage to steady yourself and keep to the path. Every now and again, the concrete gives way to metal. You quickly find there's a rythm to it, two steps of concrete, ten steps of metal. Two steps of concrete, ten steps of metal. Two steps of concrete... Air. You stumble. You try to steady yourself but in the dark you can't find anything to hold on to.{Party has Alice && AffAlice =< 50: You feel something brush your back. Is Alice trying to catch you? If she is, she's too late.|}With a smack you collide with the ground. Your knee hurts and you think you've scratched your arm, but otherwise you seem relatively fine.}
 
+
+
 //@Bas having a bit of a scuffle with the above section regarding party member presence. I can't manage to have it check for both Alice's presence in the party and her current affection. Mind taking a look?
+
+/*@Vugs I was able to spot a few errors:
+1. you typed "=<" instead of "<=". A common enough mistake. I often forget which way it goes to. What helps me remember is that I know "=>" is a symbol reserved for other uses, so the symbol for "greather or equal" must be ">=", so the symbol for "smaller or equal" must be "<=". But I'm not sure that's a useful mnemonic for you.
+
+2. You're trying to use an if-else within an if-else, and I don't think ink allows for that with this formatting, even though their automatic markup erroneously tells you that it does recognise it. You can tell because your whole ifelse statement is itself readable within the ink output.
+
+To do multi-layered if-else statements, I believe you need to do it like so: 
+{example1==true:
+    This is written if example1 is true.
+  - else:
+    Otherwise this is written.
+    
+    {example2==true:
+        This is written if example2 is true.
+    - else:
+        Otherwise this is written.
+    }
+}
+
+This is not space-sensitive, i.e. you can omit the leading whitespaces if you want to. (In fact I still haven't thought of a formatting schema that allows us to write in an orderly manner, I've tried writing my paragraphs and functions consistently spaced but inkle's examples themselves are not consistent so I keep changing without meaning to, and forgetting what the preferred spacing is.)
+
+I've recreated your paragraph below as I believe you've intended it. 
+
+By the way, I believe you're not using affinity the way I thought we said we would: namely, by checking the ordinal values (i.e. friendly, unfriendly) rather than the numeric values directly. But we can discuss that later, shouldn't make a difference for testing purposes. 
+*/
+
+{
+- LightSource == 1:
+You move further down the hallway. You pass what appear to be doorways, but they are blocked by either debris or metal sheets. Noticeably, the doorways alternate with large window frames. Most of these are shuttered by metal. However, the next window frame on your left seems to be open.
+- else: 
+By keeping your hand against the wall, you manage to steady yourself and keep to the path. Every now and again, the concrete gives way to metal. You quickly find there's a rythm to it, two steps of concrete, ten steps of metal. Two steps of concrete, ten steps of metal. Two steps of concrete... Air. You stumble. You try to steady yourself but in the dark you can't find anything to hold on to.
+    {
+    - Party has Alice && AffAlice <= 50: 
+    You feel something brush your back. Is Alice trying to catch you? If she is, she's too late.
+    }
+    With a smack you collide with the ground. Your knee hurts and you think you've scratched your arm, but otherwise you seem relatively fine.
+}
 
 - (top)
 {LightSource == 0:You should be standing at about the midway point in the corridor, but it's too dark to know for sure.}

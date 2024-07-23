@@ -114,7 +114,8 @@ Her song reaches a small crescendo, which she seemingly deems a good point to st
 
 *[Clap excitedly]
 You clap excitedly, to which she responds with a comically extravagant bow. "Why thank you, dear audience! You're too kind" she says with a laugh. 
-//~AffAlice + 5 How to do this?
+~ AffAlice += 5// How to do this? 
+// @Vugs zo!
 ->TravelersSong1B
 *[Compliment her]
 You compliment her singing. She smiles, "Thanks, {PlayerName}."

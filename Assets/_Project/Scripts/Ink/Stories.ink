@@ -5,26 +5,28 @@
 
  ----------------------------------*/
 //Introduction Ink files
-INCLUDE CharacterCreation.ink
-INCLUDE introductionAwakening.ink
+INCLUDE Introduction\CharacterCreation.ink
+INCLUDE Introduction\introductionAwakening.ink
 
 //Edan Ink files
-INCLUDE Edan.ink
-INCLUDE EdanInn.ink
-INCLUDE EdanPrison.ink
+INCLUDE Edan\Edan.ink
+INCLUDE Edan\EdanInn.ink
+INCLUDE Edan\EdanPrison.ink
 
 //Edan region Ink files
-INCLUDE SouthernRoads.ink
-INCLUDE RuinedCoast.ink
-INCLUDE SeaBreezePath.ink
+INCLUDE EdanRegion\SouthernRoads.ink
+INCLUDE EdanRegion\RuinedCoast.ink
+INCLUDE EdanRegion\SeaBreezePath.ink
+INCLUDE EdanRegion\RandomEvents.ink
 
-//Gameplay mechanic Ink files
-INCLUDE RandomEvents.ink
-INCLUDE Fishing.ink
+//System Ink files
+INCLUDE System\Dev Mode.ink
+INCLUDE System\Fishing.ink
+INCLUDE System\ItemStates.ink
 
 //Testing Ink files
-INCLUDE BasTestBackup.ink
-INCLUDE Dev Mode.ink
-INCLUDE InventoryPuzzle.ink
-INCLUDE BasTest.ink
-INCLUDE Heist.ink
+INCLUDE Testing\BasTestBackup.ink
+INCLUDE Testing\PartyDialogues.ink
+INCLUDE Testing\InventoryPuzzle.ink
+INCLUDE Testing\BasTest.ink
+INCLUDE Testing\Heist.ink

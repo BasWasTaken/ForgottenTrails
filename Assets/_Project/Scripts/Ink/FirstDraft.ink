@@ -6,11 +6,6 @@
 INCLUDE System.ink
 INCLUDE Stories.ink
 INCLUDE DraftPieces.ink
-INCLUDE ItemStates.ink
-
-
-
-
 
 //Set inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)

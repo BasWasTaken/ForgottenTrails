@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cqwc0m2tsc7gn"
+path="res://.godot/imported/SeaBreezePath.ink-9ce72963a7994388a94ab29aa4d43c6a.res"
+
+[deps]
+
+source_file="res://Ink/tvz/SeaBreezePath.ink"
+dest_files=["res://.godot/imported/SeaBreezePath.ink-9ce72963a7994388a94ab29aa4d43c6a.res"]
+
+[params]
+
+is_main_file=false
+compress=true

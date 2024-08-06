@@ -1,0 +1,30 @@
+// --------- Shared ---------
+/* ---------------------------------
+
+    This file lists all ink stories as includes. Including just this script includes all of them as well.
+
+ ----------------------------------*/
+//Introduction Ink files
+INCLUDE CharacterCreation.ink
+INCLUDE introductionAwakening.ink
+
+//Edan Ink files
+INCLUDE Edan.ink
+INCLUDE EdanInn.ink
+INCLUDE EdanPrison.ink
+
+//Edan region Ink files
+INCLUDE SouthernRoads.ink
+INCLUDE RuinedCoast.ink
+INCLUDE SeaBreezePath.ink
+
+//Gameplay mechanic Ink files
+INCLUDE RandomEvents.ink
+INCLUDE Fishing.ink
+
+//Testing Ink files
+INCLUDE BasTestBackup.ink
+INCLUDE Dev Mode.ink
+INCLUDE InventoryPuzzle.ink
+INCLUDE BasTest.ink
+INCLUDE Heist.ink

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cqkj1x16pb81a"
+path="res://.godot/imported/RandomEvents.ink-4ffce6e155a176a21db6898ccef866e0.res"
+
+[deps]
+
+source_file="res://Ink/tvz/RandomEvents.ink"
+dest_files=["res://.godot/imported/RandomEvents.ink-4ffce6e155a176a21db6898ccef866e0.res"]
+
+[params]
+
+is_main_file=false
+compress=true

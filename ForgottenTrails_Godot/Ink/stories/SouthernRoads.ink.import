@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://iwsrn80k3bpn"
+path="res://.godot/imported/SouthernRoads.ink-55a2f20957b6009594f189666b4d29e6.res"
+
+[deps]
+
+source_file="res://Ink/stories/SouthernRoads.ink"
+dest_files=["res://.godot/imported/SouthernRoads.ink-55a2f20957b6009594f189666b4d29e6.res"]
+
+[params]
+
+is_main_file=false
+compress=true

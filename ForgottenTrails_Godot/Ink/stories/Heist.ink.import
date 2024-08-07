@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cbx4bkmxagb1u"
+path="res://.godot/imported/Heist.ink-fb9f457b2e9b2d3a79bc4c197d5433a7.res"
+
+[deps]
+
+source_file="res://Ink/stories/Heist.ink"
+dest_files=["res://.godot/imported/Heist.ink-fb9f457b2e9b2d3a79bc4c197d5433a7.res"]
+
+[params]
+
+is_main_file=false
+compress=true

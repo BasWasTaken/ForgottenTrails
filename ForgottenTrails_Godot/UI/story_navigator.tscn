@@ -1,0 +1,65 @@
+[gd_scene load_steps=9 format=3 uid="uid://d2heo3o0s3ot3"]
+
+[ext_resource type="Script" path="res://UI/story_navigator.gd" id="1_n1hfe"]
+[ext_resource type="Script" path="res://UI/text_presenter.gd" id="2_7kog2"]
+[ext_resource type="Script" path="res://UI/story_getter.cs" id="2_r357r"]
+[ext_resource type="Resource" uid="uid://dgol21inb7kl8" path="res://Ink/_tests.ink" id="3_8wbfs"]
+[ext_resource type="Script" path="res://UI/choices_presenter.gd" id="3_cgmjb"]
+[ext_resource type="PackedScene" uid="uid://b1bf6i2ls3ciu" path="res://UI/continue_button.tscn" id="4_6bwso"]
+[ext_resource type="PackedScene" uid="uid://cqcv01npgwq0e" path="res://UI/choice_button.tscn" id="4_axki0"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_66eoy"]
+
+[node name="StoryNavigator" type="TextureRect"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -200.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("ImageTexture_66eoy")
+stretch_mode = 2
+script = ExtResource("1_n1hfe")
+
+[node name="StoryGetter" type="Node" parent="."]
+script = ExtResource("2_r357r")
+story = ExtResource("3_8wbfs")
+
+[node name="TextPresenter" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -512.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Hello World!"
+script = ExtResource("2_7kog2")
+
+[node name="ChoicesPresenter" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -512.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 2
+script = ExtResource("3_cgmjb")
+
+[node name="ChoiceButton" parent="ChoicesPresenter" instance=ExtResource("4_axki0")]
+layout_mode = 2
+script = null
+
+[node name="ContinueButton" parent="ChoicesPresenter" instance=ExtResource("4_6bwso")]
+layout_mode = 2
+
+[connection signal="continued_story" from="StoryGetter" to="TextPresenter" method="present_story"]
+[connection signal="continued_story" from="StoryGetter" to="ChoicesPresenter" method="_on_finished_continue"]
+[connection signal="encountered_choice" from="StoryGetter" to="ChoicesPresenter" method="present_choice"]
+[connection signal="encountered_no_choices" from="StoryGetter" to="ChoicesPresenter" method="present_continue_button"]
+[connection signal="ink_function_print" from="StoryGetter" to="TextPresenter" method="present_console_message"]
+[connection signal="choice_pressed" from="ChoicesPresenter" to="." method="_on_choices_presenter_choice_pressed"]
+[connection signal="pressed" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_button_pressed"]

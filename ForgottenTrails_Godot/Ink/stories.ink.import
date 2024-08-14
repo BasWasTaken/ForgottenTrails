@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://cw434qlbkf738"
-path="res://.godot/imported/stories.ink-143f308395359d565f8c52499a512b44.res"
+path="res://.godot/imported/Stories.ink-d0c3a352a79703e31e527ce79b90b43c.res"
 
 [deps]
 
-source_file="res://Ink/stories.ink"
-dest_files=["res://.godot/imported/stories.ink-143f308395359d565f8c52499a512b44.res"]
+source_file="res://Ink/Stories.ink"
+dest_files=["res://.godot/imported/Stories.ink-d0c3a352a79703e31e527ce79b90b43c.res"]
 
 [params]
 

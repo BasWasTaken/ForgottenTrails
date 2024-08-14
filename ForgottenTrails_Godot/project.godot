@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ForgottenTrails"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://main_gameplay_scene.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://art/ForgottenTrailsTitle_IMG.png"
 
@@ -27,6 +27,5 @@ enabled=PackedStringArray("res://addons/GodotInk/plugin.cfg")
 
 continue={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":32,"physical_keycode":32,"key_label":32,"unicode":32,"echo":false,"script":null)
-]
+"events": []
 }

@@ -1,31 +1,31 @@
 using Godot;
 using GodotInk;
 
-public partial class StoryGetter : VBoxContainer
+public partial class myStoryGetter : VBoxContainer
 {	
 	[Export]
-	private InkStory story;
+	private InkStory story; 
+	
+	[Export]
+	private Button myContinueButton;
 
 	public override void _Ready()
 	{
-		//Button ContinueButton = GetNode<Button>("ContinueButton");
-		//ContinueButton.Pressed += () => SendContinue();
+		myContinueButton.Connect("continueSignal", Callable.From(ContinueStory));
 		
 		story.BindExternalFunction("Print", (string text) => PresentConsoleMessage(text, false));
 		story.BindExternalFunction("PrintWarning", (string text) => PresentConsoleMessage(text, true));
 		ContinueStory();
 	}
 	
-	public void SendContinue()
-	{
-		if(story.CanContinue)
-		{
-			ContinueStory();
-		}
-	}
-
 	private void ContinueStory()
 	{
+		if(!story.CanContinue)
+		{
+			GD.Print("Cannot Continue");
+			return;
+		}
+		
 		PresentStory(story.Continue());
 
 		if(story.CanContinue)
@@ -88,3 +88,7 @@ public partial class StoryGetter : VBoxContainer
 	}
 	#endregion Presenter
 }
+
+
+
+

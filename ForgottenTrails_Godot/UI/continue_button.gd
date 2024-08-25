@@ -1,7 +1,16 @@
 extends Button
 
+signal pressed_continue
 
-func _process(delta):
+#func _ready():
+	#pressed.connect(_on_pressed)
+
+func _process(_delta):
 	# This connects the spacebar to the button:
 	if Input.is_action_just_pressed("continue"): 
-		get_node("Button").emit("pressed")
+		print("got spacebar")
+		_on_pressed()
+
+func _on_pressed():
+	print("pressed continue")
+	pressed_continue.emit()

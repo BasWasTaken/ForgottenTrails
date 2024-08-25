@@ -23,19 +23,28 @@ public partial class story_getter : Node
 	{
 		story.BindExternalFunction("Print", (string text) => EmitSignal(SignalName.ink_function_print, text, false));
 		story.BindExternalFunction("PrintWarning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
-		RequestContinue();
+		//TODO: enable starting automatically (need to figure out timing)
 	}
 	
 	public void RequestContinue()
 	{
-		// room for checking if the script is ready
-		ContinueStory();
+		GD.Print("sotry_getter received request to continue, evaluating...");
+		if(story.CanContinue)
+		{
+			GD.Print("validated. Continueing Story.");
+			ContinueStory();
+		}
+		else
+		{
+			GD.Print("Cannot Continue");
+		}
 	}
 	
 	private void ContinueStory()
 	{
-		if(story.CanContinue)
+		if(story.CanContinue) // extra validation
 		{
+			//GD.Print("continueing story")
 			string content = story.Continue();
 			
 			EmitSignal(SignalName.continued_story, content);
@@ -54,12 +63,13 @@ public partial class story_getter : Node
 		}
 		else
 		{
-			GD.Print("Cannot Continue");
+			GD.PushWarning("Illegal Continue attempt.");
 		}
 	}
 	
 	public void FeedChoice(int index)
 	{
+		GD.Print("story_getter received choice, feeding now");
 		story.ChooseChoiceIndex(index);
 		ContinueStory();
 	}

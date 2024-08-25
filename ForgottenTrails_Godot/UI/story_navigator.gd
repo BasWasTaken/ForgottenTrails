@@ -4,28 +4,16 @@ extends Node
 #@onready var my_csharp_node = my_csharp_script.new()
 @onready var story_getter = get_node("StoryGetter")
 
-#remove: signal continued_story(text)
-#remove: signal encountered_no_choices()
-#remove: signal encountered_choice(choice)
+func _on_continue_pressed():
+	print("navigator received continue")
+	story_getter.RequestContinue();
 
-#remove: func _ready(): # catch various events to convert and retransmit them via godot signals. 
-#remove: 	story_getter.continued_story_EventHandler.connect(_on_continued_story)
-#remove: 	story_getter.encountered_no_choices_EventHandler.connect(_on_encountered_no_choices)
-#remove: 	story_getter.encountered_choice_EventHandler.connect(_on_encountered_choice)
-	
-
-func _on_continue_button_pressed(): # connecting here is more visible than doing sofrom a c# script
-	story_getter.TryContinue();
-
-#remove: func _on_continued_story(text):
-#remove: 	continued_story.emit(text)
-
-#remove: func _on_encountered_no_choices():
-#remove: 	encountered_no_choices.emit()
-
-#remove: func _on_encountered_choice(choice):
-#remove: 	encountered_choice.emit(choice)
-
-
-func _on_choices_presenter_choice_pressed(index):
+func _on_choice_pressed(index):
+	print("navigator received choice " + str(index))
 	story_getter.FeedChoice(index);
+
+func _process(_delta):
+	# manually start the story (because it cannot do so automatically yet)
+	if Input.is_action_just_pressed("start"): 
+		print("got enter")
+		story_getter.RequestContinue()

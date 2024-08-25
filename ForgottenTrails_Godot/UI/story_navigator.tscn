@@ -37,7 +37,7 @@ grow_vertical = 2
 text = "Hello World!"
 script = ExtResource("2_7kog2")
 
-[node name="ChoicesPresenter" type="VBoxContainer" parent="."]
+[node name="ChoicesPresenter" type="VBoxContainer" parent="." node_paths=PackedStringArray("story_navigator")]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
@@ -48,10 +48,10 @@ grow_horizontal = 0
 grow_vertical = 2
 alignment = 2
 script = ExtResource("3_cgmjb")
+story_navigator = NodePath("..")
 
 [node name="ChoiceButton" parent="ChoicesPresenter" instance=ExtResource("4_axki0")]
 layout_mode = 2
-script = null
 
 [node name="ContinueButton" parent="ChoicesPresenter" instance=ExtResource("4_6bwso")]
 layout_mode = 2
@@ -62,4 +62,5 @@ layout_mode = 2
 [connection signal="encountered_no_choices" from="StoryGetter" to="ChoicesPresenter" method="present_continue_button"]
 [connection signal="ink_function_print" from="StoryGetter" to="TextPresenter" method="present_console_message"]
 [connection signal="choice_pressed" from="ChoicesPresenter" to="." method="_on_choices_presenter_choice_pressed"]
+[connection signal="pressed_choice" from="ChoicesPresenter/ChoiceButton" to="ChoicesPresenter" method="_on_choice_pressed"]
 [connection signal="pressed" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_button_pressed"]

@@ -9,7 +9,7 @@ INCLUDE Introduction\CharacterCreation.ink
 INCLUDE Introduction\introductionAwakening.ink
 
 //Edan Ink files
-INCLUDE Edan\Edan.ink
+INCLUDE Edan\EdanGate.ink
 INCLUDE Edan\EdanInn.ink
 INCLUDE Edan\EdanPrison.ink
 

@@ -6,6 +6,8 @@
 INCLUDE System.ink
 INCLUDE Stories.ink
 INCLUDE DraftPieces.ink
+INCLUDE Edan/EdanMarket.ink
+
 
 //Set inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)

@@ -31,3 +31,4 @@ grow_vertical = 2
 
 [node name="StoryNavigator" parent="." instance=ExtResource("1_233ac")]
 layout_mode = 1
+texture = null

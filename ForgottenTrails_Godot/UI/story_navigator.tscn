@@ -11,13 +11,13 @@
 [ext_resource type="Script" path="res://UI/matrix_text.gd" id="4_sspuv"]
 [ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://UI/380138__yottasounds__typewriter-single-key-type-1.wav" id="7_dquh2"]
 
-[sub_resource type="ImageTexture" id="ImageTexture_66eoy"]
-
 [sub_resource type="RichTextEffect" id="RichTextEffect_ndccd"]
 script = ExtResource("4_1c2he")
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
 script = ExtResource("4_sspuv")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_eaa6r"]
 
 [node name="StoryNavigator" type="TextureRect"]
 anchors_preset = 12
@@ -27,7 +27,6 @@ anchor_bottom = 1.0
 offset_top = -200.0
 grow_horizontal = 2
 grow_vertical = 0
-texture = SubResource("ImageTexture_66eoy")
 stretch_mode = 2
 script = ExtResource("1_n1hfe")
 
@@ -44,7 +43,7 @@ offset_right = -512.0
 grow_horizontal = 2
 grow_vertical = 2
 bbcode_enabled = true
-text = "Hello World!"
+text = "[wave]Hello[/wave] [rainbow]World[/rainbow]!"
 custom_effects = [SubResource("RichTextEffect_ndccd"), SubResource("RichTextEffect_y4d4d")]
 script = ExtResource("2_7kog2")
 timer = NodePath("Timer")
@@ -58,6 +57,17 @@ volume_db = -30.0
 pitch_scale = 1.2
 max_polyphony = 99
 bus = &"System"
+
+[node name="TextPresenterBackground" type="TextureRect" parent="TextPresenter"]
+modulate = Color(0, 0, 0, 0.94902)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_eaa6r")
 
 [node name="ChoicesPresenter" type="VBoxContainer" parent="." node_paths=PackedStringArray("story_navigator")]
 layout_mode = 1
@@ -84,6 +94,7 @@ layout_mode = 2
 [connection signal="encountered_choice" from="StoryGetter" to="ChoicesPresenter" method="present_choice"]
 [connection signal="encountered_no_choices" from="StoryGetter" to="ChoicesPresenter" method="present_continue_button"]
 [connection signal="ink_function_print" from="StoryGetter" to="TextPresenter" method="present_console_message"]
+[connection signal="ink_function_spd" from="StoryGetter" to="TextPresenter" method="_spd"]
 [connection signal="timeout" from="TextPresenter/Timer" to="TextPresenter" method="_on_timer_timeout"]
 [connection signal="pressed_choice" from="ChoicesPresenter/ChoiceButton" to="ChoicesPresenter" method="_on_choice_pressed"]
 [connection signal="pressed_continue" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_pressed"]

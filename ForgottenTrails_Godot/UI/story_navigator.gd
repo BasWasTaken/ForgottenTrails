@@ -36,7 +36,7 @@ func _on_continue_pressed():
 	elif story_getter.story.CanContinue:
 		#print("validated. Continueing Story.");
 		_send_continue()
-	elif choices_presenter.get_child_count()>0:#if there are choice buttons
+	elif choices_presenter.get_child_count()>1:#if there are choice buttons
 		if selectedChoice == -1:
 			print("Select a Choice first");
 		else:

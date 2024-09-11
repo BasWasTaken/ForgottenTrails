@@ -18,13 +18,16 @@ public partial class story_getter : Node
 	// external functions
 	[Signal]
 	public delegate void ink_function_printEventHandler(string content, bool is_warning);
+	
+	[Signal]
+	public delegate void ink_function_spdEventHandler(float speed);
 
 	public override void _Ready()
 	{
-		story.BindExternalFunction("Print", (string text) => EmitSignal(SignalName.ink_function_print, text, false));
-		story.BindExternalFunction("PrintWarning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
-		//TODO: enable starting automatically (need to figure out timing)
-		
+		story.BindExternalFunction("print", (string text) => EmitSignal(SignalName.ink_function_print, text, false));
+		story.BindExternalFunction("print_warning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
+		story.BindExternalFunction("_spd", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
+		story.BindExternalFunction("_clear", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
 	}
 	
 	public void ContinueStory()
@@ -33,6 +36,7 @@ public partial class story_getter : Node
 		{
 			//GD.Print("continueing story")
 			string content = story.Continue();
+			content = content.Replace('<', '[').Replace('>', ']');
 			
 			EmitSignal(SignalName.continued_story, content);
 			

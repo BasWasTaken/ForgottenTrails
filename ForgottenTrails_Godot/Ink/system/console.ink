@@ -1,7 +1,7 @@
-EXTERNAL Print(string) 
-=== function Print(message) // send text to game engine console as message
+EXTERNAL print(string) 
+=== function print(message) // send text to game engine console as message
 <<i>Log: {message}</i>> 
 
-EXTERNAL PrintWarning(string)
-=== function PrintWarning(message) // send text to game engine console as warning
+EXTERNAL print_warning(string)
+=== function print_warning(message) // send text to game engine console as warning
 <<i>LogWarning: {message}</i>>

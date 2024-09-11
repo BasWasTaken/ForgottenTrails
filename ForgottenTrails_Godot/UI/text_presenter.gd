@@ -4,48 +4,15 @@ extends RichTextLabel
 
 var fulltext = "Hello World!"  # Set this to the text you want to display
 var currenttext = "" 
-var currentindex = 0
 
-var typingspeed = 0.1
+var typingspeed = 0.01
 @export var timer: Timer  
 
 
 @onready var audio_player: AudioStreamPlayer =$AudioStreamPlayer
 
 signal finished_typing
-var busy: bool = false
-
-func _ready():
-	#load_text(text)
-	pass
-
-func _on_timer_timeout():
-	# Handle the timeout signal to update text
-	if currentindex < len(fulltext):
-		
-		audio_player.play() # play some audio
-		
-		currenttext += fulltext[currentindex] #display the next character
-		self.set_text(currenttext)
-		
-		currentindex += 1 #move on to the next character
-	else:
-		finish_text()
-
-func finish_text():
-	#TODO: Add finish line sound?
-	#currenttext=fulltext
-	#currentindex=fulltext.length()-1
-	#self.set_text(currenttext)
-	
-	self.set_text(fulltext)
-	
-	timer.stop()
-	busy=false
-	finished_typing.emit()
-
-func present_story(content: String) -> void:
-	load_text(content)
+var typing: bool = false
 
 func present_console_message(content: String, warning: bool = false) -> void:
 	if warning:
@@ -53,18 +20,51 @@ func present_console_message(content: String, warning: bool = false) -> void:
 	else:
 		print("Message from INK Script: " + content)
 
-func load_text(content: String):
-	clear()
+func present_story(content: String) -> void:
+	# Prep Textbox
+	self.clear()
 	currenttext = ""
+	
+	# Load Text
 	fulltext=content
-	currentindex = 0
-	timer.wait_time = typingspeed
-	timer.start()  # Start the timer
-	busy=true
+	
+	# Type Text
+	typing=true
+	var level = 0
+	for n in fulltext: #Go through each character. (Old Loops: # while(text.length() < fulltext.length()): #while(typing):
+		#timer.wait_time = typingspeed
+		
+		# Evaluate 'n'
+		if n=='[':
+			level +=1 # we are one more layer into brackets
+		elif n==']':
+			level -=1 # we are one less layer into brackets
+		
+		currenttext += n # place the letter
+		
+		if level>0:
+			continue #skip delay, go to next character
+		elif level<0: 
+			push_warning("bracket depth error")
+		else: # level==0
+			self.set_text(currenttext) # display the added letter(s)
+			audio_player.play() # play some audio
+			timer.start(typingspeed) # start the delay TODO:make dependent on 'n'
+			await timer.timeout # wait for the typing delay
+	
+	# Finish Text
+	finish_text()
 
 
-
-
+func finish_text():
+	#TODO: Add finish line sound?
+	
+	self.set_text(fulltext) # set text in case we came here by skipping
+	
+	# stop typing
+	timer.stop()
+	typing=false
+	finished_typing.emit() #give signal
 
 
 

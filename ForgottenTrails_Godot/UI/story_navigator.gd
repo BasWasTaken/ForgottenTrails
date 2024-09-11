@@ -18,7 +18,7 @@ func _process(_delta):
 
 func _on_continue_pressed():
 	print("story_navigator received request to continue, evaluating...");
-	if text_presenter.busy:
+	if text_presenter.typing:
 		print("Typer Busy. Skipping to end of Line.");
 		skip.emit();
 	elif story_getter.story.CanContinue:

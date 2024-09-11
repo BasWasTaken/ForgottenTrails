@@ -6,6 +6,8 @@ extends VBoxContainer
 @export var story_navigator: Node
 @onready var text_presenter = get_node("../TextPresenter")
 
+var selected = 0
+
 signal choice_pressed(index) # is dit een onnodig tussensignaal?
 
 func _ready():

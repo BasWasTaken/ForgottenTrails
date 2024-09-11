@@ -54,6 +54,8 @@ wait_time = 0.1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TextPresenter"]
 stream = ExtResource("7_dquh2")
+volume_db = -30.0
+pitch_scale = 1.2
 max_polyphony = 99
 bus = &"System"
 

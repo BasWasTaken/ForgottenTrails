@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d2heo3o0s3ot3"]
+[gd_scene load_steps=14 format=3 uid="uid://d2heo3o0s3ot3"]
 
 [ext_resource type="Script" path="res://UI/story_navigator.gd" id="1_n1hfe"]
 [ext_resource type="Script" path="res://UI/text_presenter.gd" id="2_7kog2"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b1bf6i2ls3ciu" path="res://UI/continue_button.tscn" id="4_6bwso"]
 [ext_resource type="PackedScene" uid="uid://cqcv01npgwq0e" path="res://UI/choice_button.tscn" id="4_axki0"]
 [ext_resource type="Script" path="res://UI/matrix_text.gd" id="4_sspuv"]
+[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://UI/380138__yottasounds__typewriter-single-key-type-1.wav" id="7_dquh2"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_66eoy"]
 
@@ -34,7 +35,7 @@ script = ExtResource("1_n1hfe")
 script = ExtResource("2_r357r")
 story = ExtResource("3_8wbfs")
 
-[node name="TextPresenter" type="RichTextLabel" parent="."]
+[node name="TextPresenter" type="RichTextLabel" parent="." node_paths=PackedStringArray("timer")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,9 +44,18 @@ offset_right = -512.0
 grow_horizontal = 2
 grow_vertical = 2
 bbcode_enabled = true
-text = "[type]Hello World! [/type]"
+text = "Hello World!"
 custom_effects = [SubResource("RichTextEffect_ndccd"), SubResource("RichTextEffect_y4d4d")]
 script = ExtResource("2_7kog2")
+timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="TextPresenter"]
+wait_time = 0.1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TextPresenter"]
+stream = ExtResource("7_dquh2")
+max_polyphony = 99
+bus = &"System"
 
 [node name="ChoicesPresenter" type="VBoxContainer" parent="." node_paths=PackedStringArray("story_navigator")]
 layout_mode = 1
@@ -71,6 +81,7 @@ layout_mode = 2
 [connection signal="encountered_choice" from="StoryGetter" to="ChoicesPresenter" method="present_choice"]
 [connection signal="encountered_no_choices" from="StoryGetter" to="ChoicesPresenter" method="present_continue_button"]
 [connection signal="ink_function_print" from="StoryGetter" to="TextPresenter" method="present_console_message"]
+[connection signal="timeout" from="TextPresenter/Timer" to="TextPresenter" method="_on_timer_timeout"]
 [connection signal="choice_pressed" from="ChoicesPresenter" to="." method="_on_choices_presenter_choice_pressed"]
 [connection signal="pressed_choice" from="ChoicesPresenter/ChoiceButton" to="ChoicesPresenter" method="_on_choice_pressed"]
 [connection signal="pressed" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_button_pressed"]

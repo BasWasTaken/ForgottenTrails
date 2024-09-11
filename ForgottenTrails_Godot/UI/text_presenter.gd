@@ -2,7 +2,7 @@ extends RichTextLabel
 
 #@onready var label = $TextPresenter
 
-var fulltext = "Hello World!"  # Set this to the text you want to display
+var fulltext = "Press Continue To Start the Story."
 var currenttext = "" 
 
 var typingspeed = 0.01
@@ -13,6 +13,9 @@ var typingspeed = 0.01
 
 signal finished_typing
 var typing: bool = false
+
+func _ready():
+	present_story(fulltext)
 
 func present_console_message(content: String, warning: bool = false) -> void:
 	if warning:
@@ -51,6 +54,8 @@ func present_story(content: String) -> void:
 			audio_player.play() # play some audio
 			timer.start(typingspeed) # start the delay TODO:make dependent on 'n'
 			await timer.timeout # wait for the typing delay
+			if(!typing):
+				break # exit loop if we have been skipped
 	
 	# Finish Text
 	finish_text()
@@ -58,7 +63,6 @@ func present_story(content: String) -> void:
 
 func finish_text():
 	#TODO: Add finish line sound?
-	
 	self.set_text(fulltext) # set text in case we came here by skipping
 	
 	# stop typing

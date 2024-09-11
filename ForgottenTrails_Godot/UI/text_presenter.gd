@@ -7,25 +7,42 @@ var currenttext = ""
 var currentindex = 0
 
 var typingspeed = 0.1
-@export var timer: Timer  # Declare a variable to hold the timer
+@export var timer: Timer  
 
-#@export var sfx: AudioStream
 
 @onready var audio_player: AudioStreamPlayer =$AudioStreamPlayer
 
+signal finished_typing
+var busy: bool = false
+
 func _ready():
-	load_text(text)
+	#load_text(text)
+	pass
 
 func _on_timer_timeout():
 	# Handle the timeout signal to update text
 	if currentindex < len(fulltext):
-		currenttext += fulltext[currentindex]
-		#var playback: AudioStreamPlayback = sfx.instantiate_playback()
-		audio_player.play()
+		
+		audio_player.play() # play some audio
+		
+		currenttext += fulltext[currentindex] #display the next character
 		self.set_text(currenttext)
-		currentindex += 1
+		
+		currentindex += 1 #move on to the next character
 	else:
-		timer.stop()  # Stop the timer when the text is fully typed
+		finish_text()
+
+func finish_text():
+	#TODO: Add finish line sound?
+	#currenttext=fulltext
+	#currentindex=fulltext.length()-1
+	#self.set_text(currenttext)
+	
+	self.set_text(fulltext)
+	
+	timer.stop()
+	busy=false
+	finished_typing.emit()
 
 func present_story(content: String) -> void:
 	load_text(content)
@@ -43,6 +60,10 @@ func load_text(content: String):
 	currentindex = 0
 	timer.wait_time = typingspeed
 	timer.start()  # Start the timer
+	busy=true
+
+
+
 
 
 

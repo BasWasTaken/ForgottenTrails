@@ -76,12 +76,13 @@ layout_mode = 2
 [node name="ContinueButton" parent="ChoicesPresenter" instance=ExtResource("4_6bwso")]
 layout_mode = 2
 
+[connection signal="skip" from="." to="TextPresenter" method="finish_text"]
 [connection signal="continued_story" from="StoryGetter" to="TextPresenter" method="present_story"]
-[connection signal="continued_story" from="StoryGetter" to="ChoicesPresenter" method="_on_finished_continue"]
+[connection signal="continued_story" from="StoryGetter" to="ChoicesPresenter" method="_on_continue"]
 [connection signal="encountered_choice" from="StoryGetter" to="ChoicesPresenter" method="present_choice"]
 [connection signal="encountered_no_choices" from="StoryGetter" to="ChoicesPresenter" method="present_continue_button"]
 [connection signal="ink_function_print" from="StoryGetter" to="TextPresenter" method="present_console_message"]
 [connection signal="timeout" from="TextPresenter/Timer" to="TextPresenter" method="_on_timer_timeout"]
 [connection signal="choice_pressed" from="ChoicesPresenter" to="." method="_on_choices_presenter_choice_pressed"]
 [connection signal="pressed_choice" from="ChoicesPresenter/ChoiceButton" to="ChoicesPresenter" method="_on_choice_pressed"]
-[connection signal="pressed" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed_continue" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_pressed"]

@@ -24,23 +24,10 @@ public partial class story_getter : Node
 		story.BindExternalFunction("Print", (string text) => EmitSignal(SignalName.ink_function_print, text, false));
 		story.BindExternalFunction("PrintWarning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
 		//TODO: enable starting automatically (need to figure out timing)
+		
 	}
 	
-	public void RequestContinue()
-	{
-		GD.Print("sotry_getter received request to continue, evaluating...");
-		if(story.CanContinue)
-		{
-			GD.Print("validated. Continueing Story.");
-			ContinueStory();
-		}
-		else
-		{
-			GD.Print("Cannot Continue");
-		}
-	}
-	
-	private void ContinueStory()
+	public void ContinueStory()
 	{
 		if(story.CanContinue) // extra validation
 		{

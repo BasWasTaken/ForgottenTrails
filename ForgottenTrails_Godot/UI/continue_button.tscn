@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1bf6i2ls3ciu"]
+
+[ext_resource type="Script" path="res://UI/continue_button.gd" id="1_chll4"]
+
+[node name="ContinueButton" type="Button"]
+offset_right = 92.0
+offset_bottom = 31.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Continue >"
+script = ExtResource("1_chll4")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

@@ -1,6 +1,6 @@
 // The following are functions taken directly from Ink's documentation. May be altered, but the core is official functionality.
 
-=== function _Pop(ref list) // Helper function: popping elements from lists
+=== function _pop(ref list) // Helper function: popping elements from lists
    ~ temp x = LIST_MIN(list) 
    ~ list -= x 
    ~ return x
@@ -92,27 +92,7 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
 === function KnowsAbout(subject)
     ~ return KnowledgeState ^ subject // see if any overlap between subject and knowledge base
 
-/* This function simplified on 2024-05-06 as part of the pivot awai from incremental knowledge states. We are opting instead for the ability to use nonlineair logic (as in a player can Know A, not B, as well as B, not A) and estimate that the paradoxical results (not knowing A before B when that is nonsensical) are mitigatable by manual additions. Should we see that we often have to manually learn a lot of steps to prevent paradoxes and/or not really benefit from the nonlineair knowledge states, we can reinstate the following logic.:
-
-=== function KnowledgeStateBetween(factX, factY) // used to check if knowledge state is between two specific points, i.e. does the player know x, but also not know y?
-   ~ return KnowledgeState? factX && not (KnowledgeState ^ factY)
-
-=== function Learn(facts)  // used to "learn" a fact (i.e. add it to knowledge state). This also learns all facts before it (because they are incremental).
-   ~ temp x = _Pop(facts)
-   {
-   - not x: 
-      ~ return false 
-
-   - not Knows(x):
-      ~ temp chain = LIST_ALL(x)
-      ~ temp statesGained = LIST_RANGE(chain, LIST_MIN(chain), x)
-      ~ KnowledgeState += statesGained
-      ~ Learn (facts) 	// set any other states left to set
-      ~ return true  	       // and we set this state, so true
- 
-    - else:
-      ~ return false || Learn(facts) 
-    }	
+/* This function simplified on 2024-05-06 as part of the pivot awai from incremental knowledge states. We are opting instead for the ability to use nonlineair logic (as in a player can Know A, not B, as well as B, not A) and estimate that the paradoxical results (not knowing A before B when that is nonsensical) are mitigatable by manual additions. Should we see that we often have to manually learn a lot of steps to prevent paradoxes and/or not really benefit from the nonlineair knowledge states, we can reinstate the previous logic.	
 */
     
    /* ---------------------------------

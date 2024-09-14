@@ -2,12 +2,13 @@
 
 importer="ink"
 type="Resource"
-uid="uid://c2lpub8ol8ih4"
-valid=false
+uid="uid://djg8co407cv3h"
+path="res://.godot/imported/Main.ink-8c17450664621cb2764015284d124c7a.res"
 
 [deps]
 
 source_file="res://ink_scripts/Main.ink"
+dest_files=["res://.godot/imported/Main.ink-8c17450664621cb2764015284d124c7a.res"]
 
 [params]
 

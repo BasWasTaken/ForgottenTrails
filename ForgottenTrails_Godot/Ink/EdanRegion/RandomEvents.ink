@@ -1,7 +1,7 @@
 // --------- Shared ---------
 === RandomEventsEdanArea ===
 //To do: add event content
-{~->MerchantSiblings1|->Deer|->Downpour | ->FindRations} 
+{~->MerchantSiblings1||->Downpour | ->FindRations} 
 
 // --------- Vugs  ---------
 === MerchantSiblings1 ===
@@ -251,10 +251,10 @@ She shakes her head, "There are a few more verses{AffAlice >=50:." And with a wi
         text text
         ->->
 
-
-=== Deer ===
-TestDeer
-->->
+//@Bas The tunnel below gives an error when it pops up as a random event ("Line 257: Found tunnel onwards statement (->->), when expected end of flow (-> END or choice)")
+//=== Deer ===
+//TestDeer
+//->->
 
 VAR rainStart = -1
 VAR rainStop = -1

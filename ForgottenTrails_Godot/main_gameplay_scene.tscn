@@ -18,10 +18,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 0
 
 [node name="ScenePlayer" parent="TabContainer" instance=ExtResource("1_atfhu")]
 layout_mode = 2
+metadata/_tab_index = 0
 
 [node name="Inventory" parent="TabContainer" instance=ExtResource("2_c8w7c")]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 1

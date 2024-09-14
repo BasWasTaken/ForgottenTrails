@@ -65,4 +65,3 @@ public partial class story_getter : Node
 		ContinueStory();
 	}
 }
-

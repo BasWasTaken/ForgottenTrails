@@ -15,11 +15,11 @@
 
 
 
-VAR player_name = "PlayerName"
+VAR PlayerName = "PlayerName"
 
 EXTERNAL prompt_name()
 === function prompt_name()
-~player_name = "Player"
+~PlayerName = "Player"
 
 // This is the list of vars for the gender stuff, but that's also not really well implemented yet of course.
 
@@ -85,3 +85,4 @@ VAR guy = "guy"
         ~ lad = "lad"
         ~ guy = "guy"
 }
+

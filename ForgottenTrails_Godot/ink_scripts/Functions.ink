@@ -17,8 +17,6 @@ INCLUDE System/Presentation/Foreground.ink
 INCLUDE System/Presentation/TextEffects.ink
 INCLUDE System/Presentation/VariableLanguage.ink
 
-INCLUDE System/DevMode.ink
-
 INCLUDE System/Modules/Fishing.ink
 
 

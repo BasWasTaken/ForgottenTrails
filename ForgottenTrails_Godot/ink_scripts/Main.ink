@@ -1,6 +1,6 @@
 INCLUDE Functions.ink
-INCLUDE Stories.ink
-
+INCLUDE Stories.in
+INCLUDE System/DevMode.ink
 
 
 //Set inventory

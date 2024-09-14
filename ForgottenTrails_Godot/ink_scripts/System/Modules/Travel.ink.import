@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://d4ks8gp4lokh3"
-path="res://.godot/imported/Travel.ink-2753d88a34723948ba02248f585b0dd2.res"
+path="res://.godot/imported/Travel.ink-d4bad0e4ec6114c8f029511ef2a7a3a4.res"
 
 [deps]
 
-source_file="res://Ink/System/Modules/Travel.ink"
-dest_files=["res://.godot/imported/Travel.ink-2753d88a34723948ba02248f585b0dd2.res"]
+source_file="res://ink_scripts/System/Modules/Travel.ink"
+dest_files=["res://.godot/imported/Travel.ink-d4bad0e4ec6114c8f029511ef2a7a3a4.res"]
 
 [params]
 

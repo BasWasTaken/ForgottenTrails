@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://8sbmewuftiyv"
-path="res://.godot/imported/Foreground.ink-971f08175e83705786213bc61c269bac.res"
+path="res://.godot/imported/Foreground.ink-64979936077e70d20d40fb9085ca14ae.res"
 
 [deps]
 
-source_file="res://Ink/System/Presentation/Foreground.ink"
-dest_files=["res://.godot/imported/Foreground.ink-971f08175e83705786213bc61c269bac.res"]
+source_file="res://ink_scripts/System/Presentation/Foreground.ink"
+dest_files=["res://.godot/imported/Foreground.ink-64979936077e70d20d40fb9085ca14ae.res"]
 
 [params]
 

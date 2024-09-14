@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://c1ego2m08aaih"
-path="res://.godot/imported/EdanGate.ink-c93934ce7f3bcacbae04f244afdb8a3b.res"
+path="res://.godot/imported/EdanGate.ink-8ec7ceaeec589fdb2a4b3d4f9ad21f8b.res"
 
 [deps]
 
-source_file="res://Ink/Edan/EdanGate.ink"
-dest_files=["res://.godot/imported/EdanGate.ink-c93934ce7f3bcacbae04f244afdb8a3b.res"]
+source_file="res://ink_scripts/Edan/EdanGate.ink"
+dest_files=["res://.godot/imported/EdanGate.ink-8ec7ceaeec589fdb2a4b3d4f9ad21f8b.res"]
 
 [params]
 

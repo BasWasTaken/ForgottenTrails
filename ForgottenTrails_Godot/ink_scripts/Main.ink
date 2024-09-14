@@ -1,5 +1,5 @@
-INCLUDE functions.ink
-INCLUDE stories.ink
+INCLUDE Functions.ink
+INCLUDE Stories.ink
 
 
 //Set inventory

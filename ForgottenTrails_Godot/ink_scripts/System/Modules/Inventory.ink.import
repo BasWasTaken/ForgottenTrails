@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://blwvtxpjgwx2d"
-path="res://.godot/imported/Inventory.ink-a09d85c6b75f7522d8650e5d9f8f34a8.res"
+path="res://.godot/imported/Inventory.ink-5fbab8e021dd4b938e43a128c1515ce3.res"
 
 [deps]
 
-source_file="res://Ink/System/Modules/Inventory.ink"
-dest_files=["res://.godot/imported/Inventory.ink-a09d85c6b75f7522d8650e5d9f8f34a8.res"]
+source_file="res://ink_scripts/System/Modules/Inventory.ink"
+dest_files=["res://.godot/imported/Inventory.ink-5fbab8e021dd4b938e43a128c1515ce3.res"]
 
 [params]
 

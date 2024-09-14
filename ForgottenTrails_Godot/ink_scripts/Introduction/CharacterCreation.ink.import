@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://cqf8fjbkgw387"
-path="res://.godot/imported/CharacterCreation.ink-58c4d04d013bca544d40ba9dfa46f3bf.res"
+path="res://.godot/imported/CharacterCreation.ink-d74ddb2973d49bbd18143308f4e4cfca.res"
 
 [deps]
 
-source_file="res://Ink/Introduction/CharacterCreation.ink"
-dest_files=["res://.godot/imported/CharacterCreation.ink-58c4d04d013bca544d40ba9dfa46f3bf.res"]
+source_file="res://ink_scripts/Introduction/CharacterCreation.ink"
+dest_files=["res://.godot/imported/CharacterCreation.ink-d74ddb2973d49bbd18143308f4e4cfca.res"]
 
 [params]
 

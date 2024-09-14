@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://bpw8nbwo6a5fr"
-path="res://.godot/imported/RandomEvents.ink-9716ca41fa003dd858985b8be64798d5.res"
+path="res://.godot/imported/RandomEvents.ink-ccd4c63e3fe116ec4ea9550485a00a63.res"
 
 [deps]
 
-source_file="res://Ink/EdanRegion/RandomEvents.ink"
-dest_files=["res://.godot/imported/RandomEvents.ink-9716ca41fa003dd858985b8be64798d5.res"]
+source_file="res://ink_scripts/EdanRegion/RandomEvents.ink"
+dest_files=["res://.godot/imported/RandomEvents.ink-ccd4c63e3fe116ec4ea9550485a00a63.res"]
 
 [params]
 

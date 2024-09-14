@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://faiaqbyopygu"
-path="res://.godot/imported/RuinedCoast.ink-fb78ae77883506daaa999cb36efc7381.res"
+path="res://.godot/imported/RuinedCoast.ink-9400b6a1f7ea45bd98fec4477be43843.res"
 
 [deps]
 
-source_file="res://Ink/EdanRegion/RuinedCoast.ink"
-dest_files=["res://.godot/imported/RuinedCoast.ink-fb78ae77883506daaa999cb36efc7381.res"]
+source_file="res://ink_scripts/EdanRegion/RuinedCoast.ink"
+dest_files=["res://.godot/imported/RuinedCoast.ink-9400b6a1f7ea45bd98fec4477be43843.res"]
 
 [params]
 

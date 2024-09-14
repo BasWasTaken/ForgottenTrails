@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://g5ockarstlsm"
-path="res://.godot/imported/SouthernRoads.ink-f644a78b9dbaabaeb0167b00b484ba23.res"
+path="res://.godot/imported/SouthernRoads.ink-b26755335eb36b5c864f3e23a7a21026.res"
 
 [deps]
 
-source_file="res://Ink/EdanRegion/SouthernRoads.ink"
-dest_files=["res://.godot/imported/SouthernRoads.ink-f644a78b9dbaabaeb0167b00b484ba23.res"]
+source_file="res://ink_scripts/EdanRegion/SouthernRoads.ink"
+dest_files=["res://.godot/imported/SouthernRoads.ink-b26755335eb36b5c864f3e23a7a21026.res"]
 
 [params]
 

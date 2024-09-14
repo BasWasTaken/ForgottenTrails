@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://cjmhfsx2p5ntp"
-path="res://.godot/imported/PartyDialogues.ink-24c14acc94199ce99105a8a7896967b1.res"
+path="res://.godot/imported/PartyDialogues.ink-241fadab2d5381b8d62a4a88bc133b4a.res"
 
 [deps]
 
-source_file="res://Ink/Testing/PartyDialogues.ink"
-dest_files=["res://.godot/imported/PartyDialogues.ink-24c14acc94199ce99105a8a7896967b1.res"]
+source_file="res://ink_scripts/Testing/PartyDialogues.ink"
+dest_files=["res://.godot/imported/PartyDialogues.ink-241fadab2d5381b8d62a4a88bc133b4a.res"]
 
 [params]
 

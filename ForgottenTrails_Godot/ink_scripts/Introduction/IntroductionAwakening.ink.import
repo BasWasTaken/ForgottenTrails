@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://slqogm2ufvof"
-path="res://.godot/imported/IntroductionAwakening.ink-ca1f836798e6f41f381e8aeeb486eb5d.res"
+path="res://.godot/imported/IntroductionAwakening.ink-70e1521f61c76ccc792b98cb6e94e9f9.res"
 
 [deps]
 
-source_file="res://Ink/Introduction/IntroductionAwakening.ink"
-dest_files=["res://.godot/imported/IntroductionAwakening.ink-ca1f836798e6f41f381e8aeeb486eb5d.res"]
+source_file="res://ink_scripts/Introduction/IntroductionAwakening.ink"
+dest_files=["res://.godot/imported/IntroductionAwakening.ink-70e1521f61c76ccc792b98cb6e94e9f9.res"]
 
 [params]
 

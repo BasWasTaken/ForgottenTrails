@@ -3,11 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://c8bjy63qwe0r2"
-valid=false
+path="res://.godot/imported/_Tests.ink-613203faf129460c9d0b59e0b955f5ca.res"
 
 [deps]
 
 source_file="res://ink_scripts/_Tests.ink"
+dest_files=["res://.godot/imported/_Tests.ink-613203faf129460c9d0b59e0b955f5ca.res"]
 
 [params]
 

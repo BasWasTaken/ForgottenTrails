@@ -1,4 +1,4 @@
-INCLUDE Functions.ink
+INCLUDE Functions_Dev.ink
 
 
 ~ print("Testing console log")

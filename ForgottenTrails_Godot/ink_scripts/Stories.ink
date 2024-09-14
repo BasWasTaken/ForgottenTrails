@@ -13,7 +13,4 @@ INCLUDE EdanRegion/SeaBreezePath.ink
 INCLUDE EdanRegion/RandomEvents.ink
 
 //Testing Ink files
-INCLUDE Testing/PartyDialogues.inkINCLUDE Testing/PartyDialogues.ink
-INCLUDE Testing/InventoryPuzzle.ink
-INCLUDE Testing/BasTest.ink
-INCLUDE Testing/Heist.ink
+INCLUDE Testing/PartyDialogues.ink

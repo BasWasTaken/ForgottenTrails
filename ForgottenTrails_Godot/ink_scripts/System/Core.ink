@@ -81,16 +81,16 @@ VAR buffer = -> seen_this_scene
 
   //  Allows tracking of what the player has observed throughout the game. Used by distinct LISTs. Each LIST is a chain of facts. Each fact supersedes the fact before. LISTs used this way are also called "Knowledge Chains".
   
-VAR KnowledgeState = () // VAR that will serve as list containing all acquired knowledge
+VAR knowledgeState = () // VAR that will serve as list containing all acquired knowledge
 
-=== function Knows(fact) // check if fact is present in knowledge state, i.e. is it known information?
-   ~ return KnowledgeState ? fact 
+=== function knows(fact) // check if fact is present in knowledge state, i.e. is it known information?
+   ~ return knowledgeState ? fact 
    
-=== function Learn(facts)  // used to "learn" a fact   
-    ~ KnowledgeState += facts
+=== function learn(facts)  // used to "learn" a fact   
+    ~ knowledgeState += facts
     
-=== function KnowsAbout(subject)
-    ~ return KnowledgeState ^ subject // see if any overlap between subject and knowledge base
+=== function knowsAbout(subject)
+    ~ return knowledgeState ^ subject // see if any overlap between subject and knowledge base
 
 /* This function simplified on 2024-05-06 as part of the pivot awai from incremental knowledge states. We are opting instead for the ability to use nonlineair logic (as in a player can Know A, not B, as well as B, not A) and estimate that the paradoxical results (not knowing A before B when that is nonsensical) are mitigatable by manual additions. Should we see that we often have to manually learn a lot of steps to prevent paradoxes and/or not really benefit from the nonlineair knowledge states, we can reinstate the previous logic.	
 */

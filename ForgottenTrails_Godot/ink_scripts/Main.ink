@@ -14,7 +14,7 @@ INCLUDE Stories.ink
 ~ChangeWeather()
 Do you want to toggle developer mode?
 +[Yes]
--> DeveloperModeToggle
+-> developer_mode_toggle
 +[No]
 -> Opening
 

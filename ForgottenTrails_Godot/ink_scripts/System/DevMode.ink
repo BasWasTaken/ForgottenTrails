@@ -1,9 +1,10 @@
 VAR DEBUG = false
 
-=== DeveloperModeToggle ===
+=== developer_mode_toggle ===
 // Developer mode adds a few shortcuts - remember to set to false in release!
 ~DEBUG = true
-{DEBUG:
+{
+-DEBUG:
 	IN DEVELOPER MODE!
     + [Proceed with Vugs' sequence]
         -> RuinedCoast
@@ -20,6 +21,7 @@ VAR DEBUG = false
             -> InventoryPuzzleWelcome
     + [Proceed to Character Creation]
     -> Opening
-- else:
+
+-else:
     -> Start
 }

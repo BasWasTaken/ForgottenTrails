@@ -22,4 +22,6 @@ INCLUDE System/DevMode.ink
 INCLUDE System/Modules/Fishing.ink
 
 
-ystem/Modules/Fishing.inkk
+// Ink is super inconcistent met casing, maar ik moet IETS hanteren, dus ik doe het volgende (gebaseerd op wat ze lijken te proberen):
+// - scenes & functies: snake_case
+// - lists & vars: camelCase (soms splitten ze lists & vars of camel  & pascal en soms niet. is vrij verwarrend samen dus ik laat het lekker zo.

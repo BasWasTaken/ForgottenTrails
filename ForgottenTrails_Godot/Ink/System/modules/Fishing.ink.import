@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://fn5lndny7t6l"
-path="res://.godot/imported/Fishing.ink-d1e7266f0ffdcb1ff42e28fd0b9dafb7.res"
+path="res://.godot/imported/Fishing.ink-68e1dd9e075f64aab75f6b795063eeb5.res"
 
 [deps]
 
-source_file="res://Ink/system/modules/Fishing.ink"
-dest_files=["res://.godot/imported/Fishing.ink-d1e7266f0ffdcb1ff42e28fd0b9dafb7.res"]
+source_file="res://Ink/System/modules/Fishing.ink"
+dest_files=["res://.godot/imported/Fishing.ink-68e1dd9e075f64aab75f6b795063eeb5.res"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://bwgvwgsyrpa61"
-path="res://.godot/imported/core.ink-fbd904aadaf96c9cf94a39596062c8d9.res"
+path="res://.godot/imported/core.ink-f8f1076cf990aa430d560da4107e2900.res"
 
 [deps]
 
-source_file="res://Ink/system/core.ink"
-dest_files=["res://.godot/imported/core.ink-fbd904aadaf96c9cf94a39596062c8d9.res"]
+source_file="res://Ink/System/core.ink"
+dest_files=["res://.godot/imported/core.ink-f8f1076cf990aa430d560da4107e2900.res"]
 
 [params]
 

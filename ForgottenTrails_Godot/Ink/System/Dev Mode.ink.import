@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://bkv3ix1lnvmqv"
-path="res://.godot/imported/Dev Mode.ink-ebcf53bee5c0a6c225733e22b714c0e2.res"
+path="res://.godot/imported/Dev Mode.ink-10ce015e23f9c35b24bf4dfa51ac4dfd.res"
 
 [deps]
 
-source_file="res://Ink/system/Dev Mode.ink"
-dest_files=["res://.godot/imported/Dev Mode.ink-ebcf53bee5c0a6c225733e22b714c0e2.res"]
+source_file="res://Ink/System/Dev Mode.ink"
+dest_files=["res://.godot/imported/Dev Mode.ink-10ce015e23f9c35b24bf4dfa51ac4dfd.res"]
 
 [params]
 

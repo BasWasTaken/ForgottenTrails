@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://2e0nxr0iqps1"
-path="res://.godot/imported/sprites.ink-c22faca511110166ee8c6f745521bb83.res"
+path="res://.godot/imported/sprites.ink-972cb4275c5cb7dc77291dbb193ff58d.res"
 
 [deps]
 
-source_file="res://Ink/system/presentation/sprites.ink"
-dest_files=["res://.godot/imported/sprites.ink-c22faca511110166ee8c6f745521bb83.res"]
+source_file="res://Ink/System/presentation/sprites.ink"
+dest_files=["res://.godot/imported/sprites.ink-972cb4275c5cb7dc77291dbb193ff58d.res"]
 
 [params]
 

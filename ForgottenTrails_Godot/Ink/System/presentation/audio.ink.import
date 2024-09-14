@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://cume8fc6cq7g1"
-path="res://.godot/imported/audio.ink-2136f4a80d16e2ff8f7e6fa5547766d7.res"
+path="res://.godot/imported/audio.ink-d71fa5042063037ad2262e48535dcecf.res"
 
 [deps]
 
-source_file="res://Ink/system/presentation/audio.ink"
-dest_files=["res://.godot/imported/audio.ink-2136f4a80d16e2ff8f7e6fa5547766d7.res"]
+source_file="res://Ink/System/presentation/audio.ink"
+dest_files=["res://.godot/imported/audio.ink-d71fa5042063037ad2262e48535dcecf.res"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://bd014yjde4fqw"
-path="res://.godot/imported/textEffects.ink-cc1093cf8789f3c3cb89c5c36336e8ca.res"
+path="res://.godot/imported/textEffects.ink-dbf69e38fdad42b91bfa2bf3840c5dc8.res"
 
 [deps]
 
-source_file="res://Ink/system/presentation/textEffects.ink"
-dest_files=["res://.godot/imported/textEffects.ink-cc1093cf8789f3c3cb89c5c36336e8ca.res"]
+source_file="res://Ink/System/presentation/textEffects.ink"
+dest_files=["res://.godot/imported/textEffects.ink-dbf69e38fdad42b91bfa2bf3840c5dc8.res"]
 
 [params]
 

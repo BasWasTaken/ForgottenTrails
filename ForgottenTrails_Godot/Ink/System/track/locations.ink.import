@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://bp73luyro55n2"
-path="res://.godot/imported/locations.ink-99e5b825149c89c1cb7cfae2cfbf4e64.res"
+path="res://.godot/imported/locations.ink-4f15424fa0961d73bfaf69529f6670c0.res"
 
 [deps]
 
-source_file="res://Ink/system/track/locations.ink"
-dest_files=["res://.godot/imported/locations.ink-99e5b825149c89c1cb7cfae2cfbf4e64.res"]
+source_file="res://Ink/System/track/locations.ink"
+dest_files=["res://.godot/imported/locations.ink-4f15424fa0961d73bfaf69529f6670c0.res"]
 
 [params]
 

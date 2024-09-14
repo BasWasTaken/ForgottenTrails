@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://bjfyul0armmt8"
-path="res://.godot/imported/time.ink-ed79fc8b5f0acde8d1c1c33ada9c9f6a.res"
+path="res://.godot/imported/time.ink-29ef017566a4940a8974b2b16a2ee683.res"
 
 [deps]
 
-source_file="res://Ink/system/track/time.ink"
-dest_files=["res://.godot/imported/time.ink-ed79fc8b5f0acde8d1c1c33ada9c9f6a.res"]
+source_file="res://Ink/System/track/time.ink"
+dest_files=["res://.godot/imported/time.ink-29ef017566a4940a8974b2b16a2ee683.res"]
 
 [params]
 

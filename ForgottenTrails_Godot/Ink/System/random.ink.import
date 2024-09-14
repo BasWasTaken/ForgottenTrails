@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://cksn7qli3oak5"
-path="res://.godot/imported/random.ink-5bce772141831b1a33ae3cd20c3fdcd1.res"
+path="res://.godot/imported/random.ink-c01ba73636fee9f84af2fcc5f19d4f49.res"
 
 [deps]
 
-source_file="res://Ink/system/random.ink"
-dest_files=["res://.godot/imported/random.ink-5bce772141831b1a33ae3cd20c3fdcd1.res"]
+source_file="res://Ink/System/random.ink"
+dest_files=["res://.godot/imported/random.ink-c01ba73636fee9f84af2fcc5f19d4f49.res"]
 
 [params]
 

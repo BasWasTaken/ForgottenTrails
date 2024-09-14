@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://gkai171mfwol"
-path="res://.godot/imported/states.ink-4a25e4d986b5de330098d45c7c879d52.res"
+path="res://.godot/imported/states.ink-53671d8e7348dbb27ae6b1739f053c38.res"
 
 [deps]
 
-source_file="res://Ink/system/track/states.ink"
-dest_files=["res://.godot/imported/states.ink-4a25e4d986b5de330098d45c7c879d52.res"]
+source_file="res://Ink/System/track/states.ink"
+dest_files=["res://.godot/imported/states.ink-53671d8e7348dbb27ae6b1739f053c38.res"]
 
 [params]
 

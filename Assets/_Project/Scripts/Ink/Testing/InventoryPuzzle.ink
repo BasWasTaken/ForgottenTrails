@@ -1,3 +1,0 @@
-// --------- Bas  ---------
-=== InventoryPuzzleWelcome
-    -> END

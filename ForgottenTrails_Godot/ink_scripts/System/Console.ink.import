@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://770yd47otcnp"
+path="res://.godot/imported/Console.ink-d6e47dc213a9d0843ce97eb58fb37082.res"
+
+[deps]
+
+source_file="res://ink_scripts/System/Console.ink"
+dest_files=["res://.godot/imported/Console.ink-d6e47dc213a9d0843ce97eb58fb37082.res"]
+
+[params]
+
+is_main_file=false
+compress=true

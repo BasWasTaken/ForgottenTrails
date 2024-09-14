@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://7fbgt2igkhmy"
+path="res://.godot/imported/Party.ink-eeeed137c0a1cfa563b7022aab9def17.res"
+
+[deps]
+
+source_file="res://ink_scripts/System/Modules/Party.ink"
+dest_files=["res://.godot/imported/Party.ink-eeeed137c0a1cfa563b7022aab9def17.res"]
+
+[params]
+
+is_main_file=false
+compress=true

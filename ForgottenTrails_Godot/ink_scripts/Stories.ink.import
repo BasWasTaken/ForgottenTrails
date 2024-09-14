@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cw434qlbkf738"
+path="res://.godot/imported/Stories.ink-901f66c0452c1633f6d8413f2eb050ac.res"
+
+[deps]
+
+source_file="res://ink_scripts/Stories.ink"
+dest_files=["res://.godot/imported/Stories.ink-901f66c0452c1633f6d8413f2eb050ac.res"]
+
+[params]
+
+is_main_file=false
+compress=true

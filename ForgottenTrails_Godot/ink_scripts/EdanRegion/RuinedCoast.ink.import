@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cjsifhw7bojnv"
+path="res://.godot/imported/RuinedCoast.ink-9400b6a1f7ea45bd98fec4477be43843.res"
+
+[deps]
+
+source_file="res://ink_scripts/EdanRegion/RuinedCoast.ink"
+dest_files=["res://.godot/imported/RuinedCoast.ink-9400b6a1f7ea45bd98fec4477be43843.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -1,0 +1,100 @@
+[gd_scene load_steps=14 format=3 uid="uid://d2heo3o0s3ot3"]
+
+[ext_resource type="Script" path="res://UI/story_navigator.gd" id="1_n1hfe"]
+[ext_resource type="Script" path="res://UI/text_presenter.gd" id="2_7kog2"]
+[ext_resource type="Script" path="res://UI/story_getter.cs" id="2_r357r"]
+[ext_resource type="Resource" uid="uid://c8bjy63qwe0r2" path="res://ink_scripts/_Tests.ink" id="3_8wbfs"]
+[ext_resource type="Script" path="res://UI/choices_presenter.gd" id="3_cgmjb"]
+[ext_resource type="Script" path="res://UI/typewriter_text.gd" id="4_1c2he"]
+[ext_resource type="PackedScene" uid="uid://b1bf6i2ls3ciu" path="res://UI/continue_button.tscn" id="4_6bwso"]
+[ext_resource type="PackedScene" uid="uid://cqcv01npgwq0e" path="res://UI/choice_button.tscn" id="4_axki0"]
+[ext_resource type="Script" path="res://UI/matrix_text.gd" id="4_sspuv"]
+[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://UI/380138__yottasounds__typewriter-single-key-type-1.wav" id="7_dquh2"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ndccd"]
+script = ExtResource("4_1c2he")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
+script = ExtResource("4_sspuv")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_eaa6r"]
+
+[node name="StoryNavigator" type="TextureRect"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -200.0
+grow_horizontal = 2
+grow_vertical = 0
+stretch_mode = 2
+script = ExtResource("1_n1hfe")
+
+[node name="StoryGetter" type="Node" parent="."]
+script = ExtResource("2_r357r")
+story = ExtResource("3_8wbfs")
+
+[node name="TextPresenter" type="RichTextLabel" parent="." node_paths=PackedStringArray("timer")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -512.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[wave]Hello[/wave] [rainbow]World[/rainbow]!"
+custom_effects = [SubResource("RichTextEffect_ndccd"), SubResource("RichTextEffect_y4d4d")]
+script = ExtResource("2_7kog2")
+timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="TextPresenter"]
+wait_time = 0.1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TextPresenter"]
+stream = ExtResource("7_dquh2")
+volume_db = -30.0
+pitch_scale = 1.2
+max_polyphony = 99
+bus = &"System"
+
+[node name="TextPresenterBackground" type="TextureRect" parent="TextPresenter"]
+modulate = Color(0, 0, 0, 0.94902)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_eaa6r")
+
+[node name="ChoicesPresenter" type="VBoxContainer" parent="." node_paths=PackedStringArray("story_navigator")]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -512.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 2
+script = ExtResource("3_cgmjb")
+story_navigator = NodePath("..")
+
+[node name="ChoiceButton" parent="ChoicesPresenter" instance=ExtResource("4_axki0")]
+layout_mode = 2
+
+[node name="ContinueButton" parent="ChoicesPresenter" instance=ExtResource("4_6bwso")]
+layout_mode = 2
+
+[connection signal="skip" from="." to="TextPresenter" method="finish_text"]
+[connection signal="continued_story" from="StoryGetter" to="TextPresenter" method="present_story"]
+[connection signal="continued_story" from="StoryGetter" to="ChoicesPresenter" method="_on_continue"]
+[connection signal="encountered_choice" from="StoryGetter" to="ChoicesPresenter" method="present_choice"]
+[connection signal="encountered_no_choices" from="StoryGetter" to="ChoicesPresenter" method="present_continue_button"]
+[connection signal="ink_function_print" from="StoryGetter" to="TextPresenter" method="present_console_message"]
+[connection signal="ink_function_spd" from="StoryGetter" to="TextPresenter" method="_spd"]
+[connection signal="timeout" from="TextPresenter/Timer" to="TextPresenter" method="_on_timer_timeout"]
+[connection signal="pressed_choice" from="ChoicesPresenter/ChoiceButton" to="ChoicesPresenter" method="_on_choice_pressed"]
+[connection signal="pressed_continue" from="ChoicesPresenter/ContinueButton" to="." method="_on_continue_pressed"]

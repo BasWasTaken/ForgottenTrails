@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://djjk1x5jksuib"
+path="res://.godot/imported/EdanPrison.ink-9c4244c5039886c31abafbe868ae636e.res"
+
+[deps]
+
+source_file="res://ink_scripts/Edan/EdanPrison.ink"
+dest_files=["res://.godot/imported/EdanPrison.ink-9c4244c5039886c31abafbe868ae636e.res"]
+
+[params]
+
+is_main_file=false
+compress=true

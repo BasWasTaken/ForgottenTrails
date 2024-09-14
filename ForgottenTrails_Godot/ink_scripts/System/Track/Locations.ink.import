@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://b2fxeknboglt4"
+path="res://.godot/imported/Locations.ink-9603b6801340c9cff5c9561f33e438f0.res"
+
+[deps]
+
+source_file="res://ink_scripts/System/Track/Locations.ink"
+dest_files=["res://.godot/imported/Locations.ink-9603b6801340c9cff5c9561f33e438f0.res"]
+
+[params]
+
+is_main_file=false
+compress=true

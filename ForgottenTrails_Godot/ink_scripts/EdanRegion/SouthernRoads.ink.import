@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://b1eymfgodtuyu"
+path="res://.godot/imported/SouthernRoads.ink-b26755335eb36b5c864f3e23a7a21026.res"
+
+[deps]
+
+source_file="res://ink_scripts/EdanRegion/SouthernRoads.ink"
+dest_files=["res://.godot/imported/SouthernRoads.ink-b26755335eb36b5c864f3e23a7a21026.res"]
+
+[params]
+
+is_main_file=false
+compress=true

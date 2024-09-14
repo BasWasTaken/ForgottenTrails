@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dt008l2i44s6e"
+path="res://.godot/imported/TravelTests.ink-16debca7b8bc3c1f60a4f57af41f487d.res"
+
+[deps]
+
+source_file="res://ink_scripts/Testing/TravelTests.ink"
+dest_files=["res://.godot/imported/TravelTests.ink-16debca7b8bc3c1f60a4f57af41f487d.res"]
+
+[params]
+
+is_main_file=false
+compress=true

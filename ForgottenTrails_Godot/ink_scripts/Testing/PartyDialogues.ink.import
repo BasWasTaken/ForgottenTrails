@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dd7oy05nwpj4o"
+path="res://.godot/imported/PartyDialogues.ink-241fadab2d5381b8d62a4a88bc133b4a.res"
+
+[deps]
+
+source_file="res://ink_scripts/Testing/PartyDialogues.ink"
+dest_files=["res://.godot/imported/PartyDialogues.ink-241fadab2d5381b8d62a4a88bc133b4a.res"]
+
+[params]
+
+is_main_file=false
+compress=true

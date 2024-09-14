@@ -35,7 +35,7 @@ EXTERNAL _Ambiance_Play(listItem, float)
 { Ambiance ? clip:
     ~ _Ambiance_Play(clip, newVolume)
 - else:
-    ~ PrintWarning("{clip} Not found")
+    ~ print_warning("{clip} Not found")
 }
 
 === function Ambiance_Remove(clip)

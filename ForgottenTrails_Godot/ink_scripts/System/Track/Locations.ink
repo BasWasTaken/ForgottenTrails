@@ -14,7 +14,7 @@ VAR KnownLocations = () // all known locations
 { 
 - !KnowsLoc(location):// if unknown
     ~ KnownLocations += location // add to known
-    ~ Print("{location} added to travel log") // inform in console
+    ~ print("{location} added to travel log") // inform in console
 }
 
 VAR VisitedLocations = () // lists all visited locations (NOTE: does NOT work as breadcrumbs/history- a location is only added once, on its first visit)

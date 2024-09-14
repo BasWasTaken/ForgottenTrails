@@ -1,14 +1,14 @@
 LIST Weather = ClearSkies, LightClouds, ThickClouds, (LightRain), HeavyRain, Thunderstorm
 
 === function ChangeWeather() ===
-~Print(Weather)
+~print(Weather)
 ~ temp current = LIST_VALUE(Weather)
-//~Print(current)
+//~print(current)
 ~ temp 3StepCutOff = 20 // chance to move 3 steps
 ~ temp 2StepCutOff = 50 // chance to move at least 2 steps
 ~ temp 1StepCutOff = 70 // chance to move at least 1 step
 
-~ temp check = D100() // generate number
+~ temp check = d100() // generate number
 
 ~ temp change = 0
 { 
@@ -26,20 +26,20 @@ LIST Weather = ClearSkies, LightClouds, ThickClouds, (LightRain), HeavyRain, Thu
 }
 
 
-~Print(change + " steps!")
+~print(change + " steps!")
 
 ~ temp potentialNew = current + change 
 // check if within range, else clamp
 {
 - potentialNew < 0:
-    ~Print("too low- capping at 0")
+    ~print("too low- capping at 0")
     ~Weather = LIST_MIN(LIST_ALL(Weather))
 - potentialNew > LIST_COUNT(LIST_ALL(Weather)):
-    ~Print("too high- capping at max")
+    ~print("too high- capping at max")
     ~Weather = LIST_MAX(LIST_ALL(Weather))
 - else:
     ~Weather += change
 }
 
 
-~Print(Weather)
+~print(Weather)

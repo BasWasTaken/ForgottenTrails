@@ -31,7 +31,7 @@ VAR roll = 0
 ~odds += boon * boonX
 ~return check_flat(odds)// same as doing a flat roll with higher odds (thus a lower threshold)
 
-//could also write skillroll as D100() + skill - threshold 
+//could also write skillroll as d100() + skill - threshold 
 
 === function check(odds, boon, boonX, bane, baneX) === // additionally input a variable to use as a hinderance
 ~ odds -= bane * baneX

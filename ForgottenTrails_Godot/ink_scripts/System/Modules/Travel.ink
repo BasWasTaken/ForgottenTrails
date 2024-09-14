@@ -51,19 +51,19 @@ VAR LowRationsLimit = 3 // amount of rations that causes party to complain if yo
 
 {
 - Encounter:
-    ~Print("Heads! Encounter was true!") // who knows what might happen now
+    ~print("Heads! Encounter was true!") // who knows what might happen now
     -> RandomTravelEvent -> 
 - else:
-    ~Print("Tails! Encounter was false!") // succeed automatically
+    ~print("Tails! Encounter was false!") // succeed automatically
  }
 
 {
 - SucceededRandomEvent:
-        ~Print("Proceeding with traversal.")
+        ~print("Proceeding with traversal.")
     ~_ArriveAt(TargetLocation)
     ->targetScene
 - else:
-        ~Print("Aborting traversal. Returning to previous location.")
+        ~print("Aborting traversal. Returning to previous location.")
     ~_ArriveAt(OriginLocation)
 }
 -    ->->
@@ -73,7 +73,7 @@ VAR LowRationsLimit = 3 // amount of rations that causes party to complain if yo
 
 === RandomTravelEvent ===
 ->RandomEventsEdanArea->
-~Print("A Random event happened!")
+~print("A Random event happened!")
 - ->->
 /*Continue, or head back anyway?
     + [Continue]

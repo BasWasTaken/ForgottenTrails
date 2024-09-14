@@ -8,17 +8,8 @@ VAR DEBUG = false
 	IN DEVELOPER MODE!
     + [Proceed with Vugs' sequence]
         -> RuinedCoast
-    + [Try Bas' Travel and party Example:]
-        -> BasTravelTest
-    + [I wanna test the linebreaks]
-        -> lineBreakTest
     + [Give me item examples]
         -> ItemUses
-    + [To Bas' writings]
-        //++ [Heist]
-            //-> Antecedent
-        ++ [Puzzle]
-            -> InventoryPuzzleWelcome
     + [Proceed to Character Creation]
     -> Opening
 

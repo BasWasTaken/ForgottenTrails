@@ -13,7 +13,7 @@ VAR Money = 10
 VAR Inventory = () // list of items the player has.
 ~ Inventory = Items() // restrict to items defined in list
 
-=== function Item_Add(item) // Add item to inventory.
+=== function item_add(item) // Add item to inventory.
     ~ Inventory += item
 
 === function ItemChoice(itemOrAffordances) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal). 
@@ -22,19 +22,19 @@ VAR Inventory = () // list of items the player has.
 VAR UsedItem = () // container for unity to tell ink what item it just used
 ~ UsedItem = Items()
 
-=== function _Item_Remove(item) // used to remove an item from the inventory
+=== function _item_remove(item) // used to remove an item from the inventory
     {
     - Inventory has item: 
         ~ Inventory -= item
-        ~ Print("Removed {item}. Items still in possesion: {Inventory}")
+        ~ print("Removed {item}. Items still in possesion: {Inventory}")
     - else:
-        ~ PrintWarning("Attempted to remove an item that wasn't there!")
+        ~ print_warning("Attempted to remove an item that wasn't there!")
     }
     
-=== function Item_Remove(item)
-~ _Item_Remove(item)
+=== function item_remove(item)
+~ _item_remove(item)
 
-=== function Item_RemoveLastUsed() // remove item that was just used
-~ Item_Remove(UsedItem)
+=== function item_remove_last_used() // remove item that was just used
+~ item_remove(UsedItem)
 
 

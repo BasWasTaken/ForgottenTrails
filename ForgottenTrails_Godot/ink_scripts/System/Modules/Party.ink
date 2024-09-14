@@ -13,12 +13,12 @@ VAR Party = () // list of characters in party
 === function Party_AddMember(member) // Add character to party
     ~ Party += member
 //System: {member} joined the party.
-~Print("{member} joined the party.")
+~print("{member} joined the party.")
     
 === function Party_RemoveMember(member) // Add character to party
     ~ Party -= member
 //System: {member} left the party.
-~Print("{member} left the party.")
+~print("{member} left the party.")
 
 === AllowPartyScreen(->returnTo) === // including this in the list of choices as a "thread statement" allows the player to open their party screen in order to start dialogues with party members.  Outside of these moments, party members can still be examined but not changed.
 +  [\{UNITY:OpenPartyScreen\}] -> PartyScreen(returnTo) //WITHOUT "()"

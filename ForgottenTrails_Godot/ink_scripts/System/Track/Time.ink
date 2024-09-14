@@ -12,7 +12,7 @@ VAR DaysPassed = 0
 - else:
 	~ TimeOfDay ++ 
 }   
-~Print("It is now {TimeOfDay}, Day {DaysPassed+1}")
+~print("It is now {TimeOfDay}, Day {DaysPassed+1}")
 
 === function Time_AdvanceUntil(time)
 ~ Time_AdvanceUntilBetween(time, time)

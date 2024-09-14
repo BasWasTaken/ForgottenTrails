@@ -273,7 +273,7 @@ VAR rainStop = -1
 - (calc) //set raining false
 ~ rainStart = RANDOM(0, 28) // determine rain start 
 ~ rainStop = RANDOM(rainStart, rainStart+28) // determine rain end
-~Print("Randomly determined rain will start {rainStart} turns from now, and last {rainStop-rainStart} turns")
+~print("Randomly determined rain will start {rainStart} turns from now, and last {rainStop-rainStart} turns")
 - (tell)
 As you're traveling, you start to notice dark clouds gathering overhead.
 

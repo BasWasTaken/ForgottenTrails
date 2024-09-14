@@ -1,14 +1,14 @@
 INCLUDE System/Core.ink
 INCLUDE System/Console.ink
 INCLUDE System/Random.ink
-INCLUDE System/track/relations.ink
-INCLUDE System/track/time.ink
-INCLUDE System/track/states.ink
-INCLUDE System/track/weather.ink
-INCLUDE System/track/locations.ink
-INCLUDE System/modules/travel.ink
-INCLUDE System/modules/inventory.ink
-INCLUDE System/modules/party.ink
+INCLUDE System/Track/Relations.ink
+INCLUDE System/Track/Time.ink
+INCLUDE System/Track/States.ink
+INCLUDE System/Track/Weather.ink
+INCLUDE System/Track/Locations.ink
+INCLUDE System/Modules/Travel.ink
+INCLUDE System/Modules/Inventory.ink
+INCLUDE System/Modules/Party.ink
 
 INCLUDE System/Presentation/Audio.ink
 INCLUDE System/Presentation/Sprites.ink

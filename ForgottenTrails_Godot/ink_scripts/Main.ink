@@ -2,6 +2,7 @@ INCLUDE Functions.ink
 INCLUDE Stories.ink
 
 
+
 //Set inventory
 ~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
 

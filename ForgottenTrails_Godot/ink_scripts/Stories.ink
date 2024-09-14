@@ -1,10 +1,12 @@
 //Introduction Ink files
 INCLUDE Introduction/CharacterCreation.ink
-INCLUDE Introduction/introductionAwakening.ink
+INCLUDE Introduction/IntroductionAwakening.ink
 
 //Edan Ink files
 INCLUDE Edan/EdanInn.ink
 INCLUDE Edan/EdanPrison.ink
+INCLUDE Edan/EdanGate.ink
+INCLUDE Edan/EdanMarket.ink
 
 //Edan region Ink files
 INCLUDE EdanRegion/SouthernRoads.ink

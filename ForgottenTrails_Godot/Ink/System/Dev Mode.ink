@@ -1,3 +1,5 @@
+VAR DEBUG = false
+
 === DeveloperModeToggle ===
 // Developer mode adds a few shortcuts - remember to set to false in release!
 ~DEBUG = true

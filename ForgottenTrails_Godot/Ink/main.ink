@@ -1,12 +1,5 @@
-// --------- Shared  ---------
-//Start-up
-
-//Set core Ink files
-//Story Ink files that need to be included can be further defined in Stories.ink
-INCLUDE System.ink
-INCLUDE Stories.ink
-INCLUDE DraftPieces.ink
-INCLUDE Edan/EdanMarket.ink
+INCLUDE functions.ink
+INCLUDE stories.ink
 
 
 //Set inventory
@@ -17,9 +10,6 @@ INCLUDE Edan/EdanMarket.ink
 
 ->Start
 
-//Set debug variable
-VAR DEBUG = false
-
 === Start ===
 ~ChangeWeather()
 Do you want to toggle developer mode?
@@ -28,7 +18,6 @@ Do you want to toggle developer mode?
 +[No]
 -> Opening
 
-// --------- Vugs  ---------
 // Placeholder. Need to move this and make it context specific in several cases.     
 === Death ===
 And so ends this tale. Another apprentice that would never return, their findings lost to the wind.

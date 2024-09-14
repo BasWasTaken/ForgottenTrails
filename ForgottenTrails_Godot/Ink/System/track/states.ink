@@ -1,3 +1,5 @@
+// ItemStates
+
 === ItemStateLightSource ===
 VAR LightSource = 0
 ->END
@@ -36,4 +38,6 @@ VAR LanternState = 0
 {TorchState == 0: ->ItemStateLightSource.LightSourceToggleOff}
 ->->
 
+
+// other States
 

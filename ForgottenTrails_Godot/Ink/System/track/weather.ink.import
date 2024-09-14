@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://0tw8nm8e04m6"
-path="res://.godot/imported/weather.ink-57c382b79437ba29c61cbea902e3a7c4.res"
+path="res://.godot/imported/Weather.ink-6a89d0ac5e0df37f6cf16c9d01dee510.res"
 
 [deps]
 
-source_file="res://Ink/system/track/weather.ink"
-dest_files=["res://.godot/imported/weather.ink-57c382b79437ba29c61cbea902e3a7c4.res"]
+source_file="res://Ink/System/Track/Weather.ink"
+dest_files=["res://.godot/imported/Weather.ink-6a89d0ac5e0df37f6cf16c9d01dee510.res"]
 
 [params]
 

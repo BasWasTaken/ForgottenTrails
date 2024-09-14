@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://cjnn1hs2l1t3b"
-path="res://.godot/imported/background.ink-8726eda38534141aba3cc018a7e3f327.res"
+path="res://.godot/imported/Background.ink-8633f82d6342314370f4fda00b7c7ca4.res"
 
 [deps]
 
-source_file="res://Ink/system/presentation/background.ink"
-dest_files=["res://.godot/imported/background.ink-8726eda38534141aba3cc018a7e3f327.res"]
+source_file="res://Ink/System/Presentation/Background.ink"
+dest_files=["res://.godot/imported/Background.ink-8633f82d6342314370f4fda00b7c7ca4.res"]
 
 [params]
 

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://c1ego2m08aaih"
+path="res://.godot/imported/EdanGate.ink-c93934ce7f3bcacbae04f244afdb8a3b.res"
+
+[deps]
+
+source_file="res://Ink/Edan/EdanGate.ink"
+dest_files=["res://.godot/imported/EdanGate.ink-c93934ce7f3bcacbae04f244afdb8a3b.res"]
+
+[params]
+
+is_main_file=false
+compress=true

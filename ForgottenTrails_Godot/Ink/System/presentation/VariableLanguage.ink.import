@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://8brc6k1o0e"
-path="res://.godot/imported/VariableLanguage.ink-74843cce394e90601a654d293f9982de.res"
+path="res://.godot/imported/VariableLanguage.ink-3c27c77cdd7299a5c30f9af9338907e4.res"
 
 [deps]
 
-source_file="res://Ink/system/presentation/VariableLanguage.ink"
-dest_files=["res://.godot/imported/VariableLanguage.ink-74843cce394e90601a654d293f9982de.res"]
+source_file="res://Ink/System/Presentation/VariableLanguage.ink"
+dest_files=["res://.godot/imported/VariableLanguage.ink-3c27c77cdd7299a5c30f9af9338907e4.res"]
 
 [params]
 

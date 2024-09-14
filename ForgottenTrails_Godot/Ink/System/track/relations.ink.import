@@ -3,12 +3,12 @@
 importer="ink"
 type="Resource"
 uid="uid://be475nbpfdlfg"
-path="res://.godot/imported/relations.ink-697601520597d79a4b274dd7576fd15e.res"
+path="res://.godot/imported/Relations.ink-6368773e38dc832ca966249dd80802ac.res"
 
 [deps]
 
-source_file="res://Ink/system/track/relations.ink"
-dest_files=["res://.godot/imported/relations.ink-697601520597d79a4b274dd7576fd15e.res"]
+source_file="res://Ink/System/Track/Relations.ink"
+dest_files=["res://.godot/imported/Relations.ink-6368773e38dc832ca966249dd80802ac.res"]
 
 [params]
 

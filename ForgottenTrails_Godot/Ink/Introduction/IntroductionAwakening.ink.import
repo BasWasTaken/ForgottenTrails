@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://slqogm2ufvof"
+path="res://.godot/imported/IntroductionAwakening.ink-ca1f836798e6f41f381e8aeeb486eb5d.res"
+
+[deps]
+
+source_file="res://Ink/Introduction/IntroductionAwakening.ink"
+dest_files=["res://.godot/imported/IntroductionAwakening.ink-ca1f836798e6f41f381e8aeeb486eb5d.res"]
+
+[params]
+
+is_main_file=false
+compress=true

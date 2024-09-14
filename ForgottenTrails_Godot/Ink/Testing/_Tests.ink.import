@@ -2,12 +2,12 @@
 
 importer="ink"
 type="Resource"
-uid="uid://c2lpub8ol8ih4"
+uid="uid://dgol21inb7kl8"
 valid=false
 
 [deps]
 
-source_file="res://Ink/Main.ink"
+source_file="res://Ink/Testing/_Tests.ink"
 
 [params]
 

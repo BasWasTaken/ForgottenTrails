@@ -34,7 +34,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ SetLocation(LOC_EdinburghCrossroads)
-The road splits here into four directions. The northbound road {(!HasVisited(LOC_EdanCastle)) and KnowsAbout(EdanCastleKnowState): presumably |}leads to {Knows(EdanCastleKnowState.Location):Edan Castle|the castle on the hill}{PreviousLocation ? LOC_RoadToEdanCastle:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? LOC_ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+The road splits here into four directions. The northbound road {(!HasVisited(LOC_EdanCastle)) and KnowsAbout(EdanCastleKnowState): presumably |}leads to {knows(EdanCastleKnowState.Location):Edan Castle|the castle on the hill}{PreviousLocation ? LOC_RoadToEdanCastle:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? LOC_ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing

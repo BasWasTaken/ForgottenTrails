@@ -7,7 +7,7 @@ LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, 
 VAR KnownLocations = () // all known locations
 ~ KnownLocations = Locations() // limit var to locations defined in Lists
 
-=== function KnowsLoc(location) === //check if the player knows a location exists (NOTE: confusing overlap here with Knows(fact) function)
+=== function KnowsLoc(location) === //check if the player knows a location exists (NOTE: confusing overlap here with knows(fact) function)
 ~return KnownLocations has location
 
 === function LearnLoc(location) === /// add location to list

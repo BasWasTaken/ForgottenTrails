@@ -5,12 +5,12 @@
 ->CastleEntranceOutsideApproach
 
 =CastleEntranceOutsideApproach
-As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in the dark, {Inventory has Lantern:but your lantern illuminates your surroundings enough to find your way.|but knowing it's there helps guide your feet.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {Knows(HenryKnowState.Name):Henry|a guard} leaning on his halberd. 
+As you {once again crest the|crest the increasingly familiar|crest the well known} hill, the Edani Gatehouse comes into view. {TimeOfDay == Night:It's hard to make out in the dark, {Inventory has Lantern:but your lantern illuminates your surroundings enough to find your way.|but knowing it's there helps guide your feet.} ->CastleEntranceReturnVisitNight}{TimeOfDay == Dawn:The morning sun casts a gentle yellow hue on the building.}{TimeOfDay == Dusk: A pair of torches has already been lit, despite the setting sun still providing ample lighting.}{TimeOfDay == Evening:Two torches placed on either side of the gate illuminate it with a flickering orange light.} The gate's ironbound doors are open, welcoming visitors. In front of them, you spot {knows(HenryKnowState.Name):Henry|a guard} leaning on his halberd. 
 //{AffHenry < 25: } (to do: make scenario where Henry stops you)
 He looks {LIST_COUNT(Party)==1:you|your party} over and gives a gentle smile. With his left hand, he gestures that you may pass into the settlement.
 +[Continue on]
 ->CastleGatehouseCourtyard
-+[Talk to {Knows(HenryKnowState.Name):Henry|the guard}.]
++[Talk to {knows(HenryKnowState.Name):Henry|the guard}.]
 ->HenryGateConversation
 +[Head back]
 ~PreviousLocation = "EdanCastleEntrance"
@@ -27,7 +27,7 @@ He looks {LIST_COUNT(Party)==1:you|your party} over and gives a gentle smile. Wi
 {Inventory has Lantern:As you approach, you hear someone shouting from behind the door. -> CastleEntranceReturnVisitNightNoLantern}
 {Inventory has Lantern:As you approach, you hear a man's voice ring out from behind the battlements:}
 "Hail traveler{LIST_COUNT(Party):s}, what's your business in Edan at this hour?"
-+{Knows(EdgarKnowState.Name)}"It's {LIST_COUNT(Party):us|me} Edgar, {PlayerName}{Party has Alice and Party !? Robert: and Alice}{Party !? Alice and Party has Robert: and Robert}, {Party has Alice and Party has Robert:along with Alice and Robert}."
++{knows(EdgarKnowState.Name)}"It's {LIST_COUNT(Party):us|me} Edgar, {PlayerName}{Party has Alice and Party !? Robert: and Alice}{Party !? Alice and Party has Robert: and Robert}, {Party has Alice and Party has Robert:along with Alice and Robert}."
     {AffEdgar < 25:"{PlayerName} ey? Don't think I've heard that name before, but sounds like the name of a twat! Try coming back in the morning, maybe Henry will let you in."->CastleEntranceReturnVisitNightLocked}
     {AffEdgar < 50 and AffEdgar > 24:Oh, {PlayerName}. Behaving yourself at this hour I hope? Well no matter, come on in, it's no time to be outside. ->CastleGatehouseCourtyard} 
     {AffEdgar > 49:Ah, {PlayerName}! What are you{LIST_COUNT(Party)>1: all} doing outside at this hour? Ah no matter, let me open up the gate for you!" ->CastleGatehouseCourtyard}
@@ -130,9 +130,9 @@ The man nods. "Aye, {TimeOfDay == Evening or Night or Dawn:just yesterday.|just 
 ->EdanTownSquare
 +[Approach the guardhouse]
 -> Guardhouse
-+{TimeOfDay == Dawn}Talk to {Knows(EdgarKnowState.Name):Edgar|the guard}.
++{TimeOfDay == Dawn}Talk to {knows(EdgarKnowState.Name):Edgar|the guard}.
 ->EdgarGateConvo
-+{TimeOfDay == Morning or Midday or Afternoon or Dusk}Talk to {Knows(HenryKnowState.Name):Henry|the guard}.
++{TimeOfDay == Morning or Midday or Afternoon or Dusk}Talk to {knows(HenryKnowState.Name):Henry|the guard}.
 ->HenryGateConvo
 +[Leave through the gate]
 

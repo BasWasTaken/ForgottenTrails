@@ -3,10 +3,10 @@
 ~ FadeToImage(BG_VaultLibrary, 1)
 ~ SetLocation(LOC_DreamState)
 The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark.
-{stop}
+
 It's a place that in an ancient past held a different name but you know it by two: "The Vault of Forgotten Books" and "Home". 
 Home? Didn't you leave home months ago?
-{stop}
+
 You ponder this briefly. A dream perhaps? Maybe. Surely! Surely? Maybe... 
 The thought has nearly solidified in your mind when an unexpected blow knocks you to the ground. As you look up you see one of the caretakers on the floor, just like you, with books scattered about everywhere. The young man begins to apologize profusely, all the while gathering the dropped books. Before you can even get a word in he has already reformed the towering stack, undoubtedly the thing that obstructed his vision in the first place, and has continued on his way. <br>
 On the floor, a mirror sparkles with light's reflection. Did he drop this?

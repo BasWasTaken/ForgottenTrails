@@ -8,15 +8,15 @@ LIST Weather = ClearSkies, LightClouds, ThickClouds, (LightRain), HeavyRain, Thu
 ~ temp 2StepCutOff = 50 // chance to move at least 2 steps
 ~ temp 1StepCutOff = 70 // chance to move at least 1 step
 
-~ temp check = d100() // generate number
+~ temp p = d100() // generate number
 
 ~ temp change = 0
 { 
-- check>=101-3StepCutOff: //is roll high enough for 3rd cutoff?
+- p>=101-3StepCutOff: //is roll high enough for 3rd cutoff?
     ~ change = 3
-- check>=101-2StepCutOff: //is roll high enough for 2nd cutoff?
+- p>=101-2StepCutOff: //is roll high enough for 2nd cutoff?
     ~ change = 2
-- check>=101-1StepCutOff: //is roll high enough for 1st cutoff?
+- p>=101-1StepCutOff: //is roll high enough for 1st cutoff?
     ~ change = 1
 }
 

@@ -1,5 +1,5 @@
 INCLUDE Functions.ink
-INCLUDE Stories.in
+INCLUDE Stories.ink
 INCLUDE System/DevMode.ink
 
 

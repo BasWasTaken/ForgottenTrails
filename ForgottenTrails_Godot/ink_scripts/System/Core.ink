@@ -89,7 +89,7 @@ VAR knowledgeState = () // VAR that will serve as list containing all acquired k
 === function learn(facts)  // used to "learn" a fact   
     ~ knowledgeState += facts
     
-=== function knowsAbout(subject)
+=== function knows_about(subject)
     ~ return knowledgeState ^ subject // see if any overlap between subject and knowledge base
 
 /* This function simplified on 2024-05-06 as part of the pivot awai from incremental knowledge states. We are opting instead for the ability to use nonlineair logic (as in a player can Know A, not B, as well as B, not A) and estimate that the paradoxical results (not knowing A before B when that is nonsensical) are mitigatable by manual additions. Should we see that we often have to manually learn a lot of steps to prevent paradoxes and/or not really benefit from the nonlineair knowledge states, we can reinstate the previous logic.	

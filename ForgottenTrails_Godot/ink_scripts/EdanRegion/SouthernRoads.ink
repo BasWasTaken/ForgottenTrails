@@ -22,7 +22,7 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
         ***[Survey the landscape]Beneath a bright morning sky fields of flowers roll out before you. The road winds down the hill, slowly making its descent before starting to climb again far in the distance. Its destination: a castle on a rocky outcrop. From your vantage point, you can see the land flattening out beyond it, eventually meeting the inlet sea. 
             ****[Continue following the road towards the castle]
             You continue your journey, the earth crunching beneath your feet. Almost at the halfway point between your hilltop outlook and the castle you find yourself at a crossroads. 
-            ~ Learn(EdanCastleKnowState.Location)
+            ~ learn(EdanCastleKnowState.Location)
             ~ PreviousLocation = LOC_ScotlandEntranceRoad
             ->EdinburghCrossroads
         
@@ -34,12 +34,12 @@ Step by step, you climb the hill. A worn path guides your feet, a pleasant chang
             
 === EdinburghCrossroads ===
 ~ SetLocation(LOC_EdinburghCrossroads)
-The road splits here into four directions. The northbound road {(!HasVisited(LOC_EdanCastle)) and KnowsAbout(EdanCastleKnowState): presumably |}leads to {knows(EdanCastleKnowState.Location):Edan Castle|the castle on the hill}{PreviousLocation ? LOC_RoadToEdanCastle:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? LOC_ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
+The road splits here into four directions. The northbound road {(!HasVisited(LOC_EdanCastle)) and knows_about(EdanCastleKnowState): presumably |}leads to {knows(EdanCastleKnowState.Location):Edan Castle|the castle on the hill}{PreviousLocation ? LOC_RoadToEdanCastle:, from which you came|.} The road South would carry you away from the Northern Lands, perhaps even all the way back home{PreviousLocation ? LOC_ScotlandEntranceRoad:, but you just came from there.|.} You're unsure where the roads leading East and West would take you.
 At the center of the crossing you spot a decorated boulder: a Waystone.
 ->EdinburghCrossroads.Crossing
 =Crossing
 +[Take the North Road]
-You decide to take the North road{PreviousLocation == LOC_EdinburghCastleEntrance: and go and go back the way you came.|  leading to {KnowsAbout(EdanCastleKnowState):Edan Castle |the Hilltop Castle.}}
+You decide to take the North road{PreviousLocation == LOC_EdinburghCastleEntrance: and go and go back the way you came.|  leading to {knows_about(EdanCastleKnowState):Edan Castle |the Hilltop Castle.}}
 ->RoadToEdanCastle
 +[Take the East Road]
 You decide to follow the road east. 
@@ -52,7 +52,7 @@ Sorry buddy, no content West yet!
 ->EdinburghCrossroads.Crossing
 +[Inspect the Waystone]
 
-~ Learn(EdanCastleKnowState.Name)
+~ learn(EdanCastleKnowState.Name)
 {You decide to take a closer look at the Waystone in the middle of the crossing. It's decorated in a blocky script, which thankfully matches the sources you were able to study back in Barralon. In the Northern Tongue it reads:|You decide to take another look at the Waystone. It reads:}
 "May the blessings of Crìsdaen be upon the honorable traveler
 
@@ -65,7 +65,7 @@ A fourth line is also there, but the markings are scratched out. Carved beneath 
 * [Consult your map]
     You can open your map by clicking on the relevant tab above!
     \[This is where the player learns about the map, and that they can also always open it with in the menu. But, currently, using this option caused a softlock! So sorry buddy, your game is softlocked now. You won't be able to go advance the story after the map closes. I'm working on it, al right?
-    {stop}
+
     (Hope the quickload functionality works at the moment...)
     {OpenMap()}
     -> MapScreen(-> Crossing.)

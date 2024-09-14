@@ -33,7 +33,7 @@ You see <>
 -> Opening.CharCreation1
 
 = CharCreation1
-~ SetPronouns(players_gender)
+~ set_pronouns(players_gender)
 
 whose eyes shine a bright <>
 +...blue[]. 
@@ -149,7 +149,7 @@ You blink and a different face stares back at you.
 
 = Recognition
 You consider the name that belongs to this face. 
-{PromptName()}
+{prompt_name()}
 <This is a buffer line. If removed, {PlayerName} does not show properly in the line immediately following it, although it is still saved. this is a bug Bas needs to fix later.>
 Right. A young {person} called {PlayerName}.
 + I've always thought it seemed to fit.

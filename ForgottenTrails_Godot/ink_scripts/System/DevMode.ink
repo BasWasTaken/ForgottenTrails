@@ -8,8 +8,6 @@ VAR DEBUG = false
 	IN DEVELOPER MODE!
     + [Proceed with Vugs' sequence]
         -> RuinedCoast
-    + [Give me item examples]
-        -> ItemUses
     + [Proceed to Character Creation]
     -> Opening
 

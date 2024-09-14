@@ -116,4 +116,5 @@ VAR LowRationsLimit = 3 // amount of rations that causes party to complain if yo
 EXTERNAL _OpenMap()
     
 === function _MapChoice(destination) === // used to present an inky choice that will be represented visually on a map in unity. (in ink it simply lists as a normal choice)
+\{MapChoice({destination})\in unity. (in ink it simply lists as a normal choice)
 \{MapChoice({destination})\

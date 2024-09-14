@@ -48,7 +48,7 @@ Once at the top, you spot the source: a cooking fire set by the roadside. A man 
                 *"I just really don't feel like dealing with people right now."
 
 =MerchantSiblings1a
-{KnowsAbout(EileenKnowState): test }
+{knows_about(EileenKnowState): test }
     As you near a distance in which you would no longer need to shout, {players_gender == male:the woman}{players_gender == female:the man}{~!the man|the woman} speaks up: "Hello friend! How does Crìsdaen's wind blow?
     - (test)
         <- UnprovokedAttackMerchants(->test)

@@ -73,9 +73,6 @@ crashlytics-build.properties
 
 # Personal additions:
 *.dwlt
-Assets/_Project/Resources/General/InkJSONs/FirstDraft.json
-Assets/_Project/Resources/General/InkJSONs/FirstDraft.json
-Assets/_Project/Resources/General/InkJSONs/FirstDraft.json.meta
 
 # Godot:
 .godot/

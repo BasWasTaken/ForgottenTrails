@@ -4,7 +4,7 @@
 {DEBUG:
 	IN DEVELOPER MODE!
     + [Proceed with Vugs' sequence]
-        -> RuinedCoast
+        -> Excerptfromthecoastalruins
     + [Try Bas' Travel and party Example:]
         -> BasTravelTest
     + [I wanna test the linebreaks]

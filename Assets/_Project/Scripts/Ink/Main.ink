@@ -6,10 +6,7 @@
 INCLUDE System.ink
 INCLUDE Stories.ink
 INCLUDE DraftPieces.ink
-INCLUDE ItemStates.ink
-
-
-
+INCLUDE Edan/EdanMarket.ink
 
 
 //Set inventory

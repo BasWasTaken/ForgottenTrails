@@ -94,7 +94,6 @@ namespace VVGames.ForgottenTrails.InkConnections
             Story story = new(TextAsset.text);
 
             ListDefinition items = null;
-            ListDefinition affordances = null;
             ListDefinition locations = null;
             ListDefinition partyCandidates = null;
             foreach (string inkListName in InkListNames)
@@ -106,11 +105,6 @@ namespace VVGames.ForgottenTrails.InkConnections
                     {
                         items = listDefinition;
                         Debug.LogFormat("Found items list as {0}", listDefinition);
-                    }
-                    else if (inkListName == "Affordances")
-                    {
-                        affordances = listDefinition;
-                        Debug.LogFormat("Found affordances list as {0}", listDefinition);
                     }
                     else if (inkListName == "Locations")
                     {
@@ -143,7 +137,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                                     string absolutePath = AssetDatabase.GUIDToAssetPath(asset);
                                     absolutePath = absolutePath.Substring(0, absolutePath.LastIndexOf('.'));// remove .extension because resources utility is super finicky
                                     string relativePath = GetRelativePath(absolutePath, basePath);
-                                    if (relativePath.ToLower().Contains(searchFor.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset
+                                    if (relativePath.ToLower().Contains(searchFor.ToString().ToLower() + "_")) // check if whole name plus underscore present in asset //in searching, I think it IS okay if the case sensitivity is of, because this is non-exact anyway, and to be honest a bit hacky, and it's best to make it as frictionless as possible.
                                     {
                                         noError += string.Format("\nFound {1} for {0}", item, relativePath);
                                         if (assets.TryAdd(item, relativePath))
@@ -181,7 +175,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             if (error == "") message = "Succesfully fetched InkLists." + noError;
             else message = "ERROR IN ATTEMPTING TO LIST ASSETS" + error;
 
-            if (items == null | affordances == null | locations == null | partyCandidates == null)
+            if (items == null | locations == null | partyCandidates == null)
             {
                 throw new NullReferenceException("one of the expected inklists was not set to be searched. \nLog:" + message);
             }
@@ -189,9 +183,9 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 throw new Exception(message);
             }
-            else if (!ItemListsKnown(items, affordances))
+            else if (!ItemListsKnown(items))
             {
-                throw new Exception("Could not match up items or affordances. \nLog:" + message);
+                throw new Exception("Could not match up items. \nLog:" + message);
             }
             else if (!LocationsRecognised(locations))
             {
@@ -234,14 +228,14 @@ namespace VVGames.ForgottenTrails.InkConnections
             return relativePath;
         }
 
-        private bool ItemListsKnown(ListDefinition items, ListDefinition affordances)
+        private bool ItemListsKnown(ListDefinition items)
         {
             ItemDictionary.Clear();
             Dictionary<string, InventoryItem> TemporaryDictionary = new();
 
             foreach (InventoryItem item in possibleItems)
             {
-                TemporaryDictionary.Add(item.CanonicalName, item);
+                TemporaryDictionary.Add(item.CanonicalName/*.ToLower()*/, item);
             }
 
             string error = "";
@@ -249,7 +243,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             // assert all items from ink exist in unity
             foreach (InkListItem inkListItem in items.items.Keys)
             {
-                if (TemporaryDictionary.TryGetValue(inkListItem.itemName, out InventoryItem item))
+                if (TemporaryDictionary.TryGetValue(inkListItem.itemName/*.ToLower()*/, out InventoryItem item))
                 {
                     item.InkListItem = inkListItem;
                     ItemDictionary.Add(inkListItem, item);
@@ -261,31 +255,13 @@ namespace VVGames.ForgottenTrails.InkConnections
             }
             // assert all afforances are same
 
-            // assert all affordances from ink exist in unity
-            foreach (InkListItem affordance in affordances.items.Keys)
-            {
-                if (!Enum.IsDefined(typeof(Affordance), affordance.itemName))
-                {
-                    error += string.Format("\nAffordance \"{0}\" not present in unity enum definition!", affordance);
-                }
-            }
-
-            // assert all affordances from unity exist in ink
-            foreach (string affordance in Enum.GetNames(typeof(Affordance)))
-            {
-                if (!affordances.ContainsItemWithName(affordance))
-                {
-                    error += string.Format("\nAffordance \"{0}\" not present in ink list!", affordance);
-                }
-            }
-
             if (error == "")
             {
                 return true;
             }
             else
             {
-                Debug.LogAssertion("ITEMS OR AFFORDANCES NOT MATCHED UP" + error);
+                Debug.LogAssertion("ITEMS NOT MATCHED UP" + error);
                 return false;
             }
         }
@@ -296,7 +272,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             Dictionary<string, MapLocationDefinition> TemporaryDictionary = new();
             foreach (MapLocationDefinition loc in possibleLocations)
             {
-                TemporaryDictionary.Add(loc.CanonicalName, loc);
+                TemporaryDictionary.Add(loc.CanonicalName/*.ToLower()*/, loc);
             }
             string error = "";
 
@@ -305,7 +281,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 //Debug.Log(name);
                 //Debug.Log(locations);
-                if (!locations.ContainsItemWithName(name))
+                if (!locations.ContainsItemWithName(name/*.ToLower()*/))
                 {
                     error += string.Format("\nLocation \"{0}\" not found in inky list!", name);
                 }
@@ -328,14 +304,14 @@ namespace VVGames.ForgottenTrails.InkConnections
             Dictionary<string, PartyMemberSO> TemporaryDictionary = new();
             foreach (PartyMemberSO mem in possiblePartyMembers)
             {
-                TemporaryDictionary.Add(mem.CanonicalName, mem);
+                TemporaryDictionary.Add(mem.CanonicalName/*.ToLower()*/, mem);
             }
             string error = "";
 
             // assert all party members from ink exist in unity
             foreach (InkListItem inkListItem in partyMembers.items.Keys)
             {
-                if (TemporaryDictionary.TryGetValue(inkListItem.itemName, out PartyMemberSO item))
+                if (TemporaryDictionary.TryGetValue(inkListItem.itemName/*.ToLower()*/, out PartyMemberSO item))
                 {
                     item.InkListItem = inkListItem;
                     PartyMemberDictionary.Add(inkListItem, item);
@@ -350,7 +326,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             {
                 //Debug.Log(name);
                 //Debug.Log(locations);
-                if (!partyMembers.ContainsItemWithName(name))
+                if (!partyMembers.ContainsItemWithName(name)) // THIS is where I can't force the code not to check for casing.
                 {
                     error += string.Format("\nParty Member \"{0}\" not found in inky list!", name);
                 }

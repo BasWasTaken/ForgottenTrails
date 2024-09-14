@@ -37,5 +37,34 @@ namespace VVGames.ForgottenTrails.InkConnections.Items
         public List<Affordance> Affordaces { get; private set; }
 
         #endregion Properties
+
+        #region Public Methods
+
+        public bool ContainsAffordance(Affordance affordanceNeeded)
+        {
+            foreach (Affordance affordanceInItem in Affordaces)
+            {
+                if (affordanceInItem == affordanceNeeded)
+                {
+                    return true; // found it!
+                }
+            }
+            return false; // did not find it!
+        }
+
+        public bool ContainsAffordance(string affordanceNeeded)
+        {
+            Affordance processed;
+            if (Enum.TryParse(affordanceNeeded, out processed))
+            {
+                return ContainsAffordance(processed);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        #endregion Public Methods
     }
 }

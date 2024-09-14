@@ -41,7 +41,7 @@ namespace VVGames.ForgottenTrails.InkConnections
             public Button ButtonPrefab { get; internal set; }
 
             [field: SerializeField, Header("Scene References"), BoxGroup("Scene References"), Required]
-            public Book book { get; set; }
+            public InGameMenuSwapper InGameMenu { get; set; }
 
             [field: SerializeField, BoxGroup("Scene References"), Required]
             public Image FloatingMarker { get; internal set; }
@@ -101,17 +101,37 @@ namespace VVGames.ForgottenTrails.InkConnections
                         if (item.CanonicalName == keyPhrase)
                         {
                             discoveredChoice = potentialChoice;
+                            Debug.LogFormat("Found exact match: {0} == {1}", item, keyPhrase);
                             break;
                         }
                         else
-                        {
-                            foreach (Affordance trait in item.Affordaces)
+                        { // get one or more affordances
+                            // Split the input string using the '&' separator
+                            string[] affordances = keyPhrase.Split('&');
+
+                            // Output each affordance
+                            List<bool> HasAffordances = new();
+                            string values = "";
+                            foreach (string affordance in affordances) // for each affordance we need,
                             {
-                                if (trait.ToString() == keyPhrase)
+                                // see if the item has it.
+                                if (item.ContainsAffordance(affordance))
                                 {
-                                    discoveredChoice = potentialChoice;
+                                    HasAffordances.Add(true);
+                                    values += affordance + '&';
+                                }
+                                else
+                                {
+                                    HasAffordances.Add(false);
+                                    string addendum = "It's not " + affordance;
                                     break;
                                 }
+                            }
+                            if (!HasAffordances.Contains(false))
+                            {
+                                discoveredChoice = potentialChoice;
+                                Debug.LogFormat("found item that is {0}", values);
+                                break;
                             }
                         }
                     }
@@ -125,6 +145,7 @@ namespace VVGames.ForgottenTrails.InkConnections
                     newList.AddItem(item.InkListItem);
                     Controller.Story.variablesState["UsedItem"] = newList;
                     OnClickChoiceButton(discoveredChoice);
+                    Debug.LogFormat("used item {0} for choice {1}", item.name, discoveredChoice.text);
                     return true;
                 }
                 else

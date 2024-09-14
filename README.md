@@ -26,7 +26,7 @@ Allows tracking of what the player has observed throughout the game, using disti
 
 - **KnowledgeState:** This variable serves as a list containing all acquired knowledge.
 - **Knows(fact):** Check if a fact is present in the knowledge state.
-- **KnowledgeStateBetween(factX, factY):** Check if the knowledge state is between two specific points.
+- **KnowsAbout(subject):** Check if ANY of the facts associated with a given subject are present in the knowledge state.
 - **Learn(facts):** Learn a new fact and add it to the knowledge state.
 
 ## Custom Utility
@@ -76,9 +76,11 @@ Keeps track of player inventory and items.
 
 Items are defined in the Items LIST.
 
+Affordances are NOT defined in Ink- they are defined in Unity, and in ink, we just use strings, which it just assumed we input correctly.
+
 - **Item_Add(item):** Add an item to the inventory.
 - **Item_Remove(item):** Remove a given from the inventory.
-- **ItemChoice(itemOrAffordance):** Present an in-game choice using an inventory item. This will be hidden in Unity, instead enabling an item to be used from the inventory screen. In Ink however this will just show up as a sample choice without indicating a specific item. NOTE: as of 2024-02-25, soon to be expanded with multiple parameter options.
+- **ItemChoice(itemOrAffordances):** Present an in-game choice using an inventory item. This will be hidden in Unity, instead enabling an item to be used from the inventory screen. In Ink however this will just show up as a sample choice without indicating a specific item. As of 2024-03-17, also accepts multiple affordances to match per choice, separated with "&"s. E.G.: "tool&sharp"
 - **UsedItem:** Variable to contain most recently used item. Useful in cases of multiple options where you as a writer don't know what item the player will choose. Note that this function cannot really be used this way in Ink (i.e. without playing in Unity) since the item use action takes place in Unity and cannot take place in Ink- you can only choose what affordance you used. 
 - **Item_RemoveLstUsed():** Remove the item which was most recently used by the player, from inventory. Equivalent to calling Item_Remove() with the UsedItem parameter. This can be used to remove whatever item the player chose to use during a item puzzle. As noted above, it does not work without Unity. Thus this presents one of the few ways our game isn't entirely playable in Inky- the inventory won't have such items removed on use.
 

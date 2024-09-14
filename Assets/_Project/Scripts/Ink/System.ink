@@ -1,4 +1,3 @@
-INCLUDE PartyDialogues.ink
 // --------- Bas ---------
 === Section_Top ===
 /* ---------------------------------
@@ -23,6 +22,72 @@ INCLUDE PartyDialogues.ink
 
 === function came_from(-> x)
 	~ return TURNS_SINCE(x) == 0
+	
+/*
+	Tests if the flow has reached a particular gather "this scene". This is an extension of "seen_more_recently_than", but it's so useful it's worth having separately.
+
+	Usage: 
+
+	// define where the start of the scene is
+	~ sceneStart = -> start_of_scene
+
+	- (start_of_scene)
+		"Welcome!"
+
+	- (opts)	
+		<- cough_politely(-> opts)
+
+		*	{ seen_this_scene(-> cough_politely.cough) }
+			"Hello!"
+		
+		+	{ not seen_this_scene(-> cough_politely.cough) }
+			["Hello!"]
+			I try to speak, but I can't get the words out!
+			-> opts
+
+
+		
+	=== cough_politely(-> go_to)
+		*	(cough) [Cough politely]
+			I clear my throat. 
+			-> go_to
+		
+*/
+
+
+VAR sceneStart = -> seen_this_scene 
+VAR buffer = -> seen_this_scene
+
+=== function init_sceneStart(-> link)
+~ sceneStart = link
+
+=== function seen(->x)
+    ~ return x
+
+=== function seen_very_recently(-> x)
+    ~ return TURNS_SINCE(x) >= 0 && TURNS_SINCE(x) <= 3
+    
+=== function seen_this_scene(-> link)
+	{  sceneStart == -> seen_this_scene:
+		[ERROR] - you need to initialise the sceneStart variable before using "seen_this_scene"!
+		~ return false
+	}
+	~ buffer = sceneStart
+	~ sceneStart = -> seen_this_scene 
+	~ return seen_more_recently_than(link, sceneStart)
+	
+
+=== function seen_more_recently_than(-> link, -> marker)
+	{ TURNS_SINCE(link) >= 0: 
+        { TURNS_SINCE(marker) == -1: 
+            ~ return true 
+        } 
+        ~ return TURNS_SINCE(link) < TURNS_SINCE(marker) 
+    }
+    ~ return false 
+
+
+
 
   === Section_TrackKnowledge ===
   /* ---------------------------------
@@ -33,8 +98,16 @@ INCLUDE PartyDialogues.ink
   
 VAR KnowledgeState = () // VAR that will serve as list containing all acquired knowledge
 
-=== function Knows (fact) // check if fact is present in knowledge state, i.e. is it known information?
+=== function Knows(fact) // check if fact is present in knowledge state, i.e. is it known information?
    ~ return KnowledgeState ? fact 
+   
+=== function Learn(facts)  // used to "learn" a fact   
+    ~ KnowledgeState += facts
+    
+=== function KnowsAbout(subject)
+    ~ return KnowledgeState ^ subject // see if any overlap between subject and knowledge base
+
+/* This function simplified on 2024-05-06 as part of the pivot awai from incremental knowledge states. We are opting instead for the ability to use nonlineair logic (as in a player can Know A, not B, as well as B, not A) and estimate that the paradoxical results (not knowing A before B when that is nonsensical) are mitigatable by manual additions. Should we see that we often have to manually learn a lot of steps to prevent paradoxes and/or not really benefit from the nonlineair knowledge states, we can reinstate the following logic.:
 
 === function KnowledgeStateBetween(factX, factY) // used to check if knowledge state is between two specific points, i.e. does the player know x, but also not know y?
    ~ return KnowledgeState? factX && not (KnowledgeState ^ factY)
@@ -55,31 +128,75 @@ VAR KnowledgeState = () // VAR that will serve as list containing all acquired k
     - else:
       ~ return false || Learn(facts) 
     }	
+*/
     
    /* ---------------------------------
    #### List of Knowledge Chains
    ----------------------------------*/
-//Vugs: kunnen we het een keer hebben over de exists, name flow? Weet niet of ik daar helemaal happy mee ben atm. 
-// Bas: Absoluut, laat maar weten. 
-// Overigens is dit trouwens een voorbeeld van iets dat me misschien handig lijkt om in een andere file te defineren: jij zult wsl veel nieuwe knowledge chains aan moeten maken, en dan is het miss fijn als je niet steeds dit hele systeem document door hoef te spitten. (Idem voor items etc.)
-// Vugs: dit wordt nu al irritant idd nu ik er voor de eerste keer echt mee bezig ben xD
-LIST EdanCastleKnow = (none), Exists, IsCastleOnHill // wat is dit nou weer voor een verschikkelijke variabelnaam die ik heb gemaakt wtf
-LIST Edgar = (none), Exists, Name
-LIST Henry = (none), Exists, Name
-LIST Tomas = (none), Exists, Name
-LIST Eileen = (none), Exists, Name
-//I keep running into the issue that you can't give the same name to things that have already been used elsewhere, even in different functions or as the variable instead of the variable name. You seem to have fixed this, how?
-//LIST Alice = (none), Exists, Name
-LIST Rubert = (none), Exists, Name
-LIST Edie = (none), Exists, Name
-    
+// WIP: Movev to different file
+LIST EdanCastleKnowState = Reputation, Location, Name 
+
+LIST EdgarKnowState = Reputation, Face, Name
+LIST HenryKnowState = Reputation, Face, Name
+LIST TomasKnowState = Reputation, Face, Name
+LIST EileenKnowState = Reputation, Face, Name
+LIST AliceKnowState = Reputation, Face, Name
+LIST RobertKnowState = Reputation, Face, Name
+LIST EdieKnowState = Reputation, Face, Name
+
  === Section_Extended ===
  /* ---------------------------------
     ## Custom Utility
  ----------------------------------*/
  -> DONE
  // The following is not official Ink utility: they are functions and lists we build for this project.
- 
+  
+  === Section_Random ===
+ /* ---------------------------------
+    ### Customized Randomiser Function
+ ----------------------------------*/
+ -> DONE
+ // The following is not official Ink utility: they are functions and lists we build for this project.
+
+=== function D(X) === // roll with a die of X sides
+VAR result = 0
+~result = RANDOM(1,X)
+~Print(result)
+~ return result
+
+=== function D6() ===
+~ return D(6)
+
+=== function D20() ===
+~ return D(20)
+
+=== function D100() ===
+~ return D(100)
+
+=== function CheckFlat(odds) === //input the chance to succeed from 0-100% as odds.
+VAR threshold = 101
+~threshold-=odds
+VAR roll = 0
+~roll = D100()
+{
+- roll - odds*2 > 0:
+    ~return 2
+- roll - odds > 0:
+    ~return 1
+- else:
+    ~return 0
+}
+
+=== function CheckSimple(odds, boon, boonX) === // additionally input a variable to use as a boost
+~odds += boon * boonX
+~return CheckFlat(odds)// same as doing a flat roll with higher odds (thus a lower threshold)
+
+//could also write skillroll as D100() + skill - threshold 
+
+=== function Check(odds, boon, boonX, bane, baneX) === // additionally input a variable to use as a hinderance
+~ odds -= bane * baneX
+~return CheckSimple(odds, boon, boonX) // same as doing a skill roll with lower odds (i.e. a higher threshold)
+
   === Section_TrackTime ===
   /* ---------------------------------
    ### System: Looping Time of Day.
@@ -88,8 +205,8 @@ LIST Edie = (none), Exists, Name
   
 LIST TimeOfDay = (Dawn), Morning, Midday, Afternoon, Dusk, Evening, Night
 //(Here we consider the day to start at dawn and end at night. Admittedly a large part of day 1's night is technically part of day 2, the alternatives are either saying that the day ends in evening, making night part of the next day entirely, which complicates the condition "TimeOfDay>=Dusk", or splitting the night up further in before or after midnight. Of these three I find the current option to be least unsatisfactory.)
-//@Vugs: thoughts on the above? Do you agree with these parts of day, or should Night be considered part of the next day or split up?
-//@Bas: This looks good to me! 
+
+LIST DayOfTheWeek = (Monday), Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 
 VAR DaysPassed = 0
 
@@ -123,17 +240,68 @@ VAR DaysPassed = 0
 
 
 === Section_TrackWeather ===
-LIST Weather = ClearSkies, LightClouds, ThickClouds, LightRain, HeavyRain, Thunderstorm
--> DONE
+  /* ---------------------------------
+   ### System: Tracks Weather conditions
+  ----------------------------------*/
+->DONE
 
-  === Section_TrackLocations ===
+LIST Weather = ClearSkies, LightClouds, ThickClouds, (LightRain), HeavyRain, Thunderstorm
+
+=== function ChangeWeather() ===
+~Print(Weather)
+~ temp current = LIST_VALUE(Weather)
+//~Print(current)
+~ temp 3StepCutOff = 20 // chance to move 3 steps
+~ temp 2StepCutOff = 50 // chance to move at least 2 steps
+~ temp 1StepCutOff = 70 // chance to move at least 1 step
+
+~ temp check = D100() // generate number
+
+~ temp change = 0
+{ 
+- check>=101-3StepCutOff: //is roll high enough for 3rd cutoff?
+    ~ change = 3
+- check>=101-2StepCutOff: //is roll high enough for 2nd cutoff?
+    ~ change = 2
+- check>=101-1StepCutOff: //is roll high enough for 1st cutoff?
+    ~ change = 1
+}
+
+{
+-RANDOM(0,1) == 0: // flip a coin, if heads...
+    ~change = change *-1 // change direction of change
+}
+
+
+~Print(change + " steps!")
+
+~ temp potentialNew = current + change 
+// check if within range, else clamp
+{
+- potentialNew < 0:
+    ~Print("too low- capping at 0")
+    ~Weather = LIST_MIN(LIST_ALL(Weather))
+- potentialNew > LIST_COUNT(LIST_ALL(Weather)):
+    ~Print("too high- capping at max")
+    ~Weather = LIST_MAX(LIST_ALL(Weather))
+- else:
+    ~Weather += change
+}
+
+
+~Print(Weather)
+
+
+
+
+=== Section_TrackLocations ===
   /* ---------------------------------
    ### System: Tracks Locations Player visited
   ----------------------------------*/
   -> DONE
   // Tracking the players previous, current, and intended location, for use in backtraveling, intermitting random encounters, and more.
 
-LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath // Vugs may add items to this list.
+LIST Locations = LOC_EdanCastle, LOC_RoadToEdanCastle, LOC_EdinburghCrossroads, LOC_DreamState, LOC_ScotlandEntranceRoad, LOC_EdinburghCastleEntrance, LOC_EdanCastleEntrance, LOC_EdanCastleGatehouse, LOC_SampleCave, LOC_OnTheRoad, LOC_RuinedCoast, LOC_SeaBreezePath, LOC_EdanCastlePrison // Vugs may add items to this list.
 
 ~ Locations = LIST_ALL(Locations)  
     
@@ -187,31 +355,31 @@ VAR RollRandomEvents = true // wether or not to roll for random events during tr
 
 VAR SucceededRandomEvent = false // boolean to check after travel event
 
-VAR LowRationsLimit = 9 // amount of rations that causes party to complain if you go under it.
+VAR LowRationsLimit = 3 // amount of rations that causes party to complain if you go under it.
 
 
 === InsertComplaint === // the complaint scene to insert on low rations
-You {LIST_COUNT(Party)>1:and your party} are growing {|ever more }hungry.
-->->
+    You {LIST_COUNT(Party)>1:and your party} are growing {|ever more } wary of the low amount of remaining rations.
+    ->->
 
 === Starvation ===
-You need food to survive idiot.
--> Death
+    You look at the meager rations still laft in your packs.
+    // TODO: incldue fail forward here
+    // if you do have a non-0 amount of rations left, you can divvy them out. everyone who did not get a portion grows more hungry. and then as some point they should just die or go of by themselves i guess?
+    ->->
 
 === TravelingTo(targetLocation, ->targetScene) === // used for traveling from a to b. instead of immediately warping, there will be some animation, chance for encounter, use of rations, etc.
 ~ TargetLocation = targetLocation
 ~ temp OriginLocation = CurrentLocation
 ~ SetLocation(LOC_OnTheRoad)
 {
-- TravelRations == 0: // check if rations left
-    -> Starvation
-- TravelRations < LowRationsLimit: // check if low on rations
-    ~ TravelRations-- // eat the rations
-    -> InsertComplaint
-- else:
-    ~ TravelRations-- // eat the rations
-    You eat yummy rations.
+- TravelRations < LIST_COUNT(Party): // if not enough rations left to feed everyone
+    -> Starvation -> //grow more hungry
+- TravelRations < LowRationsLimit * LIST_COUNT(Party): // check if low on rations
+    -> InsertComplaint -> // grow more wary
 } 
+    ~ TravelRations-=1*LIST_COUNT(Party)  // each party member eats some rations
+    You {LIST_COUNT(Party)>1:all }eat rations.
 
 ~ temp Encounter = false // default to false
 
@@ -305,15 +473,9 @@ EXTERNAL _OpenMap()
   -> DONE
   // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey // existing items // Vugs may add items to this list.
+LIST Items = Knife, Pot, Rope, Lantern, Torch, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
-
-LIST Affordances = weapon, tool, cooking, cutting, stabbing, food // Vugs may add items to this list.
-
-~ Affordances = LIST_ALL(Affordances) // Full list for Unity syncing. Note Bas: I should maybe prefix with underscore 
-
-// NOTE BAS: Wait, why do I do that? Check this later. Volgens mij moet ik helemaal niet hier "List all" moeten gebruiken, dat kan ook gewoon vanuit code in unity... En de lijst is hier al gewoon gedefineerd als zo'n lijst.
 
 // rations and money are currently not in inventory sytem:
 VAR TravelRations = 107
@@ -327,8 +489,8 @@ VAR Inventory = () // list of items the player has.
 === function Item_Add(item) // Add item to inventory.
     ~ Inventory += item
 
-=== function ItemChoice(itemOrAffordance) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal). 
-\{ItemChoice({itemOrAffordance})\}
+=== function ItemChoice(itemOrAffordances) // include an ink choice which can only be taken by using an item from the inventory (in unity. in ink, it'll show as normal). 
+\{ItemChoice({itemOrAffordances})\} 
 
 VAR UsedItem = () // container for unity to tell ink what item it just used
 ~ UsedItem = Items()

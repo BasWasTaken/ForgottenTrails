@@ -1,5 +1,6 @@
 using Ink.Runtime;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VVGames.ForgottenTrails.InkConnections;
 using VVGames.ForgottenTrails.InkConnections.Items;
@@ -13,7 +14,7 @@ namespace VVGames.ForgottenTrails.UI
     {
         #region Fields
 
-        public Book book;
+        public SupplementalPage Supplemental;
 
         [Header("Prefab")]
         [SerializeField]
@@ -25,11 +26,32 @@ namespace VVGames.ForgottenTrails.UI
 
         #region Public Methods
 
+        public void Init()
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
+        }
+
         // note: zou dit problemen gevven met dat items in unity verwijderd  worden en de inventroy vervvolgens weer rechtgetrokken wordt naar hoe ie in ink is?
         // eigenlijk zou deze functionaliteit in ink moeten zitten, niet?
         // oh wacht dat is het ook, dit adden en removen gaat vgm puur om de knopjes.
         public void FetchItems(InkList inkInventory)
         {
+            foreach (ItemContainer itemContainer in GetComponentsInChildren<ItemContainer>())
+            {
+                if (!UnityInventory.Values.Contains(itemContainer))
+                {
+                    //why was this item not removed? remove it anyway now. (or should it be added to inventory?)
+                    Destroy(itemContainer.gameObject);
+                    Debug.LogWarning("Found item in children that is not in listed inventory. Removed item.");
+                }
+                else
+                {
+                }
+            }
+
             List<InkListItem> dummy = new();
             dummy.AddRange(UnityInventory.Keys);
             //Debug.Log("Populating inventory");
@@ -37,7 +59,7 @@ namespace VVGames.ForgottenTrails.UI
             {
                 if (!inkInventory.ContainsKey(item))
                 {
-                    RemoveItem(item);
+                    TryRemoveItem(item);
                 }
             }
 
@@ -73,16 +95,18 @@ namespace VVGames.ForgottenTrails.UI
             }
         }
 
-        public void RemoveItem(InkListItem item)
+        public bool TryRemoveItem(InkListItem item)
         {
             if (UnityInventory.TryGetValue(item, out ItemContainer value))
             {
                 UnityInventory.Remove(item);
                 Destroy(value.gameObject);
+                return true;
             }
             else
             {
-                Debug.LogError(string.Format("Item \"{0}\" not found in inventory!", item.itemName));
+                //Debug.LogError(string.Format("Item \"{0}\" not found in inventory!", item.itemName));
+                return false;
             }
         }
 

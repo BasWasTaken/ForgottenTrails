@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://bd014yjde4fqw"
+path="res://.godot/imported/textEffects.ink-cc1093cf8789f3c3cb89c5c36336e8ca.res"
+
+[deps]
+
+source_file="res://Ink/system/presentation/textEffects.ink"
+dest_files=["res://.godot/imported/textEffects.ink-cc1093cf8789f3c3cb89c5c36336e8ca.res"]
+
+[params]
+
+is_main_file=false
+compress=true

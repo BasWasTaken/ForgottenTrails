@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://fn5lndny7t6l"
+path="res://.godot/imported/Fishing.ink-d1e7266f0ffdcb1ff42e28fd0b9dafb7.res"
+
+[deps]
+
+source_file="res://Ink/system/modules/Fishing.ink"
+dest_files=["res://.godot/imported/Fishing.ink-d1e7266f0ffdcb1ff42e28fd0b9dafb7.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -15,6 +15,10 @@ run/main_scene="res://main_gameplay_scene.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://art/ForgottenTrailsTitle_IMG.png"
 
+[autoload]
+
+Settings="*res://settings/settings.gd"
+
 [dotnet]
 
 project/assembly_name="ForgottenTrails"

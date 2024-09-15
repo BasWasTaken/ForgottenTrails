@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://UI/scene_player.tscn" id="1_atfhu"]
 [ext_resource type="PackedScene" uid="uid://bx7wv3dyc1kjw" path="res://UI/inventory.tscn" id="2_c8w7c"]
-[ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://settings/settings.tscn" id="3_qyxre"]
+[ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://settings/settings_screen.tscn" id="3_qyxre"]
 
 [node name="MainGameplayScene" type="Control"]
 layout_mode = 3

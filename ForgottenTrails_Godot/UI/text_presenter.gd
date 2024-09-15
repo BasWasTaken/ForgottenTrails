@@ -1,17 +1,13 @@
 extends RichTextLabel
 
-const _box_opacity_default:float = 0.5# TODO: move to settings file
-@export var _box_opacity:float = _box_opacity_default # TODO: move to settings file
-var box_opacity = _box_opacity
-
-
 @onready var box:TextureRect= get_node("TextPresenterBackground")
 
-const _typing_delay_base_default:float = 0.01# TODO: move to settings file
-@export var _typing_delay_base = 0.01 # TODO: move to settings file
-var typing_delay_base = _typing_delay_base
-#TODO: make signal for changed settings, and update
-
+var box_opacity:
+	get:
+		return Settings._box_opacity
+var typing_delay_base:
+	get:
+		return Settings._typing_delay_base
 
 var typing_speed_modifier = 1
 
@@ -27,13 +23,14 @@ signal finished_typing
 var typing: bool = false
 
 func _ready():
-	present_story("Press Continue To Start the Story.")
+	Settings.settings_changed.connect(_apply_settings())
 	_apply_settings()
+	present_story("Press Continue To Start the Story.")
 
 func _apply_settings():
-	box_opacity = clamp(_box_opacity, 0, 1)
+	box_opacity = clamp(Settings._box_opacity, 0, 1)
 	box.modulate.a=box_opacity
-	typing_delay_base = clamp(_typing_delay_base, 0, 999999999)
+	typing_delay_base = clamp(Settings._typing_delay_base, 0, 999999999)
 
 func present_console_message(content: String, warning: bool = false) -> void:
 	if warning:

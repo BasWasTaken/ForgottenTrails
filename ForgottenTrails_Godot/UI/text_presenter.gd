@@ -23,7 +23,7 @@ signal finished_typing
 var typing: bool = false
 
 func _ready():
-	Settings.settings_changed.connect(_apply_settings())
+	Settings.settings_changed.connect(_apply_settings)
 	_apply_settings()
 	present_story("Press Continue To Start the Story.")
 

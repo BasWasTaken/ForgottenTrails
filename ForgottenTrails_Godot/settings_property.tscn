@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwjoo1lwuwf5j"]
+
+[ext_resource type="Script" path="res://settings/settings_item.gd" id="1_xk83h"]
+
+[node name="Setting Property" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
+script = ExtResource("1_xk83h")
+reset_button = NodePath("H/Reset")
+revert_button = NodePath("H/Revert")
+apply_button = NodePath("H/Apply")
+
+[node name="H" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="H"]
+layout_mode = 2
+text = "Label:"
+
+[node name="Reset" type="Button" parent="H"]
+visible = false
+layout_mode = 2
+text = "Reset"
+
+[node name="Revert" type="Button" parent="H"]
+visible = false
+layout_mode = 2
+text = "Revert"
+
+[node name="Apply" type="Button" parent="H"]
+visible = false
+layout_mode = 2
+text = "Apply"
+
+[node name="Value Slider" type="HSlider" parent="."]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[connection signal="changed" from="Value Slider" to="Value Slider" method="_on_changed"]
+[connection signal="value_changed" from="Value Slider" to="Value Slider" method="_on_value_changed"]

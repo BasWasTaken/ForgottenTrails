@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dkr7obwclut2x"]
+[gd_scene load_steps=4 format=3 uid="uid://dkr7obwclut2x"]
 
 [ext_resource type="Script" path="res://settings/settings.gd" id="1_j51ml"]
-[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://settings_property.tscn" id="2_h2cb7"]
+[ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://settings/setting_with_slider.tscn" id="2_h2cb7"]
+[ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://settings/setting_with_enum.tscn" id="2_kkcbu"]
 
 [node name="Settings Screen" type="Control" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button", "close_button")]
 layout_mode = 3
@@ -32,17 +33,28 @@ current_tab = 0
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Opacity Setting" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_h2cb7")]
+[node name="Speed" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_kkcbu")]
 layout_mode = 2
+setting_reference = 3
 
-[node name="Label" parent="Settings Tabs/Gameplay Settings/Opacity Setting/H" index="0"]
-text = "Opacity: "
+[node name="Label" parent="Settings Tabs/Gameplay Settings/Speed/H" index="0"]
+text = "Speed:"
 
-[node name="Speed Setting" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_h2cb7")]
+[node name="Value Input" parent="Settings Tabs/Gameplay Settings/Speed" index="1"]
+item_count = 3
+popup/item_0/text = "Low"
+popup/item_0/id = 1
+popup/item_1/text = "Mid"
+popup/item_1/id = 50
+popup/item_2/text = "High"
+popup/item_2/id = 100
+
+[node name="Opacity" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_h2cb7")]
 layout_mode = 2
+setting_reference = 2
 
-[node name="Label" parent="Settings Tabs/Gameplay Settings/Speed Setting/H" index="0"]
-text = "Speed: "
+[node name="Label" parent="Settings Tabs/Gameplay Settings/Opacity/H" index="0"]
+text = "Opacity:"
 
 [node name="Audio" type="VBoxContainer" parent="Settings Tabs"]
 visible = false
@@ -82,5 +94,5 @@ text = "Close Window"
 
 [connection signal="focus_entered" from="." to="." method="_get_values"]
 
-[editable path="Settings Tabs/Gameplay Settings/Opacity Setting"]
-[editable path="Settings Tabs/Gameplay Settings/Speed Setting"]
+[editable path="Settings Tabs/Gameplay Settings/Speed"]
+[editable path="Settings Tabs/Gameplay Settings/Opacity"]

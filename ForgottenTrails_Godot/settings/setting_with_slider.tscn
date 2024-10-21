@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbtdbb1r7ikd0"]
+
+[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://settings/setting.tscn" id="1_k4i4f"]
+
+[node name="Setting with Slider" instance=ExtResource("1_k4i4f")]
+
+[node name="Value Input" type="HSlider" parent="." index="1"]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[connection signal="changed" from="Value Input" to="Value Input" method="_on_changed"]
+[connection signal="value_changed" from="Value Input" to="Value Input" method="_on_value_changed"]

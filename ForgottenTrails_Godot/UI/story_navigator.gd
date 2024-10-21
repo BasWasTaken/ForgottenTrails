@@ -11,7 +11,8 @@ signal skip
 var selectedChoice = -1
 
 func _ready():
-	Settings.apply()
+	#Settings.apply()
+	pass
 
 func _process(_delta):
 	# manually start the story (because it cannot do so automatically yet)

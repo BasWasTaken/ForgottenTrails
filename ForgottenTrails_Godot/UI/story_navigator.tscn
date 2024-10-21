@@ -49,7 +49,7 @@ script = ExtResource("2_7kog2")
 timer = NodePath("Timer")
 
 [node name="Timer" type="Timer" parent="TextPresenter"]
-wait_time = 0.1
+wait_time = 0.002
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TextPresenter"]
 stream = ExtResource("7_dquh2")

@@ -8,7 +8,10 @@ var typing_speed_modifier = 1
 
 var typing_delay: float:
 	get:
-		var speed = clamp(Settings.typing_speed as float, 0, 999999999) * typing_speed_modifier
+		#print(Settings.setting_items[Settings.Keys.speed].default_value)
+		#print(Settings.setting_items[Settings.Keys.speed].saved_value)
+		var speed = Settings.setting_items[Settings.Keys.speed].saved_value
+		speed *= typing_speed_modifier
 		var delay = 1/speed
 		return delay
 

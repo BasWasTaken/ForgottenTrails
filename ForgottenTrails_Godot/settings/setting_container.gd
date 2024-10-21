@@ -1,23 +1,25 @@
 extends Control
+# this scripts acts as a broker between the Slider object and the Settings script
 
-#TODO: should this be an interface with a generic type parameter?
+@export var setting_reference:Settings.Keys
 
-@onready var slider:Slider = get_node("Value Slider")  #TODO: make this more generic than only applying to sliders?
+@onready var input:Control = get_node("Value Input")
 
-
-
-const default_value:float = 0.5
-@onready var saved_value:float = default_value
+var default_value:
+	get:
+		return Settings.setting_items[setting_reference].default_value
+var saved_value:
+	get:
+		return Settings.setting_items[setting_reference].saved_value
 var slider_value:
 	get:
-		return slider.value 
+		return input.value
 
 var change_pending: bool:
 	get:
 		return saved_value!=slider_value
 		#return slider.is_node_ready() && saved_value!=slider_value
 
-#TODO do this not on ready but when the settings screen is opened?
 @export var reset_button:Button# = get_node("H/Reset")
 func reset():
 	slider_value=default_value
@@ -47,4 +49,4 @@ func _on_value_changed(new_value):
 		apply_button.hide()
 		
 
-signal setting_changed(slider_value)
+signal setting_changed(slider_value) #TODO Room to add behaviour to see the new bheaviour from the changes, such as redrawing boxes with new opcaity

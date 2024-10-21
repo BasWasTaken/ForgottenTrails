@@ -93,6 +93,8 @@ text = "Close Window"
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 
 [connection signal="focus_entered" from="." to="." method="_get_values"]
+[connection signal="change_applied" from="Settings Tabs/Gameplay Settings/Speed" to="Settings Tabs/Gameplay Settings/Speed" method="_on_change_applied"]
+[connection signal="change_applied" from="Settings Tabs/Gameplay Settings/Opacity" to="Settings Tabs/Gameplay Settings/Opacity" method="_on_change_applied"]
 
 [editable path="Settings Tabs/Gameplay Settings/Speed"]
 [editable path="Settings Tabs/Gameplay Settings/Opacity"]

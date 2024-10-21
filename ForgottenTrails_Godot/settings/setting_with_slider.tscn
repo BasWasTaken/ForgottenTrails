@@ -9,5 +9,5 @@ layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[connection signal="changed" from="Value Input" to="Value Input" method="_on_changed"]
-[connection signal="value_changed" from="Value Input" to="Value Input" method="_on_value_changed"]
+[connection signal="changed" from="Value Input" to="." method="_check_input"]
+[connection signal="value_changed" from="Value Input" to="." method="check_input"]

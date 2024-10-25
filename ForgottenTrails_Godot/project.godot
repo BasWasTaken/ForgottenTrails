@@ -17,7 +17,7 @@ config/icon="res://art/ForgottenTrailsTitle_IMG.png"
 
 [autoload]
 
-Settings="*res://settings/settings.gd"
+UserSettings="*res://settings/settings_values.gd"
 
 [dotnet]
 

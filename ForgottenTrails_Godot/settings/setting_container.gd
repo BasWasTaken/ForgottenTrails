@@ -1,21 +1,22 @@
 extends Control
 # this scripts acts as a broker between the Slider object and the Settings script
 
-@export var setting_reference:Settings.Keys
+@export var setting_reference:UserSettings.Keys
 
 @onready var input:Control = get_node("Value Input")
 
+
 var values:
 	get:
-		return Settings.setting_items[setting_reference]
+		return UserSettings.setting_items[setting_reference]
 var default_value:
 	get:
-		return Settings.setting_items[setting_reference].default_value
+		return UserSettings.setting_items[setting_reference].default_value
 var saved_value:
 	get:
-		return Settings.setting_items[setting_reference].saved_value
+		return UserSettings.setting_items[setting_reference].saved_value
 	set(value):
-		Settings.setting_items[setting_reference].saved_value = value
+		UserSettings.setting_items[setting_reference].saved_value = value
 
 var input_value:
 	get:
@@ -38,42 +39,42 @@ var change_pending: bool:
 @export var reset_button:Button# = get_node("H/Reset")
 func reset():
 	input_value=default_value
+	check_buttons()
 
 @export var revert_button:Button# = get_node("H/Revert")
 func revert():
 	input_value=saved_value
+	check_buttons()
 
 @export var apply_button:Button# = get_node("H/Apply")
 func apply():
-	log(input_value)
 	saved_value=input_value
-	change_applied.emit(input_value)
+	change_applied.emit()
 	check_buttons()
 
+signal checked_buttons()
+
 func check_buttons():
-	print(saved_value)
-	print(input_value)
-	if saved_value != input_value:
+	if input_value != saved_value:
 		revert_button.show()
 		apply_button.show()
 	else:
 		revert_button.hide()
 		apply_button.hide()
-	if saved_value != default_value:
+	if input_value != default_value:
 		reset_button.show()
 	else:
 		reset_button.hide()
-
-func _check_input():
-	check_input(input_value)
+	checked_buttons.emit()
 
 func check_input(new_value):
 	check_buttons()
 
-signal change_applied(slider_value) 
+signal change_applied() 
 
 func _on_change_applied():
 	#TODO Room to add behaviour to see the new bheaviour from the changes, such as redrawing boxes with new opcaity
+	#e.g. draw the box. but how to set  function o nan instance without setting it here?
 	pass
 
 

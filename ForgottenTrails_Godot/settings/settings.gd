@@ -48,6 +48,7 @@ var change_pending: bool:
 			#if setting.change_pending:
 				#return true;
 		#return false
+		print(changes_pending)
 		return changes_pending.size() >0
 
 func check_buttons(): #TODO  have to figure out how to only do this when settings scene is active

@@ -29,3 +29,7 @@ text = "Revert"
 visible = false
 layout_mode = 2
 text = "Apply"
+
+[connection signal="pressed" from="H/Reset" to="." method="reset"]
+[connection signal="pressed" from="H/Revert" to="." method="revert"]
+[connection signal="pressed" from="H/Apply" to="." method="apply"]

@@ -6,3 +6,5 @@
 
 [node name="Value Input" type="OptionButton" parent="." index="1"]
 layout_mode = 2
+
+[connection signal="item_selected" from="Value Input" to="." method="check_input"]

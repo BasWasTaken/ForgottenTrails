@@ -7,6 +7,9 @@ class_name setting_container
 @onready var input:Control = get_node("Value Input")
 
 
+func _ready():
+	init()
+
 var values:
 	get:
 		return UserSettings.setting_items[setting_reference]
@@ -79,7 +82,8 @@ func _on_change_applied():
 	pass
 
 
-func _ready():
+
+func init():
 	input_value = saved_value
 	if input is Range:
 		input.min_value = values.min_value

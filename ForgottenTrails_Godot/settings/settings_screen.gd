@@ -1,4 +1,4 @@
-extends Control
+extends Screen
 
 
 # UI Objects in Scene
@@ -7,14 +7,7 @@ extends Control
 @export var apply_button:Button#=$"Global Buttons/Apply All Button" #confirm, save and apply changes
 @export var close_button:Button#=$"Global Buttons/Close Button"
 
-func _ready():
-	for child in settings_all:
-		child.checked_buttons.connect(check_buttons)
-	pass
-	check_buttons()
-
-
-var settings_all:
+var settings_all:# setting_container:
 	get:
 		print("getting children")
 		var list = []
@@ -36,14 +29,67 @@ func get_all_children(node) -> Array:
 		else:
 			nodes.append(N)
 	return nodes
-	
+
 var changes_are_pending: bool:
 	get:
+		if !is_visible_in_tree():
+			return false
 		var changes_pending = []
 		for setting in settings_all:
 			if setting.change_pending:
 				changes_pending.append(setting)
 		return changes_pending.size() >0
+
+func _ready():
+	_init()
+	#_on_open_or_close() #is probably already called by itself..?
+
+func _process(delta):
+	open_or_close()
+
+func _init():
+	for child in settings_all:
+		#child.ready.connect(child.init)
+		child.checked_buttons.connect(check_buttons)
+
+func _on_open_or_close(): #on visibility changed
+	if is_visible_in_tree():
+		_on_open()
+	else:
+		_on_close()
+
+func _on_open():
+	for child in settings_all:
+		child.init()
+	#check_buttons()
+
+func _on_close():
+	if(changes_are_pending):
+		revert()
+
+
+func open_or_close():
+	if Input.is_action_just_pressed("menu"):
+		if is_visible_in_tree():
+			close_try()
+		else: 
+			open()
+
+func open():
+	_on_open()
+	show()
+
+func close_try():
+	if not changes_are_pending:
+		close_confirm()
+	else:
+		#TODO prompt first
+		close_confirm()
+
+func close_confirm():
+	_on_close()
+	hide()
+
 
 func check_buttons(): 
 	if changes_are_pending:
@@ -52,12 +98,10 @@ func check_buttons():
 		apply_button.disabled = false
 		close_button.disabled = true
 	else:
-		reset_button.disabled = true
+		reset_button.disabled = false
 		revert_button.disabled = true
 		apply_button.disabled = true
 		close_button.disabled = false
-
-
 
 func reset():
 	for setting in settings_all:

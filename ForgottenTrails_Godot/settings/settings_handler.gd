@@ -9,8 +9,9 @@ extends Control
 
 func _ready():
 	for child in settings_all:
-		child.checked_buttons.connect(check_buttons())
+		child.checked_buttons.connect(check_buttons)
 	pass
+	check_buttons()
 
 
 var settings_all:
@@ -19,9 +20,9 @@ var settings_all:
 		var list = []
 		for child in get_all_children(self):
 			print(child)
-			if child.get_script()==typeof("setting_container"): #AAAARGH
+			if child is setting_container: 
 				print(child)
-				list+=child
+				list.append(child)
 		return list
 
 func get_all_children(node) -> Array:
@@ -41,12 +42,12 @@ var changes_are_pending: bool:
 		var changes_pending = []
 		for setting in settings_all:
 			if setting.change_pending:
-				changes_pending+=setting
+				changes_pending.append(setting)
 		return changes_pending.size() >0
 
 func check_buttons(): 
 	if changes_are_pending:
-		reset_button.disabled = false
+		reset_button.disabled = false #could also be hidden and shown. same effect, different representation
 		revert_button.disabled = false
 		apply_button.disabled = false
 		close_button.disabled = true

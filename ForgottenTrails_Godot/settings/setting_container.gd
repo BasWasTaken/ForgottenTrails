@@ -1,4 +1,5 @@
 extends Control
+class_name setting_container
 # this scripts acts as a broker between the Slider object and the Settings script
 
 @export var setting_reference:UserSettings.Keys

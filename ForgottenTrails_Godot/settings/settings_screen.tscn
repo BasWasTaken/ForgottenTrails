@@ -72,17 +72,14 @@ grow_horizontal = 2
 grow_vertical = 0
 
 [node name="Reset All Button" type="Button" parent="Global Buttons"]
-visible = false
 layout_mode = 2
 text = "Reset All Changes"
 
 [node name="Revert All Button" type="Button" parent="Global Buttons"]
-visible = false
 layout_mode = 2
 text = "Revert All Changes"
 
 [node name="Apply All Button" type="Button" parent="Global Buttons"]
-visible = false
 layout_mode = 2
 text = "Apply All Changes"
 

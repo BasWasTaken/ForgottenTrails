@@ -23,7 +23,14 @@ signal finished_typing
 var typing: bool = false
 
 func _ready():
+	init()
 	present_story("Press Continue To Start the Story.")
+
+func init():
+	var scaled = UserSettings.setting_items[UserSettings.Keys.opacity].saved_value * 255
+	print(scaled)
+	var bg = get_node("TextPresenterBackground")
+	bg.self_modulate=Color8(0,0,0,scaled as int)
 
 
 func present_console_message(content: String, warning: bool = false) -> void:
@@ -78,3 +85,7 @@ func finish_text():
 
 func _spd(new):
 	typing_speed_modifier = new
+
+
+func _on_opacity_change_applied():
+	init()

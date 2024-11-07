@@ -11,7 +11,6 @@ signal skip
 var selectedChoice = -1
 
 func _ready():
-	#Settings.apply()
 	pass
 
 func _process(_delta):

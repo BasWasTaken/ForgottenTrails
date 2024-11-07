@@ -59,7 +59,6 @@ max_polyphony = 99
 bus = &"System"
 
 [node name="TextPresenterBackground" type="TextureRect" parent="TextPresenter"]
-modulate = Color(0, 0, 0, 0.94902)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15

@@ -76,9 +76,10 @@ func check_input(new_value):
 
 signal change_applied() 
 
+#@export var subject: Node # the object affected by this setting, if any- to be redrawn after a change
+
 func _on_change_applied():
-	#TODO Room to add behaviour to see the new bheaviour from the changes, such as redrawing boxes with new opcaity
-	#e.g. draw the box. but how to set  function o nan instance without setting it here?
+	#subject.init()
 	pass
 
 

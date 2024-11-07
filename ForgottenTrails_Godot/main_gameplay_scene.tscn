@@ -36,3 +36,11 @@ metadata/_tab_index = 1
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
+
+[connection signal="change_applied" from="TabContainer/Settings Screen/Settings Tabs/Gameplay Settings/Opacity" to="TabContainer/Story/StoryNavigator/TextPresenter" method="_on_opacity_change_applied"]
+
+[editable path="TabContainer/Settings Screen"]
+[editable path="TabContainer/Settings Screen/Settings Tabs/Gameplay Settings/Speed"]
+[editable path="TabContainer/Settings Screen/Settings Tabs/Gameplay Settings/Opacity"]
+[editable path="TabContainer/Story"]
+[editable path="TabContainer/Story/StoryNavigator"]

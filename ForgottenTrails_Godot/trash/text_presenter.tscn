@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://vo6a44bv2isv"]
+
+[ext_resource type="Script" path="res://game/story_navigation/text_presenter/RTE_matrix.gd" id="1_1bi7q"]
+[ext_resource type="Script" path="res://game/story_navigation/text_presenter/RTE_ghost.gd" id="2_n0bgw"]
+[ext_resource type="Script" path="res://game/story_navigation/text_presenter/text_presenter.gd" id="3_4yn35"]
+[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://game/story_navigation/text_presenter/typesound_physical.wav" id="4_5pukd"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_eaa6r"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
+script = ExtResource("1_1bi7q")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_4ph1k"]
+script = ExtResource("2_n0bgw")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextPresenterBackground" type="TextureRect" parent="."]
+self_modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_eaa6r")
+
+[node name="TextPresenter" type="RichTextLabel" parent="." node_paths=PackedStringArray("timer")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost]
+[matrix]onzin[/matrix]"
+custom_effects = [SubResource("RichTextEffect_y4d4d"), SubResource("RichTextEffect_4ph1k")]
+script = ExtResource("3_4yn35")
+timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="TextPresenter"]
+wait_time = 0.002
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TextPresenter"]
+stream = ExtResource("4_5pukd")
+volume_db = -30.0
+pitch_scale = 1.2
+max_polyphony = 99
+bus = &"System"
+
+[connection signal="timeout" from="TextPresenter/Timer" to="TextPresenter" method="_on_timer_timeout"]

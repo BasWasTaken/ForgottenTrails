@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dhun7ptpos524"
+path="res://.godot/imported/Weather.ink-bd037889944df6dbddbea9aaa2c60eaf.res"
+
+[deps]
+
+source_file="res://game/ink_scripts/System/Track/Weather.ink"
+dest_files=["res://.godot/imported/Weather.ink-bd037889944df6dbddbea9aaa2c60eaf.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwjoo1lwuwf5j"]
+
+[ext_resource type="Script" path="res://game/game_settings/setting_container.gd" id="1_i6yl5"]
+
+[node name="Setting" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
+script = ExtResource("1_i6yl5")
+reset_button = NodePath("H/Reset")
+revert_button = NodePath("H/Revert")
+apply_button = NodePath("H/Apply")
+
+[node name="H" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="H"]
+layout_mode = 2
+text = "Label:"
+
+[node name="Reset" type="Button" parent="H"]
+visible = false
+layout_mode = 2
+text = "Reset"
+
+[node name="Revert" type="Button" parent="H"]
+visible = false
+layout_mode = 2
+text = "Revert"
+
+[node name="Apply" type="Button" parent="H"]
+visible = false
+layout_mode = 2
+text = "Apply"
+
+[connection signal="pressed" from="H/Reset" to="." method="reset"]
+[connection signal="pressed" from="H/Revert" to="." method="revert"]
+[connection signal="pressed" from="H/Apply" to="." method="apply"]

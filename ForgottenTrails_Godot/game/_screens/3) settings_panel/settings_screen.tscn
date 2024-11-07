@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkr7obwclut2x"]
+
+[ext_resource type="Script" path="res://game/game_settings/settings_changer.gd" id="1_j51ml"]
+[ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://game/game_settings/setting_with_slider.tscn" id="2_h2cb7"]
+[ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://game/game_settings/setting_with_enum.tscn" id="2_kkcbu"]
+
+
+[node name="Settings Screen" type="Control" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button", "close_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_j51ml")
+reset_button = NodePath("Global Buttons/Reset All Button")
+revert_button = NodePath("Global Buttons/Revert All Button")
+apply_button = NodePath("Global Buttons/Apply All Button")
+close_button = NodePath("Global Buttons/Close Button")
+
+[node name="Settings Tabs" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+
+[node name="Gameplay Settings" type="VBoxContainer" parent="Settings Tabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Speed" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_kkcbu")]
+layout_mode = 2
+setting_reference = 3
+
+[node name="Label" parent="Settings Tabs/Gameplay Settings/Speed/H" index="0"]
+text = "Speed:"
+
+[node name="Value Input" parent="Settings Tabs/Gameplay Settings/Speed" index="1"]
+item_count = 3
+popup/item_0/text = "Low"
+popup/item_0/id = 1
+popup/item_1/text = "Mid"
+popup/item_1/id = 50
+popup/item_2/text = "High"
+popup/item_2/id = 100
+
+[node name="Opacity" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+setting_reference = 2
+
+[node name="Label" parent="Settings Tabs/Gameplay Settings/Opacity/H" index="0"]
+text = "Opacity:"
+
+[node name="Reset" parent="Settings Tabs/Gameplay Settings/Opacity/H" index="1"]
+visible = true
+
+[node name="Audio" type="VBoxContainer" parent="Settings Tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Global Buttons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Reset All Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+disabled = true
+text = "Reset All Settings"
+
+[node name="Revert All Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+disabled = true
+text = "Revert All Changes"
+
+[node name="Apply All Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+disabled = true
+text = "Apply All Changes"
+
+[node name="Close Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+text = "Close Window"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+
+[connection signal="visibility_changed" from="." to="." method="_on_open_or_close"]
+[connection signal="change_applied" from="Settings Tabs/Gameplay Settings/Speed" to="Settings Tabs/Gameplay Settings/Speed" method="_on_change_applied"]
+[connection signal="change_applied" from="Settings Tabs/Gameplay Settings/Opacity" to="Settings Tabs/Gameplay Settings/Opacity" method="_on_change_applied"]
+[connection signal="pressed" from="Global Buttons/Reset All Button" to="." method="reset"]
+[connection signal="pressed" from="Global Buttons/Revert All Button" to="." method="revert"]
+[connection signal="pressed" from="Global Buttons/Apply All Button" to="." method="apply"]
+[connection signal="pressed" from="Global Buttons/Close Button" to="." method="close"]
+
+[editable path="Settings Tabs/Gameplay Settings/Speed"]
+[editable path="Settings Tabs/Gameplay Settings/Opacity"]

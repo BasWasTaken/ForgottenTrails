@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://riol868g4uvx"
+path="res://.godot/imported/Sprites.ink-3b491694490eaa0f55f6549d7dfbea46.res"
+
+[deps]
+
+source_file="res://game/ink_scripts/System/Presentation/Sprites.ink"
+dest_files=["res://.godot/imported/Sprites.ink-3b491694490eaa0f55f6549d7dfbea46.res"]
+
+[params]
+
+is_main_file=false
+compress=true

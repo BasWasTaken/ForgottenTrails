@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d2heo3o0s3ot3"]
+[gd_scene load_steps=14 format=3 uid="uid://cuxkafxwufk6x"]
 
 [ext_resource type="Script" path="res://UI/story_navigator.gd" id="1_n1hfe"]
 [ext_resource type="Script" path="res://UI/text_presenter.gd" id="2_7kog2"]
@@ -6,8 +6,8 @@
 [ext_resource type="Resource" uid="uid://c8bjy63qwe0r2" path="res://ink_scripts/_Tests.ink" id="3_8wbfs"]
 [ext_resource type="Script" path="res://UI/choices_presenter.gd" id="3_cgmjb"]
 [ext_resource type="Script" path="res://UI/typewriter_text.gd" id="4_1c2he"]
-[ext_resource type="PackedScene" uid="uid://b1bf6i2ls3ciu" path="res://UI/continue_button.tscn" id="4_6bwso"]
-[ext_resource type="PackedScene" uid="uid://cqcv01npgwq0e" path="res://UI/choice_button.tscn" id="4_axki0"]
+[ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://UI/continue_button.tscn" id="4_6bwso"]
+[ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://UI/choice_button.tscn" id="4_axki0"]
 [ext_resource type="Script" path="res://UI/matrix_text.gd" id="4_sspuv"]
 [ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://UI/380138__yottasounds__typewriter-single-key-type-1.wav" id="7_dquh2"]
 
@@ -49,7 +49,7 @@ script = ExtResource("2_7kog2")
 timer = NodePath("Timer")
 
 [node name="Timer" type="Timer" parent="TextPresenter"]
-wait_time = 0.1
+wait_time = 0.002
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TextPresenter"]
 stream = ExtResource("7_dquh2")
@@ -59,7 +59,6 @@ max_polyphony = 99
 bus = &"System"
 
 [node name="TextPresenterBackground" type="TextureRect" parent="TextPresenter"]
-modulate = Color(0, 0, 0, 0.94902)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15

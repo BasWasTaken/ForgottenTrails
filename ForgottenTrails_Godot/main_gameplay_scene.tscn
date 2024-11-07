@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c55mrjnq5r6xa"]
+[gd_scene load_steps=4 format=3 uid="uid://ga7ualj4ktmf"]
 
-[ext_resource type="PackedScene" uid="uid://bbfhrk54euwke" path="res://UI/scene_player.tscn" id="1_atfhu"]
-[ext_resource type="PackedScene" uid="uid://dgg5ai6gdyf0g" path="res://UI/inventory.tscn" id="2_c8w7c"]
+[ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://UI/scene_player.tscn" id="1_atfhu"]
+[ext_resource type="PackedScene" uid="uid://bx7wv3dyc1kjw" path="res://UI/inventory.tscn" id="2_c8w7c"]
+[ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://settings/settings_screen.tscn" id="3_qyxre"]
 
 [node name="MainGameplayScene" type="Control"]
 layout_mode = 3
@@ -18,13 +19,28 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 0
+current_tab = 1
+all_tabs_in_front = true
+use_hidden_tabs_for_min_size = true
 
-[node name="ScenePlayer" parent="TabContainer" instance=ExtResource("1_atfhu")]
+[node name="Settings Screen" parent="TabContainer" instance=ExtResource("3_qyxre")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="Story" parent="TabContainer" instance=ExtResource("1_atfhu")]
+layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="Inventory" parent="TabContainer" instance=ExtResource("2_c8w7c")]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 1
+metadata/_tab_index = 2
+
+[connection signal="change_applied" from="TabContainer/Settings Screen/Settings Tabs/Gameplay Settings/Opacity" to="TabContainer/Story/StoryNavigator/TextPresenter" method="_on_opacity_change_applied"]
+
+[editable path="TabContainer/Settings Screen"]
+[editable path="TabContainer/Settings Screen/Settings Tabs/Gameplay Settings/Speed"]
+[editable path="TabContainer/Settings Screen/Settings Tabs/Gameplay Settings/Opacity"]
+[editable path="TabContainer/Story"]
+[editable path="TabContainer/Story/StoryNavigator"]

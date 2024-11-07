@@ -10,6 +10,9 @@ signal skip
 
 var selectedChoice = -1
 
+func _ready():
+	pass
+
 func _process(_delta):
 	# manually start the story (because it cannot do so automatically yet)
 	var input_next = Input.is_action_just_pressed("select_next_choice")

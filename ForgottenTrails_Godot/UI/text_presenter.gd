@@ -1,23 +1,19 @@
 extends RichTextLabel
 
-const _box_opacity_default:float = 0.5# TODO: move to settings file
-@export var _box_opacity:float = _box_opacity_default # TODO: move to settings file
-var box_opacity = _box_opacity
-
-
 @onready var box:TextureRect= get_node("TextPresenterBackground")
 
-const _typing_delay_base_default:float = 0.01# TODO: move to settings file
-@export var _typing_delay_base = 0.01 # TODO: move to settings file
-var typing_delay_base = _typing_delay_base
-#TODO: make signal for changed settings, and update
 
 
 var typing_speed_modifier = 1
 
 var typing_delay: float:
 	get:
-		return typing_delay_base/typing_speed_modifier
+		#print(Settings.setting_items[Settings.Keys.speed].default_value)
+		#print(Settings.setting_items[Settings.Keys.speed].saved_value)
+		var speed = UserSettings.setting_items[UserSettings.Keys.speed].saved_value
+		speed *= typing_speed_modifier
+		var delay = 1/speed
+		return delay
 
 @export var timer: Timer  
 
@@ -27,13 +23,15 @@ signal finished_typing
 var typing: bool = false
 
 func _ready():
+	init()
 	present_story("Press Continue To Start the Story.")
-	_apply_settings()
 
-func _apply_settings():
-	box_opacity = clamp(_box_opacity, 0, 1)
-	box.modulate.a=box_opacity
-	typing_delay_base = clamp(_typing_delay_base, 0, 999999999)
+func init():
+	var scaled = UserSettings.setting_items[UserSettings.Keys.opacity].saved_value * 255
+	print(scaled)
+	var bg = get_node("TextPresenterBackground")
+	bg.self_modulate=Color8(0,0,0,scaled as int)
+
 
 func present_console_message(content: String, warning: bool = false) -> void:
 	if warning:
@@ -87,3 +85,7 @@ func finish_text():
 
 func _spd(new):
 	typing_speed_modifier = new
+
+
+func _on_opacity_change_applied():
+	init()

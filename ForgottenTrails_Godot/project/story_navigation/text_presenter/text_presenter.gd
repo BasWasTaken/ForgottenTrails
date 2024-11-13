@@ -1,7 +1,6 @@
 extends RichTextLabel
 
-@onready var box:TextureRect= get_node("TextPresenterBackground")
-
+@onready var box:ColorRect= get_parent()
 
 
 var typing_speed_modifier = 1
@@ -29,8 +28,7 @@ func _ready():
 func init():
 	var scaled = UserSettings.setting_items[UserSettings.Keys.opacity].saved_value * 255
 	print(scaled)
-	var bg = get_node("././TextPresenterPanel")
-	bg.self_modulate=Color8(0,0,0,scaled as int)
+	box.self_modulate=Color8(0,0,0,scaled as int)
 
 
 func present_console_message(content: String, warning: bool = false) -> void:

@@ -3,8 +3,8 @@ extends Node
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
 @onready var story_getter = get_node("StoryGetter")
-@onready var text_presenter = get_node("TextPresenter")
-@onready var choices_presenter = get_node("ChoicesPresenter")
+@onready var text_presenter = get_node("TextPresenterPanel/TextPresenter")
+@onready var choices_presenter = get_node("ChoicePresenter")
 
 signal skip
 

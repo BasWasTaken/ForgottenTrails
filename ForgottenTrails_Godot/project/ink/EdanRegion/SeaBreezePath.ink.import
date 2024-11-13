@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cxsnf6jjx42ry"
+path="res://.godot/imported/SeaBreezePath.ink-6ae6c1b61a6f75d30d19adbd8398736b.res"
+
+[deps]
+
+source_file="res://project/ink/EdanRegion/SeaBreezePath.ink"
+dest_files=["res://.godot/imported/SeaBreezePath.ink-6ae6c1b61a6f75d30d19adbd8398736b.res"]
+
+[params]
+
+is_main_file=false
+compress=true

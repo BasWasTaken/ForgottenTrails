@@ -11,17 +11,17 @@ config_version=5
 [application]
 
 config/name="ForgottenTrails"
-run/main_scene="res://game/_screens/1) main_menu/main_menu.tscn"
+run/main_scene="res://project/main_menu/main_menu_scene.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
-config/icon="res://game/main_menu/ForgottenTrailsTitle_IMG.png"
+config/icon="res://project/main_menu/ForgottenTrailsTitle_IMG.png"
 
 [audio]
 
-buses/default_bus_layout="res://game/_globals/default_bus_layout.tres"
+buses/default_bus_layout="res://project/_globals/default_bus_layout.tres"
 
 [autoload]
 
-UserSettings="*res://game/_globals/player_settings.gd"
+UserSettings="*res://project/_globals/player_settings.gd"
 
 [dotnet]
 
@@ -35,10 +35,18 @@ enabled=PackedStringArray("res://addons/GodotInk/plugin.cfg")
 
 folder_colors={
 "res://addons/": "gray",
-"res://game/_screens/": "red",
-"res://game/ink_scripts/": "blue",
-"res://game/story_navigation/": "teal",
-"res://trash/": "gray"
+"res://editor/": "gray",
+"res://project/": "purple",
+"res://project/_globals/": "teal",
+"res://project/game_settings/": "red",
+"res://project/ink/": "blue",
+"res://project/inventory/": "yellow",
+"res://project/main_menu/": "orange",
+"res://project/story_navigation/": "blue",
+"res://project/story_navigation/choice_presenter/": "blue",
+"res://project/story_navigation/text_presenter/": "blue",
+"res://trash/": "gray",
+"res://trash/_structure/": "red"
 }
 
 [input]

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ne7hxq7y2dar"]
+
+[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/game_settings/setting.tscn" id="1_oxik6"]
+
+[node name="Setting With Drowndown" instance=ExtResource("1_oxik6")]
+
+[node name="Value Input" type="OptionButton" parent="." index="1"]
+layout_mode = 2
+
+[connection signal="item_selected" from="Value Input" to="." method="check_input"]

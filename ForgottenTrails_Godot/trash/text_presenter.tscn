@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://vo6a44bv2isv"]
 
-[ext_resource type="Script" path="res://game/story_navigation/text_presenter/RTE_matrix.gd" id="1_1bi7q"]
-[ext_resource type="Script" path="res://game/story_navigation/text_presenter/RTE_ghost.gd" id="2_n0bgw"]
-[ext_resource type="Script" path="res://game/story_navigation/text_presenter/text_presenter.gd" id="3_4yn35"]
-[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://game/story_navigation/text_presenter/typesound_physical.wav" id="4_5pukd"]
+[ext_resource type="Script" path="res://project/story_navigation/text_presenter/RTE_matrix.gd" id="1_1bi7q"]
+[ext_resource type="Script" path="res://project/story_navigation/text_presenter/RTE_ghost.gd" id="2_n0bgw"]
+[ext_resource type="Script" path="res://project/story_navigation/text_presenter/text_presenter.gd" id="3_4yn35"]
+[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://project/story_navigation/text_presenter/typesound_physical.wav" id="4_5pukd"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_eaa6r"]
 

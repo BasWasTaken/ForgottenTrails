@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://c56qdobhh70ci"
+path="res://.godot/imported/Background.ink-efafdfca7a85c82f42d0d4a6e9dfdfac.res"
+
+[deps]
+
+source_file="res://project/ink/System/Presentation/Background.ink"
+dest_files=["res://.godot/imported/Background.ink-efafdfca7a85c82f42d0d4a6e9dfdfac.res"]
+
+[params]
+
+is_main_file=false
+compress=true

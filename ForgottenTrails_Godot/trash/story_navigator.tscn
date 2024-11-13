@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://cuxkafxwufk6x"]
 
-[ext_resource type="Script" path="res://game/story_navigation/story_navigator.gd" id="1_n1hfe"]
-[ext_resource type="Script" path="res://game/story_navigation/story_getter.cs" id="2_r357r"]
-[ext_resource type="Resource" uid="uid://c8bjy63qwe0r2" path="res://game/ink_scripts/_Tests.ink" id="3_8wbfs"]
+[ext_resource type="Script" path="res://project/story_navigation/story_navigator.gd" id="1_n1hfe"]
+[ext_resource type="Script" path="res://project/story_navigation/story_getter.cs" id="2_r357r"]
+[ext_resource type="Resource" uid="uid://c8bjy63qwe0r2" path="res://project/ink/_Tests.ink" id="3_8wbfs"]
 [ext_resource type="PackedScene" uid="uid://vo6a44bv2isv" path="res://trash/text_presenter.tscn" id="4_73oop"]
 [ext_resource type="PackedScene" uid="uid://d3sn8sehc3exp" path="res://trash/choices_presenter.tscn" id="5_wqcis"]
 

@@ -2,8 +2,7 @@ extends VBoxContainer
 
 @onready var continue_button_scene = preload("res://project/story_navigation/choice_presenter/continue_button.tscn")#$ContinueButton
 @onready var choice_button_scene = preload("res://project/story_navigation/choice_presenter/choice_button.tscn")#$ChoiceButton
-#@onready var story_navigator = get_node("../StoryNavigator")#TODO:fix this reference
-@export var story_navigator: Node
+@export var story_navigator:StoryNavigator# = get_node("StoryNavigator") #TODO fix onready for this
 @onready var text_presenter = get_node("../TextPresenterPanel/TextPresenter")
 
 func _ready():
@@ -22,7 +21,7 @@ func present_continue_button() -> void:
 	await text_presenter.finished_typing
 	var continue_button = continue_button_scene.instantiate() #create object
 	continue_button.pressed_continue.connect(story_navigator._on_continue_pressed) # link to continue signal
-	add_child(continue_button) #place in hierarchy #TODO: figure out why create a button here and link ir rather than keep the same one and activate / de-activate
+	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
 
 func present_choice(choice: InkChoice) -> void:
 	await text_presenter.finished_typing

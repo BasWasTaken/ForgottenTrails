@@ -1,4 +1,5 @@
 extends Node
+class_name StoryNavigator
 
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
@@ -32,18 +33,18 @@ func _process(_delta):
 		print("selected choice " + str(selectedChoice))
 
 func _on_continue_pressed():	
-	#print("story_navigator received request to continue, evaluating...");
+	print("story_navigator received request to continue, evaluating...");
 	if text_presenter.typing:
-		#print("Typer Busy. Skipping to end of Line.");
+		print("Typer Busy. Skipping to end of Line.");
 		skip.emit();
 	elif story_getter.story.CanContinue:
-		#print("validated. Continueing Story.");
+		print("validated. Continueing Story.");
 		_send_continue()
 	elif choices_presenter.get_child_count()>1:#if there are choice buttons
 		if selectedChoice == -1:
 			print("Select a Choice first");
 		else:
-			#print("validated. Fed selected choice.");
+			print("validated. Fed selected choice.");
 			_send_choice(selectedChoice)
 	else:
 		push_warning("Cannot Parse Continue");

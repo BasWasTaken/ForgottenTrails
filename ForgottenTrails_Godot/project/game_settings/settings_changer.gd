@@ -53,6 +53,7 @@ func _init():
 		child.checked_buttons.connect(check_buttons)
 
 func _on_open_or_close(): #on visibility changed
+	#TODO fix issue where tab menu opens the first child on startup
 	if is_visible_in_tree():
 		_on_open()
 	else:

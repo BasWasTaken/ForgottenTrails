@@ -34,8 +34,9 @@ public partial class story_getter : Node
 	{
 		if(story.CanContinue) // extra validation
 		{
-			//GD.Print("continueing story")
+			//GD.Print("continueing story");
 			string content = story.Continue();
+			//GD.Print(content);
 			content = content.Replace('<', '[').Replace('>', ']');
 			
 			EmitSignal(SignalName.continued_story, content);

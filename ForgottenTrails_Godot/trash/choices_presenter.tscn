@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://project/story_navigation/choice_presenter/choice_button.tscn" id="2_p3ghg"]
 [ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://project/story_navigation/choice_presenter/continue_button.tscn" id="3_xdosf"]
 
-[node name="ChoicesPresenter" type="VBoxContainer" node_paths=PackedStringArray("story_navigator")]
+[node name="ChoicesPresenter" type="VBoxContainer"]
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
@@ -14,7 +14,6 @@ grow_horizontal = 0
 grow_vertical = 2
 alignment = 2
 script = ExtResource("1_6wa77")
-story_navigator = NodePath("")
 
 [node name="ChoiceButton" parent="." instance=ExtResource("2_p3ghg")]
 layout_mode = 2

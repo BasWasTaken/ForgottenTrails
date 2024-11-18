@@ -31,17 +31,12 @@ all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
 deselect_enabled = true
 
-[node name="Settings Screen" parent="Menus" instance=ExtResource("2_fv7wo")]
-self_modulate = Color(0, 0, 0, 1)
+[node name="Inventory" parent="Menus" instance=ExtResource("3_wlwa0")]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Inventory" parent="Menus" instance=ExtResource("3_wlwa0")]
+[node name="Settings Screen" parent="Menus" instance=ExtResource("2_fv7wo")]
 visible = false
+self_modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 metadata/_tab_index = 1
-
-[editable path="InkPlayer"]
-[editable path="Menus/Settings Screen"]
-[editable path="Menus/Settings Screen/Settings Tabs/Gameplay Settings/Speed"]
-[editable path="Menus/Settings Screen/Settings Tabs/Gameplay Settings/Opacity"]

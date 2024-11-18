@@ -1,6 +1,6 @@
 extends Node
 
-var scene = preload("res://main_gameplay_scene.tscn")
+var scene = preload("res://project/main_gameplay_scene.tscn")
 
 func _ready():
 	var instance = scene.instantiate()

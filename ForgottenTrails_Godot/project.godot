@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ForgottenTrails"
-run/main_scene="res://project/main_gameplay_scene.tscn"
+run/main_scene="res://project/main_menu/main_menu_scene.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://project/main_menu/ForgottenTrailsTitle_IMG.png"
 

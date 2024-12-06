@@ -17,12 +17,13 @@ config/icon="res://project/main_menu/ForgottenTrailsTitle_IMG.png"
 
 [audio]
 
-buses/default_bus_layout="res://project/_globals/default_bus_layout.tres"
+buses/default_bus_layout="res://project/game_settings/default_bus_layout.tres"
 
 [autoload]
 
-UserSettings="*res://project/_globals/player_settings.gd"
-DataManager="*res://project/_globals/data_manager.gd"
+DataManager="*res://project/saveloading/data_manager.gd"
+ConfigHandler="*res://project/game_settings/config_handler.gd"
+Settings="*res://project/game_settings/settings.gd"
 
 [dotnet]
 
@@ -38,7 +39,6 @@ folder_colors={
 "res://addons/": "gray",
 "res://editor/": "gray",
 "res://project/": "purple",
-"res://project/_globals/": "teal",
 "res://project/game_settings/": "red",
 "res://project/ink/": "blue",
 "res://project/inventory/": "yellow",
@@ -48,6 +48,7 @@ folder_colors={
 "res://project/story_navigation/choice_presenter/": "blue",
 "res://project/story_navigation/text_presenter/": "blue",
 "res://trash/": "gray",
+"res://trash/_globals/": "teal",
 "res://trash/_structure/": "red"
 }
 

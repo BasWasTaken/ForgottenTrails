@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbtdbb1r7ikd0"]
+
+[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/game_settings/setting_handler_base.tscn" id="1_4to5w"]
+[ext_resource type="Script" path="res://trash/setting_t_int.gd" id="2_16071"]
+
+[node name="Setting with Slider" instance=ExtResource("1_4to5w")]
+script = ExtResource("2_16071")
+default = null
+setting = null
+
+[node name="Value Input" type="HSlider" parent="." index="1"]
+layout_mode = 2
+
+[connection signal="changed" from="Value Input" to="." method="_check_input"]
+[connection signal="value_changed" from="Value Input" to="." method="check_input"]

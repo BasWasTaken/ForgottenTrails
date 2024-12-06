@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwjoo1lwuwf5j"]
+
+[ext_resource type="Script" path="res://project/game_settings/setting_change_transmitter.gd" id="1_labw2"]
+[ext_resource type="Script" path="res://project/setting_buttons.gd" id="2_246wk"]
+
+[node name="Setting Handler" type="VBoxContainer"]
+script = ExtResource("1_labw2")
+reference = null
+
+[node name="Button Handler" type="HBoxContainer" parent="."]
+layout_mode = 2
+script = ExtResource("2_246wk")
+
+[node name="Label" type="Label" parent="Button Handler"]
+layout_mode = 2
+text = "Label:"
+
+[node name="Reset" type="Button" parent="Button Handler"]
+visible = false
+layout_mode = 2
+text = "Reset"
+
+[node name="Revert" type="Button" parent="Button Handler"]
+visible = false
+layout_mode = 2
+text = "Revert"
+
+[node name="Apply" type="Button" parent="Button Handler"]
+visible = false
+layout_mode = 2
+text = "Apply"
+
+[connection signal="pressed" from="Button Handler/Reset" to="." method="reset"]
+[connection signal="pressed" from="Button Handler/Revert" to="." method="revert"]
+[connection signal="pressed" from="Button Handler/Apply" to="." method="apply"]

@@ -1,5 +1,8 @@
 extends Node
 
+@export_dir var saving_directory
+var player_name = "dev"
+
 func _process(delta):
 	if Input.is_action_pressed("quickload"):
 		load_game(data_method.quick)
@@ -28,9 +31,9 @@ func save_game(method:data_method):
 	var save_nodes = get_tree().get_nodes_in_group("persist")
 	for node in save_nodes:
 		# Check the node is an instanced scene so it can be instanced again during load.
-		if node.scene_file_path.is_empty():
-			print("persistent node '%s' is not an instanced scene, skipped" % node.name)
-			continue
+		#if node.scene_file_path.is_empty():
+			#print("persistent node '%s' is not an instanced scene, skipped" % node.name)
+			#continue
 
 		# Check the node has a save function.
 		if !node.has_method("save"):

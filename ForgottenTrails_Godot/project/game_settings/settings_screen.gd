@@ -7,21 +7,29 @@ extends Screen
 @export var apply_button:Button#=$"Global Buttons/Apply All Button" #confirm, save and apply changes
 @export var close_button:Button#=$"Global Buttons/Close Button"
 
-var settings_all:# setting_container:
+var default_config_file:  #Alleen te gebruiken in het settings scherm
 	get:
-		print("getting children")
+		var default_config = ConfigFile.new()
+		for setting in settings_all:
+			default_config.set_value(DataManager.player_name,setting,setting.default_value)
+		return default_config
+
+
+var config:ConfigFile = ConfigFile.new()
+
+var settings_all:
+	get:
+		#print("getting children")
 		var list = []
 		for child in get_all_children(self):
-			print(child)
-			if child is setting_container: 
-				print(child)
+			#print(child)
+			if child is Setting: 
+				#print(child)
 				list.append(child)
 		return list
 
 func get_all_children(node) -> Array:
-
 	var nodes : Array = []
-
 	for N in node.get_children():
 		if N.get_child_count() > 0:
 			nodes.append(N)
@@ -29,6 +37,7 @@ func get_all_children(node) -> Array:
 		else:
 			nodes.append(N)
 	return nodes
+
 
 var changes_are_pending: bool:
 	get:

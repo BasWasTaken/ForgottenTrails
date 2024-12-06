@@ -2,14 +2,20 @@ extends RichTextLabel
 
 @onready var box:ColorRect= get_parent()
 
+#--- should this be here? definitions
+
 
 var typing_speed_modifier = 1
+var speed_preference:
+	get:
+		return Settings.text_speed
 
 var typing_delay: float:
 	get:
 		#print(Settings.setting_items[Settings.Keys.speed].default_value)
 		#print(Settings.setting_items[Settings.Keys.speed].saved_value)
-		var speed = UserSettings.setting_items[UserSettings.Keys.speed].saved_value
+		
+		var speed = speed_preference.value  # UserSettings.setting_items[UserSettings.Keys.speed].saved_value
 		speed *= typing_speed_modifier
 		var delay = 1/speed
 		return delay

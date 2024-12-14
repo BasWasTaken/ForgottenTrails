@@ -5,8 +5,6 @@
 
 [node name="Setting with Slider" instance=ExtResource("1_4to5w")]
 script = ExtResource("2_16071")
-default = null
-setting = null
 
 [node name="Value Input" type="HSlider" parent="." index="1"]
 layout_mode = 2

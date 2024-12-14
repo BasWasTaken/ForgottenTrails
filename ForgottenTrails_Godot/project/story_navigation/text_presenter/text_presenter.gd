@@ -8,7 +8,7 @@ extends RichTextLabel
 var typing_speed_modifier = 1
 var speed_preference:
 	get:
-		return Settings.text_speed
+		return ConfigHandler.get_active_value("text_speed")
 
 var typing_delay: float:
 	get:
@@ -31,8 +31,11 @@ func _ready():
 	init()
 	present_story("Press Continue To Start the Story.")
 
+var setting:
+	get:
+		return ConfigHandler.get_active_value("opacity")
 func init():
-	var scaled = UserSettings.setting_items[UserSettings.Keys.opacity].saved_value * 255
+	var scaled = setting * 255
 	print(scaled)
 	box.self_modulate=Color8(0,0,0,scaled as int)
 

@@ -1,63 +1,93 @@
 extends Node
-# Provides acces to user config in memory.
-# Hands over config file to data manager for storage
-# Creates an instance of default values for resetting and so that settings are never blank.
 
-# THis should not be the primary way of getting setting values, because it is costly.
-# So, only when the value is not present in the objects already. ANd mainly in the settings csreen probably.
+# Store for the default values
+var _default_settings : Dictionary = {
+	"opacity": 0.5,  # Example default for transparency setting
+	"volume": 100,        # Example default for volume
+	"text_speed":speeds.mid
+	# Add more defaults here as needed
+}
 
-# Not a pre-allocated file, but a growing file. Because I do not at this moment know all that should be listed on it.
+# Store for the active settings
+var _active_settings : Dictionary = {}
 
-var config = ConfigFile.new()
+# The Config file in memory, storing changed settings
+@onready var _stored_settings: ConfigFile = _get_or_create_config_file()
 
-
-# get setting
-# create if it does not yet exist
-# with default based on..?
-
-
-func get_setting():
-	pass
-
-
-func get_default_value(request:setting_name):
-	return request.default_value
-
-func get_value(request:setting_name):
-	var result = _load_from_memory(request.name)
-	if result != null:
-		setting.stored_value = result #write retreived value as stored
-		return result
-	#else
-	result = get_default_value(setting)
-	if result!=null:
-		setting.stored_value = result #write default value as stored because apperantly the player has not changed this
-		return result
+func _get_or_create_config_file():
+	if false:
+		pass
 	else:
-		print("CANNOT FIND SETTING" + setting.to_string())
+		_stored_settings = ConfigFile.new()
 
-func _load_from_memory(setting_name: String):
-	if !config.get_section_keys(DataManager.player_name).has(setting_name):
-		return null
-	#TODO check (somehow) if you need to get from storage first
-	return config.get_value(DataManager.player_name, setting_name)
+# Register a setting
+func _register_setting(name : String, newValue=null):
+	if !_default_settings.has(name):
+		print("Define setting in default list first!")
+		return
 
-func _read_file_from_storage():
-	#TODO Get file from storage.
-	#NOTE Use data_manager
-	#NOTE also open the file up again on the name config
+	if get_stored_value(name)!=null:
+		newValue = _stored_settings[name]
+	
+	set_active_value(name, newValue)
+
+# Set the active value for a setting to its default
+func _reset_active_value(name:String):
+	if _active_settings.has(name):
+		_active_settings[name] = null
+
+func _reset_active_values_all():
+	for setting in _active_settings.keys:
+		_reset_active_value(setting)
+
+# Get the default value for a setting
+func get_default_value(name : String) -> Variant:
+	return _default_settings[name]
+
+# Set the value of a setting
+func set_active_value(name : String, value : Variant):
+	_active_settings[name] = value
+
+# Get the value of a setting
+func get_active_value(name : String) -> Variant:
+	if !_active_settings.has(name): #if not yet active...
+		_register_setting(name) # activate from memory or default
+	return _active_settings[name] if _active_settings[name]!=null else _default_settings[name] #return the stored if changed and default if no custom has been stored
+
+# Store the active value for a setting
+func _store_active_value(name : String):
+	if _active_settings.has(name):
+		_stored_settings.set_value(DataManager.player_name,name,_active_settings[name])
+
+func _store_active_values_all():
+	for setting in _active_settings.keys:
+		_store_active_value(setting)
+
+# Revert the active value back to equal what was stored (in settings)
+func _revert_active_value(name : String):
+	if _active_settings.has(name):
+		_active_settings[name] = get_stored_value(name)
+
+func _revert_active_values_all():
+	for setting in _active_settings.keys:
+		_revert_active_value(setting)
+
+# Get the stored value for a setting
+func get_stored_value(name : String, player_name : String = DataManager.player_name) -> Variant:
+	return _stored_settings.get_value(player_name,name)
+
+func write_to_disk():
+	#TODO
 	pass
 
-func save_to_memory(setting: Setting, value):
-	config.set_value(DataManager.player_name, setting.name, value)
-	setting._stored_value=value
-	#NOTE should return some sucess code if no error
-
-func _write_file_to_storage():
-	#TODO Commit file to storage.
-	#NOTE Use data_manager
-	#NOTE also open the file up again on the name config
+func read_from_disk():
+	#TODO
 	pass
 
-func _ready():
-	config = _read_file_from_storage()
+
+#---
+enum speeds{
+	slow=1,
+	mid=50,
+	fast=100
+}

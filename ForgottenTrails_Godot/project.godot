@@ -23,7 +23,6 @@ buses/default_bus_layout="res://project/game_settings/default_bus_layout.tres"
 
 DataManager="*res://project/saveloading/data_manager.gd"
 ConfigHandler="*res://project/game_settings/config_handler.gd"
-Settings="*res://project/game_settings/settings.gd"
 
 [dotnet]
 

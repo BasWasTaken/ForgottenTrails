@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dkr7obwclut2x"]
+[gd_scene load_steps=4 format=3 uid="uid://dkr7obwclut2x"]
 
 [ext_resource type="Script" path="res://project/game_settings/settings_screen.gd" id="1_j51ml"]
 [ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://project/game_settings/setting_handler_slider.tscn" id="2_h2cb7"]
 [ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://project/game_settings/setting_handler_dropdown.tscn" id="2_kkcbu"]
-[ext_resource type="Script" path="res://project/setting_buttons.gd" id="3_tughx"]
 
 [node name="Settings Screen" type="Control" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button", "close_button")]
 layout_mode = 3
@@ -36,11 +35,11 @@ metadata/_tab_index = 0
 
 [node name="Speed" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_kkcbu")]
 layout_mode = 2
-script = ExtResource("3_tughx")
+key_name = "text_speed"
 
 [node name="Opacity" parent="Settings Tabs/Gameplay Settings" instance=ExtResource("2_h2cb7")]
 layout_mode = 2
-script = ExtResource("3_tughx")
+key_name = "opacity"
 
 [node name="Audio" type="VBoxContainer" parent="Settings Tabs"]
 visible = false

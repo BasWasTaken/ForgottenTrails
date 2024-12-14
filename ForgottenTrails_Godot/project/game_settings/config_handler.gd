@@ -18,6 +18,7 @@ func _get_or_create_config_file():
 	if false:
 		pass
 	else:
+		print('test! creating config file')
 		_stored_settings = ConfigFile.new()
 
 # Register a setting
@@ -74,6 +75,8 @@ func _revert_active_values_all():
 
 # Get the stored value for a setting
 func get_stored_value(name : String, player_name : String = DataManager.player_name) -> Variant:
+	if _stored_settings==null:
+		return null
 	return _stored_settings.get_value(player_name,name)
 
 func write_to_disk():

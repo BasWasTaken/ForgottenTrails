@@ -1,10 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://ne7hxq7y2dar"]
+[gd_scene load_steps=2 format=3 uid="uid://ne7hxq7y2dar"]
 
 [ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/game_settings/setting_handler_base.tscn" id="1_18ard"]
-[ext_resource type="Script" path="res://trash/setting_t_int.gd" id="2_ctyrx"]
 
 [node name="Setting With Drowndown" instance=ExtResource("1_18ard")]
-script = ExtResource("2_ctyrx")
+
+[node name="Button Handler" parent="." index="0" node_paths=PackedStringArray("input")]
+input = NodePath("../Value Input")
 
 [node name="Value Input" type="OptionButton" parent="." index="1"]
 layout_mode = 2

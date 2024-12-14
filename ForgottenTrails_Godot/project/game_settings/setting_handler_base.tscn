@@ -1,14 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://cwjoo1lwuwf5j"]
 
-[ext_resource type="Script" path="res://trash/setting_change_transmitter.gd" id="1_labw2"]
+[ext_resource type="Script" path="res://trash/setting_item.gd" id="1_djq8q"]
 [ext_resource type="Script" path="res://project/setting_buttons.gd" id="2_246wk"]
 
 [node name="Setting Handler" type="VBoxContainer"]
-script = ExtResource("1_labw2")
+script = ExtResource("1_djq8q")
 
-[node name="Button Handler" type="HBoxContainer" parent="."]
+[node name="Button Handler" type="HBoxContainer" parent="." node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
 layout_mode = 2
 script = ExtResource("2_246wk")
+reset_button = NodePath("Reset")
+revert_button = NodePath("Revert")
+apply_button = NodePath("Apply")
 
 [node name="Label" type="Label" parent="Button Handler"]
 layout_mode = 2

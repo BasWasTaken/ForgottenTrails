@@ -6,7 +6,7 @@ extends RichTextLabel
 
 
 var typing_speed_modifier = 1
-var speed_preference:
+var speed_preference: int:
 	get:
 		return ConfigHandler.get_active_value("text_speed")
 
@@ -15,7 +15,7 @@ var typing_delay: float:
 		#print(Settings.setting_items[Settings.Keys.speed].default_value)
 		#print(Settings.setting_items[Settings.Keys.speed].saved_value)
 		
-		var speed = speed_preference.value  # UserSettings.setting_items[UserSettings.Keys.speed].saved_value
+		var speed = speed_preference  # UserSettings.setting_items[UserSettings.Keys.speed].saved_value
 		speed *= typing_speed_modifier
 		var delay = 1/speed
 		return delay

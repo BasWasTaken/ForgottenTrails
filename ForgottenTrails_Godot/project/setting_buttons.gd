@@ -1,15 +1,17 @@
+@tool
 extends Control
-class_name setting_buttons
+class_name SettingButtons
+#TODO why not merge this with setting handler / item script?
 # this scripts acts as a broker between the object in scene and the script attached to it, containing a setting
 # Contains both interface VIA THE EDITOR for devs to change defaults, (well, that's just in the setting scripts)
 # as well as GUI for changing theplayerprefs through help of the config_handler. 
 
 
-@export var setting: Setting:
+var setting: Setting:
 	get:
 		return get_parent()
 
-@onready var input:Control = get_node("Value Input")
+@export var input:Control# = get_node("Value Input")
 
 signal checked_buttons()
 
@@ -38,22 +40,21 @@ var change_pending: bool:
 		return setting.value!=input_value
 		#return slider.is_node_ready() && saved_value!=slider_value
 
-func _ready():
-	init()
+
 
 @export var reset_button:Button# = get_node("H/Reset")
 func reset():
-	input_value=setting.default_value
+	input_value=ConfigHandler._reset_active_value(setting.key_name)
 	check_buttons()
 
 @export var revert_button:Button# = get_node("H/Revert")
 func revert():
-	input_value=setting.value
+	input_value=ConfigHandler._revert_active_value(setting.key_name)
 	check_buttons()
 
 @export var apply_button:Button# = get_node("H/Apply")
 func apply():
-	ConfigHandler.save_setting_to_memory(setting,input_value)
+	ConfigHandler._store_active_value(setting.key_name)
 	check_buttons()
 
 func check_buttons():

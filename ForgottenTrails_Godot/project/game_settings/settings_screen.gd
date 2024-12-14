@@ -7,23 +7,13 @@ extends Screen
 @export var apply_button:Button#=$"Global Buttons/Apply All Button" #confirm, save and apply changes
 @export var close_button:Button#=$"Global Buttons/Close Button"
 
-var default_config_file:  #Alleen te gebruiken in het settings scherm
-	get:
-		var default_config = ConfigFile.new()
-		for setting in settings_all:
-			default_config.set_value(DataManager.player_name,setting,setting.default_value)
-		return default_config
-
-
-var config:ConfigFile = ConfigFile.new()
-
 var settings_all:
 	get:
 		#print("getting children")
 		var list = []
 		for child in get_all_children(self):
 			#print(child)
-			if child is Setting: 
+			if child is SettingButtons: 
 				#print(child)
 				list.append(child)
 		return list
@@ -113,6 +103,7 @@ func check_buttons():
 		apply_button.disabled = true
 		close_button.disabled = false
 
+#TODO decide whether to use this looping method, or the one from config hasndler. define here  what things need saving depensing on the change pending check, or get from the handler based on what's active?
 func reset():
 	for setting in settings_all:
 		setting.reset()

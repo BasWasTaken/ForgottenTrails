@@ -29,6 +29,11 @@ var typing: bool = false
 
 func _ready():
 	init()
+	ConfigHandler.setting_changed.connect(
+		func(id):
+			if id == "opacity":
+				_on_opacity_change_applied()
+	)
 	present_story("Press Continue To Start the Story.")
 
 var setting:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cwjoo1lwuwf5j"]
 
-[ext_resource type="Script" path="res://trash/setting_item.gd" id="1_djq8q"]
+[ext_resource type="Script" path="res://project/game_settings/setting_item.gd" id="1_djq8q"]
 
 [node name="Setting Handler" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
 script = ExtResource("1_djq8q")

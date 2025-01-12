@@ -9,7 +9,29 @@ class_name Setting
 @export var revert_button: Button # Revert button to revert the provisional live_value.
 @export var apply_button: Button # Apply button to apply the provisional live_value.
 
+func _ready():
+
+	# Set input options based on the setting values
+	if input is Range:
+		input.value = live_value  # Set the range (slider) value
+	elif input is OptionButton:
+		input.selected = input.get_item_index(live_value)  # Set the selected item in OptionButton
+	elif input is CheckBox:
+		input.button_pressed = (live_value != 0)  # Set the button pressed state (assuming live_value is 1 for checked, 0 for unchecked)
+	else:
+		print("Unsupported input control type!")
+	init()
+
+	# Connect signals for buttons
+	reset_button.pressed.connect(_on_reset_pressed)
+	revert_button.pressed.connect(_on_revert_pressed)
+	apply_button.pressed.connect(_on_apply_pressed)
+
+	# Set the label text to match the key name
+	var label: Label = get_node("Button Handler/Label")
+	label.text = key_name
 func init():
+	# Initialize input_value with the current setting live_value
 	input_value = live_value
 	check_buttons()
 
@@ -46,19 +68,7 @@ var default_value:
 	get:
 		return ConfigHandler.get_default_value(self.key_name)
 
-func _ready():
-	# Initialize input_value with the current setting live_value
-	input_value = live_value
-	check_buttons()
 
-	# Connect signals for buttons
-	reset_button.pressed.connect(_on_reset_pressed)
-	revert_button.pressed.connect(_on_revert_pressed)
-	apply_button.pressed.connect(_on_apply_pressed)
-
-	# Set the label text to match the key name
-	var label: Label = get_node("Button Handler/Label")
-	label.text = key_name
 
 func _on_reset_pressed():
 	input_value = default_value
@@ -72,11 +82,11 @@ func _on_apply_pressed():
 	live_value = input_value
 	check_buttons()
 
-var using_default:
+var using_default: bool:
 	get:
 		return input_value == default_value
 
-var change_pending:
+var change_pending: bool:
 	get:
 		return input_value != live_value
 

@@ -6,9 +6,9 @@ extends RichTextLabel
 
 
 var typing_speed_modifier = 1
-var speed_preference: int:
+var speed_preference: float:
 	get:
-		return ConfigHandler.get_active_value("text_speed")
+		return ConfigHandler.get_live_value("text_speed")
 
 var typing_delay: float:
 	get:
@@ -33,7 +33,7 @@ func _ready():
 
 var setting:
 	get:
-		return ConfigHandler.get_active_value("opacity")
+		return ConfigHandler.get_live_value("opacity")
 func init():
 	var scaled = setting * 255
 	print(scaled)

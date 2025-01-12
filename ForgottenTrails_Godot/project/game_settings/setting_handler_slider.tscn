@@ -2,10 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/game_settings/setting_handler_base.tscn" id="1_4to5w"]
 
-[node name="Setting with Slider" instance=ExtResource("1_4to5w")]
+[node name="Setting with Slider" node_paths=PackedStringArray("input") instance=ExtResource("1_4to5w")]
+input = NodePath("Value Input")
 
-[node name="Button Handler" parent="." index="0" node_paths=PackedStringArray("input")]
-input = NodePath("../Value Input")
+[node name="Reset" parent="Button Handler" index="1"]
+visible = true
+
+[node name="Revert" parent="Button Handler" index="2"]
+visible = true
+
+[node name="Apply" parent="Button Handler" index="3"]
+visible = true
 
 [node name="Value Input" type="HSlider" parent="." index="1"]
 layout_mode = 2

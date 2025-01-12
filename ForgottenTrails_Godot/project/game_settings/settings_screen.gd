@@ -13,7 +13,7 @@ var settings_all:
 		var list = []
 		for child in get_all_children(self):
 			#print(child)
-			if child is SettingButtons: 
+			if child is Setting: 
 				#print(child)
 				list.append(child)
 		return list
@@ -29,15 +29,31 @@ func get_all_children(node) -> Array:
 	return nodes
 
 
-var changes_are_pending: bool:
+var changes_pending:
 	get:
 		if !is_visible_in_tree():
 			return false
-		var changes_pending = []
+		var _pending = []
 		for setting in settings_all:
 			if setting.change_pending:
 				changes_pending.append(setting)
-		return changes_pending.size() >0
+		if _pending.size() > 0:
+			return _pending
+		else:
+			return false
+
+var deviations_from_defaults:
+	get:
+		if !is_visible_in_tree():
+			return false
+		var _deviations = []
+		for setting in settings_all:
+			if setting.deviation_from_default:
+				deviations_from_defaults.append(setting)
+		if _deviations.size() > 0:
+			return _deviations
+		else:
+			return false
 
 func _ready():
 	_init()
@@ -49,7 +65,8 @@ func _process(delta):
 func _init():
 	for child in settings_all:
 		#child.ready.connect(child.init)
-		child.checked_buttons.connect(check_buttons)
+		#child.checked_buttons.connect(check_buttons)
+		pass
 
 func _on_open_or_close(): #on visibility changed
 	#TODO fix issue where tab menu opens the first child on startup
@@ -64,7 +81,7 @@ func _on_open():
 	#check_buttons()
 
 func _on_close():
-	if(changes_are_pending):
+	if(changes_pending):
 		revert()
 
 
@@ -80,7 +97,7 @@ func open():
 	show()
 
 func close_try():
-	if not changes_are_pending:
+	if not changes_pending:
 		close_confirm()
 	else:
 		#TODO prompt first
@@ -91,30 +108,37 @@ func close_confirm():
 	hide()
 
 
-func check_buttons(): 
-	if changes_are_pending:
-		reset_button.disabled = false #could also be hidden and shown. same effect, different representation
+func check_buttons():
+	if changes_pending:
+		# allow reverts and applys
 		revert_button.disabled = false
 		apply_button.disabled = false
+		# disallow close
 		close_button.disabled = true
 	else:
-		reset_button.disabled = false
+		# disallow reverts and applys
 		revert_button.disabled = true
 		apply_button.disabled = true
-		close_button.disabled = false
+		
+		# allow close
+		close_button.disabled=false
 
-#TODO decide whether to use this looping method, or the one from config hasndler. define here  what things need saving depensing on the change pending check, or get from the handler based on what's active?
+	if deviations_from_defaults:
+		reset_button.disabled = false 
+	else:
+		reset_button.disabled = true 
+
 func reset():
-	for setting in settings_all:
+	for setting in deviations_from_defaults:
 		setting.reset()
 	check_buttons()
 
 func revert():
-	for setting in settings_all:
+	for setting in changes_pending:
 		setting.revert()
 	check_buttons()
 
 func apply():
-	for setting in settings_all:
+	for setting in changes_pending:
 		setting.apply()
 	check_buttons()

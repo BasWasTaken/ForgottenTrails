@@ -1,21 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwjoo1lwuwf5j"]
+[gd_scene load_steps=2 format=3 uid="uid://cwjoo1lwuwf5j"]
 
 [ext_resource type="Script" path="res://trash/setting_item.gd" id="1_djq8q"]
-[ext_resource type="Script" path="res://project/setting_buttons.gd" id="2_246wk"]
 
-[node name="Setting Handler" type="VBoxContainer"]
+[node name="Setting Handler" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
 script = ExtResource("1_djq8q")
+reset_button = NodePath("Button Handler/Reset")
+revert_button = NodePath("Button Handler/Revert")
+apply_button = NodePath("Button Handler/Apply")
 
-[node name="Button Handler" type="HBoxContainer" parent="." node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
+[node name="Button Handler" type="HBoxContainer" parent="."]
 layout_mode = 2
-script = ExtResource("2_246wk")
-reset_button = NodePath("Reset")
-revert_button = NodePath("Revert")
-apply_button = NodePath("Apply")
 
 [node name="Label" type="Label" parent="Button Handler"]
 layout_mode = 2
-text = "Label:"
 
 [node name="Reset" type="Button" parent="Button Handler"]
 visible = false

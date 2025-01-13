@@ -6,17 +6,11 @@ extends RichTextLabel
 
 
 var typing_speed_modifier = 1
-var speed_preference: float:
-	get:
-		return ConfigHandler.get_live_value("text_speed")
 
 var typing_delay: float:
-	get:
-		#print(Settings.setting_items[Settings.Keys.speed].default_value)
-		#print(Settings.setting_items[Settings.Keys.speed].saved_value)
-		
-		var speed = speed_preference  # UserSettings.setting_items[UserSettings.Keys.speed].saved_value
-		speed *= typing_speed_modifier
+	get:		
+		var speed = ConfigHandler.get_live_value(ConfigHandler.key.text_speed)
+		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on setting change and compute once
 		var delay = 1/speed
 		return delay
 
@@ -31,14 +25,14 @@ func _ready():
 	init()
 	ConfigHandler.setting_changed.connect(
 		func(id):
-			if id == "opacity":
+			if id == ConfigHandler.key.textbox_opacity:
 				_on_opacity_change_applied()
 	)
 	present_story("Press Continue To Start the Story.")
 
 var setting:
 	get:
-		return ConfigHandler.get_live_value("opacity")
+		return ConfigHandler.get_live_value(ConfigHandler.key.textbox_opacity)
 func init():
 	var scaled = setting * 255
 	print(scaled)

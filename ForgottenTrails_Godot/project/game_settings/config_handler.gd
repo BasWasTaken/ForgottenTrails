@@ -1,21 +1,134 @@
 extends Node
+# TEST 20250113190200
+class SettingObject:
+	extends Object
 
-# Dictionary containing default keyvaluepairs, all to be set in the code before buiild
-var _default_values : Dictionary = {
-	"opacity": 0.5,  # Example default for transparency setting
-	"volume": 100,        # Example default for volume
-	"text_speed":speeds.mid
-	# Add more defaults here as needed
+enum SettingType {
+	OptionButton,
+	Range,
+	CheckBox
 }
 
-# Dictionary containing active keyvaluepars, reflecting what's currently used by the system
-var _live_settings: Dictionary = _default_values
+class Setting_OptionButton: 
+	extends SettingObject
+	var type = SettingType.OptionButton
+	var value_options: Array
+	var default_value
+	var live_value
+
+	func _init(default, options: Array):
+		self.value_options = options
+		self.default_value = default
+		self.live_value = default
+
+class Setting_Range:
+	extends SettingObject
+	var type = SettingType.Range
+	var minimum_value: int
+	var maximum_value: int
+	var step_size: int
+	var default_value: int:
+		get:
+			return default_value
+		set(value):
+			if value < minimum_value:
+				default_value = minimum_value
+			elif value > maximum_value:
+				default_value = maximum_value
+			else:
+				default_value = value
+	var live_value: int:
+		get:
+			return live_value
+		set(value):
+			if value < minimum_value:
+				live_value = minimum_value
+			elif value > maximum_value:
+				live_value = maximum_value
+			else:
+				live_value = value
+
+	func _init(default: int, minimum: int= 0, maximum: int=100, step: int=1 ):
+		self.minimum_value = minimum
+		self.maximum_value = maximum
+		self.step_size = step
+		self.default_value = default
+		self.live_value = default
+
+class Setting_CheckBox:
+	extends SettingObject
+	var type = SettingType.CheckBox
+	var default_value: bool
+	var live_value: bool
+
+	func _init(default: bool):
+		default_value = default
+		live_value = default
+
+enum text_speed_preset{
+	slow=1,
+	mid=50,
+	fast=100
+}
+
+const temporary_list: Array[String] = ["text_speed", "textbox_opacity", "master_volume", "full_screen"]
+
+@export var setting_dictionary = {
+	"text_speed": Setting_OptionButton.new(text_speed_preset.mid, [text_speed_preset.slow, text_speed_preset.mid, text_speed_preset.fast]),
+	"textbox_opacity": Setting_Range.new(50, 0, 100, 1),
+	"master_volume": Setting_Range.new(50, 0, 100, 1),
+	"full_screen": Setting_CheckBox.new(false)
+}
+
+func get_default_value(id: String) -> Variant:
+	if id in setting_dictionary:
+		return setting_dictionary[id].default_value
+	else:
+		print("Invalid key:", id)
+		return null
+
+func get_range(id: String) -> Array:
+	if id in setting_dictionary:
+		if setting_dictionary[id].type == SettingType.Range:
+			return [setting_dictionary[id].minimum_value, setting_dictionary[id].maximum_value, setting_dictionary[id].step_size]
+		else:
+			print("Key:", id, "is not a range setting")
+			return []
+	else:
+		print("Invalid key:", id)
+		return []
+
+func get_options(id: String) -> Array:
+	if id in setting_dictionary:
+		if setting_dictionary[id].type == SettingType.OptionButton:
+			return setting_dictionary[id].value_options
+		else:
+			print("Key:", id, "is not an option setting")
+			return []
+	else:
+		print("Invalid key:", id)
+		return []
+
+func get_live_value(id: String) -> Variant:
+	print("get_live_value called with key:", id)
+	if id in setting_dictionary:
+		print("Valid key:", id, "Value:", setting_dictionary[id].live_value)
+		return setting_dictionary[id].live_value
+	else:
+		print("Invalid key:", id)
+		return null
+
+signal setting_changed(id: String, value: Variant)
+
+func set_live_value(id: String, value: Variant):
+	if id in setting_dictionary:
+		setting_dictionary[id].live_value = value
+		setting_changed.emit(id, value)
+	else:
+		print("Invalid key:", id)
 
 # The Config file in memory 
-@onready var storage = _get_or_create_config_file()
-
-## dictionary to use for temporary storage while the player is changing settings in the menu. these won't have any effect yet, but they can be previewed later using sample sounds or timed signals briefly showing what the change would looke like 
-#var _provisional_values : Dictionary = {}
+@onready var storage = _get_or_create_config_file() # purely key and value needed
 
 func _get_or_create_config_file() -> ConfigFile:
 	if false: #if any file is found on startup
@@ -25,79 +138,7 @@ func _get_or_create_config_file() -> ConfigFile:
 		print('test! creating config file')
 		return ConfigFile.new()
 
-# Get the default value for a setting
-func get_default_value(id : String) -> Variant:
-	return _default_values[id]
-
-## Get the provisional value for a setting
-#func get_provisional_value(id : String) -> Variant:
-#	if !_provisional_values.has(id):
-#		_provisional_values[id] = get_live_value(id)
-#	print("Provisional value for ", id, " received as :", _provisional_values[id]) # Debugging line
-#	return _provisional_values[id]
-
-## Set the provisional value for a setting
-#func set_provisional_value(id : String, value : Variant):
-#	print("Provisional value for ", id, " set to: ", _provisional_values[id]) # Debugging line
-#	_provisional_values[id] = value
-
-# Get the actual value of a setting
-func get_live_value(id : String) -> Variant:
-	print("Live value for ", id, " read as : ", _live_settings[id]) # Debugging line
-	return _live_settings[id]# redundant since i won't work with a file of growing data adding to it every time and starting with null. that proved t convoluted  if _live_settings[id]!=null else _default_values[id] #return the stored if changed and default if no custom has been stored
-
-## Set the active value for a setting to its default
-#func _provisional_reset(id:String):
-#	_provisional_values[id] = _default_values[id] #null would be cleaner, but also woudl require refresh on screen
-
-#func _provisional_reset_all():
-#	for setting in _provisional_values.keys:
-#		_provisional_reset(setting)
-
-# Apply the provisional value for a setting to be its live value
-#func _apply_provisional_value(id : String):
-#	_live_settings[id] = _provisional_values[id]
-#	#signal to the game that the setting has changed
-#	setting_changed.emit(id, _live_settings[id])
-
-# Change a setting to a new value
-func _change_live_value(id : String, value : Variant):
-	_live_settings[id] = value
-	#signal to the game that the setting has changed
-	setting_changed.emit(id, _live_settings[id])
-
-signal setting_changed(id : String, value : Variant)
-
-
-
-#func _apply_provisional_value_all():
-#	for setting in _provisional_values.keys:
-#		_apply_provisional_value(setting)
-
-# Revert the provisional value back to equal what the live value is
-#func _revert_provisional_value(id : String):
-#	_provisional_values[id] = get_live_value(id)
-
-#func _revert_provisional_values_all():
-#	for setting in _provisional_values.keys:
-#		_revert_provisional_value(setting)
-#	_provisional_values.clear() #TODO also call this when exiting the settings menu
-
-
-
-
-
-func _register_setting(id : String):
-	if _live_settings.has(id):
-		return
-	if DataManager.player_name in _live_settings:
-		_live_settings[DataManager.player_name][id] = _default_values[id]
-	else:
-		_live_settings[DataManager.player_name] = {id : _default_values[id]}
-
-func _register_all_settings():
-	for setting in _live_settings.keys():
-		_register_setting(setting)
+#register settings func..?
 
 func write_to_disk():
 	#TODO call this when saved, register all settings, and give the config file as one of the files to be persisted
@@ -106,11 +147,3 @@ func write_to_disk():
 func read_from_disk():
 	#TODO
 	pass
-
-
-#---
-enum speeds{
-	slow=1,
-	mid=50,
-	fast=100
-}

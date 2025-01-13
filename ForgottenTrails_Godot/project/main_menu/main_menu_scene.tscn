@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cqy4xfl5d38mk"]
 
-[ext_resource type="Script" path="res://trash/mySceneLoader.gd" id="1_mb2h1"]
+[ext_resource type="Script" path="res://project/mySceneLoader.gd" id="1_mb2h1"]
 
 [node name="MainMenu" type="Node"]
 
@@ -8,8 +8,9 @@
 script = ExtResource("1_mb2h1")
 
 [node name="Start Game" type="Button" parent="."]
-offset_right = 8.0
-offset_bottom = 8.0
+offset_top = 1.0
+offset_right = 96.0
+offset_bottom = 32.0
 text = "Start Game"
 
 [connection signal="pressed" from="Start Game" to="SceneLoader" method="_on_start_game_pressed"]

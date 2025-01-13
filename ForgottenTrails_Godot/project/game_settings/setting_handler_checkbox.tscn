@@ -5,6 +5,9 @@
 [node name="Setting Handler" node_paths=PackedStringArray("input") instance=ExtResource("1_5m15b")]
 input = NodePath("Value Input")
 
+[node name="Label" parent="Button Handler" index="0"]
+text = "0"
+
 [node name="Reset" parent="Button Handler" index="1"]
 visible = true
 

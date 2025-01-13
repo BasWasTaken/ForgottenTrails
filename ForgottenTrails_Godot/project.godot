@@ -45,10 +45,7 @@ folder_colors={
 "res://project/saveloading/": "gray",
 "res://project/story_navigation/": "blue",
 "res://project/story_navigation/choice_presenter/": "blue",
-"res://project/story_navigation/text_presenter/": "blue",
-"res://trash/": "gray",
-"res://trash/_globals/": "teal",
-"res://trash/_structure/": "red"
+"res://project/story_navigation/text_presenter/": "blue"
 }
 
 [input]

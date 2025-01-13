@@ -13,7 +13,7 @@ var settings_all:
 		var list = []
 		for child in get_all_children(self):
 			#print(child)
-			if child is Setting: 
+			if child is Setting_Broker: 
 				#print(child)
 				list.append(child)
 		return list
@@ -77,7 +77,7 @@ func _on_open_or_close(): #on visibility changed
 
 func _on_open():
 	for child in settings_all:
-		child.init()
+		child._init()
 	#check_buttons()
 
 func _on_close():

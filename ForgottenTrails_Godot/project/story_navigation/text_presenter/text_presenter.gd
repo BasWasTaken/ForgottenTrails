@@ -23,8 +23,8 @@ var typing: bool = false
 
 func _ready():
 	ConfigHandler.setting_changed.connect(
-		func(id):
-			if id == ConfigHandler.choose.textbox_opacity:
+		func(id, value):
+			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:
 				_on_opacity_change_applied()
 	)
 	

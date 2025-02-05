@@ -90,30 +90,19 @@ enum choose{
 
 
 func get_default_value(id: String) -> Variant:
-	if id in setting_dictionary:
-		return setting_dictionary[id].default_value
-	else:
-		print("Invalid option:", id)
-		return null
+	assert(id in setting_dictionary, "Invalid option: " + id)
+	return setting_dictionary[id].default_value
 
 func get_range(id: String) -> Array:
-	if id in setting_dictionary.values():
-		if setting_dictionary[id].type == SettingType.Range:
-			return [setting_dictionary[id].minimum_value, setting_dictionary[id].maximum_value, setting_dictionary[id].step_size]
-		else:
-			print("Key:", id, "is not a range setting")
-			return []
-	else:
-		print("Invalid option:", id)
-		return []
+	assert(id in setting_dictionary, "Invalid option: " + id)
+	assert(setting_dictionary[id].type == SettingType.Range, "Key:"+ id+ "is not a range setting")
+	return [setting_dictionary[id].minimum_value, setting_dictionary[id].maximum_value, setting_dictionary[id].step_size]
+
 
 func get_options(id: String) -> Dictionary:
 	assert(id in setting_dictionary, "Invalid option: " + id)
-	if setting_dictionary[id].type == SettingType.OptionButton:
-		return setting_dictionary[id].value_options
-	else:
-		assert(false, "Key: " + id + " is not an option setting")
-		return {}
+	assert(setting_dictionary[id].type == SettingType.OptionButton, "Key: " + id + " is not an option setting")
+	return setting_dictionary[id].value_options
 
 func get_live_value(id: String) -> Variant:
 	#print("get_live_value called for the option:", id)

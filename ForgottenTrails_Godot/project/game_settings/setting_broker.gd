@@ -4,7 +4,7 @@ class_name Setting_Broker
 # Merged class handling both the UI elements and the settings logic.
 
 @export var affected_setting: ConfigHandler.choose # The name of the setting, needed to fetch from config manager.
-@onready var ref = ConfigHandler.choose.keys()[affected_setting] # The reference to the setting in the config manager.
+@onready var ref: String = ConfigHandler.choose.keys()[affected_setting] # The reference to the setting in the config manager, in string form
 @export var input: Control # The input control for changing the setting live_value.
 @export var reset_button: Button # Reset button to reset the live_value.
 @export var revert_button: Button # Revert button to revert the provisional live_value.
@@ -70,16 +70,17 @@ var change_pending: bool:
 		return input_value != live_value
 
 func _ready():
-	if is_visible_in_tree() && false:
+	if is_visible_in_tree():
 		prepare_ui_element() # ja moet dit wel, of gewoon aangecalld vanaf boven?
 		refresh_ui_element()
 
 func prepare_ui_element(): # dit samenvoegen met eronder? gewoon in if block?
 	if is_visible_in_tree():
+		print("Preparing setting broker for: " + ref)
 		# Set the label text to match the affected_setting name.
 		print("Setting up setting broker for: " + ref)
 		var label: Label = get_node("Button Handler/Label")
-		label.text = ref
+		label.text = str(ref)
 
 		# Connect signals for the buttons.
 		reset_button.pressed.connect(_on_reset_pressed)
@@ -92,6 +93,7 @@ var prepared: bool = false
 
 func refresh_ui_element():
 	if is_visible_in_tree():
+		print("Refreshing setting broker for: " + ref)
 		if!prepared:
 			prepare_ui_element()
 		# Populate the input control with the setting's options.
@@ -107,11 +109,13 @@ func populate_input_options():
 	if input is OptionButton:
 		input.clear()
 		var options: Dictionary = ConfigHandler.get_options(ref)
-		for option in options:
-			print("Adding option: " + option.affected_setting + " : " + option.value)
-			input.add_item(option.affected_setting, option.value)
+		for key in options.keys():
+			print("Adding option: " + key + " with value: " + str(options[key]))
+			input.add_item(key, options[key])
+
 	elif input is Range:
 		var item = ConfigHandler.get_range(ref)
+		print("Setting range for: " + ref + " with min: " + str(item[0]) + " max: " + str(item[1]) + " step: " + str(item[2]))
 		input.min_value = item[0]#.minimum_value
 		input.max_value = item[1]#.maximum_value
 		input.step = item[2]#.step_size

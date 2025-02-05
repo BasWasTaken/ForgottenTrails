@@ -4,7 +4,6 @@
 
 [node name="Setting Handler" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
 script = ExtResource("1_f1ypg")
-key = ""
 reset_button = NodePath("Button Handler/Reset")
 revert_button = NodePath("Button Handler/Revert")
 apply_button = NodePath("Button Handler/Apply")

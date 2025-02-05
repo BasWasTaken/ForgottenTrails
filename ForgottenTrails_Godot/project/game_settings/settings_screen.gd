@@ -1,6 +1,4 @@
-extends Screen
-
-
+extends Control
 # UI Objects in Scene
 @export var reset_button:Button# =$"Global Buttons/Apply All Button" #reset to defaults
 @export var revert_button:Button#=$"Global Buttons/Revert All Button" #undo changes
@@ -9,13 +7,14 @@ extends Screen
 
 var settings_all:
 	get:
-		#print("getting children")
+		print("getting children")
 		var list = []
 		for child in get_all_children(self):
-			#print(child)
+			print(child)
 			if child is Setting_Broker: 
-				#print(child)
+				print(child)
 				list.append(child)
+		print(list)
 		return list
 
 func get_all_children(node) -> Array:
@@ -62,28 +61,6 @@ func _ready():
 func _process(delta):
 	open_or_close()
 
-func _init():
-	for child in settings_all:
-		if child.is_ready():
-			child.prepare_ui_element()
-		
-
-func _on_open_or_close(): #on visibility changed
-	#TODO fix issue where tab menu opens the first child on startup
-	if is_visible_in_tree():
-		_on_open()
-	else:
-		_on_close()
-
-func _on_open():
-	for child in settings_all:
-		child.refresh_ui_element()
-	check_buttons()
-
-func _on_close():
-	if(changes_pending):
-		revert()
-
 
 func open_or_close():
 	if Input.is_action_just_pressed("menu"):
@@ -93,8 +70,9 @@ func open_or_close():
 			open()
 
 func open():
-	_on_open()
 	show()
+	_on_open()
+
 
 func close_try():
 	if not changes_pending:
@@ -106,6 +84,37 @@ func close_try():
 func close_confirm():
 	_on_close()
 	hide()
+
+
+func _on_open_or_close(): #on visibility changed
+	#TODO fix issue where tab menu opens the first child on startup
+	if is_visible_in_tree():
+		_on_open()
+	else:
+		_on_close()
+
+
+
+func _on_open():
+	print("Settings Screen Opened")
+	for child in settings_all:
+		child.refresh_ui_element()
+	check_buttons()
+
+func _on_close():
+	if(changes_pending):
+		revert()
+
+
+func _init():
+	for child in settings_all:
+		if child.is_ready():
+			child.prepare_ui_element()
+		
+
+
+
+
 
 
 func check_buttons():

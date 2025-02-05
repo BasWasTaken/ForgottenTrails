@@ -82,7 +82,7 @@ enum choose{
 
 # jezus wat zijn enums een gekut in godot
 @export var setting_dictionary: Dictionary = {
-	choose.keys()[choose.text_speed]: Setting_OptionButton.new(choose.text_speed, 50, {"slow":1, "mid":50, "fast":100}),
+	choose.keys()[choose.text_speed]: Setting_OptionButton.new(choose.text_speed, 50, {"slow":20, "mid":40, "fast":80}),
 	choose.keys()[choose.textbox_opacity]: Setting_Range.new(choose.textbox_opacity, 50, 0, 100, 1),
 	choose.keys()[choose.master_volume]: Setting_Range.new(choose.master_volume, 50, 0, 100, 1),
 	choose.keys()[choose.full_screen]: Setting_CheckBox.new(choose.full_screen, false)

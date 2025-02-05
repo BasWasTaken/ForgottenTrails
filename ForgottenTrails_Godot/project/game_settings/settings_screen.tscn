@@ -36,11 +36,11 @@ metadata/_tab_index = 0
 
 [node name="Speed" parent="Settings Tabs/Gameplay" instance=ExtResource("2_kkcbu")]
 layout_mode = 2
-key = 1
+affected_setting = 1
 
 [node name="Opacity" parent="Settings Tabs/Gameplay" instance=ExtResource("2_h2cb7")]
 layout_mode = 2
-key = 2
+affected_setting = 2
 
 [node name="Audio" type="VBoxContainer" parent="Settings Tabs"]
 visible = false
@@ -50,7 +50,7 @@ metadata/_tab_index = 1
 [node name="Master Volume" parent="Settings Tabs/Audio" instance=ExtResource("2_h2cb7")]
 visible = false
 layout_mode = 2
-key = 3
+affected_setting = 3
 
 [node name="Video" type="VBoxContainer" parent="Settings Tabs"]
 visible = false
@@ -60,7 +60,7 @@ metadata/_tab_index = 2
 [node name="Full Screen" parent="Settings Tabs/Video" instance=ExtResource("4_asi8a")]
 visible = false
 layout_mode = 2
-key = 4
+affected_setting = 4
 
 [node name="Global Buttons" type="HBoxContainer" parent="."]
 layout_mode = 1

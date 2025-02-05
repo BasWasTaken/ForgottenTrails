@@ -1,9 +1,10 @@
-@tool
+#@tool
 extends Control
 class_name Setting_Broker
 # Merged class handling both the UI elements and the settings logic.
 
-@export_enum("text_speed", "textbox_opacity", "master_volume", "full_screen") var key: String # The name of the setting, needed to fetch from config manager.
+@export var affected_setting: ConfigHandler.choose # The name of the setting, needed to fetch from config manager.
+@onready var ref = ConfigHandler.choose.keys()[affected_setting] # The reference to the setting in the config manager.
 @export var input: Control # The input control for changing the setting live_value.
 @export var reset_button: Button # Reset button to reset the live_value.
 @export var revert_button: Button # Revert button to revert the provisional live_value.
@@ -11,6 +12,7 @@ class_name Setting_Broker
 
 var input_value:
 	get:
+		assert(input != null, "Input control is null")
 		if input is Range:
 			return input.value
 		elif input is OptionButton:
@@ -18,9 +20,10 @@ var input_value:
 		elif input is CheckBox:
 			return input.button_pressed
 		else:
-			print("Unrecognised setting type!")
+			assert(false, "Trying to get unrecognised setting type!")
 			return null
 	set(value):
+		assert(input != null, "Input control is null")
 		if input is Range:
 			input.value = value
 		elif input is OptionButton:
@@ -28,19 +31,35 @@ var input_value:
 		elif input is CheckBox:
 			input.button_pressed = value
 		else:
-			print("Unrecognised setting type!")
+			assert(false, "Trying to set unrecognised setting type!")
+
+# # Getter for the current (live) live_value of the setting
+# var live_value:
+# 	get:
+# 		print("Getting live value for: " + ref)
+# 		return ConfigHandler.get_live_value(ref)
+# 	set(value):
+# 		ConfigHandler.set_live_value(ref, value)
+
+# # Getter for the default live_value of the setting
+# var default_value:
+# 	get:
+# 		return ConfigHandler.get_default_value(ref)
 
 # Getter for the current (live) live_value of the setting
 var live_value:
 	get:
-		return ConfigHandler.get_live_value(key)
+		assert(ref in ConfigHandler.setting_dictionary, "Invalid key: " + str(ref))
+		return ConfigHandler.get_live_value(ref)
 	set(value):
-		ConfigHandler.set_live_value(key, value)
+		assert(ref in ConfigHandler.setting_dictionary, "Invalid key: " + str(ref))
+		ConfigHandler.set_live_value(ref, value)
 
 # Getter for the default live_value of the setting
 var default_value:
 	get:
-		return ConfigHandler.get_default_value(key)
+		assert(ref in ConfigHandler.setting_dictionary, "Invalid key: " + str(ref))
+		return ConfigHandler.get_default_value(ref)
 
 var using_default: bool:
 	get:
@@ -51,34 +70,40 @@ var change_pending: bool:
 		return input_value != live_value
 
 func _ready():
-	# Set the label text to match the key name.
-	var label: Label = get_node("Button Handler/Label")
-	label.text = str(key)
+	if is_visible_in_tree():
+		# Set the label text to match the affected_setting name.
+		print("Setting up setting broker for: " + ref)
+		var label: Label = get_node("Button Handler/Label")
+		label.text = ref
 
-	# Connect signals for the buttons.
-	reset_button.pressed.connect(_on_reset_pressed)
-	revert_button.pressed.connect(_on_revert_pressed)
-	apply_button.pressed.connect(_on_apply_pressed)
+		# Connect signals for the buttons.
+		reset_button.pressed.connect(_on_reset_pressed)
+		revert_button.pressed.connect(_on_revert_pressed)
+		apply_button.pressed.connect(_on_apply_pressed)
 
 	_init()
 
+
 func _init():
-	# Populate the input control with the setting's options.
-	populate_input_options()
+	if is_visible_in_tree():
+		# Populate the input control with the setting's options.
+		populate_input_options()
 
-	# Set the input control to the live_value.
-	input_value = live_value
+		# Set the input control to the live_value.
+		input_value = live_value
 
-	# Check the buttons to see if they should be visible.
-	check_buttons()
+		# Check the buttons to see if they should be visible.
+		check_buttons()
 
 func populate_input_options():
 	if input is OptionButton:
-		var options = ConfigHandler.get_options(key)
+		input.clear()
+		var options: Dictionary = ConfigHandler.get_options(ref)
 		for option in options:
-			input.add_item(str(option), option)
+			print("Adding option: " + option.affected_setting + " : " + option.value)
+			input.add_item(option.affected_setting, option.value)
 	elif input is Range:
-		var item = ConfigHandler.get_range(key)
+		var item = ConfigHandler.get_range(ref)
 		input.min_value = item[0]#.minimum_value
 		input.max_value = item[1]#.maximum_value
 		input.step = item[2]#.step_size

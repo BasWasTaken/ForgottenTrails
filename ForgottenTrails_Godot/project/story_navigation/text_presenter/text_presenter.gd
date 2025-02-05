@@ -9,8 +9,8 @@ var typing_speed_modifier = 1
 
 var typing_delay: float:
 	get:		
-		var speed = ConfigHandler.get_live_value(ConfigHandler.key.text_speed)
-		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on setting change and compute once
+		var speed = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on opacity change and compute once
 		var delay = 1/speed
 		return delay
 
@@ -22,22 +22,25 @@ signal finished_typing
 var typing: bool = false
 
 func _ready():
-	init()
 	ConfigHandler.setting_changed.connect(
 		func(id):
-			if id == ConfigHandler.key.textbox_opacity:
+			if id == ConfigHandler.choose.textbox_opacity:
 				_on_opacity_change_applied()
 	)
+	
+	_on_opacity_change_applied()
+	
 	present_story("Press Continue To Start the Story.")
 
-var setting:
+var opacity:
 	get:
-		return ConfigHandler.get_live_value(ConfigHandler.key.textbox_opacity)
-func init():
-	var scaled = setting * 255
+		return ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity])
+
+func _on_opacity_change_applied():
+	var scaled = opacity * 255
 	print(scaled)
 	box.self_modulate=Color8(0,0,0,scaled as int)
-
+	
 
 func present_console_message(content: String, warning: bool = false) -> void:
 	if warning:
@@ -91,7 +94,3 @@ func finish_text():
 
 func _spd(new):
 	typing_speed_modifier = new
-
-
-func _on_opacity_change_applied():
-	init()

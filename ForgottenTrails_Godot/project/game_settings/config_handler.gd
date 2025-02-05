@@ -1,7 +1,8 @@
 extends Node
 # TEST 20250113190200
 class SettingObject:
-	extends Object
+	var ref: choose
+	pass
 
 enum SettingType {
 	OptionButton,
@@ -12,14 +13,16 @@ enum SettingType {
 class Setting_OptionButton: 
 	extends SettingObject
 	var type = SettingType.OptionButton
-	var value_options: Array
+	var value_options: Dictionary
 	var default_value
 	var live_value
 
-	func _init(default, options: Array):
+	func _init(_ref:choose, default, options: Dictionary):
+		ref = _ref
 		self.value_options = options
 		self.default_value = default
 		self.live_value = default
+		print(choose.keys()[ref], " created with default: ", default, " and options: ", options)
 
 class Setting_Range:
 	extends SettingObject
@@ -48,12 +51,14 @@ class Setting_Range:
 			else:
 				live_value = value
 
-	func _init(default: int, minimum: int= 0, maximum: int=100, step: int=1 ):
+	func _init(_ref:choose, default: int, minimum: int= 0, maximum: int=100, step: int=1 ):
+		ref = _ref
 		self.minimum_value = minimum
 		self.maximum_value = maximum
 		self.step_size = step
 		self.default_value = default
 		self.live_value = default
+		print(choose.keys()[ref], " created with default:", default, "min:", minimum, "max:", maximum, "step:", step)
 
 class Setting_CheckBox:
 	extends SettingObject
@@ -61,74 +66,70 @@ class Setting_CheckBox:
 	var default_value: bool
 	var live_value: bool
 
-	func _init(default: bool):
+	func _init(_ref:choose, default: bool):
+		ref = _ref
 		default_value = default
 		live_value = default
+		print(choose.keys()[ref], " created with default:", default)
 
-enum text_speed_preset{
-	slow=1,
-	mid=50,
-	fast=100
+enum choose{
+	placeholder,
+	text_speed,
+	textbox_opacity,
+	master_volume,
+	full_screen
+} 
+
+# jezus wat zijn enums een gekut in godot
+@export var setting_dictionary: Dictionary = {
+	choose.keys()[choose.text_speed]: Setting_OptionButton.new(choose.text_speed, 50, {"slow":1, "mid":50, "fast":100}),
+	choose.keys()[choose.textbox_opacity]: Setting_Range.new(choose.textbox_opacity, 50, 0, 100, 1),
+	choose.keys()[choose.master_volume]: Setting_Range.new(choose.master_volume, 50, 0, 100, 1),
+	choose.keys()[choose.full_screen]: Setting_CheckBox.new(choose.full_screen, false)
 }
 
-const temporary_list: Array[String] = ["text_speed", "textbox_opacity", "master_volume", "full_screen"]
-
-@export var setting_dictionary = {
-	"text_speed": Setting_OptionButton.new(text_speed_preset.mid, [text_speed_preset.slow, text_speed_preset.mid, text_speed_preset.fast]),
-	"textbox_opacity": Setting_Range.new(50, 0, 100, 1),
-	"master_volume": Setting_Range.new(50, 0, 100, 1),
-	"full_screen": Setting_CheckBox.new(false)
-}
 
 func get_default_value(id: String) -> Variant:
 	if id in setting_dictionary:
 		return setting_dictionary[id].default_value
 	else:
-		print("Invalid key:", id)
+		print("Invalid option:", id)
 		return null
 
 func get_range(id: String) -> Array:
-	if id in setting_dictionary:
+	if id in setting_dictionary.values():
 		if setting_dictionary[id].type == SettingType.Range:
 			return [setting_dictionary[id].minimum_value, setting_dictionary[id].maximum_value, setting_dictionary[id].step_size]
 		else:
 			print("Key:", id, "is not a range setting")
 			return []
 	else:
-		print("Invalid key:", id)
+		print("Invalid option:", id)
 		return []
 
-func get_options(id: String) -> Array:
-	if id in setting_dictionary:
-		if setting_dictionary[id].type == SettingType.OptionButton:
-			return setting_dictionary[id].value_options
-		else:
-			print("Key:", id, "is not an option setting")
-			return []
+func get_options(id: String) -> Dictionary:
+	assert(id in setting_dictionary, "Invalid option: " + id)
+	if setting_dictionary[id].type == SettingType.OptionButton:
+		return setting_dictionary[id].value_options
 	else:
-		print("Invalid key:", id)
-		return []
+		assert(false, "Key: " + id + " is not an option setting")
+		return {}
 
 func get_live_value(id: String) -> Variant:
-	print("get_live_value called with key:", id)
-	if id in setting_dictionary:
-		print("Valid key:", id, "Value:", setting_dictionary[id].live_value)
-		return setting_dictionary[id].live_value
-	else:
-		print("Invalid key:", id)
-		return null
+	print("get_live_value called for the option:", id)
+	assert(id in setting_dictionary, "Invalid option: " + id)
+	print("Valid choose:", id, "Value:", setting_dictionary[id].live_value)
+	return setting_dictionary[id].live_value
 
 signal setting_changed(id: String, value: Variant)
 
 func set_live_value(id: String, value: Variant):
-	if id in setting_dictionary:
-		setting_dictionary[id].live_value = value
-		setting_changed.emit(id, value)
-	else:
-		print("Invalid key:", id)
+	assert(id in setting_dictionary, "Invalid option: " + id)
+	setting_dictionary[id].live_value = value
+	setting_changed.emit(id, value)
 
 # The Config file in memory 
-@onready var storage = _get_or_create_config_file() # purely key and value needed
+#@onready var storage = _get_or_create_config_file() # purely choose and value needed
 
 func _get_or_create_config_file() -> ConfigFile:
 	if false: #if any file is found on startup

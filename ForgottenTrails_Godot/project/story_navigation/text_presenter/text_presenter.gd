@@ -2,16 +2,20 @@ extends RichTextLabel
 
 @onready var box:ColorRect= get_parent()
 
+#--- should this be here? definitions
+
 
 var typing_speed_modifier = 1
 
 var typing_delay: float:
-	get:
-		#print(Settings.setting_items[Settings.Keys.speed].default_value)
-		#print(Settings.setting_items[Settings.Keys.speed].saved_value)
-		var speed = UserSettings.setting_items[UserSettings.Keys.speed].saved_value
-		speed *= typing_speed_modifier
-		var delay = 1/speed
+	get:		
+		var speed: float = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+		print("speed: ", speed)#TODO: feed this into some logging or testing function that gathers mesages into one output per frame..?
+		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on opacity change and compute once
+		var delay:float = 0
+		if speed > 0:
+			delay = 1/speed
+		print("delay: ", delay)
 		return delay
 
 @export var timer: Timer  
@@ -22,14 +26,25 @@ signal finished_typing
 var typing: bool = false
 
 func _ready():
-	init()
+	ConfigHandler.setting_changed.connect(
+		func(id, value):
+			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:
+				_on_opacity_change_applied()
+	)
+	
+	_on_opacity_change_applied()
+	
 	present_story("Press Continue To Start the Story.")
 
-func init():
-	var scaled = UserSettings.setting_items[UserSettings.Keys.opacity].saved_value * 255
+var opacity:
+	get:
+		return ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity])
+
+func _on_opacity_change_applied():
+	var scaled = opacity * 2.55 #convert 0-100 to 0-255
 	print(scaled)
 	box.self_modulate=Color8(0,0,0,scaled as int)
-
+	
 
 func present_console_message(content: String, warning: bool = false) -> void:
 	if warning:
@@ -62,10 +77,11 @@ func present_story(content: String) -> void:
 			continue #skip delay, go to next character
 		elif level<0: 
 			push_warning("bracket depth error")
-		else: # level==0			
-			audio_player.play() # play some audio
-			timer.start(typing_delay) # start the delay TODO:make dependent on 'n'
-			await timer.timeout # wait for the typing delay
+		else: # level==0
+			audio_player.play() # play some audio #TODO make not all sound at once with instant text
+			if(typing_delay>0):	
+				timer.start(typing_delay) # start the delay TODO:make dependent on 'n'
+				await timer.timeout # wait for the typing delay
 			if(!typing):
 				break # exit loop if we have been skipped
 	
@@ -83,7 +99,3 @@ func finish_text():
 
 func _spd(new):
 	typing_speed_modifier = new
-
-
-func _on_opacity_change_applied():
-	init()

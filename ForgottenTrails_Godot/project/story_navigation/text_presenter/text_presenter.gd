@@ -9,9 +9,13 @@ var typing_speed_modifier = 1
 
 var typing_delay: float:
 	get:		
-		var speed = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+		var speed: float = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+		print("speed: ", speed)#TODO: feed this into some logging or testing function that gathers mesages into one output per frame..?
 		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on opacity change and compute once
-		var delay = 1/speed
+		var delay:float = 0
+		if speed > 0:
+			delay = 1/speed
+		print("delay: ", delay)
 		return delay
 
 @export var timer: Timer  
@@ -73,10 +77,11 @@ func present_story(content: String) -> void:
 			continue #skip delay, go to next character
 		elif level<0: 
 			push_warning("bracket depth error")
-		else: # level==0			
-			audio_player.play() # play some audio
-			timer.start(typing_delay) # start the delay TODO:make dependent on 'n'
-			await timer.timeout # wait for the typing delay
+		else: # level==0
+			audio_player.play() # play some audio #TODO make not all sound at once with instant text
+			if(typing_delay>0):	
+				timer.start(typing_delay) # start the delay TODO:make dependent on 'n'
+				await timer.timeout # wait for the typing delay
 			if(!typing):
 				break # exit loop if we have been skipped
 	

@@ -82,7 +82,7 @@ enum choose{
 
 # jezus wat zijn enums een gekut in godot
 @export var setting_dictionary: Dictionary = {
-	choose.keys()[choose.text_speed]: Setting_OptionButton.new(choose.text_speed, 50, {"slow":20, "mid":40, "fast":80}),
+	choose.keys()[choose.text_speed]: Setting_OptionButton.new(choose.text_speed, 100, {"literally 1 cpm":1,"so zetta slow":6, "v slow":12, "slow":25, "mid":50,"fast":100,"v fast":200, "wa-jow":1000, "instant":0}), #in cps
 	choose.keys()[choose.textbox_opacity]: Setting_Range.new(choose.textbox_opacity, 50, 0, 100, 1),
 	choose.keys()[choose.master_volume]: Setting_Range.new(choose.master_volume, 50, 0, 100, 1),
 	choose.keys()[choose.full_screen]: Setting_CheckBox.new(choose.full_screen, false)
@@ -116,6 +116,7 @@ func set_live_value(id: String, value: Variant):
 	assert(id in setting_dictionary, "Invalid option: " + id)
 	setting_dictionary[id].live_value = value
 	setting_changed.emit(id, value)
+	print("Setting changed for:", id, "to:", value)
 
 # The Config file in memory 
 #@onready var storage = _get_or_create_config_file() # purely choose and value needed

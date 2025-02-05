@@ -20,7 +20,7 @@ var input_value:
 		elif input is CheckBox:
 			return input.button_pressed
 		else:
-			assert(false, "Trying to get unrecognised setting type!")
+			assert(false, "Could not get unrecognised input type of" + str(input))
 			return null
 	set(value):
 		assert(input != null, "Input control is null")
@@ -31,7 +31,7 @@ var input_value:
 		elif input is CheckBox:
 			input.button_pressed = value
 		else:
-			assert(false, "Trying to set unrecognised setting type!")
+			assert(false, "Could not set unrecognised input type of" + str(input))
 
 # # Getter for the current (live) live_value of the setting
 # var live_value:
@@ -70,6 +70,11 @@ var change_pending: bool:
 		return input_value != live_value
 
 func _ready():
+	if is_visible_in_tree() && false:
+		prepare_ui_element() # ja moet dit wel, of gewoon aangecalld vanaf boven?
+		refresh_ui_element()
+
+func prepare_ui_element(): # dit samenvoegen met eronder? gewoon in if block?
 	if is_visible_in_tree():
 		# Set the label text to match the affected_setting name.
 		print("Setting up setting broker for: " + ref)
@@ -80,12 +85,15 @@ func _ready():
 		reset_button.pressed.connect(_on_reset_pressed)
 		revert_button.pressed.connect(_on_revert_pressed)
 		apply_button.pressed.connect(_on_apply_pressed)
+		prepared = true
+	refresh_ui_element()
 
-	_init()
+var prepared: bool = false
 
-
-func _init():
+func refresh_ui_element():
 	if is_visible_in_tree():
+		if!prepared:
+			prepare_ui_element()
 		# Populate the input control with the setting's options.
 		populate_input_options()
 
@@ -127,7 +135,7 @@ func check_buttons():
 
 func _on_reset_pressed():
 	input_value = default_value
-	check_buttons()
+	check_buttons() #TODO: resolve fact you're creating many calls per framt to check the buttons
 
 func _on_revert_pressed():
 	input_value = live_value

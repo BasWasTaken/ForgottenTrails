@@ -2,7 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/game_settings/setting_handler_base.tscn" id="1_5m15b"]
 
-[node name="Setting Handler" instance=ExtResource("1_5m15b")]
+[node name="Setting Handler" node_paths=PackedStringArray("input") instance=ExtResource("1_5m15b")]
+input = NodePath("Value Input")
 
 [node name="Label" parent="Button Handler" index="0"]
 text = "0"
@@ -16,5 +17,5 @@ visible = true
 [node name="Apply" parent="Button Handler" index="3"]
 visible = true
 
-[node name="Value Input" type="CheckButton" parent="." index="1"]
+[node name="Value Input" type="CheckBox" parent="." index="1"]
 layout_mode = 2

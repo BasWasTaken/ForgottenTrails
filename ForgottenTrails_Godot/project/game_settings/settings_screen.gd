@@ -36,7 +36,7 @@ var changes_pending:
 		var _pending = []
 		for setting in settings_all:
 			if setting.change_pending:
-				changes_pending.append(setting)
+				_pending.append(setting)
 		if _pending.size() > 0:
 			return _pending
 		else:
@@ -48,15 +48,15 @@ var deviations_from_defaults:
 			return false
 		var _deviations = []
 		for setting in settings_all:
-			if setting.deviation_from_default:
-				deviations_from_defaults.append(setting)
+			if !setting.using_default:
+				_deviations.append(setting)
 		if _deviations.size() > 0:
 			return _deviations
 		else:
 			return false
 
 func _ready():
-	_init()
+	pass
 	#_on_open_or_close() #is probably already called by itself..?
 
 func _process(delta):
@@ -64,9 +64,9 @@ func _process(delta):
 
 func _init():
 	for child in settings_all:
-		#child.ready.connect(child.init)
-		#child.checked_buttons.connect(check_buttons)
-		pass
+		if child.is_ready():
+			child.prepare_ui_element()
+		
 
 func _on_open_or_close(): #on visibility changed
 	#TODO fix issue where tab menu opens the first child on startup
@@ -77,8 +77,8 @@ func _on_open_or_close(): #on visibility changed
 
 func _on_open():
 	for child in settings_all:
-		child._init()
-	#check_buttons()
+		child.refresh_ui_element()
+	check_buttons()
 
 func _on_close():
 	if(changes_pending):
@@ -130,15 +130,15 @@ func check_buttons():
 
 func reset():
 	for setting in deviations_from_defaults:
-		setting.reset()
+		setting._on_reset_pressed() #NOTE: is it ok to use the on pressed or should this be own function, thus neseccisating second function per button?
 	check_buttons()
 
 func revert():
 	for setting in changes_pending:
-		setting.revert()
+		setting._on_revert_pressed()
 	check_buttons()
 
 func apply():
 	for setting in changes_pending:
-		setting.apply()
+		setting._on_apply_pressed()
 	check_buttons()

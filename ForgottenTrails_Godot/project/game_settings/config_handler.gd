@@ -116,9 +116,9 @@ func get_options(id: String) -> Dictionary:
 		return {}
 
 func get_live_value(id: String) -> Variant:
-	print("get_live_value called for the option:", id)
+	#print("get_live_value called for the option:", id)
 	assert(id in setting_dictionary, "Invalid option: " + id)
-	print("Valid choose:", id, "Value:", setting_dictionary[id].live_value)
+	#print("Valid choose:", id, "Value:", setting_dictionary[id].live_value)
 	return setting_dictionary[id].live_value
 
 signal setting_changed(id: String, value: Variant)

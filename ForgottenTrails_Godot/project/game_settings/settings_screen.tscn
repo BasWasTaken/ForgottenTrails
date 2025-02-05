@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://dkr7obwclut2x"]
+[gd_scene load_steps=6 format=3 uid="uid://dkr7obwclut2x"]
 
 [ext_resource type="Script" path="res://project/game_settings/settings_screen.gd" id="1_j51ml"]
 [ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://project/game_settings/setting_handler_slider.tscn" id="2_h2cb7"]
 [ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://project/game_settings/setting_handler_dropdown.tscn" id="2_kkcbu"]
 [ext_resource type="PackedScene" uid="uid://cjnyg02autwl0" path="res://project/game_settings/setting_handler_checkbox.tscn" id="4_asi8a"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_hyk2o"]
+device = -1
+keycode = 4194305
 
 [node name="Settings Screen" type="Control" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button", "close_button")]
 layout_mode = 3
@@ -19,6 +23,7 @@ reset_button = NodePath("Global Buttons/Reset All Button")
 revert_button = NodePath("Global Buttons/Revert All Button")
 apply_button = NodePath("Global Buttons/Apply All Button")
 close_button = NodePath("Global Buttons/Close Button")
+hotkey = SubResource("InputEventKey_hyk2o")
 
 [node name="Settings Tabs" type="TabContainer" parent="."]
 layout_mode = 1

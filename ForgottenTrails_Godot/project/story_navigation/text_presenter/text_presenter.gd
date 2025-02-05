@@ -10,12 +10,12 @@ var typing_speed_modifier = 1
 var typing_delay: float:
 	get:		
 		var speed: float = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
-		print("speed: ", speed)#TODO: feed this into some logging or testing function that gathers mesages into one output per frame..?
+		#print("speed: ", speed)#TODO: feed this into some logging or testing function that gathers mesages into one output per frame..?
 		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on opacity change and compute once
 		var delay:float = 0
 		if speed > 0:
 			delay = 1/speed
-		print("delay: ", delay)
+		#print("delay: ", delay)
 		return delay
 
 @export var timer: Timer  
@@ -42,7 +42,7 @@ var opacity:
 
 func _on_opacity_change_applied():
 	var scaled = opacity * 2.55 #convert 0-100 to 0-255
-	print(scaled)
+	#print(scaled)
 	box.self_modulate=Color8(0,0,0,scaled as int)
 	
 

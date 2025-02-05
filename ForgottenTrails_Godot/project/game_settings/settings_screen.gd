@@ -7,14 +7,14 @@ extends Control
 
 var settings_all:
 	get:
-		print("getting children")
+		#print("getting children")
 		var list = []
 		for child in get_all_children(self):
-			print(child)
+			#print(child)
 			if child is Setting_Broker: 
 				print(child)
 				list.append(child)
-		print(list)
+		#print(list)
 		return list
 
 func get_all_children(node) -> Array:
@@ -110,11 +110,6 @@ func _init():
 	for child in settings_all:
 		if child.is_ready():
 			child.prepare_ui_element()
-		
-
-
-
-
 
 
 func check_buttons():
@@ -150,4 +145,5 @@ func revert():
 func apply():
 	for setting in changes_pending:
 		setting._on_apply_pressed()
-	check_buttons()
+	check_buttons()	
+	#ConfigHandler.write_to_disk()

@@ -93,7 +93,7 @@ var prepared: bool = false
 
 func refresh_ui_element():
 	if is_visible_in_tree():
-		print("Refreshing setting broker for: " + ref)
+		#print("Refreshing setting broker for: " + ref)
 		if!prepared:
 			prepare_ui_element()
 		# Populate the input control with the setting's options.
@@ -110,12 +110,12 @@ func populate_input_options():
 		input.clear()
 		var options: Dictionary = ConfigHandler.get_options(ref)
 		for key in options.keys():
-			print("Adding option: " + key + " with value: " + str(options[key]))
+			#print("Adding option: " + key + " with value: " + str(options[key]))
 			input.add_item(key, options[key])
 
 	elif input is Range:
 		var item = ConfigHandler.get_range(ref)
-		print("Setting range for: " + ref + " with min: " + str(item[0]) + " max: " + str(item[1]) + " step: " + str(item[2]))
+		#print("Setting range for: " + ref + " with min: " + str(item[0]) + " max: " + str(item[1]) + " step: " + str(item[2]))
 		input.min_value = item[0]#.minimum_value
 		input.max_value = item[1]#.maximum_value
 		input.step = item[2]#.step_size
@@ -149,6 +149,6 @@ func _on_apply_pressed():
 	live_value = input_value
 	check_buttons()
 
-func check_input(new_value):
+func check_input(_new_value):
 	#???
 	check_buttons()

@@ -13,3 +13,4 @@ func launch_game():
 
 func _on_start_game_pressed():
 	launch_game()
+	DataManager.load_game(DataManager.data_method.auto)

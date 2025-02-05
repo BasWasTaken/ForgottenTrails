@@ -65,4 +65,18 @@ public partial class story_getter : Node
 		story.ChooseChoiceIndex(index);
 		ContinueStory();
 	}
+
+	public string GetSaveState()
+	{
+		// get story state
+		return story.state.ToJson();
+		// TODO also save log
+	}
+
+	public void LoadSaveState(string saveState)
+	{
+		// load story state
+		story.state.LoadJson(saveState);
+		// TODO also load log
+	}
 }

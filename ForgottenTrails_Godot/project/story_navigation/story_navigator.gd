@@ -6,6 +6,9 @@ class_name StoryNavigator
 @onready var story_getter = get_node("StoryGetter")
 @onready var text_presenter = get_node("TextPresenterPanel/TextPresenter")
 @onready var choices_presenter = get_node("ChoicePresenter")
+@onready var history_log #= get_node("HistoryLog")
+
+static var story_state: String
 
 signal skip
 
@@ -59,4 +62,11 @@ func _on_choice_pressed(index):
 func _send_choice(index):
 	#print("navigator received choice " + str(index))
 	story_getter.FeedChoice(index);
+	save_state()
 	selectedChoice = -1 # reset selection so next required an action to select
+
+func save_state():
+	story_state = story_getter.GetSaveState
+
+func load_state():
+	story_getter.LoadSaveState(story_state)

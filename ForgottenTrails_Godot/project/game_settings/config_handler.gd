@@ -135,7 +135,6 @@ enum File_State{
 } 
 var state: File_State = File_State.none: 
 	get:
-		print("State requested:", state)
 		return state
 	set(value):
 		print("State changed to:", value)

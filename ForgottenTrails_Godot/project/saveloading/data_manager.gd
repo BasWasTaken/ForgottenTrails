@@ -3,7 +3,7 @@ extends Node
 @export_dir var saving_directory
 var player_name = "dev"
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_pressed("quickload"):
 		load_game(data_method.quick)
 	elif Input.is_action_pressed("quicksave"):
@@ -16,15 +16,13 @@ enum data_method{
 	manual
 }
 
-# hm, this seems to not work for settings. but, that makes sense i think- i don't think i wanna save a scene for that, i wannaa write some json to a file on disk. 
-# maybe for this one it makes sense to see how i did it in unity, and perhaps ask chatgpt for help
-
 # Script - Globally accessible
 # Note: This can be called from anywhere inside the tree. This function is
 # path independent.
 # Go through everything in the persist category and ask them to return a
 # dict of relevant variables.
 func save_game(method:data_method):
+	print("Saving game")
 	#TODO create behaviour based on enum
 	
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
@@ -49,11 +47,30 @@ func save_game(method:data_method):
 		# Store the save dictionary as a new line in the save file.
 		save_file.store_line(json_string)
 
+		if method != data_method.auto:
+			#StoryNavigator.save_state()
+			pass #TODO implement this #make a new save not just from checkpoints, but from the current state of the story
+		
+		# store the ink file state
+		save_file.store_line(StoryNavigator.story_state)
+
+		save_file.close()
+	print("Game saved")
+
 func load_game(method:data_method):
+	print("Loading game")
 	#TODO create behaviour based on enum
 	
 	if not FileAccess.file_exists("user://savegame.save"):
 		return # Error! We don't have a save to load.
+
+	# CONTINUE HERE AFTER 20250205221645
+	# OK I REALLY QUESTION THE NEED FOR THE BELOW, AT LEAST FOR NOW
+	# I WANT TO at least do the story state for json, ie 	StoryNavigator.story_state = save_file.get_line()
+
+	# for now there are some issues with needing static and such which i also need to look at, as i'm running up against what statics can and can;'t do. i have globals for this, i should use those
+	
+
 
 	# We need to revert the game state so we're not cloning objects
 	# during loading. This will vary wildly depending on the needs of a
@@ -91,3 +108,5 @@ func load_game(method:data_method):
 			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y":
 				continue
 			new_object.set(i, node_data[i])
+		
+	print("Game loaded")

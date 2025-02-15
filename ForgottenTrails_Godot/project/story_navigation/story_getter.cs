@@ -5,6 +5,8 @@ public partial class story_getter : Node
 {	
 	[Export]
 	private InkStory story; 
+
+	public string latest_state;
 		
 	[Signal]
 	public delegate void continued_storyEventHandler(string content);
@@ -15,11 +17,11 @@ public partial class story_getter : Node
 	[Signal]
 	public delegate void encountered_no_choicesEventHandler(InkChoice choice);
 	
-	//[Signal]
-	//public delegate void saved_stateEventHandler(string json, string saveMethod = "quick");
+	[Signal]
+	public delegate void saved_stateEventHandler(string json);
 	
-	//[Signal]
-	//public delegate void loaded_stateEventHandler(string json, string saveMethod = "quick");
+	[Signal]
+	public delegate void loaded_stateEventHandler(string json);
 	
 	// external functions
 	[Signal]
@@ -40,13 +42,13 @@ public partial class story_getter : Node
 	{
 		if(story.CanContinue) // extra validation
 		{
+			SaveState(); // save state before continuing
 			//GD.Print("continueing story");
 			string content = story.Continue();
 			//GD.Print(content);
 			content = content.Replace('<', '[').Replace('>', ']');
 
 			EmitSignal(SignalName.continued_story, content);
-			
 			if(story.CanContinue)
 			{
 				GD.Print("Still continuing, no choices.");
@@ -78,10 +80,10 @@ public partial class story_getter : Node
 	public string SaveState()
 	{
 		// get story state
-		var state = story.SaveState();
-		GD.Print("saving story state: " + state);
-		//EmitSignal(SignalName.saved_state, state, saveMethod);
-		return state;
+		latest_state = story.SaveState();
+		GD.Print("getting story state: " + latest_state);
+		
+		return latest_state;
 		// TODO also save log
 	}
 
@@ -89,9 +91,18 @@ public partial class story_getter : Node
 	{
 		// load story state
 		GD.Print("loading story state: " + saveState);
-		//EmitSignal(SignalName.loaded_state, saveState, saveMethod);
 		//TODO Also set other objects
 		story.LoadState(saveState);
+		if(story.CanContinue)
+		{
+			ContinueStory();
+		}
+		else
+		{
+			GD.Print("Loaded state is at end of story.");
+		}
+		EmitSignal(SignalName.loaded_state);
+
 		// TODO also load log
 	}
 }

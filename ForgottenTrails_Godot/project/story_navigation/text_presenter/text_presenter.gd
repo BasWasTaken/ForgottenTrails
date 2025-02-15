@@ -43,11 +43,13 @@ func _ready():
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed]:
 				_on_speed_applied()
 	)
-	
 	_on_opacity_change_applied()
-	_on_speed_applied()
-	
-	present_story("Press Continue To Start the Story.")
+	_on_speed_applied()	
+	_init()
+	present_story("Press Continue To Start/Continue the Story.")
+
+func _init():
+	clear()
 
 var opacity:
 	get:

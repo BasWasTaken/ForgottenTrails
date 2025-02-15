@@ -66,7 +66,7 @@ func _send_choice(index):
 	selectedChoice = -1 # reset selection so next required an action to select
 
 func save_state():
-	story_state = story_getter.GetSaveState
+	story_state = story_getter.GetSaveState()
 
 func load_state():
 	story_getter.LoadSaveState(story_state)

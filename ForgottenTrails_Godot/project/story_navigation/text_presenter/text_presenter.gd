@@ -13,7 +13,8 @@ var typing_speed_net: float:
 		return typing_speed_base * typing_speed_modifier 
 
 func _on_speed_applied():
-	typing_speed_base = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])		
+	typing_speed_base = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+	print("new speed: ",typing_speed_base, " times ", typing_speed_modifier, " = ", typing_speed_net, " characters per second") 		
 	
 
 var typing_delay: float:
@@ -111,4 +112,4 @@ func finish_text():
 
 func _spd(new):
 	typing_speed_modifier = new
-	print("new speed: ",typing_speed_base, " times ", typing_speed_modifier, " = ", typing_speed_net, " seconds per character") 
+	_on_speed_applied()

@@ -20,7 +20,7 @@ There was slow text.
 
 ~ spd(1)
 
-.
+There were choices.
 
  * There were two choices.
 

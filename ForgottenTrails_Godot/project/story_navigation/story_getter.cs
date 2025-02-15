@@ -63,20 +63,25 @@ public partial class story_getter : Node
 	{
 		GD.Print("story_getter received choice, feeding now");
 		story.ChooseChoiceIndex(index);
+		//TODO: Call autosave via signal 
+		GetSaveState();
 		ContinueStory();
 	}
 
 	public string GetSaveState()
 	{
 		// get story state
-		return story.state.ToJson();
+		var state = story.SaveState();
+		GD.Print("saving story state: " + state);
+		return state;
 		// TODO also save log
 	}
 
 	public void LoadSaveState(string saveState)
 	{
 		// load story state
-		story.state.LoadJson(saveState);
+		GD.Print("saving story state: " + saveState);
+		story.LoadState(saveState);
 		// TODO also load log
 	}
 }

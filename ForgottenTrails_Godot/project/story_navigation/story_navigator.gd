@@ -7,8 +7,11 @@ class_name StoryNavigator
 @onready var text_presenter = get_node("TextPresenterPanel/TextPresenter")
 @onready var choices_presenter = get_node("ChoicePresenter")
 @onready var history_log #= get_node("HistoryLog")
-
-static var story_state: String
+var story_state: String:
+	get:
+		return story_getter.SaveState()
+# 	set(value):
+# 		story_getter.LoadState(value)
 
 signal skip
 
@@ -34,6 +37,12 @@ func _process(_delta):
 			if selectedChoice<0:
 				selectedChoice=choices_presenter.get_child_count()-1
 		print("selected choice " + str(selectedChoice))
+
+	if Input.is_action_pressed("quickload"):
+		DataManager.load_most_recent_quicksave()
+	elif Input.is_action_pressed("quicksave"):
+		DataManager.quicksave_game(story_state)
+
 
 func _on_continue_pressed():	
 	print("story_navigator received request to continue, evaluating...");
@@ -62,11 +71,5 @@ func _on_choice_pressed(index):
 func _send_choice(index):
 	#print("navigator received choice " + str(index))
 	story_getter.FeedChoice(index);
-	save_state()
+	DataManager.autosave_game(story_state)
 	selectedChoice = -1 # reset selection so next required an action to select
-
-func save_state():
-	story_state = story_getter.GetSaveState()
-
-func load_state():
-	story_getter.LoadSaveState(story_state)

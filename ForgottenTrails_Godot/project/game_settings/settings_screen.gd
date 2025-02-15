@@ -58,7 +58,7 @@ func _ready():
 	pass
 	#_on_open_or_close() #is probably already called by itself..?
 
-func _process(delta):
+func _process(_delta):
 	open_or_close()
 
 

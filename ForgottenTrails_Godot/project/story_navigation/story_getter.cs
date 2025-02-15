@@ -10,10 +10,16 @@ public partial class story_getter : Node
 	public delegate void continued_storyEventHandler(string content);
 	
 	[Signal]
-	public delegate void encountered_no_choicesEventHandler();
+	public delegate void encountered_choiceEventHandler(InkChoice choice);
 	
 	[Signal]
-	public delegate void encountered_choiceEventHandler(InkChoice choice);
+	public delegate void encountered_no_choicesEventHandler(InkChoice choice);
+	
+	//[Signal]
+	//public delegate void saved_stateEventHandler(string json, string saveMethod = "quick");
+	
+	//[Signal]
+	//public delegate void loaded_stateEventHandler(string json, string saveMethod = "quick");
 	
 	// external functions
 	[Signal]
@@ -66,24 +72,25 @@ public partial class story_getter : Node
 	{
 		GD.Print("story_getter received choice, feeding now");
 		story.ChooseChoiceIndex(index);
-		//TODO: Call autosave via signal 
-		GetSaveState();
 		ContinueStory();
 	}
 
-	public string GetSaveState()
+	public string SaveState()
 	{
 		// get story state
 		var state = story.SaveState();
 		GD.Print("saving story state: " + state);
+		//EmitSignal(SignalName.saved_state, state, saveMethod);
 		return state;
 		// TODO also save log
 	}
 
-	public void LoadSaveState(string saveState)
+	public void LoadState(string saveState)
 	{
 		// load story state
-		GD.Print("saving story state: " + saveState);
+		GD.Print("loading story state: " + saveState);
+		//EmitSignal(SignalName.loaded_state, saveState, saveMethod);
+		//TODO Also set other objects
 		story.LoadState(saveState);
 		// TODO also load log
 	}

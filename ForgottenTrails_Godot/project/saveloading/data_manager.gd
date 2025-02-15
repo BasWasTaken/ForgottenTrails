@@ -1,31 +1,54 @@
 extends Node
 
-@export_dir var saving_directory
+@export_dir var saving_directory = "user://saves"
 var player_name = "dev"
 
-func _process(_delta):
-	if Input.is_action_pressed("quickload"):
-		load_game(data_method.quick)
-	elif Input.is_action_pressed("quicksave"):
-		save_game(data_method.quick)
+var file_path:
+	get:
+		return saving_directory + "/"+player_name+"/"
+
+func _ready():
+	# Ensure the root save directory exists
+	if not DirAccess.dir_exists_absolute(saving_directory):
+		DirAccess.make_dir_absolute(saving_directory)
+
+	# Now we can safely open it
+	var dir = DirAccess.open(saving_directory)
+	if dir == null:
+		push_error("Failed to open directory: " + saving_directory)
+		return
+
+	# Now create subdirectories
+	dir.make_dir_recursive(file_path)
+
 
 # need a quicksave, autosave and manual save
-enum data_method{
-	quick,
-	auto,
-	manual
-}
+
 
 # Script - Globally accessible
 # Note: This can be called from anywhere inside the tree. This function is
 # path independent.
 # Go through everything in the persist category and ask them to return a
 # dict of relevant variables.
-func save_game(method:data_method):
-	print("Saving game")
-	#TODO create behaviour based on enum
-	
-	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+
+func quicksave_game(state:String):
+	save_game(state, "quick")
+
+func autosave_game(state:String):
+	save_game(state, "auto")
+
+func save_game(state:String, method):
+	print("starting " + method + " save" + " with state: " + state)
+	# determine timestamp
+
+	# determine file path	
+	var datetime = Time.get_date_string_from_system()
+
+	var filename = file_path + method + "_" + datetime + ".save"
+	var save_file = FileAccess.open(filename, FileAccess.WRITE)
+
+	assert(save_file, "Failed to open file for writing: " + filename + " with error " + str(FileAccess.get_open_error()))
+
 	var save_nodes = get_tree().get_nodes_in_group("persist")
 	for node in save_nodes:
 		# Check the node is an instanced scene so it can be instanced again during load.
@@ -47,21 +70,62 @@ func save_game(method:data_method):
 		# Store the save dictionary as a new line in the save file.
 		save_file.store_line(json_string)
 
-		if method != data_method.auto:
-			#StoryNavigator.save_state()
-			pass #TODO implement this #make a new save not just from checkpoints, but from the current state of the story
-		
-		# store the ink file state
-		save_file.store_line(StoryNavigator.story_state)
+	# store the ink file state
+	save_file.store_line(state)
 
-		save_file.close()
+	save_file.close()
 	print("Game saved")
 
-func load_game(method:data_method):
+func get_files(player: String = player_name, type: String = "any") -> Array:
+	var files = []
+	var dir = DirAccess.open(saving_directory)
+	if dir == null:
+		push_error("Failed to open directory: " + saving_directory)
+		return files
+
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if file_name.ends_with(".save"):
+			# Use full path
+			var full_path = saving_directory + "/" + file_name
+			
+			# Extract player and type based on assumed file structure
+			var parts = file_name.get_basename().split("_")  # Adjust if structure differs
+			if parts.size() >= 2:
+				var file_player = parts[0]
+				var file_type = parts[1]
+				
+				if (player == "any" or file_player == player) and (type == "any" or file_type == type):
+					files.append(full_path)
+					
+		file_name = dir.get_next()
+	dir.list_dir_end()
+
+	# Sort the files chronologically by modification time
+	files.sort_custom(_compare_file_modification_time)
+	return files
+
+func _compare_file_modification_time(a: String, b: String) -> int:
+	var time_a = FileAccess.get_modified_time(a)
+	var time_b = FileAccess.get_modified_time(b)
+	return sign(time_a - time_b)  # Ensures proper sorting
+
+
+func load_most_recent_quicksavefile():
+	load_game(get_files(player_name,"quick")[0])
+
+func load_most_recent_autosavefile():
+	load_game(get_files(player_name,"auto")[0])
+
+func load_most_recent_savefile():
+	load_game(get_files(player_name, "any")[0])
+
+func load_game(file):
 	print("Loading game")
 	#TODO create behaviour based on enum
 	
-	if not FileAccess.file_exists("user://savegame.save"):
+	if not FileAccess.file_exists(file):
 		return # Error! We don't have a save to load.
 
 	# CONTINUE HERE AFTER 20250205221645
@@ -82,7 +146,7 @@ func load_game(method:data_method):
 
 	# Load the file line by line and process that dictionary to restore
 	# the object it represents.
-	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
+	var save_file = FileAccess.open(file, FileAccess.READ)
 	while save_file.get_position() < save_file.get_length():
 		var json_string = save_file.get_line()
 

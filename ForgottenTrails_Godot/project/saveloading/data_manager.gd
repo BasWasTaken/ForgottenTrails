@@ -42,9 +42,9 @@ func save_game(state:String, method):
 	# determine timestamp
 
 	# determine file path	
-	var datetime = Time.get_date_string_from_system()
+	var datetime = Time.get_datetime_string_from_system(true).replace(":", "").replace(" ", "_").replace(".", "")
 
-	var filename = file_path + method + "_" + datetime + ".save"
+	var filename = file_path + datetime + "_"+ method +".save"
 	var save_file = FileAccess.open(filename, FileAccess.WRITE)
 
 	assert(save_file, "Failed to open file for writing: " + filename + " with error " + str(FileAccess.get_open_error()))

@@ -27,6 +27,7 @@ func _ready():
 	#story_getter.loaded_state.connect(text_presenter.clear)
 	#story_getter.loaded_state.connect(choices_presenter.clear)
 	# actually, i think these can be removed, because the story_getter should be able to handle this itself by continueing
+	story_getter.loaded_state.connect(_send_continue)
 
 func _process(_delta):
 	# manually start the story (because it cannot do so automatically yet)
@@ -82,8 +83,10 @@ func _on_choice_pressed(index):
 func _send_choice(index):
 	#print("navigator received choice " + str(index))
 	story_getter.FeedChoice(index);
-	DataManager.autosave_game(story_state_json)
 	selectedChoice = -1 # reset selection so next required an action to select
+	save_state()
+	DataManager.autosave_game(story_state_json) # save now
+	_send_continue()
 
 func load_state(state: String):
 	story_getter.LoadState(state)

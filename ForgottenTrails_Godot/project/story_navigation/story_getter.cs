@@ -74,7 +74,6 @@ public partial class story_getter : Node
 	{
 		GD.Print("story_getter received choice, feeding now");
 		story.ChooseChoiceIndex(index);
-		ContinueStory();
 	}
 
 	public string SaveState()
@@ -93,14 +92,14 @@ public partial class story_getter : Node
 		GD.Print("loading story state: " + saveState);
 		//TODO Also set other objects
 		story.LoadState(saveState);
-		if(story.CanContinue)
-		{
-			ContinueStory();
-		}
-		else
-		{
-			GD.Print("Loaded state is at end of story.");
-		}
+		// if(story.CanContinue)
+		// {
+		// 	ContinueStory();
+		// }
+		// else
+		// {
+
+		// }
 		EmitSignal(SignalName.loaded_state);
 
 		// TODO also load log

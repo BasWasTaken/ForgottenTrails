@@ -89,21 +89,33 @@ func get_files(_player: String = player_name, type: String = "any") -> Array:
 	files.reverse()
 	return files
 
-# Load the most recent save file of each type
-func load_most_recent_quicksavefile():
+# get and load the most recent save file of each type
+func get_most_recent_quicksavefile():
 	var files = get_files(player_name, "quick")
 	if files.size() > 0:
-		load_game(files[0])
+		return files[0]
+	return null
 
-func load_most_recent_autosavefile():
+func load_most_recent_quicksavefile():
+	load_game(get_most_recent_quicksavefile())
+
+func get_most_recent_autosavefile():
 	var files = get_files(player_name, "auto")
 	if files.size() > 0:
-		load_game(files[0])
+		return files[0]
+	return null
 
-func load_most_recent_savefile():
+func load_most_recent_autosavefile():
+	load_game(get_most_recent_autosavefile())
+
+func get_most_recent_savefile():
 	var files = get_files(player_name, "any")
 	if files.size() > 0:
-		load_game(files[0])
+		return files[0]
+	return null
+
+func load_most_recent_savefile():
+	load_game(get_most_recent_savefile())
 
 # signal for emitting storystat to story_navigator
 signal load_story_state(story_state: String)
@@ -118,9 +130,9 @@ func load_game(file: String):
 	var save_file = FileAccess.open(file, FileAccess.READ)
 
 	# Clear existing objects in the "persist" group to prevent duplication
-	var save_nodes = get_tree().get_nodes_in_group("persist")
-	for node in save_nodes:
-		node.queue_free()
+	# var save_nodes = get_tree().get_nodes_in_group("persist")
+	# for node in save_nodes:
+	# 	node.queue_free()
 
 	# Read and process saved data
 

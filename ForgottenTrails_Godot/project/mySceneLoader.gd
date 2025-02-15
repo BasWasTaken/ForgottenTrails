@@ -9,7 +9,7 @@ func _on_new_game_pressed():
 	SceneChanger.launch_game()
 
 func _on_continue_pressed():
-	SceneChanger.launch_game(get_files()[0])
+	SceneChanger.launch_game(DataManager.get_most_recent_savefile())
 
 func load_game(file):
 	SceneChanger.launch_game(file)

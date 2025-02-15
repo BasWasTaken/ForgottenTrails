@@ -38,17 +38,20 @@ public partial class story_getter : Node
 			string content = story.Continue();
 			//GD.Print(content);
 			content = content.Replace('<', '[').Replace('>', ']');
-			
+
 			EmitSignal(SignalName.continued_story, content);
 			
 			if(story.CanContinue)
 			{
-				EmitSignal(SignalName.encountered_no_choices);
+				GD.Print("Still continuing, no choices.");
+				EmitSignal(SignalName.encountered_no_choices); // does nothing as of now?
 			}
 			else
 			{
+				GD.Print("Checking choices: " + story.CurrentChoices.Count);
 				foreach (InkChoice choice in story.CurrentChoices)
 				{
+					GD.Print("Choice: " + choice.Text);
 					EmitSignal(SignalName.encountered_choice, choice);
 				}
 			}

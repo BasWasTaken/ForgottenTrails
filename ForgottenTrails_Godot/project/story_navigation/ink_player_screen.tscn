@@ -114,7 +114,11 @@ layout_mode = 2
 [node name="ContinueButton" parent="StoryNavigator/ChoicePresenter" instance=ExtResource("11_snlba")]
 layout_mode = 2
 
+[connection signal="skip" from="StoryNavigator" to="StoryNavigator/TextPresenterPanel/TextPresenter" method="finish_text"]
 [connection signal="continued_story" from="StoryNavigator/StoryGetter" to="StoryNavigator/TextPresenterPanel/TextPresenter" method="present_story"]
+[connection signal="encountered_choice" from="StoryNavigator/StoryGetter" to="StoryNavigator/ChoicePresenter" method="present_choice"]
+[connection signal="ink_function_print" from="StoryNavigator/StoryGetter" to="StoryNavigator/TextPresenterPanel/TextPresenter" method="present_console_message"]
+[connection signal="ink_function_spd" from="StoryNavigator/StoryGetter" to="StoryNavigator/TextPresenterPanel/TextPresenter" method="_spd"]
 [connection signal="timeout" from="StoryNavigator/TextPresenterPanel/TextPresenter/Timer" to="StoryNavigator/TextPresenterPanel/TextPresenter" method="_on_timer_timeout"]
 [connection signal="pressed_choice" from="StoryNavigator/ChoicePresenter/ChoiceButton" to="StoryNavigator/ChoicePresenter" method="_on_choice_pressed"]
 [connection signal="pressed_continue" from="StoryNavigator/ChoicePresenter/ContinueButton" to="StoryNavigator" method="_on_continue_pressed"]

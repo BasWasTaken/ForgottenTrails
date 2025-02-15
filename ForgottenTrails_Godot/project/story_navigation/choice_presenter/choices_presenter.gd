@@ -9,7 +9,8 @@ func _ready():
 	#continue_button_scene = preload("res://UI/continue_button.tscn")
 	#choice_button_scene = preload("res://UI/choice_button.tscn")
 	pass
-
+func clear():
+	_clear()
 func _clear():
 	for child in get_children():
 		child.queue_free()

@@ -20,7 +20,7 @@ There was slow text.
 
 ~ spd(1)
 
-.
+There were choices.
 
  * There were two choices.
 
@@ -28,5 +28,9 @@ There was slow text.
  
 
 - They lived happily ever after.
+
+They needed some more text afterwards.
+
+And some more.
     -> END
 

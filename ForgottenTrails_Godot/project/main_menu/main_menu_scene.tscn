@@ -7,10 +7,17 @@
 [node name="SceneLoader" type="Node" parent="."]
 script = ExtResource("1_mb2h1")
 
-[node name="Start Game" type="Button" parent="."]
+[node name="New Game" type="Button" parent="."]
 offset_top = 1.0
 offset_right = 96.0
 offset_bottom = 32.0
-text = "Start Game"
+text = "New Game"
 
-[connection signal="pressed" from="Start Game" to="SceneLoader" method="_on_start_game_pressed"]
+[node name="Continue Game" type="Button" parent="."]
+offset_top = 61.0
+offset_right = 96.0
+offset_bottom = 92.0
+text = "Continue Game"
+
+[connection signal="pressed" from="New Game" to="SceneLoader" method="_on_new_game_pressed"]
+[connection signal="pressed" from="Continue Game" to="SceneLoader" method="_on_continue_pressed"]

@@ -5,17 +5,24 @@ extends RichTextLabel
 #--- should this be here? definitions
 
 
-var typing_speed_modifier = 1
+var typing_speed_base: float = 1
+var typing_speed_modifier: float = 1
+
+var typing_speed_net: float:
+	get:
+		return typing_speed_base * typing_speed_modifier 
+
+func _on_speed_applied():
+	typing_speed_base = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+	print("new speed: ",typing_speed_base, " times ", typing_speed_modifier, " = ", typing_speed_net, " characters per second") 		
+	
 
 var typing_delay: float:
 	get:		
-		var speed: float = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
-		print("speed: ", speed)#TODO: feed this into some logging or testing function that gathers mesages into one output per frame..?
-		speed *= typing_speed_modifier #TODO rather than get this every line, only refresh on opacity change and compute once
 		var delay:float = 0
-		if speed > 0:
-			delay = 1/speed
-		print("delay: ", delay)
+		if typing_speed_net > 0:
+			delay = 1/typing_speed_net
+		#print("delay: ", delay) 
 		return delay
 
 @export var timer: Timer  
@@ -27,14 +34,22 @@ var typing: bool = false
 
 func _ready():
 	ConfigHandler.setting_changed.connect(
-		func(id, value):
+		func(id, _value):
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:
 				_on_opacity_change_applied()
 	)
-	
+	ConfigHandler.setting_changed.connect(
+		func(id, _value):
+			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed]:
+				_on_speed_applied()
+	)
 	_on_opacity_change_applied()
-	
-	present_story("Press Continue To Start the Story.")
+	_on_speed_applied()	
+	_init()
+	present_story("Press Continue To Start/Continue the Story.")
+
+func _init():
+	clear()
 
 var opacity:
 	get:
@@ -42,7 +57,7 @@ var opacity:
 
 func _on_opacity_change_applied():
 	var scaled = opacity * 2.55 #convert 0-100 to 0-255
-	print(scaled)
+	#print(scaled)
 	box.self_modulate=Color8(0,0,0,scaled as int)
 	
 
@@ -99,3 +114,4 @@ func finish_text():
 
 func _spd(new):
 	typing_speed_modifier = new
+	_on_speed_applied()

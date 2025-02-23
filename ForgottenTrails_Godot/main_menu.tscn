@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1ieiolq6tsbv"]
-
-[ext_resource type="Script" path="res://trash/mySceneLoader.gd" id="1_swow7"]
-
-[node name="MainMenu" type="Node"]
-
-[node name="SceneLoader" type="Node" parent="."]
-script = ExtResource("1_swow7")

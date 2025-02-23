@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://otcalp4pa360"
+path="res://.godot/imported/RandomEvents.ink-caf0c073f42d12d7db49a24819587cc6.res"
+
+[deps]
+
+source_file="res://project/ink/EdanRegion/RandomEvents.ink"
+dest_files=["res://.godot/imported/RandomEvents.ink-caf0c073f42d12d7db49a24819587cc6.res"]
+
+[params]
+
+is_main_file=false
+compress=true

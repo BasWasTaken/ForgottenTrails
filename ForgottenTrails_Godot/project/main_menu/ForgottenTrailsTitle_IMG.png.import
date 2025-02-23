@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cq04m7x8fj4ar"
-path="res://.godot/imported/GodotInk.svg-0c8ec83d82b5d336ec3fed92ffcbc8bc.ctex"
+uid="uid://ciceh73yhjwly"
+path="res://.godot/imported/ForgottenTrailsTitle_IMG.png-c32f4c9614826486bbdbec0a004bafde.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/GodotInk/GodotInk.svg"
-dest_files=["res://.godot/imported/GodotInk.svg-0c8ec83d82b5d336ec3fed92ffcbc8bc.ctex"]
+source_file="res://project/main_menu/ForgottenTrailsTitle_IMG.png"
+dest_files=["res://.godot/imported/ForgottenTrailsTitle_IMG.png-c32f4c9614826486bbdbec0a004bafde.ctex"]
 
 [params]
 
@@ -32,6 +32,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

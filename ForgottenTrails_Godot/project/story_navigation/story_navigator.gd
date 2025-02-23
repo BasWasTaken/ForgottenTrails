@@ -3,9 +3,9 @@ class_name StoryNavigator
 
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
-@onready var story_getter = get_node("StoryGetter")
-@onready var text_presenter = get_node("TextPresenterPanel/TextPresenter")
-@onready var choices_presenter = get_node("ChoicePresenter")
+@export var story_getter: Node
+@export var text_presenter: RichTextLabel
+@export var choices_presenter: VBoxContainer 
 @onready var history_log #= get_node("HistoryLog")
 var story_state_json: String:
 	get:

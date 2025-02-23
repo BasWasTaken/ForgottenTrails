@@ -1,6 +1,6 @@
 extends RichTextLabel
 
-@onready var box:ColorRect= get_parent()
+@export var box:ColorRect
 
 #--- should this be here? definitions
 
@@ -58,7 +58,7 @@ var opacity:
 func _on_opacity_change_applied():
 	var scaled = opacity * 2.55 #convert 0-100 to 0-255
 	#print(scaled)
-	box.self_modulate=Color8(0,0,0,scaled as int)
+	box.color=Color8(0,0,0,scaled as int)
 	
 
 func present_console_message(content: String, warning: bool = false) -> void:

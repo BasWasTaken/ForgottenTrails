@@ -13,7 +13,6 @@ var story_state_json: String:
 	# set(value):
 	# 	story_getter.LoadState(value)
 
-signal skip
 
 var selectedChoice = -1
 
@@ -60,7 +59,7 @@ func _on_continue_pressed():
 	print("story_navigator received request to continue, evaluating...");
 	if text_presenter.typing:
 		print("Typer Busy. Skipping to end of Line.");
-		skip.emit();
+		SignalBus.user_skip_requested.emit();
 	elif story_getter.story.CanContinue:
 		print("validated. Continueing Story.");
 		_send_continue()

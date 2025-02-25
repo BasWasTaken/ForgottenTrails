@@ -131,7 +131,6 @@ layout_mode = 2
 [node name="ChoiceButton9" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("10_id7o2")]
 layout_mode = 2
 
-[connection signal="skip" from="StoryNavigator" to="StoryNavigator/HBoxContainer/TextPresenter" method="finish_text"]
 [connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_story"]
 [connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_continue"]
 [connection signal="encountered_choice" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="present_choice"]

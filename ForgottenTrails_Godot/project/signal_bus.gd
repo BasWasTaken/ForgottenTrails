@@ -10,3 +10,8 @@ extends Node
 # signal game_saved
 # signal game_loaded
 # signal game_reset
+# FORMAT: actor_topic_action
+# FORMAT: subject_object_verb
+# FORMAT: who_which_what
+signal user_skip_requested
+signal printer_text_finished

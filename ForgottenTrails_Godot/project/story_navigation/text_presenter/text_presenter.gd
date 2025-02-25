@@ -1,5 +1,5 @@
 extends RichTextLabel
-
+#TTODO rename this to printer or something
 @export var box:ColorRect
 
 #--- should this be here? definitions
@@ -29,10 +29,10 @@ var typing_delay: float:
 
 @onready var audio_player: AudioStreamPlayer =$AudioStreamPlayer
 
-signal finished_typing
 var typing: bool = false
 
 func _ready():
+	SignalBus.user_skip_requested.connect(_on_skip)
 	ConfigHandler.setting_changed.connect(
 		func(id, _value):
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:
@@ -79,6 +79,8 @@ func present_story(content: String) -> void:
 	typing=true
 	var level = 0
 	for n in self.get_parsed_text():
+		if visible_characters==-1: # if we are done typing
+			break
 		# Evaluate 'n'
 		# the bracket check is not needed anymore- we're getting parsed text! Alleluya Godot
 		if n=='[': 
@@ -97,11 +99,13 @@ func present_story(content: String) -> void:
 			if(typing_delay>0):	
 				timer.start(typing_delay) # start the delay TODO:make dependent on 'n'
 				await timer.timeout # wait for the typing delay
-			if(!typing):
-				break # exit loop if we have been skipped
 	
 	# Finish Text
 	finish_text()
+
+func _on_skip():
+	visible_characters = -1 # set all visible
+	# wait for the loop to exit, and it should automatically enter the finish_text() function
 
 func finish_text():
 	#TODO: Add finish line sound?
@@ -109,8 +113,8 @@ func finish_text():
 	
 	# stop typing
 	timer.stop()
-	typing=false
-	finished_typing.emit() #give signal
+	typing=false #TODO replace with state machine
+	SignalBus.printer_text_finished.emit() #give signal
 
 func _spd(new):
 	typing_speed_modifier = new

@@ -27,6 +27,8 @@ func _ready():
 	#story_getter.loaded_state.connect(choices_presenter.clear)
 	# actually, i think these can be removed, because the story_getter should be able to handle this itself by continueing
 	story_getter.loaded_state.connect(_send_continue)
+	SignalBus.continue_button_pressed.connect(_on_continue_pressed)
+	SignalBus.choice_button_pressed.connect(_on_choice_pressed)
 
 func _process(_delta):
 	# manually start the story (because it cannot do so automatically yet)
@@ -34,7 +36,7 @@ func _process(_delta):
 	var input_prev = Input.is_action_just_pressed("select_previous_choice")
 	if Input.is_action_just_pressed("start") || Input.is_action_just_pressed("continue"): 
 		print("got keystroke for continue")
-		_on_continue_pressed()
+		SignalBus.continue_button_pressed.emit()
 	elif input_next || input_prev:
 		if input_next:
 			selectedChoice+=1
@@ -45,6 +47,9 @@ func _process(_delta):
 			if selectedChoice<0:
 				selectedChoice=choices_presenter.get_child_count()-1
 		print("selected choice " + str(selectedChoice))
+	# TODO 20250301155347 also handle the behaviour of choosing with the number keys
+	#elif Input.is_action_just_pressed("choice "+str(index+1)): 
+	#	_on_pressed()
 
 	if Input.is_action_just_pressed("quickload"):
 		text_presenter.finish_text()

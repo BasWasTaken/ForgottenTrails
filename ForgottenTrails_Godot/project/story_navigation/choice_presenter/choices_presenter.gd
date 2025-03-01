@@ -21,7 +21,7 @@ func _on_continue(_dump: String):
 func present_continue_button() -> void: 
 	await SignalBus.printer_text_finished
 	var continue_button = continue_button_scene.instantiate() #create object
-	continue_button.pressed_continue.connect(story_navigator._on_continue_pressed) # link to continue signal
+	SignalBus.continue_button_pressed.connect(story_navigator._on_continue_pressed) # link to continue signal
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
 
 func present_choice(choice: InkChoice) -> void:
@@ -31,6 +31,4 @@ func present_choice(choice: InkChoice) -> void:
 	choice_button.text = choice.Text
 	choice_button.index = choice.Index
 	
-	# Connect the button's pressed signal to choose the choice and continue the story
-	SignalBus.choice_button_pressed.connect(story_navigator._on_choice_pressed)
 	add_child(choice_button)

@@ -42,7 +42,6 @@ layout_mode = 2
 size_flags_vertical = 0
 
 [node name="StoryNavigator" type="PanelContainer" parent="." node_paths=PackedStringArray("story_getter", "text_presenter", "choices_presenter")]
-self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 270)
 layout_mode = 2
 size_flags_vertical = 8
@@ -138,4 +137,3 @@ layout_mode = 2
 [connection signal="ink_function_print" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_console_message"]
 [connection signal="ink_function_spd" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="_spd"]
 [connection signal="timeout" from="StoryNavigator/HBoxContainer/TextPresenter/Timer" to="StoryNavigator/HBoxContainer/TextPresenter" method="_on_timer_timeout"]
-[connection signal="pressed_continue" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ContinueButton" to="StoryNavigator" method="_on_continue_pressed"]

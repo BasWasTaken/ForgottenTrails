@@ -11,9 +11,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="InkPlayer" parent="." instance=ExtResource("1_r2cfs")]
-layout_mode = 2
-
 [node name="Menus" type="TabContainer" parent="."]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
@@ -23,7 +20,7 @@ all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
 deselect_enabled = true
 
-[node name="Inventory" parent="Menus" instance=ExtResource("3_wlwa0")]
+[node name="InkPlayer" parent="Menus" instance=ExtResource("1_r2cfs")]
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -32,3 +29,8 @@ visible = false
 self_modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="Inventory" parent="Menus" instance=ExtResource("3_wlwa0")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2

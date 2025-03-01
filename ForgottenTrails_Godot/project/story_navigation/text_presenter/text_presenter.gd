@@ -32,7 +32,7 @@ var typing_delay: float:
 var typing: bool = false
 
 func _ready():
-	SignalBus.user_skip_requested.connect(_on_skip)
+	SignalBus.skip_key_pressed.connect(_on_skip)
 	ConfigHandler.setting_changed.connect(
 		func(id, _value):
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:

@@ -23,4 +23,4 @@ extends Node
 signal printer_text_finished
 signal continue_button_pressed
 signal choice_button_pressed(index:int) 
-signal user_skip_requested
+signal skip_key_pressed

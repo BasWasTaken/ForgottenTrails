@@ -1,6 +1,6 @@
 extends Button
 
-signal pressed_choice(int)
+signal pressed_choice(int) #TODO a signal in signal bus
 
 var index: int
 

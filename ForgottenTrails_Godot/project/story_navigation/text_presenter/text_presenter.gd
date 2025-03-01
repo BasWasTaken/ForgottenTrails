@@ -1,6 +1,6 @@
 extends RichTextLabel
 #TTODO rename this to printer or something
-@export var box:ColorRect
+@export var box:ColorRect # TODO: als je het ooit helemaal netjes wil doen (lage prio), kun je het aansturen van de popacity van it object loshalen uit dit script en in een eigen script gooien, aan die node vast. daarmee haal je de noodzaak van deze referentie hier helemaal weg. zie note marked 20250301140143.
 
 #--- should this be here? definitions
 

@@ -4,7 +4,7 @@ class_name StoryNavigator
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
 @export var story_getter: Node
-@export var text_presenter: RichTextLabel
+@export var text_presenter: RichTextLabel #TODO according to refinement 20250301135148 this could be replaced by signals, but it's very low priority.
 @export var choices_presenter: VBoxContainer 
 @onready var history_log #= get_node("HistoryLog")
 var story_state_json: String:

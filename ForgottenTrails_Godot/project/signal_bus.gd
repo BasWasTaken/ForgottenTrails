@@ -13,5 +13,7 @@ extends Node
 # FORMAT: actor_topic_action
 # FORMAT: subject_object_verb
 # FORMAT: who_which_what
+
+# Ignore the warning about unused signals- they are used in other scripts
 signal user_skip_requested
 signal printer_text_finished

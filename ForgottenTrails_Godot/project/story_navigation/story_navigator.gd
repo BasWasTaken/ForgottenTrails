@@ -47,9 +47,9 @@ func _process(_delta):
 			if selectedChoice<0:
 				selectedChoice=choices_presenter.get_child_count()-1
 		print("selected choice " + str(selectedChoice))
-	# TODO 20250301155347 also handle the behaviour of choosing with the number keys
-	#elif Input.is_action_just_pressed("choice "+str(index+1)): 
-	#	_on_pressed()
+	for index in range(choices_presenter.get_child_count()):
+		if Input.is_action_just_pressed("choice "+str(index+1)): 
+			SignalBus.choice_button_pressed.emit(index)
 
 	if Input.is_action_just_pressed("quickload"):
 		text_presenter.finish_text()
@@ -72,8 +72,8 @@ func _on_continue_pressed():
 		if selectedChoice == -1:
 			print("Select a Choice first");
 		else:
-			print("validated. Fed selected choice.");
-			_send_choice(selectedChoice)
+			print("validated. requesting selected choice.");
+			SignalBus.choice_button_pressed.emit(selectedChoice)
 	else:
 		push_warning("Cannot Parse Continue");
 	
@@ -81,11 +81,11 @@ func _send_continue():
 	story_getter.ContinueStory();
 	selectedChoice = -1 # reset selection so next required an action to select
 
-func _on_choice_pressed(index):
+func _on_choice_pressed(index:int):
 	_send_choice(index)
 
-func _send_choice(index):
-	#print("navigator received choice " + str(index))
+func _send_choice(index:int):
+	print("printer received and now sending choice.", index);
 	story_getter.FeedChoice(index);
 	selectedChoice = -1 # reset selection so next required an action to select
 	save_state()

@@ -20,5 +20,5 @@ extends Node
 signal user_skip_requested
 signal printer_text_finished
 #signal menu_open_requested(window:Control) leaving this signal for later, when|if i change how windows are management, or the current implementation starts causing problems
-signal choice_button_pressed(int) 
+signal choice_button_pressed(index:int) 
 signal continue_button_pressed

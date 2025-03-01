@@ -1,11 +1,9 @@
 extends Button
 
-signal pressed_choice(int) #TODO a signal in signal bus
-
 var index: int
 
-#func _ready():
-	#pressed.connect(_on_pressed)
+func _ready():
+	pressed.connect(_on_pressed)
 
 func _process(_delta):
 	# This connects a number key to the button:
@@ -13,4 +11,4 @@ func _process(_delta):
 		_on_pressed()
 
 func _on_pressed():
-	pressed_choice.emit(index)
+	SignalBus.choice_button_pressed.emit(index)

@@ -32,5 +32,5 @@ func present_choice(choice: InkChoice) -> void:
 	choice_button.index = choice.Index
 	
 	# Connect the button's pressed signal to choose the choice and continue the story
-	choice_button.pressed_choice.connect(story_navigator._on_choice_pressed)
+	SignalBus.choice_button_pressed.connect(story_navigator._on_choice_pressed)
 	add_child(choice_button)

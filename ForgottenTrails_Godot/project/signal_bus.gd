@@ -24,3 +24,6 @@ signal printer_text_finished
 signal continue_button_pressed
 signal choice_button_pressed(index:int) 
 signal skip_key_pressed
+
+signal inkfunc_print(text: String)
+signal inkfunc_spd(speed: int)

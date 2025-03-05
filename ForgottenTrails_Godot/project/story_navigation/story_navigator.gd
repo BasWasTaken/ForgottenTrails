@@ -1,5 +1,4 @@
 extends Node
-class_name StoryNavigator
 
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
@@ -17,6 +16,7 @@ var story_state_json: String:
 var selectedChoice = -1
 
 func _ready():
+
 	DataManager.load_story_state.connect(story_getter.LoadState)
 	# TODO make this less confusing:
 		# currently datamanger emits a signal when it has read the json line
@@ -27,6 +27,11 @@ func _ready():
 	#story_getter.loaded_state.connect(choices_presenter.clear)
 	# actually, i think these can be removed, because the story_getter should be able to handle this itself by continueing
 	story_getter.loaded_state.connect(_send_continue)
+
+
+	story_getter.ink_function_print.connect(SignalBus.inkfunc_print.emit)
+	story_getter.ink_function_spd.connect(SignalBus.inkfunc_spd.emit)
+
 	SignalBus.continue_button_pressed.connect(_on_continue_pressed)
 	SignalBus.choice_button_pressed.connect(_on_choice_pressed)
 

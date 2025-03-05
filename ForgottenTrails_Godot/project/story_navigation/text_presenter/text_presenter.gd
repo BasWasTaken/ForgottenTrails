@@ -33,6 +33,10 @@ var typing: bool = false
 
 func _ready():
 	SignalBus.skip_key_pressed.connect(_on_skip)
+
+	SignalBus.inkfunc_print.connect(present_console_message)
+	SignalBus.inkfunc_spd.connect(_spd)
+
 	ConfigHandler.setting_changed.connect(
 		func(id, _value):
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:

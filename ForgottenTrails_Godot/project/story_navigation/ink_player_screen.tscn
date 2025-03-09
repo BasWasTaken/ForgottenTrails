@@ -93,12 +93,11 @@ theme_override_constants/margin_bottom = 10
 [node name="ScrollContainer" type="ScrollContainer" parent="StoryNavigator/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="ChoicePresenter" type="VBoxContainer" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer" node_paths=PackedStringArray("story_navigator", "text_presenter")]
+[node name="ChoicePresenter" type="VBoxContainer" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer" node_paths=PackedStringArray("story_navigator")]
 layout_mode = 2
 alignment = 2
 script = ExtResource("9_pkvk5")
 story_navigator = NodePath("../../../..")
-text_presenter = NodePath("../../../TextPresenter")
 
 [node name="ContinueButton" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("11_snlba")]
 layout_mode = 2

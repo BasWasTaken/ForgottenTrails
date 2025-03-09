@@ -3,7 +3,6 @@ extends VBoxContainer
 @onready var continue_button_scene = preload("res://project/story_navigation/choice_presenter/continue_button.tscn")#$ContinueButton
 @onready var choice_button_scene = preload("res://project/story_navigation/choice_presenter/choice_button.tscn")#$ChoiceButton
 @export var story_navigator:StoryNavigator# = get_node("StoryNavigator") #TODO fix onready for this
-@export var text_presenter:Node# = get_node("../TextPresenterPanel/TextPresenter")
 
 func _ready():
 	#continue_button_scene = preload("res://UI/continue_button.tscn")

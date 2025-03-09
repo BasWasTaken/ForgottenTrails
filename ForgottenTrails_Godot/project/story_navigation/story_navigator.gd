@@ -1,4 +1,5 @@
 extends Node
+class_name StoryNavigator
 
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()

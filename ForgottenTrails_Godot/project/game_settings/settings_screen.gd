@@ -5,6 +5,8 @@ extends Control
 @export var apply_button:Button#=$"Global Buttons/Apply All Button" #confirm, save and apply changes
 @export var close_button:Button#=$"Global Buttons/Close Button"
 
+# NOTE | TODO (see 20250301143406 in obsidian): instead of is_visible_in_tree() is should probably make some state variable that tells me if it's open or close, active or inactive etc. low priority for now but might come up once I start making more screens. culd use a class to inherit from
+
 var settings_all:
 	get:
 		#print("getting children")

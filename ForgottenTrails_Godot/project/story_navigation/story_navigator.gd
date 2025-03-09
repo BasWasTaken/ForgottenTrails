@@ -4,7 +4,7 @@ class_name StoryNavigator
 #@onready var my_csharp_script = load("res://UI/story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
 @export var story_getter: Node
-@export var text_presenter: RichTextLabel
+@export var text_presenter: RichTextLabel #TODO according to refinement 20250301135148 this could be replaced by signals, but it's very low priority.
 @export var choices_presenter: VBoxContainer 
 @onready var history_log #= get_node("HistoryLog")
 var story_state_json: String:
@@ -13,11 +13,11 @@ var story_state_json: String:
 	# set(value):
 	# 	story_getter.LoadState(value)
 
-signal skip
 
 var selectedChoice = -1
 
 func _ready():
+
 	DataManager.load_story_state.connect(story_getter.LoadState)
 	# TODO make this less confusing:
 		# currently datamanger emits a signal when it has read the json line
@@ -29,13 +29,20 @@ func _ready():
 	# actually, i think these can be removed, because the story_getter should be able to handle this itself by continueing
 	story_getter.loaded_state.connect(_send_continue)
 
+
+	story_getter.ink_function_print.connect(SignalBus.inkfunc_print.emit)
+	story_getter.ink_function_spd.connect(SignalBus.inkfunc_spd.emit)
+
+	SignalBus.continue_button_pressed.connect(_on_continue_pressed)
+	SignalBus.choice_button_pressed.connect(_on_choice_pressed)
+
 func _process(_delta):
 	# manually start the story (because it cannot do so automatically yet)
 	var input_next = Input.is_action_just_pressed("select_next_choice")
 	var input_prev = Input.is_action_just_pressed("select_previous_choice")
 	if Input.is_action_just_pressed("start") || Input.is_action_just_pressed("continue"): 
 		print("got keystroke for continue")
-		_on_continue_pressed()
+		SignalBus.continue_button_pressed.emit()
 	elif input_next || input_prev:
 		if input_next:
 			selectedChoice+=1
@@ -46,6 +53,9 @@ func _process(_delta):
 			if selectedChoice<0:
 				selectedChoice=choices_presenter.get_child_count()-1
 		print("selected choice " + str(selectedChoice))
+	for index in range(choices_presenter.get_child_count()):
+		if Input.is_action_just_pressed("choice "+str(index+1)): 
+			SignalBus.choice_button_pressed.emit(index)
 
 	if Input.is_action_just_pressed("quickload"):
 		text_presenter.finish_text()
@@ -60,7 +70,7 @@ func _on_continue_pressed():
 	print("story_navigator received request to continue, evaluating...");
 	if text_presenter.typing:
 		print("Typer Busy. Skipping to end of Line.");
-		skip.emit();
+		SignalBus.skip_key_pressed.emit();
 	elif story_getter.story.CanContinue:
 		print("validated. Continueing Story.");
 		_send_continue()
@@ -68,8 +78,8 @@ func _on_continue_pressed():
 		if selectedChoice == -1:
 			print("Select a Choice first");
 		else:
-			print("validated. Fed selected choice.");
-			_send_choice(selectedChoice)
+			print("validated. requesting selected choice.");
+			SignalBus.choice_button_pressed.emit(selectedChoice)
 	else:
 		push_warning("Cannot Parse Continue");
 	
@@ -77,11 +87,11 @@ func _send_continue():
 	story_getter.ContinueStory();
 	selectedChoice = -1 # reset selection so next required an action to select
 
-func _on_choice_pressed(index):
+func _on_choice_pressed(index:int):
 	_send_choice(index)
 
-func _send_choice(index):
-	#print("navigator received choice " + str(index))
+func _send_choice(index:int):
+	print("printer received and now sending choice.", index);
 	story_getter.FeedChoice(index);
 	selectedChoice = -1 # reset selection so next required an action to select
 	save_state()

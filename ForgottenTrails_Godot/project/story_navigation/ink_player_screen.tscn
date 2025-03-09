@@ -42,7 +42,6 @@ layout_mode = 2
 size_flags_vertical = 0
 
 [node name="StoryNavigator" type="PanelContainer" parent="." node_paths=PackedStringArray("story_getter", "text_presenter", "choices_presenter")]
-self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 270)
 layout_mode = 2
 size_flags_vertical = 8
@@ -94,12 +93,10 @@ theme_override_constants/margin_bottom = 10
 [node name="ScrollContainer" type="ScrollContainer" parent="StoryNavigator/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="ChoicePresenter" type="VBoxContainer" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer" node_paths=PackedStringArray("story_navigator", "text_presenter")]
+[node name="ChoicePresenter" type="VBoxContainer" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer"]
 layout_mode = 2
 alignment = 2
 script = ExtResource("9_pkvk5")
-story_navigator = NodePath("../../../..")
-text_presenter = NodePath("../../../TextPresenter")
 
 [node name="ContinueButton" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("11_snlba")]
 layout_mode = 2
@@ -131,7 +128,6 @@ layout_mode = 2
 [node name="ChoiceButton9" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("10_id7o2")]
 layout_mode = 2
 
-[connection signal="skip" from="StoryNavigator" to="StoryNavigator/HBoxContainer/TextPresenter" method="finish_text"]
 [connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_story"]
 [connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_continue"]
 [connection signal="encountered_choice" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="present_choice"]
@@ -139,13 +135,3 @@ layout_mode = 2
 [connection signal="ink_function_print" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_console_message"]
 [connection signal="ink_function_spd" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="_spd"]
 [connection signal="timeout" from="StoryNavigator/HBoxContainer/TextPresenter/Timer" to="StoryNavigator/HBoxContainer/TextPresenter" method="_on_timer_timeout"]
-[connection signal="pressed_continue" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ContinueButton" to="StoryNavigator" method="_on_continue_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton2" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton3" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton4" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton5" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton6" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton7" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton8" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]
-[connection signal="pressed_choice" from="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter/ChoiceButton9" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_choice_pressed"]

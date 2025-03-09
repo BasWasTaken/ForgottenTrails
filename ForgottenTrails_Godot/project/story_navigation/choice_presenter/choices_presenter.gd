@@ -2,7 +2,6 @@ extends VBoxContainer
 
 @onready var continue_button_scene = preload("res://project/story_navigation/choice_presenter/continue_button.tscn")#$ContinueButton
 @onready var choice_button_scene = preload("res://project/story_navigation/choice_presenter/choice_button.tscn")#$ChoiceButton
-@export var story_navigator:StoryNavigator# = get_node("StoryNavigator") #TODO fix onready for this
 
 func _ready():
 	#continue_button_scene = preload("res://UI/continue_button.tscn")
@@ -20,7 +19,6 @@ func _on_continue(_dump: String):
 func present_continue_button() -> void: 
 	await SignalBus.printer_text_finished
 	var continue_button = continue_button_scene.instantiate() #create object
-	SignalBus.continue_button_pressed.connect(story_navigator._on_continue_pressed) # link to continue signal
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
 
 func present_choice(choice: InkChoice) -> void:

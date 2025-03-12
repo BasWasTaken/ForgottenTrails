@@ -1,5 +1,6 @@
 using Godot;
 using GodotInk;
+using System.Collections.Generic;
 
 public partial class story_getter : Node
 {	
@@ -12,7 +13,7 @@ public partial class story_getter : Node
 	public delegate void continued_storyEventHandler(string content);
 	
 	[Signal]
-	public delegate void encountered_choicesEventHandler(InkChoice[] choice);
+	public delegate void encountered_choicesEventHandler(InkChoice[] choices);
 	
 	[Signal]
 	public delegate void encountered_no_choicesEventHandler();
@@ -57,7 +58,13 @@ public partial class story_getter : Node
 			else
 			{
 				GD.Print("Checking choices: " + story.CurrentChoices.Count);
-				EmitSignal(SignalName.encountered_choices, story.CurrentChoices); //TODO: somwhere in the code later (another script) take out the hidden choices
+				//convert ireadonlylist to array
+				InkChoice[] choices = new InkChoice[story.CurrentChoices.Count];
+				for(int i = 0; i < story.CurrentChoices.Count; i++)
+				{
+					choices[i] = story.CurrentChoices[i];
+				}
+				EmitSignal(SignalName.encountered_choices, choices); //TODO: somwhere in the code later (another script) take out the hidden choices
 			}
 		}
 		else

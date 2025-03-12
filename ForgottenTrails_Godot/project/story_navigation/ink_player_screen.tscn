@@ -130,7 +130,6 @@ layout_mode = 2
 
 [connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_story"]
 [connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_continue"]
-[connection signal="encountered_choice" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="present_choice"]
 [connection signal="encountered_no_choices" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="present_continue_button"]
 [connection signal="ink_function_print" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_console_message"]
 [connection signal="ink_function_spd" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="_spd"]

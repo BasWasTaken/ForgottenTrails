@@ -35,6 +35,9 @@ func present_choices(choices: Array[InkChoice]) -> void: #TODO: connext to signa
 		if i<10:
 			pass #TODO: add keyboard shortcuts for the first 10 choices (using index i-1)
 		i=i+1
+	#set the focus neighbors for the first and last choice
+	get_child(0).focus_neighbor_top = get_child(i-1).get_path()
+	get_child(i-1).focus_neighbor_bottom = get_child(0).get_path()
 
 
 func present_choice(choice: InkChoice) -> Button:

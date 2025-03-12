@@ -16,11 +16,11 @@ func _unhandled_input(event):
 		elif event.is_action_pressed("ui_cancel"):
 			SignalBus.control_requests_cancel.emit()
 		elif event.is_action_pressed("ui_down"):
-			SignalBus.control_requests_next.emit()
+			SignalBus.control_requests_next.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
 		elif event.is_action_pressed("ui_up"):
-			SignalBus.control_requests_previous.emit()
-		elif event.is_action_pressed("menu"): #TODO later expand this with a script that handles which guis to open and close when, with dedicated events with window parameter or the like
-			SignalBus.control_requests_menu.emit()
+			SignalBus.control_requests_previous.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
+		elif event.is_action_pressed("options"): #TODO later expand this with a script that handles which guis to open and close when, with dedicated events with window parameter or the like
+			SignalBus.control_requests_options.emit()
 		# else:
 		# 	for index in range(1, 10):
 		# 		if event.is_action_pressed("choice_"+str(index)):

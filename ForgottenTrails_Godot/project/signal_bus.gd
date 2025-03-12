@@ -22,14 +22,13 @@ extends Node
 
 signal printer_text_finished
 signal control_requests_continue 
-signal choice_button_pressed(index:int)
-signal control_requests_skip 
+signal control_requests_cancel
+signal control_requests_choice(index:int)
+signal control_requests_skip
 
 signal inkfunc_print(text: String)
 signal inkfunc_spd(speed: int)
 
-signal input_requests_menu
-
-
-signal continue_input_received
-signal continue_action_requested
+signal control_requests_options
+signal control_requests_quicksave
+signal control_requests_quickload

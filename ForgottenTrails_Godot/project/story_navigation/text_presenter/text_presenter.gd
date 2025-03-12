@@ -32,7 +32,7 @@ var typing_delay: float:
 var typing: bool = false
 
 func _ready():
-	SignalBus.control_requests_skip.connect(_on_skip)
+	SignalBus.control_requests_skip.connect(skip_to_printed)
 
 	SignalBus.inkfunc_print.connect(present_console_message)
 	SignalBus.inkfunc_spd.connect(_spd)
@@ -107,7 +107,7 @@ func present_story(content: String) -> void:
 	# Finish Text
 	finish_text()
 
-func _on_skip():
+func skip_to_printed():
 	visible_characters = -1 # set all visible
 	# wait for the loop to exit, and it should automatically enter the finish_text() function
 

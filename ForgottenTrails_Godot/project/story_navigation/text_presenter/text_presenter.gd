@@ -32,7 +32,7 @@ var typing_delay: float:
 var typing: bool = false
 
 func _ready():
-	SignalBus.skip_key_pressed.connect(_on_skip)
+	SignalBus.control_requests_skip.connect(_on_skip)
 
 	SignalBus.inkfunc_print.connect(present_console_message)
 	SignalBus.inkfunc_spd.connect(_spd)

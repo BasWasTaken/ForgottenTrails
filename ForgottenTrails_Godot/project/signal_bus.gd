@@ -21,9 +21,15 @@ extends Node
 #signal menu_open_requested(window:Control) leaving this signal for later, when|if i change how windows are management, or the current implementation starts causing problems
 
 signal printer_text_finished
-signal continue_button_pressed
-signal choice_button_pressed(index:int) 
-signal skip_key_pressed
+signal control_requests_continue 
+signal choice_button_pressed(index:int)
+signal control_requests_skip 
 
 signal inkfunc_print(text: String)
 signal inkfunc_spd(speed: int)
+
+signal input_requests_menu
+
+
+signal continue_input_received
+signal continue_action_requested

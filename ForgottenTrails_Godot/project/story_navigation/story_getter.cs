@@ -12,10 +12,10 @@ public partial class story_getter : Node
 	public delegate void continued_storyEventHandler(string content);
 	
 	[Signal]
-	public delegate void encountered_choiceEventHandler(InkChoice choice);
+	public delegate void encountered_choicesEventHandler(InkChoice[] choice);
 	
 	[Signal]
-	public delegate void encountered_no_choicesEventHandler(InkChoice choice);
+	public delegate void encountered_no_choicesEventHandler();
 	
 	[Signal]
 	public delegate void saved_stateEventHandler(string json);
@@ -57,11 +57,7 @@ public partial class story_getter : Node
 			else
 			{
 				GD.Print("Checking choices: " + story.CurrentChoices.Count);
-				foreach (InkChoice choice in story.CurrentChoices)
-				{
-					GD.Print("Choice: " + choice.Text);
-					EmitSignal(SignalName.encountered_choice, choice);
-				}
+				EmitSignal(SignalName.encountered_choices, story.CurrentChoices); //TODO: somwhere in the code later (another script) take out the hidden choices
 			}
 		}
 		else

@@ -10,9 +10,11 @@ func _ready():
 	SignalBus.ink_sent_choices.connect(present_choices)
 	SignalBus.ink_sent_no_choices.connect(present_continue_button)
 	SignalBus.control_requests_continue.connect(_on_input)
-	SignalBus.control_requests_choice.connect(_on_input)
+	SignalBus.control_requests_choice.connect(_on_input2)
 	
 func _on_input():
+	_clear()
+func _on_input2(_index: int):
 	_clear()
 func clear():
 	_clear()

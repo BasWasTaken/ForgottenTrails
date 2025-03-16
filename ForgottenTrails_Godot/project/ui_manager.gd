@@ -1,12 +1,5 @@
 extends Node
 func _ready():
-	SignalBus.control_requests_up.connect(navigate_up)
-	SignalBus.control_requests_down.connect(navigate_down)
-
-func navigate_up():
-	print("up")
-
-func navigate_down():
-	print("down")
-	
-# this seems to not be necesary,as godot has this functionality baked in
+	pass
+	#ignalBus.control_requests_accept.connect(Input.parse_input_event("ui_accept"))
+#TODO DELTE THIS SCRIPT, IT'S NOT USED ANYMORE

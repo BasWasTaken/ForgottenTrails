@@ -23,7 +23,7 @@ buses/default_bus_layout="res://project/game_settings/default_bus_layout.tres"
 
 DataManager="*res://project/saveloading/data_manager.gd"
 ConfigHandler="*res://project/game_settings/config_handler.gd"
-SceneChanger="*res://project/scene_navigator.gd"
+SceneNavigator="*res://project/scene_navigator.gd"
 SignalBus="*res://project/signal_bus.gd"
 InputManager="*res://project/input_manager.gd"
 

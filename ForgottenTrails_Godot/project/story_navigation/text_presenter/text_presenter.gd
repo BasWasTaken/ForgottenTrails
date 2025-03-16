@@ -29,7 +29,9 @@ var typing_delay: float:
 
 @onready var audio_player: AudioStreamPlayer =$AudioStreamPlayer
 
-var typing: bool = false
+var vn_state:
+	get:
+		return VnState
 
 func _ready():
 	SignalBus.ink_sent_story.connect(present_story)
@@ -81,11 +83,11 @@ func present_story(content: String) -> void:
 	self.set_text(content)
 	
 	# Type Text
-	typing=true
+	vn_state.set_state(VnState.PRINTING)
 	var level = 0
 	for n in self.get_parsed_text():
-		if visible_characters==-1: # if we are done typing
-			break
+		if visible_characters == -1: # exit loop if state is no longer printing (such as if the user skips)
+			break 
 		# Evaluate 'n'
 		# the bracket check is not needed anymore- we're getting parsed text! Alleluya Godot
 		if n=='[': 
@@ -111,6 +113,7 @@ func present_story(content: String) -> void:
 func skip_to_printed():
 	visible_characters = -1 # set all visible
 	# wait for the loop to exit, and it should automatically enter the finish_text() function
+	timer.stop()
 
 func finish_text():
 	#TODO: Add finish line sound?
@@ -118,7 +121,7 @@ func finish_text():
 	
 	# stop typing
 	timer.stop()
-	typing=false #TODO replace with state machine
+	vn_state.set_state(VnState.WAITING)
 	SignalBus.printer_text_finished.emit() #give signal
 
 func _spd(new):

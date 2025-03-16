@@ -1,9 +1,10 @@
 extends Node
+# making this script receive input and send signals to the bus is a choice. certainly you could also do it by ust having the signals here and other things reaching out to this. both approached are valid i believe
 
 func _unhandled_input(event):
 	# input that is not handled by a button or other control element, comes in here
 	# process it, and call the appropriate signal
-	print("input received: " + str(event))
+	#print("input received: " + str(event))
 	if event.is_action_pressed("quicksave"):
 		SignalBus.control_requests_quicksave.emit()
 	elif event.is_action_pressed("quickload"):
@@ -15,10 +16,10 @@ func _unhandled_input(event):
 			SignalBus.control_requests_continue.emit()
 		elif event.is_action_pressed("ui_cancel"):
 			SignalBus.control_requests_cancel.emit()
-		elif event.is_action_pressed("ui_down"):
-			SignalBus.control_requests_next.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
-		elif event.is_action_pressed("ui_up"):
-			SignalBus.control_requests_previous.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
+		elif event.is_action_pressed("ui_down"): #todo remove this, because it's not used
+			SignalBus.control_requests_down.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
+		elif event.is_action_pressed("ui_up"): #TODO remove this, because it's not used
+			SignalBus.control_requests_up.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
 		elif event.is_action_pressed("options"): #TODO later expand this with a script that handles which guis to open and close when, with dedicated events with window parameter or the like
 			SignalBus.control_requests_options.emit()
 		# else:

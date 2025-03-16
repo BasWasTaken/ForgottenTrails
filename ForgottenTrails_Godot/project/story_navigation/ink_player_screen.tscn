@@ -41,14 +41,12 @@ custom_minimum_size = Vector2(0, 810)
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="StoryNavigator" type="PanelContainer" parent="." node_paths=PackedStringArray("story_getter", "text_presenter", "choices_presenter")]
+[node name="StoryNavigator" type="PanelContainer" parent="." node_paths=PackedStringArray("my_story_getter")]
 custom_minimum_size = Vector2(0, 270)
 layout_mode = 2
 size_flags_vertical = 8
 script = ExtResource("2_ilg7f")
-story_getter = NodePath("HBoxContainer/StoryGetter")
-text_presenter = NodePath("HBoxContainer/TextPresenter")
-choices_presenter = NodePath("HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter")
+my_story_getter = NodePath("HBoxContainer/StoryGetter")
 
 [node name="ColorRect" type="ColorRect" parent="StoryNavigator"]
 layout_mode = 2
@@ -128,9 +126,4 @@ layout_mode = 2
 [node name="ChoiceButton9" parent="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("10_id7o2")]
 layout_mode = 2
 
-[connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_story"]
-[connection signal="continued_story" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="_on_continue"]
-[connection signal="encountered_no_choices" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" method="present_continue_button"]
-[connection signal="ink_function_print" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="present_console_message"]
-[connection signal="ink_function_spd" from="StoryNavigator/HBoxContainer/StoryGetter" to="StoryNavigator/HBoxContainer/TextPresenter" method="_spd"]
 [connection signal="timeout" from="StoryNavigator/HBoxContainer/TextPresenter/Timer" to="StoryNavigator/HBoxContainer/TextPresenter" method="_on_timer_timeout"]

@@ -1,20 +1,31 @@
 using Godot;
 using GodotInk;
 using System.Collections.Generic;
+using Godot.Collections;
 
 public partial class story_getter : Node
 {	
 	[Export]
-	private InkStory story; 
-
+	private InkStory story;  
+	
 	public string latest_state;
+	
+	private Array choices_array;
+
+	public Array GetChoices()
+	{
+		return choices_array;
+	}
 		
 	[Signal]
 	public delegate void continued_storyEventHandler(string content);
 	
-	[Signal]
-	public delegate void encountered_choicesEventHandler(InkChoice[] choices);
+	//[Signal]
+	//public delegate void encountered_choicesEventHandler(InkChoice[] choices);
 	
+	[Signal]
+	public delegate void fetch_my_choices_plxEventHandler();
+
 	[Signal]
 	public delegate void encountered_no_choicesEventHandler();
 	
@@ -59,12 +70,23 @@ public partial class story_getter : Node
 			{
 				GD.Print("Checking choices: " + story.CurrentChoices.Count);
 				//convert ireadonlylist to array
-				InkChoice[] choices = new InkChoice[story.CurrentChoices.Count];
+				InkChoice[] seeSharpArray = new InkChoice[story.CurrentChoices.Count];
 				for(int i = 0; i < story.CurrentChoices.Count; i++)
 				{
-					choices[i] = story.CurrentChoices[i];
+					seeSharpArray[i] = story.CurrentChoices[i];
 				}
-				EmitSignal(SignalName.encountered_choices, choices); //TODO: somwhere in the code later (another script) take out the hidden choices
+				GD.Print("Choices: " + seeSharpArray.Length);
+				// convert c# array to godot array
+				Array variantArray = new Array(seeSharpArray);
+				// test array conversion
+				foreach(InkChoice choice in seeSharpArray)
+				{
+					GD.Print(choice.Text);
+				}
+				GD.Print(variantArray);
+				
+				choices_array = variantArray;
+				EmitSignal(SignalName.fetch_my_choices_plx);
 			}
 		}
 		else

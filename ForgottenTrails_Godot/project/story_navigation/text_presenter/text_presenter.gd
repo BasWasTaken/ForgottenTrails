@@ -32,10 +32,11 @@ var typing_delay: float:
 var typing: bool = false
 
 func _ready():
+	SignalBus.ink_sent_story.connect(present_story)
 	SignalBus.control_requests_skip.connect(skip_to_printed)
 
-	SignalBus.inkfunc_print.connect(present_console_message)
-	SignalBus.inkfunc_spd.connect(_spd)
+	SignalBus.ink_func_print.connect(present_console_message)
+	SignalBus.ink_func_spd.connect(_spd)
 
 	ConfigHandler.setting_changed.connect(
 		func(id, _value):

@@ -57,19 +57,16 @@ var deviations_from_defaults:
 			return false
 
 func _ready():
-	pass
+	SignalBus.control_requests_options.connect(open_or_close)
 	#_on_open_or_close() #is probably already called by itself..?
 
-func _process(_delta):
-	open_or_close()
 
 
 func open_or_close():
-	if Input.is_action_just_pressed("menu"):
-		if is_visible_in_tree():
-			close_try()
-		else: 
-			open()
+	if is_visible_in_tree():
+		close_try()
+	else: 
+		open()
 
 func open():
 	show()

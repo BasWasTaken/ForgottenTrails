@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cqy4xfl5d38mk"]
+[gd_scene load_steps=3 format=3 uid="uid://cqy4xfl5d38mk"]
 
 [ext_resource type="Script" path="res://project/mySceneLoader.gd" id="1_mb2h1"]
+[ext_resource type="Script" path="res://project/main_menu/take_focus.gd" id="2_mbfsm"]
 
 [node name="MainMenu" type="Node"]
 
@@ -11,12 +12,19 @@ script = ExtResource("1_mb2h1")
 offset_top = 1.0
 offset_right = 96.0
 offset_bottom = 32.0
+focus_neighbor_top = NodePath("../Continue Game")
+focus_neighbor_bottom = NodePath("../Continue Game")
+focus_next = NodePath("../Continue Game")
 text = "New Game"
+script = ExtResource("2_mbfsm")
 
 [node name="Continue Game" type="Button" parent="."]
 offset_top = 61.0
 offset_right = 96.0
 offset_bottom = 92.0
+focus_neighbor_top = NodePath("../New Game")
+focus_neighbor_bottom = NodePath("../New Game")
+focus_previous = NodePath("../New Game")
 text = "Continue Game"
 
 [connection signal="pressed" from="New Game" to="SceneLoader" method="_on_new_game_pressed"]

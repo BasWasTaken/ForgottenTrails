@@ -18,6 +18,7 @@ func _ready():
 		DirAccess.make_dir_absolute(file_path)
 
 	# connect signals
+	
 	SignalBus.control_requests_quicksave.connect(quicksave_game)
 	SignalBus.control_requests_quickload.connect(load_most_recent_quicksavefile)
 

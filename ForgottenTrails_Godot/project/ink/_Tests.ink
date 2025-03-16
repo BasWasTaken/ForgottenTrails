@@ -20,12 +20,13 @@ There was slow text.
 
 ~ spd(1)
 
-There were choices.
+There were thee choices. (Well, one decision with three options.)
 
- * There were two choices.
-
- * There were four lines of content.
+ * There was the first choice.
  
+ * There was the second choice.
+
+ * There was the third choice.
 
 - They lived happily ever after.
 

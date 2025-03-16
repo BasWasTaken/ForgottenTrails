@@ -1,95 +1,63 @@
 extends Node
-class_name StoryNavigator
+class_name StoryNavigator #todo remove, confusing
 
-#@onready var my_csharp_script = load("res://UI/story_getter.cs")
+#@onready var my_csharp_script = load("res://UI/my_story_getter.cs")
 #@onready var my_csharp_node = my_csharp_script.new()
-@onready var story_getter = get_node("StoryGetter")
-@onready var text_presenter = get_node("TextPresenterPanel/TextPresenter")
-@onready var choices_presenter = get_node("ChoicePresenter")
+@export var my_story_getter: Node
+#@export var text_presenter: RichTextLabel #TODO according to refinement 20250301135148 this could be replaced by signals, but it's very low priority.
+#@export var choices_presenter: VBoxContainer #todo remove reference
 @onready var history_log #= get_node("HistoryLog")
 var story_state_json: String:
 	get:
-		return story_getter.latest_state # PREVIOUSLY saved state
+		return my_story_getter.latest_state # PREVIOUSLY saved state
 	# set(value):
-	# 	story_getter.LoadState(value)
+	# 	my_story_getter.LoadState(value)
 
-signal skip
-
-var selectedChoice = -1
 
 func _ready():
-	DataManager.load_story_state.connect(story_getter.LoadState)
+	
+	SignalBus.control_requests_continue.connect(input_continue)
+	SignalBus.control_requests_choice.connect(input_choice)
+
+	my_story_getter.continued_story.connect(SignalBus.ink_sent_story.emit)
+#	my_story_getter.continued_story.connect(history_log.add_to_history) # TODO but in own script
+#	my_story_getter.encountered_choices.connect(SignalBus.ink_sent_choices.emit) #does not work, have to do with hack
+	my_story_getter.encountered_no_choices.connect(SignalBus.ink_sent_no_choices.emit)
+	my_story_getter.fetch_my_choices_plx.connect(hack)
+
+
+	DataManager.load_story_state.connect(my_story_getter.LoadState)
 	# TODO make this less confusing:
 		# currently datamanger emits a signal when it has read the json line
-		# then storynavigater receives that and fires story_getter.LoadState to load it in ink
+		# then storynavigater receives that and fires my_story_getter.LoadState to load it in ink
 		# then when that is done story gettter fires again and navigator catches it back and then calls upon textpresenter via another signal
 		# and tbh i think this is all done because i am too lazy to declare and assign nodes in my scripts. or it's best practise. either or.
-	#story_getter.loaded_state.connect(text_presenter.clear)
-	#story_getter.loaded_state.connect(choices_presenter.clear)
-	# actually, i think these can be removed, because the story_getter should be able to handle this itself by continueing
-	story_getter.loaded_state.connect(_send_continue)
-
-func _process(_delta):
-	# manually start the story (because it cannot do so automatically yet)
-	var input_next = Input.is_action_just_pressed("select_next_choice")
-	var input_prev = Input.is_action_just_pressed("select_previous_choice")
-	if Input.is_action_just_pressed("start") || Input.is_action_just_pressed("continue"): 
-		print("got keystroke for continue")
-		_on_continue_pressed()
-	elif input_next || input_prev:
-		if input_next:
-			selectedChoice+=1
-			if selectedChoice>choices_presenter.get_child_count()-1:
-				selectedChoice=0
-		elif input_prev:
-			selectedChoice-=1
-			if selectedChoice<0:
-				selectedChoice=choices_presenter.get_child_count()-1
-		print("selected choice " + str(selectedChoice))
-
-	if Input.is_action_just_pressed("quickload"):
-		text_presenter.finish_text()
-		text_presenter.clear()
-		choices_presenter.clear()
-		DataManager.load_most_recent_quicksavefile()
-	elif Input.is_action_just_pressed("quicksave"):
-		DataManager.quicksave_game(story_state_json) # TODO since this is always the same, just replace, by making a reference to story naviagator from datamanager
+	#my_story_getter.loaded_state.connect(text_presenter.clear)
+	#my_story_getter.loaded_state.connect(choices_presenter.clear)
+	# actually, i think these can be removed, because the my_story_getter should be able to handle this itself by continueing
+	my_story_getter.loaded_state.connect(input_continue)
 
 
-func _on_continue_pressed():	
-	print("story_navigator received request to continue, evaluating...");
-	if text_presenter.typing:
-		print("Typer Busy. Skipping to end of Line.");
-		skip.emit();
-	elif story_getter.story.CanContinue:
-		print("validated. Continueing Story.");
-		_send_continue()
-	elif choices_presenter.get_child_count()>1:#if there are choice buttons
-		if selectedChoice == -1:
-			print("Select a Choice first");
-		else:
-			print("validated. Fed selected choice.");
-			_send_choice(selectedChoice)
-	else:
-		push_warning("Cannot Parse Continue");
+	my_story_getter.ink_function_print.connect(SignalBus.ink_func_print.emit)
+	my_story_getter.ink_function_spd.connect(SignalBus.ink_func_spd.emit)
+
+
+func hack(): #needed because the variantarray cannot by itself be sent through a signal
+	var converted_array: Array = Array(my_story_getter.GetChoices())
+	SignalBus.ink_sent_choices.emit(converted_array)
 	
-func _send_continue():
-	story_getter.ContinueStory();
-	selectedChoice = -1 # reset selection so next required an action to select
 
-func _on_choice_pressed(index):
-	_send_choice(index)
+func input_continue():
+	my_story_getter.ContinueStory();
 
-func _send_choice(index):
-	#print("navigator received choice " + str(index))
-	story_getter.FeedChoice(index);
-	selectedChoice = -1 # reset selection so next required an action to select
+func input_choice(index:int):
+	my_story_getter.FeedChoice(index);
 	save_state()
-	DataManager.autosave_game(story_state_json) # save now
-	_send_continue()
+	DataManager.autosave_game(story_state_json) # save now #TODO instead regel dit met een signal?
+	input_continue()
 
 func load_state(state: String):
-	story_getter.LoadState(state)
+	my_story_getter.LoadState(state)
 
 func save_state():
-	return story_getter.SaveState()
+	return my_story_getter.SaveState()

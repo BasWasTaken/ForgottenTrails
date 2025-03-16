@@ -1,6 +1,6 @@
 extends RichTextLabel
-
-@onready var box:ColorRect= get_parent()
+#TTODO rename this to printer or something
+@export var box:ColorRect # TODO: als je het ooit helemaal netjes wil doen (lage prio), kun je het aansturen van de popacity van it object loshalen uit dit script en in een eigen script gooien, aan die node vast. daarmee haal je de noodzaak van deze referentie hier helemaal weg. zie note marked 20250301140143.
 
 #--- should this be here? definitions
 
@@ -29,10 +29,15 @@ var typing_delay: float:
 
 @onready var audio_player: AudioStreamPlayer =$AudioStreamPlayer
 
-signal finished_typing
 var typing: bool = false
 
 func _ready():
+	SignalBus.ink_sent_story.connect(present_story)
+	SignalBus.control_requests_skip.connect(skip_to_printed)
+
+	SignalBus.ink_func_print.connect(present_console_message)
+	SignalBus.ink_func_spd.connect(_spd)
+
 	ConfigHandler.setting_changed.connect(
 		func(id, _value):
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:
@@ -58,7 +63,7 @@ var opacity:
 func _on_opacity_change_applied():
 	var scaled = opacity * 2.55 #convert 0-100 to 0-255
 	#print(scaled)
-	box.self_modulate=Color8(0,0,0,scaled as int)
+	box.color=Color8(0,0,0,scaled as int)
 	
 
 func present_console_message(content: String, warning: bool = false) -> void:
@@ -79,6 +84,8 @@ func present_story(content: String) -> void:
 	typing=true
 	var level = 0
 	for n in self.get_parsed_text():
+		if visible_characters==-1: # if we are done typing
+			break
 		# Evaluate 'n'
 		# the bracket check is not needed anymore- we're getting parsed text! Alleluya Godot
 		if n=='[': 
@@ -97,11 +104,13 @@ func present_story(content: String) -> void:
 			if(typing_delay>0):	
 				timer.start(typing_delay) # start the delay TODO:make dependent on 'n'
 				await timer.timeout # wait for the typing delay
-			if(!typing):
-				break # exit loop if we have been skipped
 	
 	# Finish Text
 	finish_text()
+
+func skip_to_printed():
+	visible_characters = -1 # set all visible
+	# wait for the loop to exit, and it should automatically enter the finish_text() function
 
 func finish_text():
 	#TODO: Add finish line sound?
@@ -109,8 +118,8 @@ func finish_text():
 	
 	# stop typing
 	timer.stop()
-	typing=false
-	finished_typing.emit() #give signal
+	typing=false #TODO replace with state machine
+	SignalBus.printer_text_finished.emit() #give signal
 
 func _spd(new):
 	typing_speed_modifier = new

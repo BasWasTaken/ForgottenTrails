@@ -3,7 +3,8 @@ extends Button
 
 func _ready():
 	pressed.connect(_on_pressed)
+	grab_focus()
 
 func _on_pressed():
 	print("pressed continue")
-	SignalBus.continue_button_pressed.emit()
+	SignalBus.control_requests_continue.emit()

@@ -15,21 +15,13 @@ func _unhandled_input(event):
 		print("input manager received skip")
 		SignalBus.control_requests_skip.emit()
 	else:
-		if event.is_action_pressed("ui_accept"):
-			#print("input manager received continue")
-			#SignalBus.control_requests_continue.emit()
-			print("input manager received accept")
-			SignalBus.control_requests_accept.emit()
-		elif event.is_action_pressed("ui_cancel"):
-			print("input manager received cancel")
-			SignalBus.control_requests_cancel.emit()
-		elif event.is_action_pressed("ui_down"): #todo remove this, because it's not used
-			print("input manager received down")
-			SignalBus.control_requests_down.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
-		elif event.is_action_pressed("ui_up"): #TODO remove this, because it's not used
-			print("input manager received up")
-			SignalBus.control_requests_up.emit() #hopyfully will be uunnessecary because it should be handled by ui navigation in godot
-		elif event.is_action_pressed("options"): #TODO later expand this with a script that handles which guis to open and close when, with dedicated events with window parameter or the like
+		# if event.is_action_pressed("ui_accept"):
+		# 	print("input manager received accept")
+		# 	SignalBus.control_requests_accept.emit()
+		# elif event.is_action_pressed("ui_cancel"):
+		# 	print("input manager received cancel")
+		# 	SignalBus.control_requests_cancel.emit()
+		if event.is_action_pressed("options"): #TODO later expand this with a script that handles which guis to open and close when, with dedicated events with window parameter or the like
 			print("input manager received options")
 			SignalBus.control_requests_options.emit()
 		# else:

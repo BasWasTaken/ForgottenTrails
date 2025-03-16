@@ -29,6 +29,7 @@ func present_continue_button() -> void:
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
 	continue_button.grab_focus() #set focus to this button
 
+#TODO: catch event for end of script better. now if no continue it just assumes there is a choice
 func present_choices(choices: Array) -> void: #TODO: connext to signal
 	#await SignalBus.printer_text_finished # this is here because it needs to wait for the text to finish printing before it can present the choices, but i belive this is what is causing issues with the loading sometimes. i believe it should rather just check the state of the printer
 	var i: int = 0

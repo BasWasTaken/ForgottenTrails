@@ -47,7 +47,9 @@ func hack(): #needed because the variantarray cannot by itself be sent through a
 	
 
 func input_continue():
+	printer_state.set_state(printer_state.PROCESSING)
 	my_story_getter.ContinueStory();
+
 
 func input_choice(index:int):
 	my_story_getter.FeedChoice(index);

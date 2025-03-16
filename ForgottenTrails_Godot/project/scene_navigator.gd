@@ -18,7 +18,7 @@ func _process(_delta):
 
 
 func launch_game(file = null):
-	get_tree().change_scene_to_packed(SceneChanger.main_gameplay) # why scene and not instance..?
+	get_tree().change_scene_to_packed(main_gameplay) # why scene and not instance..?
 	if file:
 		#TODO: better resetting of text presenter states
 		DataManager.load_game(file)

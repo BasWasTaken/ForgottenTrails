@@ -25,7 +25,7 @@ var typing_delay: float:
 		#print("delay: ", delay) 
 		return delay
 
-@export var timer: Timer  
+@onready var timer: Timer = $Timer
 
 @onready var audio_player: AudioStreamPlayer =$AudioStreamPlayer
 

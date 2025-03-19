@@ -4,34 +4,23 @@
 [ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://project/game_settings/settings_screen.tscn" id="2_fv7wo"]
 [ext_resource type="PackedScene" uid="uid://bx7wv3dyc1kjw" path="res://project/inventory/inventory_screen.tscn" id="3_wlwa0"]
 
-[node name="MainGameplayScene" type="Control"]
-layout_mode = 3
+[node name="MainGameplayScene" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="InkPlayer" parent="." instance=ExtResource("1_r2cfs")]
-layout_mode = 1
 
 [node name="Menus" type="TabContainer" parent="."]
 self_modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 531.0
-offset_bottom = -196.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 current_tab = 0
 tabs_visible = false
 all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
 deselect_enabled = true
 
-[node name="Inventory" parent="Menus" instance=ExtResource("3_wlwa0")]
+[node name="InkPlayer" parent="Menus" instance=ExtResource("1_r2cfs")]
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -40,3 +29,8 @@ visible = false
 self_modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="Inventory" parent="Menus" instance=ExtResource("3_wlwa0")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2

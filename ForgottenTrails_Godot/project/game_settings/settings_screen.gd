@@ -5,6 +5,8 @@ extends Control
 @export var apply_button:Button#=$"Global Buttons/Apply All Button" #confirm, save and apply changes
 @export var close_button:Button#=$"Global Buttons/Close Button"
 
+# NOTE | TODO (see 20250301143406 in obsidian): instead of is_visible_in_tree() is should probably make some state variable that tells me if it's open or close, active or inactive etc. low priority for now but might come up once I start making more screens. culd use a class to inherit from
+
 var settings_all:
 	get:
 		#print("getting children")
@@ -55,19 +57,16 @@ var deviations_from_defaults:
 			return false
 
 func _ready():
-	pass
+	SignalBus.control_requests_options.connect(open_or_close)
 	#_on_open_or_close() #is probably already called by itself..?
 
-func _process(_delta):
-	open_or_close()
 
 
 func open_or_close():
-	if Input.is_action_just_pressed("menu"):
-		if is_visible_in_tree():
-			close_try()
-		else: 
-			open()
+	if is_visible_in_tree():
+		close_try()
+	else: 
+		open()
 
 func open():
 	show()

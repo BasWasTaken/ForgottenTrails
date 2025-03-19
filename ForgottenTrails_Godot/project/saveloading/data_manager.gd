@@ -17,6 +17,11 @@ func _ready():
 	if not DirAccess.dir_exists_absolute(file_path):
 		DirAccess.make_dir_absolute(file_path)
 
+	# connect signals
+	
+	SignalBus.control_requests_quicksave.connect(quicksave_game)
+	SignalBus.control_requests_quickload.connect(load_most_recent_quicksavefile)
+
 # Quick, Auto, and Manual Save Functions
 func quicksave_game(state: String):
 	save_game(state, "quick")
@@ -26,6 +31,7 @@ func autosave_game(state: String):
 
 func save_game(state: String, method: String):
 	print("Starting " + method + " save with state: " + state)
+	
 
 	# Get timestamp (safe filename format)
 	var datetime = Time.get_datetime_string_from_system(true).replace(":", "").replace(" ", "_").replace(".", "")
@@ -123,6 +129,11 @@ signal load_story_state(story_state: String)
 func load_game(file: String):
 	
 	print("Loading game from file: " + file)	
+	# TODO: if needed(?) first ensure we're in a save state for loading
+	#text_presenter.finish_text()
+	#text_presenter.clear()
+	#choices_presenter.clear()
+
 
 	# Ensure the file exists before attempting to read
 	assert(FileAccess.file_exists(file), "File does not exist: " + file)

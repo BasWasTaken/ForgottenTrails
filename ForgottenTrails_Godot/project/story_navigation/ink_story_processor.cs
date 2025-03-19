@@ -1,21 +1,33 @@
 using Godot;
 using GodotInk;
+using System.Collections.Generic;
+using Godot.Collections;
 
-public partial class story_getter : Node
+public partial class ink_story_processor : Node
 {	
 	[Export]
-	private InkStory story; 
-
+	private InkStory story;  
+	
 	public string latest_state;
+	
+	private Array choices_array;
+
+	public Array GetChoices()
+	{
+		return choices_array;
+	}
 		
 	[Signal]
 	public delegate void continued_storyEventHandler(string content);
 	
-	[Signal]
-	public delegate void encountered_choiceEventHandler(InkChoice choice);
+	//[Signal]
+	//public delegate void encountered_choicesEventHandler(InkChoice[] choices);
 	
 	[Signal]
-	public delegate void encountered_no_choicesEventHandler(InkChoice choice);
+	public delegate void fetch_my_choices_plxEventHandler();
+
+	[Signal]
+	public delegate void encountered_no_choicesEventHandler();
 	
 	[Signal]
 	public delegate void saved_stateEventHandler(string json);
@@ -29,6 +41,12 @@ public partial class story_getter : Node
 	
 	[Signal]
 	public delegate void ink_function_spdEventHandler(float speed);
+	
+	[Signal]
+	public delegate void ink_function_backdrop_colorEventHandler(string color, float delay);
+	
+	[Signal]
+	public delegate void ink_function_backdrop_imageEventHandler(string image, float delay);
 
 	public override void _Ready()
 	{
@@ -36,6 +54,8 @@ public partial class story_getter : Node
 		story.BindExternalFunction("print_warning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
 		story.BindExternalFunction("_spd", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
 		story.BindExternalFunction("_clear", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
+		story.BindExternalFunction("_FadeToImage", (string color, float delay) => EmitSignal(SignalName.ink_function_backdrop_image, color, delay));
+		story.BindExternalFunction("_FadeToColor", (string color, float delay) => EmitSignal(SignalName.ink_function_backdrop_color, color, delay));
 	}
 	
 	public void ContinueStory()
@@ -57,11 +77,24 @@ public partial class story_getter : Node
 			else
 			{
 				GD.Print("Checking choices: " + story.CurrentChoices.Count);
-				foreach (InkChoice choice in story.CurrentChoices)
+				//convert ireadonlylist to array
+				InkChoice[] seeSharpArray = new InkChoice[story.CurrentChoices.Count];
+				for(int i = 0; i < story.CurrentChoices.Count; i++)
 				{
-					GD.Print("Choice: " + choice.Text);
-					EmitSignal(SignalName.encountered_choice, choice);
+					seeSharpArray[i] = story.CurrentChoices[i];
 				}
+				GD.Print("Choices: " + seeSharpArray.Length);
+				// convert c# array to godot array
+				Array variantArray = new Array(seeSharpArray);
+				// test array conversion
+				foreach(InkChoice choice in seeSharpArray)
+				{
+					GD.Print(choice.Text);
+				}
+				GD.Print(variantArray);
+				
+				choices_array = variantArray;
+				EmitSignal(SignalName.fetch_my_choices_plx);
 			}
 		}
 		else

@@ -1,16 +1,18 @@
 extends Button
 
-signal pressed_choice(int)
-
 var index: int
 
-#func _ready():
-	#pressed.connect(_on_pressed)
-
-func _process(_delta):
-	# This connects a number key to the button:
-	if Input.is_action_just_pressed("choice "+str(index+1)): 
-		_on_pressed()
+func _ready():
+	print("choice button ready")
+	pressed.connect(_on_pressed)
 
 func _on_pressed():
-	pressed_choice.emit(index)
+	print("pressed choice ", index)
+	if printer_state.get_state == printer_state.PRINTING:
+		print("request skip")
+		SignalBus.control_requests_skip.emit()
+	elif printer_state.get_state != printer_state.WAITING: #other states are illegal (like locked or prosessing)
+		print("but it was illegal")
+		return
+	print("and it was legal")
+	SignalBus.control_requests_choice.emit(index)

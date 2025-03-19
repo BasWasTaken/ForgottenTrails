@@ -110,13 +110,13 @@ The FadeToImage function enables the smooth transition between different backgro
 To instead have instant transitions, simply give the duration parameter a value of 0.
 
 - **FadeToImage(image, duration):** Initiates a fade transition to the specified image over a given duration.
-- **FadeToColor(color, duration):** Fades the background to a solid predefined color over a specified duration. See http://www.flounder.com/csharp_color_table.htmv for a list of colours defined in C# (our unity coding language).
+- **FadeToColor(color, duration):** Fades the background to a solid predefined color over a specified duration. See https://docs.godotengine.org/en/stable/classes/class_color.html for a list of colours defined in Godot.
 
 ##### Character Portraits 
 With the Portraits system, the game dynamically adjusts character portraits based on the narrative context.
 
 Functions:
-- **Portraits_Set(images):** Sets the character portraits to the specified images. Note: ordering not fully tested yet.
+- **Portraits_Set(images):** Sets the character portraits to the specified images. Note: ordering not fully tested yet. ND 20250319131411: ORdering will work differently in new version, as per meeting agreement somtime in 2024.
 - **Portraits_Add(image):** Adds a character portrait to the existing set.
 - **Portraits_Remove(image):** Removes a specific character portrait.
 - **Portraits_RemoveAll():** Clears all character portraits from the screen.

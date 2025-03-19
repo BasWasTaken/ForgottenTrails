@@ -38,3 +38,6 @@ signal control_requests_quickload
 signal ink_sent_story(story: String)
 signal ink_sent_choices(choices: Array)
 signal ink_sent_no_choices
+
+signal ink_func_backdrop_image(image: String, duration: float)
+signal ink_func_backdrop_color(color: String, duration: float)

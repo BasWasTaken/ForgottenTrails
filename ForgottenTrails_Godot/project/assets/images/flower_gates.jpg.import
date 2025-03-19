@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b816jtrsg0ebu"
-path="res://.godot/imported/6a0da2014-08-12_DRp2-1920x1080.jpg-a228d3e1f5efa8971a4b005da6dc4b05.ctex"
+path="res://.godot/imported/flower_gates.jpg-0276760ded10a7b62d177fe9486024c5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/Temporary Files/6a0da2014-08-12_DRp2-1920x1080.jpg"
-dest_files=["res://.godot/imported/6a0da2014-08-12_DRp2-1920x1080.jpg-a228d3e1f5efa8971a4b005da6dc4b05.ctex"]
+source_file="res://project/assets/images/flower_gates.jpg"
+dest_files=["res://.godot/imported/flower_gates.jpg-0276760ded10a7b62d177fe9486024c5.ctex"]
 
 [params]
 

@@ -41,6 +41,12 @@ public partial class ink_story_processor : Node
 	
 	[Signal]
 	public delegate void ink_function_spdEventHandler(float speed);
+	
+	[Signal]
+	public delegate void ink_function_backdrop_colorEventHandler(string color, float delay);
+	
+	[Signal]
+	public delegate void ink_function_backdrop_imageEventHandler(string image, float delay);
 
 	public override void _Ready()
 	{
@@ -48,6 +54,8 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("print_warning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
 		story.BindExternalFunction("_spd", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
 		story.BindExternalFunction("_clear", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
+		story.BindExternalFunction("_FadeToImage", (string color, float delay) => EmitSignal(SignalName.ink_function_backdrop_image, color, delay));
+		story.BindExternalFunction("_FadeToColor", (string color, float delay) => EmitSignal(SignalName.ink_function_backdrop_color, color, delay));
 	}
 	
 	public void ContinueStory()

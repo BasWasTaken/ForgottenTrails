@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://tuvvqraku1dp"]
+[gd_scene load_steps=15 format=3 uid="uid://tuvvqraku1dp"]
 
-[ext_resource type="Texture2D" uid="uid://b816jtrsg0ebu" path="res://project/Temporary Files/6a0da2014-08-12_DRp2-1920x1080.jpg" id="1_vjujo"]
+[ext_resource type="Texture2D" uid="uid://rb41u71xfx1s" path="res://project/assets/images/swamp_house.jpg" id="1_76n22"]
+[ext_resource type="Script" path="res://project/backdrop.gd" id="2_2733b"]
 [ext_resource type="Script" path="res://project/story_navigation/ink_story_controller.gd" id="2_ilg7f"]
 [ext_resource type="Script" path="res://project/story_navigation/ink_story_processor.cs" id="3_wwerr"]
 [ext_resource type="Resource" uid="uid://c8bjy63qwe0r2" path="res://project/ink/_Tests.ink" id="4_0iqp6"]
@@ -32,8 +33,9 @@ layout_mode = 2
 
 [node name="BackgroundDisplay" type="TextureRect" parent="PanelContainer"]
 layout_mode = 2
-texture = ExtResource("1_vjujo")
+texture = ExtResource("1_76n22")
 expand_mode = 2
+script = ExtResource("2_2733b")
 
 [node name="CharacterDisplayer" type="Panel" parent="."]
 self_modulate = Color(1, 1, 1, 0)

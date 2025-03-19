@@ -39,6 +39,8 @@ func _ready():
 
 	my_story_getter.ink_function_print.connect(SignalBus.ink_func_print.emit)
 	my_story_getter.ink_function_spd.connect(SignalBus.ink_func_spd.emit)
+	my_story_getter.ink_function_backdrop_color.connect(SignalBus.ink_func_backdrop_color.emit)
+	my_story_getter.ink_function_backdrop_image.connect(SignalBus.ink_func_backdrop_image.emit)
 
 
 func hack(): #needed because the variantarray cannot by itself be sent through a signal

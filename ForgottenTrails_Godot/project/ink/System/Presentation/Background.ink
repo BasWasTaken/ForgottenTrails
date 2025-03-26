@@ -16,3 +16,15 @@ EXTERNAL _FadeToImage(listItem, float)
 === function _FadeToColor(string, float) // fade to a color.
 <<i>Fade to {string}</i>> 
 EXTERNAL _FadeToColor(string, float)
+function FadeIn(duration)   // duration in seconds (e.g. 0.5)
+~ _FadeIn(duration)
+
+=== function _FadeIn(float) // fade to a color.
+<<i>Fade in</i>> 
+EXTERNAL _FadeIn(float)
+
+=== function FadeToBlack(duration)   // duration in seconds (e.g. 0.5)
+~ FadeToColor("Black", duration)
+
+=== function FadeToWhite(duration)   // duration in seconds (e.g. 0.5)
+~ FadeToColor("White", duration)

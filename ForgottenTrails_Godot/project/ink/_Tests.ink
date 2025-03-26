@@ -18,14 +18,14 @@ There were thee choices. (Well, one decision with three options.)
 - test
 
 Testing out some backdrops:
-~FadeToColor("black",0)
-Black backdrop
-~FadeToColor("transparent",0)
-Transparent backdrop
-~FadeToColor("white",0)
-White backdrop
+~FadeToBlack(1)
+Fade to Black
+~FadeToWhite(1)
+Fade to White
 ~FadeToImage(swamp_house,0)
 Swamp House
+~FadeIn(1)
+Fade in
 ~FadeToImage(flower_gates,0)
 Flower gates
 

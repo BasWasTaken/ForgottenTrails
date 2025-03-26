@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://project/story_navigation/ink_story_processor.cs" id="3_wwerr"]
 [ext_resource type="Script" path="res://project/story_navigation/text_presenter/RTE_matrix.gd" id="5_3gc5c"]
 [ext_resource type="Script" path="res://project/story_navigation/text_presenter/RTE_ghost.gd" id="6_g46gf"]
-[ext_resource type="Resource" uid="uid://c4x1s8sd8gccq" path="res://project/ink/_Tests.ink" id="6_oygnw"]
+[ext_resource type="Resource" uid="uid://c4wsjwt6fs1nk" path="res://project/ink/_Tests.ink" id="6_gyjps"]
 [ext_resource type="Script" path="res://project/story_navigation/text_presenter/text_presenter.gd" id="7_k727a"]
 [ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://project/story_navigation/text_presenter/typesound_physical.wav" id="8_mi8ju"]
 [ext_resource type="Script" path="res://project/story_navigation/choice_presenter/inkbutton_presenter.gd" id="9_pkvk5"]
@@ -57,7 +57,7 @@ my_story_getter = NodePath("StoryProcessor")
 
 [node name="StoryProcessor" type="Node" parent="StoryController"]
 script = ExtResource("3_wwerr")
-story = ExtResource("6_oygnw")
+story = ExtResource("6_gyjps")
 
 [node name="ColorRect" type="ColorRect" parent="StoryController"]
 layout_mode = 2

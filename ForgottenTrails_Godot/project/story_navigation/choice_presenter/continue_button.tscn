@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://project/story_navigation/choice_presenter/continue_button.gd" id="1_chll4"]
 
-
 [node name="ContinueButton" type="Button"]
 offset_right = 92.0
 offset_bottom = 31.0

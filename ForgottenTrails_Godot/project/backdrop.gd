@@ -4,7 +4,6 @@ extends TextureRect
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	img = get_texture()
-	SignalBus.ink_func_backdrop_color.connect(fade_to_color)
 	SignalBus.ink_func_backdrop_image.connect(fade_to_image)
 
 var img: Texture2D = Texture2D.new():
@@ -13,7 +12,7 @@ var img: Texture2D = Texture2D.new():
 	set(value):
 		set_texture(value)
 
-func fade_to_color(prompt: String, duration: float=0.0):
+func fade_out(prompt: String="black", duration: float=0.0):
 	var color = Color.from_string(prompt, Color.TRANSPARENT)
 	assert(color!=null, "Color not valid")
 	modulate = color

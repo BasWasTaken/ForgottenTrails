@@ -5,7 +5,6 @@
 [ext_resource type="Script" path="res://project/story_navigation/ink_story_controller.gd" id="2_ilg7f"]
 [ext_resource type="Script" path="res://project/foreground.gd" id="3_csg8f"]
 [ext_resource type="Script" path="res://project/story_navigation/ink_story_processor.cs" id="3_wwerr"]
-[ext_resource type="Resource" uid="uid://c8bjy63qwe0r2" path="res://project/ink/_Tests.ink" id="4_0iqp6"]
 [ext_resource type="Script" path="res://project/story_navigation/text_presenter/RTE_matrix.gd" id="5_3gc5c"]
 [ext_resource type="Script" path="res://project/story_navigation/text_presenter/RTE_ghost.gd" id="6_g46gf"]
 [ext_resource type="Script" path="res://project/story_navigation/text_presenter/text_presenter.gd" id="7_k727a"]
@@ -13,6 +12,9 @@
 [ext_resource type="Script" path="res://project/story_navigation/choice_presenter/inkbutton_presenter.gd" id="9_pkvk5"]
 [ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://project/story_navigation/choice_presenter/choice_button.tscn" id="10_id7o2"]
 [ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://project/story_navigation/choice_presenter/continue_button.tscn" id="11_snlba"]
+
+[sub_resource type="Resource" id="Resource_3lx01"]
+metadata/__load_path__ = "res://project/ink/_Tests.ink"
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
 script = ExtResource("5_3gc5c")
@@ -57,7 +59,7 @@ my_story_getter = NodePath("StoryProcessor")
 
 [node name="StoryProcessor" type="Node" parent="StoryController"]
 script = ExtResource("3_wwerr")
-story = ExtResource("4_0iqp6")
+story = SubResource("Resource_3lx01")
 
 [node name="ColorRect" type="ColorRect" parent="StoryController"]
 layout_mode = 2

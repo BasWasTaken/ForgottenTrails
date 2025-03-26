@@ -2,13 +2,12 @@
 
 importer="ink"
 type="Resource"
-uid="uid://c8bjy63qwe0r2"
-path="res://.godot/imported/_Tests.ink-d6838d1f53ac8c8c2189cfde5aecaa87.res"
+uid="uid://c4x1s8sd8gccq"
+valid=false
 
 [deps]
 
 source_file="res://project/ink/_Tests.ink"
-dest_files=["res://.godot/imported/_Tests.ink-d6838d1f53ac8c8c2189cfde5aecaa87.res"]
 
 [params]
 

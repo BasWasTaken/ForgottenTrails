@@ -22,11 +22,11 @@ Testing out some backdrops:
 Fade to Black
 ~FadeToWhite(1)
 Fade to White
-~FadeToImage(swamp_house,0)
+~BackdropImage(swamp_house,0)
 Swamp House
 ~FadeIn(1)
 Fade in
-~FadeToImage(flower_gates,0)
+~BackdropImage(flower_gates,0)
 Flower gates
 
 ~ spd(4)

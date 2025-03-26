@@ -1,14 +1,14 @@
  
 LIST Background = (none), BG_Road1, BG_VaultHall, BG_VaultLibrary, BG_VaultHall2, BG_VaultOffice, BG_CastleGate, swamp_house, flower_gates // list of BackGrounds
   
-=== function FadeToImage(image, duration) // name of image and duration in seconds (e.g. 0.5)
+=== function BackdropImage(image, duration) // name of image and duration in seconds (e.g. 0.5)
     ~ Background = image //update background 
-~ (_FadeToImage(image, duration)) 
+~ (_BackdropImage(image, duration)) 
 
-=== function _FadeToImage(listItem, float)
+=== function _BackdropImage(listItem, float)
     
 <<i>Godot background: {listItem}</i>> 
-EXTERNAL _FadeToImage(listItem, float) 
+EXTERNAL _BackdropImage(listItem, float) 
 
 === function FadeToColor(color, duration)   // duration in seconds (e.g. 0.5)
 ~ _FadeToColor(color, duration)
@@ -28,3 +28,10 @@ EXTERNAL _FadeIn(float)
 
 === function FadeToWhite(duration)   // duration in seconds (e.g. 0.5)
 ~ FadeToColor("White", duration)
+
+=== function Effect(effect)
+~ _Effect(effect)
+
+=== function _Effect(string)
+<<i>Effect: {string}</i>> 
+EXTERNAL _Effect(string)

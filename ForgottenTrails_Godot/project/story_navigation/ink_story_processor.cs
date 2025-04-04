@@ -53,6 +53,9 @@ public partial class ink_story_processor : Node
 
 	[Signal]
 	public delegate void ink_function_effectEventHandler(string effect);
+	
+	[Signal]
+	public delegate void ink_function_flashEventHandler(string color, int amount);
 
 	[Signal]
 	public delegate void ink_function_backdrop_imageEventHandler(string image, float delay);
@@ -68,6 +71,7 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("_FadeIn", (float delay) => EmitSignal(SignalName.ink_function_fade_in, delay));
 		story.BindExternalFunction("_FadeOut", (bool black, float delay) => EmitSignal(SignalName.ink_function_fade_out, black, delay));
 		story.BindExternalFunction("_Effect", (string effect) => EmitSignal(SignalName.ink_function_effect, effect));
+		story.BindExternalFunction("_Flash", (string color, int amount) => EmitSignal(SignalName.ink_function_color, color, amount));
 	}
 	
 	public void ContinueStory()

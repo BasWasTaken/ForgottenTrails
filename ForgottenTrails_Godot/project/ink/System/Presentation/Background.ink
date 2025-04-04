@@ -35,3 +35,11 @@ EXTERNAL _FadeIn(float)
 === function _Effect(string)
 <<i>Effect: {string}</i>> 
 EXTERNAL _Effect(string)
+
+
+=== function Flash(color, amount)
+~ _Flash(color, amount)
+
+=== function _Flash(string, int)
+<<i>Flash: {string}, {int}</i>> 
+EXTERNAL _Flash(string, int)

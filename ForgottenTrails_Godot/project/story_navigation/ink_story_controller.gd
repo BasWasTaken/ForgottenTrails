@@ -44,6 +44,7 @@ func _ready():
 	my_story_getter.ink_function_fade_in.connect(SignalBus.ink_func_fade_in.emit)
 	my_story_getter.ink_function_fade_out.connect(SignalBus.ink_func_fade_out.emit)
 	my_story_getter.ink_function_effect.connect(SignalBus.ink_func_effect.emit)
+	my_story_getter.ink_function_flash.connect(SignalBus.ink_func_flash.emit)
 
 
 func hack(): #needed because the variantarray cannot by itself be sent through a signal

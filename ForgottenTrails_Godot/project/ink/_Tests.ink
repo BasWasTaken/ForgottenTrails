@@ -28,6 +28,11 @@ Swamp House
 Fade in
 ~BackdropImage(flower_gates,0)
 Flower gates
+~Flash("white", 1)
+Flash!
+~Flash("red", 3)
+Flash!
+
 
 ~ spd(4)
 

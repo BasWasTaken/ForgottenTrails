@@ -34,9 +34,9 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 
 [dotnet]
-project_build_enabled=true
 
 project/assembly_name="ForgottenTrails"
+project_build_enabled=true
 
 [editor_plugins]
 

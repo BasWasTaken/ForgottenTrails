@@ -45,3 +45,4 @@ signal ink_func_fade_in(duration: float)
 signal ink_func_fade_out(black: bool, duration: float)
 
 signal ink_func_effect(effect: String)
+signal ink_func_flash(color: String, amount: int)

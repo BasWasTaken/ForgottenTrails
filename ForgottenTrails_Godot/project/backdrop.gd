@@ -12,11 +12,6 @@ var img: Texture2D = Texture2D.new():
 	set(value):
 		set_texture(value)
 
-func fade_out(prompt: String="black", duration: float=0.0):
-	var color = Color.from_string(prompt, Color.TRANSPARENT)
-	assert(color!=null, "Color not valid")
-	modulate = color
-
 func fade_to_image(prompt: String, duration: float=0.0):
 	var search = load("res://project/assets/images/" + prompt + ".jpg")
 	assert(search, "Image not found")

@@ -9,6 +9,7 @@ func _ready():
 	SignalBus.ink_func_fade_out.connect(fade_out)
 	SignalBus.ink_func_fade_to_color.connect(fade_to_color)
 	SignalBus.ink_func_effect.connect(fire_effect)
+	SignalBus.ink_func_flash.connect(flash)
 
 
 func fire_effect(prompt: String, duration: float=0.0):
@@ -20,21 +21,29 @@ func fire_effect(prompt: String, duration: float=0.0):
 
 func fade_out(black: bool=true, duration: float=0.0):
 	if black:
-		fade_to_color("black", duration)
+		await FadeUtils.fade_color(self, Color(0, 0, 0, 1), duration)
+
 	else:
-		fade_to_color("white", duration)
+		await FadeUtils.fade_color(self, Color(1, 1, 1, 1), duration)
 
 func fade_in(duration: float=0.0):
 	fade_to_color("transparent", duration)
 
-func flash():
-	fade_to_color("white", 0.1)
-	fade_to_color("transparent", 0.1)
+func flash(prompt: String="white", amount: int=1):
+	var s_color = self.modulate
+	var t_color = Color.from_string(prompt, Color.TRANSPARENT)	
+	assert(t_color!=null, "Color not valid")
+
+	for i in range(amount):
+		await FadeUtils.fade_color(self, t_color, 0.1)
+		await get_tree().create_timer(0.01).timeout
+		await FadeUtils.fade_color(self, s_color, 0.1)
+		await get_tree().create_timer(0.01).timeout
 
 func fade_to_color(prompt: String, duration: float=0.0):
-	var color = Color.from_string(prompt, Color.TRANSPARENT)
+	var color = Color.from_string(prompt, Color.TRANSPARENT)	
 	assert(color!=null, "Color not valid")
-	modulate = color
+	await FadeUtils.fade_color(self, color, duration)
 
 
 

@@ -32,9 +32,11 @@ func _unhandled_input(event):
 func _process(delta):
 	if(Input.is_key_pressed(KEY_T)):
 		SignalBus.ink_func_backdrop_image.emit("swamp_house")
+		SignalBus.ink_func_fade_in.emit()
 	if(Input.is_key_pressed(KEY_Y)):
 		SignalBus.ink_func_backdrop_image.emit("flower_gates")
+		SignalBus.ink_func_fade_in.emit()
 	if(Input.is_key_pressed(KEY_G)):
-		SignalBus.ink_func_backdrop_color.emit("black")
+		SignalBus.ink_func_fade_out.emit()
 	if(Input.is_key_pressed(KEY_H)):
-		SignalBus.ink_func_backdrop_color.emit("white")
+		SignalBus.ink_func_fade_out.emit(false)

@@ -36,6 +36,7 @@ window/size/viewport_height=1080
 [dotnet]
 
 project/assembly_name="ForgottenTrails"
+project_build_enabled=true
 
 [editor_plugins]
 
@@ -48,7 +49,7 @@ folder_colors={
 "res://editor/": "gray",
 "res://project/": "purple",
 "res://project/game_settings/": "red",
-"res://project/ink/": "blue",
+"res://project/ink/": "teal",
 "res://project/inventory/": "yellow",
 "res://project/main_menu/": "orange",
 "res://project/saveloading/": "gray",

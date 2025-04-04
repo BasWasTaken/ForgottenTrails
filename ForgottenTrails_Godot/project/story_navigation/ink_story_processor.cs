@@ -43,8 +43,20 @@ public partial class ink_story_processor : Node
 	public delegate void ink_function_spdEventHandler(float speed);
 	
 	[Signal]
-	public delegate void ink_function_backdrop_colorEventHandler(string color, float delay);
+	public delegate void ink_function_fade_to_colorEventHandler(string color, float delay);
 	
+	[Signal]
+	public delegate void ink_function_fade_inEventHandler(float delay);
+	
+	[Signal]
+	public delegate void ink_function_fade_outEventHandler(bool black, float delay);
+
+	[Signal]
+	public delegate void ink_function_effectEventHandler(string effect);
+	
+	[Signal]
+	public delegate void ink_function_flashEventHandler(string color, int amount);
+
 	[Signal]
 	public delegate void ink_function_backdrop_imageEventHandler(string image, float delay);
 
@@ -54,8 +66,12 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("print_warning", (string text) => EmitSignal(SignalName.ink_function_print, text, true));
 		story.BindExternalFunction("_spd", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
 		story.BindExternalFunction("_clear", (float speed) => EmitSignal(SignalName.ink_function_spd,speed));
-		story.BindExternalFunction("_FadeToImage", (string color, float delay) => EmitSignal(SignalName.ink_function_backdrop_image, color, delay));
-		story.BindExternalFunction("_FadeToColor", (string color, float delay) => EmitSignal(SignalName.ink_function_backdrop_color, color, delay));
+		story.BindExternalFunction("_BackdropImage", (string image, float delay) => EmitSignal(SignalName.ink_function_backdrop_image, image, delay));
+		story.BindExternalFunction("_FadeToColor", (string color, float delay) => EmitSignal(SignalName.ink_function_fade_to_color, color, delay));
+		story.BindExternalFunction("_FadeIn", (float delay) => EmitSignal(SignalName.ink_function_fade_in, delay));
+		story.BindExternalFunction("_FadeOut", (bool black, float delay) => EmitSignal(SignalName.ink_function_fade_out, black, delay));
+		story.BindExternalFunction("_Effect", (string effect) => EmitSignal(SignalName.ink_function_effect, effect));
+		story.BindExternalFunction("_Flash", (string color, int amount) => EmitSignal(SignalName.ink_function_flash, color, amount));
 	}
 	
 	public void ContinueStory()

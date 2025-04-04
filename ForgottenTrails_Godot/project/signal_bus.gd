@@ -40,4 +40,9 @@ signal ink_sent_choices(choices: Array)
 signal ink_sent_no_choices
 
 signal ink_func_backdrop_image(image: String, duration: float)
-signal ink_func_backdrop_color(color: String, duration: float)
+signal ink_func_fade_to_color(color: String, duration: float)
+signal ink_func_fade_in(duration: float)
+signal ink_func_fade_out(black: bool, duration: float)
+
+signal ink_func_effect(effect: String)
+signal ink_func_flash(color: String, amount: int)

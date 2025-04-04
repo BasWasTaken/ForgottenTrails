@@ -18,16 +18,21 @@ There were thee choices. (Well, one decision with three options.)
 - test
 
 Testing out some backdrops:
-~FadeToColor("black",0)
-Black backdrop
-~FadeToColor("transparent",0)
-Transparent backdrop
-~FadeToColor("white",0)
-White backdrop
-~FadeToImage(swamp_house,0)
+~FadeToBlack(1)
+Fade to Black
+~FadeToWhite(1)
+Fade to White
+~BackdropImage(swamp_house,0)
 Swamp House
-~FadeToImage(flower_gates,0)
+~FadeIn(1)
+Fade in
+~BackdropImage(flower_gates,0)
 Flower gates
+~Flash("white", 1)
+Flash!
+~Flash("red", 3)
+Flash!
+
 
 ~ spd(4)
 

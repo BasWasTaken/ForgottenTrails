@@ -3,19 +3,31 @@ extends Panel
 
 @export var prefab : PackedScene
 
-func clear():
-	# Clear the current character display
+func find_character(character : String) -> CharacterPortrait:
+	# Find the character in the current display
 	for child in get_children():
-		if child.is_in_group("character"):
+		if child is CharacterPortrait and child.character == character:
+			return child
+	return null
+
+func remove_all_characters():
+	# Clear all characters from the display
+	for child in get_children():
+		if child is CharacterPortrait:
 			child.queue_free()
+
+func remove_character(character : String):
+	# Remove the character from the display
+	var subject:CharacterPortrait = find_character(character)
+	if subject:
+		subject.queue_free()
+	else:
+		print("Character not found: " + character)
 
 func add_or_change_character(character : String, variant: String="not_specified", coords: Vector2=Vector2(-1, -1)):
 	# Check if the character is already displayed
-	var subject:CharacterPortrait = null
-	for child in get_children():
-		if child is CharacterPortrait and child.character == character:
-			subject = child
-			break
+	var subject:CharacterPortrait = find_character(character)
+	# If the character is not displayed, create a new instance
 	if !subject:
 		subject = prefab.instantiate()
 		subject.name = character
@@ -58,3 +70,10 @@ func _input(event):
 	
 	if event.is_action_pressed("test_event_6"):
 		add_or_change_character("brian", "sad", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+	
+	if event.is_action_pressed("test_event_7"):
+		remove_character("gabriel")
+	if event.is_action_pressed("test_event_8"):
+		remove_character("brian")
+	if event.is_action_pressed("test_event_9"):
+		remove_all_characters()

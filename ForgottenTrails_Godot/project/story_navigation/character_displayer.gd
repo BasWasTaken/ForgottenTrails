@@ -37,11 +37,8 @@ func add_or_change_character(character : String, variant: String="not_specified"
 
 	# set the position
 	if coords != Vector2(-1, -1):
-		# Check if the position is valid
-		if coords.x < 0 or coords.y < 0:
-			print("Invalid position provided. Using default position.")
-			coords = (self.size / 2) - (subject.size / 2)
-		subject.position = coords
+		var abs_pos = calc_abs_coords(coords)
+		subject.position = abs_pos
 
 	# set the variant
 	if variant != "not_specified":
@@ -52,24 +49,39 @@ func add_or_change_character(character : String, variant: String="not_specified"
 		subject.texture = load(image_path)	
 		subject.variant = variant
 
+func calc_abs_coords(rel_coords: Vector2) -> Vector2:
+	# Calculate the relative coordinates based on the screen size
+
+	# first check validity of input
+	# Check if the position is valid
+	if !(rel_coords.x >= 0  and rel_coords.x <= 100 and rel_coords.y >= 0  and rel_coords.y <= 100):
+		print("Invalid position provided. Using default position.")
+		rel_coords = Vector2(50, 50)
+
+	var draw_area: Vector2 = self.size
+	#var screen_size = get_viewport().get_visible_rect().size
+	var abs_coords = draw_area * rel_coords / 100
+
+	return abs_coords
+
 func _input(event):
 	if event.is_action_pressed("test_event_1"):
-		add_or_change_character("gabriel", "happy", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+		add_or_change_character("gabriel", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_2"):
-		add_or_change_character("gabriel", "angry", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+		add_or_change_character("gabriel", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_3"):
-		add_or_change_character("gabriel", "sad", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+		add_or_change_character("gabriel", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
 
 	if event.is_action_pressed("test_event_4"):
-		add_or_change_character("brian", "happy", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+		add_or_change_character("brian", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_5"):
-		add_or_change_character("brian", "angry", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+		add_or_change_character("brian", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_6"):
-		add_or_change_character("brian", "sad", Vector2(randi_range(0, 1200), randi_range(0, 800)))
+		add_or_change_character("brian", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_7"):
 		remove_character("gabriel")

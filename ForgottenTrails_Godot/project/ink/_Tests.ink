@@ -1,9 +1,10 @@
 INCLUDE Functions_Dev.ink
 
 
-
+~FadeToWhite(0)
 ~ print("Testing console log")
 Once upon a time..
+~FadeIn(1)
 
 
 

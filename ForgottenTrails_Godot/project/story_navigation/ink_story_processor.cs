@@ -80,7 +80,7 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("_BackdropImage", (string image, float delay) => EmitSignal(SignalName.ink_function_backdrop_image, image, delay));
 		story.BindExternalFunction("_FadeToColor", (string color, float delay) => EmitSignal(SignalName.ink_function_fade_to_color, color, delay));
 		story.BindExternalFunction("_FadeIn", (float delay) => EmitSignal(SignalName.ink_function_fade_in, delay));
-		story.BindExternalFunction("_FadeOut", (bool black, float delay) => EmitSignal(SignalName.ink_function_fade_out, black, delay));
+		// story.BindExternalFunction("_FadeOut", (bool black, float delay) => EmitSignal(SignalName.ink_function_fade_out, black, delay));
 		story.BindExternalFunction("_Effect", (string effect) => EmitSignal(SignalName.ink_function_effect, effect));
 		story.BindExternalFunction("_Flash", (string color, int amount) => EmitSignal(SignalName.ink_function_flash, color, amount));
 		story.BindExternalFunction("_Spriteboard_Present", (string character, string variant, string position) => EmitSignal(SignalName.ink_function_sprite_present, character, variant, position));

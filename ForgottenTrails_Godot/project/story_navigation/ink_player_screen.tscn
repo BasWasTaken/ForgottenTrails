@@ -50,7 +50,6 @@ prefab = ExtResource("4_0fue2")
 
 [node name="ForegroundDisplay" type="ColorRect" parent="PanelContainer"]
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 script = ExtResource("3_csg8f")
 
 [node name="StoryController" type="PanelContainer" parent="." node_paths=PackedStringArray("my_story_getter")]

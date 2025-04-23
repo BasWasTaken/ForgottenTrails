@@ -13,8 +13,6 @@ static func fade_color(node: CanvasItem, to_color: Color, duration: float = 1.0)
 		var t = clamp(elapsed / duration, 0.0, 1.0)
 		node.modulate = start_color.lerp(to_color, t)
 	node.modulate = to_color
-	print(to_color.a)
-	print(node.modulate.a)
 
 static func fade_alpha(node: CanvasItem, to_alpha: float, duration: float = 1.0) -> void:
 	var current := node.modulate

@@ -33,6 +33,8 @@ Making Gabriel Angry.
 ~Spriteboard_Alter(Gabriel, Angry)
 Removing Brian.
 ~Spriteboard_Remove(Brian)
+Moving Gabriel to 40, 60 and making him happy.
+~Spriteboard_Present(Gabriel, Happy, "40,60")
 
 
 

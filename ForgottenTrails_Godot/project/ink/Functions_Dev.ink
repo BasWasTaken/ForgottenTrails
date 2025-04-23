@@ -11,9 +11,9 @@ INCLUDE System/Random.ink
 //INCLUDE System/Modules/Party.ink
 
 //INCLUDE System/Presentation/Audio.ink
-//INCLUDE System/Presentation/Sprites.ink
+INCLUDE System/Presentation/Sprites.ink
 INCLUDE System/Presentation/Background.ink
-//INCLUDE System/Presentation/Foreground.ink
+INCLUDE System/Presentation/Foreground.ink
 INCLUDE System/Presentation/TextEffects.ink
 INCLUDE System/Presentation/VariableLanguage.ink
 

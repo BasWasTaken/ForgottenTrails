@@ -3,7 +3,6 @@ INCLUDE Functions_Dev.ink
 
 ~FadeToWhite(0)
 ~ print("Testing console log")
-~FadeToBlack(3)
 Once upon a time..
 ~FadeIn(1)
 

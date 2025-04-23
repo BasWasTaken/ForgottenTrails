@@ -6,7 +6,7 @@ extends Panel
 
 func _ready():
 	# Connect the signal to the function
-	SignalBus.ink_func_sprite_present.connect(present_character)
+	SignalBus.ink_func_sprite_present_by_string.connect(present_character_by_stringposition)
 	#SignalBus.ink_func_sprite_move.connect(move_character)
 	#SignalBus.ink_func_sprite_alter.connect(alter_character)
 	SignalBus.ink_func_sprite_remove.connect(remove_character)
@@ -53,7 +53,7 @@ func present_character(character : String, variant: String="not_specified", coor
 		subject.position-= (subject.size / 2)
 
 	# set the variant
-	if variant != "not_specified":
+	if variant != "not_specified" && variant != "":
 		# get the image path
 		var image_path = "res://project/assets/images/" + character + "_" + variant + ".png" #TODO whenever referring in code to asset pahts, this should go through some sort of global path helper, so you only have to update what the pahts to various folders are in one location
 		if !ResourceLoader.exists(image_path):
@@ -61,13 +61,18 @@ func present_character(character : String, variant: String="not_specified", coor
 		subject.texture = load(image_path)	
 		subject.variant = variant
 
-func move_character(character : String, coords: Vector2):
-	# Move the character to a new position
-	present_character(character, "not_specified", coords)
+func present_character_by_stringposition(character : String, variant: String = "not_specified", location: String="not_specified"):
+	# Present the character at a specified location
+	var coords = parse_location(location)
+	present_character(character, variant, coords)
 
-func alter_character(character : String, variant: String):
-	# Alter the character's variant
-	present_character(character, variant, Vector2(-1, -1))
+# func move_character(character : String, coords: Vector2):
+# 	# Move the character to a new position
+# 	present_character(character, "not_specified", coords)
+
+# func alter_character(character : String, variant: String):
+# 	# Alter the character's variant
+# 	present_character(character, variant, Vector2(-1, -1))
 
 func calc_abs_coords(rel_coords: Vector2) -> Vector2:
 	# Calculate the relative coordinates based on the screen size
@@ -85,6 +90,31 @@ func calc_abs_coords(rel_coords: Vector2) -> Vector2:
 	return abs_coords
 
 # misschien ooit zorgen dat bij plaatsen van nieuwe sprites er ruimte wordt gemaakt door andere dingen weg te scootchen, mar dat is even voor later.
+# some location presets
+var locations = {
+	"top_left": Vector2(0, 0),
+	"top_right": Vector2(100, 0),
+	"bottom_left": Vector2(0, 100),
+	"bottom_right": Vector2(100, 100),
+	"center": Vector2(50, 50)
+}
+
+func parse_location(location: String) -> Vector2:
+	# Parse the location string and return the corresponding coordinates
+	if (location == "not_specified" || location == ""):
+		return Vector2(-1, -1)
+	elif location in locations:
+		return locations[location]
+	elif location == "random":
+		return Vector2(randi_range(0, 100), randi_range(0, 100))
+	else:
+		# If the location is a valid Vector2 string, parse it
+		var coords = location.split(",")
+		if coords.size() == 2:
+			return Vector2(coords[0].to_float(), coords[1].to_float())
+		else:
+			print("Invalid location format. Using default position.")
+	return Vector2(50, 50)
 
 
 func _input(event):

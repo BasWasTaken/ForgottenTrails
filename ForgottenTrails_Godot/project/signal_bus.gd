@@ -46,3 +46,9 @@ signal ink_func_fade_out(black: bool, duration: float)
 
 signal ink_func_effect(effect: String)
 signal ink_func_flash(color: String, amount: int)
+
+signal ink_func_sprite_present(character : String, variant: String, coords: Vector2)
+# see if you can do without this - signal ink_func_sprite_move(character : String, coords: Vector2)
+# see if you can do without this - signal ink_func_sprite_alter(character : String, variant: String)
+signal ink_func_sprite_remove(character : String)
+signal ink_func_sprite_remove_all()

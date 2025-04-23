@@ -3,18 +3,22 @@ extends Panel
 
 @export var prefab : PackedScene
 
+
+func _ready():
+	# Connect the signal to the function
+	SignalBus.ink_func_sprite_present.connect(present_character)
+	#SignalBus.ink_func_sprite_move.connect(move_character)
+	#SignalBus.ink_func_sprite_alter.connect(alter_character)
+	SignalBus.ink_func_sprite_remove.connect(remove_character)
+	SignalBus.ink_func_sprite_remove_all.connect(remove_all_characters)
+
+
 func find_character(character : String) -> CharacterPortrait:
 	# Find the character in the current display
 	for child in get_children():
 		if child is CharacterPortrait and child.character == character:
 			return child
 	return null
-
-func remove_all_characters():
-	# Clear all characters from the display
-	for child in get_children():
-		if child is CharacterPortrait:
-			child.queue_free()
 
 func remove_character(character : String):
 	# Remove the character from the display
@@ -24,7 +28,13 @@ func remove_character(character : String):
 	else:
 		print("Character not found: " + character)
 
-func add_or_change_character(character : String, variant: String="not_specified", coords: Vector2=Vector2(-1, -1)):
+func remove_all_characters():
+	# Clear all characters from the display
+	for child in get_children():
+		if child is CharacterPortrait:
+			child.queue_free()
+
+func present_character(character : String, variant: String="not_specified", coords: Vector2=Vector2(-1, -1)):
 	# Check if the character is already displayed
 	var subject:CharacterPortrait = find_character(character)
 	# If the character is not displayed, create a new instance
@@ -51,6 +61,13 @@ func add_or_change_character(character : String, variant: String="not_specified"
 		subject.texture = load(image_path)	
 		subject.variant = variant
 
+func move_character(character : String, coords: Vector2):
+	# Move the character to a new position
+	present_character(character, "not_specified", coords)
+
+func alter_character(character : String, variant: String):
+	# Alter the character's variant
+	present_character(character, variant, Vector2(-1, -1))
 
 func calc_abs_coords(rel_coords: Vector2) -> Vector2:
 	# Calculate the relative coordinates based on the screen size
@@ -67,27 +84,27 @@ func calc_abs_coords(rel_coords: Vector2) -> Vector2:
 
 	return abs_coords
 
-
+# misschien ooit zorgen dat bij plaatsen van nieuwe sprites er ruimte wordt gemaakt door andere dingen weg te scootchen, mar dat is even voor later.
 
 
 func _input(event):
 	if event.is_action_pressed("test_event_1"):
-		add_or_change_character("gabriel", "happy", Vector2(0,0))
+		present_character("gabriel", "happy", Vector2(0,0))
 	
 	if event.is_action_pressed("test_event_2"):
-		add_or_change_character("gabriel", "angry", Vector2(100, 100))
+		present_character("gabriel", "angry", Vector2(100, 100))
 	
 	if event.is_action_pressed("test_event_3"):
-		add_or_change_character("gabriel", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
+		present_character("gabriel", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
 
 	if event.is_action_pressed("test_event_4"):
-		add_or_change_character("brian", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
+		present_character("brian", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_5"):
-		add_or_change_character("brian", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
+		present_character("brian", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_6"):
-		add_or_change_character("brian", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
+		present_character("brian", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
 	if event.is_action_pressed("test_event_7"):
 		remove_character("gabriel")

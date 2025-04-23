@@ -39,6 +39,8 @@ func add_or_change_character(character : String, variant: String="not_specified"
 	if coords != Vector2(-1, -1):
 		var abs_pos = calc_abs_coords(coords)
 		subject.position = abs_pos
+		# add half the height and width to the position to center it?
+		subject.position-= (subject.size / 2)
 
 	# set the variant
 	if variant != "not_specified":
@@ -48,6 +50,7 @@ func add_or_change_character(character : String, variant: String="not_specified"
 			print("Image not found at path: " + image_path)
 		subject.texture = load(image_path)	
 		subject.variant = variant
+
 
 func calc_abs_coords(rel_coords: Vector2) -> Vector2:
 	# Calculate the relative coordinates based on the screen size
@@ -64,12 +67,15 @@ func calc_abs_coords(rel_coords: Vector2) -> Vector2:
 
 	return abs_coords
 
+
+
+
 func _input(event):
 	if event.is_action_pressed("test_event_1"):
-		add_or_change_character("gabriel", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
+		add_or_change_character("gabriel", "happy", Vector2(0,0))
 	
 	if event.is_action_pressed("test_event_2"):
-		add_or_change_character("gabriel", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
+		add_or_change_character("gabriel", "angry", Vector2(100, 100))
 	
 	if event.is_action_pressed("test_event_3"):
 		add_or_change_character("gabriel", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))

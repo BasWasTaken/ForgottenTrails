@@ -45,7 +45,7 @@ func _ready():
 	my_story_getter.ink_function_fade_out.connect(SignalBus.ink_func_fade_out.emit)
 	my_story_getter.ink_function_effect.connect(SignalBus.ink_func_effect.emit)
 	my_story_getter.ink_function_flash.connect(SignalBus.ink_func_flash.emit)
-	my_story_getter.ink_function_sprite_present.connect(SignalBus.ink_func_sprite_present.emit)
+	my_story_getter.ink_function_sprite_present.connect(SignalBus.ink_func_sprite_present_by_string.emit)
 	my_story_getter.ink_function_sprite_remove.connect(SignalBus.ink_func_sprite_remove.emit)
 	my_story_getter.ink_function_sprite_remove_all.connect(SignalBus.ink_func_sprite_remove_all.emit)
 

@@ -5,36 +5,25 @@ INCLUDE Functions_Dev.ink
 ~ print("Testing console log")
 Once upon a time..
 
-There was [b]bold[/b] text. There was [i]italics[/i] text. There was [u]underlined[/u] text. There was even [wave]wavy[/wave] text. There was even [shake]shaky[/shake] text. There was even [fade]fading[/fade] text. There was even [tornado]tornado-ing[/tornado] text? There was even [rainbow]rainbow[/rainbow] text.
-
-There were thee choices. (Well, one decision with three options.)
-
- * There was the first choice.
- 
- * There was the second choice.
-
- * There was the third choice.
-
-- test
 
 
 Testing some sprites on the spriteboard.
-Placing Brian somewhere.
 ~Spriteboard_Present(Brian, Happy, random)
-Placing Gabriel somewhere.
+Placing Brian somewhere.
 ~Spriteboard_Present(Gabriel, Happy, random)
-Moving Brian.
+Placing Gabriel somewhere.
 ~Spriteboard_Move(Brian, top_left)
-Moving Brian again.
+Moving Brian.
 ~Spriteboard_Move(Brian, bottom_right)
-Making Gabriel Sad.
+Moving Brian again.
 ~Spriteboard_Alter(Gabriel, Sad)
-Making Gabriel Angry.
+Making Gabriel Sad.
 ~Spriteboard_Alter(Gabriel, Angry)
-Removing Brian.
+Making Gabriel Angry.
 ~Spriteboard_Remove(Brian)
-Moving Gabriel to 40, 60 and making him happy.
+Removing Brian.
 ~Spriteboard_Present(Gabriel, Happy, "40,60")
+Moving Gabriel to 40, 60 and making him happy.
 
 
 
@@ -68,6 +57,21 @@ There was slow text.
 ~ spd(1)
 
 There was normal text. 
+
+
+There were choices.
+
+ * There was the first choice.
+ 
+ * There was the second choice.
+
+ * There was the third choice.
+
+- There was a response.
+
+
+There was [b]bold[/b] text. There was [i]italics[/i] text. There was [u]underlined[/u] text. There was even [wave]wavy[/wave] text. There was even [shake]shaky[/shake] text. There was even [fade]fading[/fade] text. There was even [tornado]tornado-ing[/tornado] text? There was even [rainbow]rainbow[/rainbow] text.
+
 
 They needed some more text afterwards.
 

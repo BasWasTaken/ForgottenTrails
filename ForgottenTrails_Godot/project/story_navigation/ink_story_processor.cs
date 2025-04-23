@@ -61,7 +61,7 @@ public partial class ink_story_processor : Node
 	public delegate void ink_function_backdrop_imageEventHandler(string image, float delay);
 
 	[Signal]
-	public delegate void ink_function_sprite_presentEventHandler(string character, string variant, Vector2 position);
+	public delegate void ink_function_sprite_presentEventHandler(string character, string variant, string position);
 
 	[Signal]
 	public delegate void ink_function_sprite_removeEventHandler(string character);
@@ -83,7 +83,7 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("_FadeOut", (bool black, float delay) => EmitSignal(SignalName.ink_function_fade_out, black, delay));
 		story.BindExternalFunction("_Effect", (string effect) => EmitSignal(SignalName.ink_function_effect, effect));
 		story.BindExternalFunction("_Flash", (string color, int amount) => EmitSignal(SignalName.ink_function_flash, color, amount));
-		story.BindExternalFunction("_Spriteboard_Present", (string character, string variant, Vector2 position) => EmitSignal(SignalName.ink_function_sprite_present, character, variant, position));
+		story.BindExternalFunction("_Spriteboard_Present", (string character, string variant, string position) => EmitSignal(SignalName.ink_function_sprite_present, character, variant, position));
 		story.BindExternalFunction("_Spriteboard_Remove", (string character) => EmitSignal(SignalName.ink_function_sprite_remove, character));
 		story.BindExternalFunction("_Spriteboard_Remove_All", () => EmitSignal(SignalName.ink_function_sprite_remove_all));
 	}

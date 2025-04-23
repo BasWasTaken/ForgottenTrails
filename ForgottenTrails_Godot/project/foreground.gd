@@ -5,6 +5,8 @@ var timer: Timer = Timer.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	fade_to_color("white", 0.0)
+	fade_in(0.0)
 	SignalBus.ink_func_fade_in.connect(fade_in)
 	# SignalBus.ink_func_fade_out.connect(fade_out)
 	SignalBus.ink_func_fade_to_color.connect(fade_to_color)
@@ -31,7 +33,9 @@ func fade_in(duration: float=0.0):
 
 func flash(prompt: String="white", amount: int=1):
 	var s_color = self.modulate
+	print(s_color)
 	var t_color = Color.from_string(prompt, Color.TRANSPARENT)	
+	print(t_color)
 	assert(t_color!=null, "Color not valid")
 
 	for i in range(amount):
@@ -44,8 +48,3 @@ func fade_to_color(prompt: String, duration: float=0.0):
 	var color = Color.from_string(prompt, Color.TRANSPARENT)	
 	assert(color!=null, "Color not valid")
 	await FadeUtils.fade_color(self, color, duration)
-
-
-
-
-

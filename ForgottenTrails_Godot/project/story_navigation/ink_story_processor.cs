@@ -61,7 +61,7 @@ public partial class ink_story_processor : Node
 	public delegate void ink_function_backdrop_imageEventHandler(string image, float delay);
 
 	[Signal]
-	public delegate void ink_function_sprite_presentEventHandler(string character, string variant, vector2 position);
+	public delegate void ink_function_sprite_presentEventHandler(string character, string variant, Vector2 position);
 
 	[Signal]
 	public delegate void ink_function_sprite_removeEventHandler(string character);

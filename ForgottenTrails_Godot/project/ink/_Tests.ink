@@ -17,6 +17,27 @@ There were thee choices. (Well, one decision with three options.)
 
 - test
 
+
+Testing some sprites on the spriteboard.
+Placing Brian somewhere.
+~Spriteboard_Present(Brian, Happy, random)
+Placing Gabriel somewhere.
+~Spriteboard_Present(Gabriel, Happy, random)
+Moving Brian.
+~Spriteboard_Move(Brian, top_left)
+Moving Brian again.
+~Spriteboard_Move(Brian, bottom_right)
+Making Gabriel Sad.
+~Spriteboard_Alter(Gabriel, Sad)
+Making Gabriel Angry.
+~Spriteboard_Alter(Gabriel, Angry)
+Removing Brian.
+~Spriteboard_Remove(Brian)
+
+
+
+
+
 Testing out some backdrops:
 ~FadeToBlack(1)
 Fade to Black

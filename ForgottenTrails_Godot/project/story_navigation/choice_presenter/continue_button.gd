@@ -2,7 +2,9 @@ extends Button
 
 
 func _ready():
+	button_down.connect(SignalBus.ui_button_clicked.emit)
 	pressed.connect(_on_pressed)
+	button_up.connect(SignalBus.ui_button_released.emit)
 	grab_focus()
 
 func _on_pressed():

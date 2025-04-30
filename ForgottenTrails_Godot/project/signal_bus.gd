@@ -34,6 +34,8 @@ signal control_requests_options
 signal control_requests_quicksave
 signal control_requests_quickload
 
+signal ui_button_clicked()
+signal ui_button_released()
 
 signal ink_sent_story(story: String)
 signal ink_sent_choices(choices: Array)

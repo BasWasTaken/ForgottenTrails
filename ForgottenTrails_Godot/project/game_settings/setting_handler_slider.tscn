@@ -5,6 +5,9 @@
 [node name="Setting with Slider" node_paths=PackedStringArray("input") instance=ExtResource("1_4to5w")]
 input = NodePath("Value Input")
 
+[node name="Label" parent="Button Handler" index="0"]
+text = "{{Name}}:"
+
 [node name="Reset" parent="Button Handler" index="1"]
 visible = true
 

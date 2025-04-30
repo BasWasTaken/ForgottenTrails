@@ -6,7 +6,7 @@
 input = NodePath("Value Input")
 
 [node name="Label" parent="Button Handler" index="0"]
-text = "0"
+text = "{{Name}}:"
 
 [node name="Value Input" type="OptionButton" parent="." index="1"]
 layout_mode = 2

@@ -9,7 +9,7 @@ script = ExtResource("1_backx")
 
 [node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
 
-[node name="AmbiancePlayer" type="AudioStreamPlayer" parent="."]
+[node name="AmbiencePlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 

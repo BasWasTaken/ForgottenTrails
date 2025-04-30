@@ -33,9 +33,9 @@ func present_continue_button() -> void:
 func present_choices(choices: Array) -> void: #TODO: connext to signal
 	#await SignalBus.printer_text_finished # this is here because it needs to wait for the text to finish printing before it can present the choices, but i belive this is what is causing issues with the loading sometimes. i believe it should rather just check the state of the printer
 	var i: int = 0
-	var first: Button
-	var prev: Button
-	var current: Button
+	var first: Button = null
+	var prev: Button = null
+	var current: Button = null
 	for choice in choices:
 		if false:
 			pass #TODO: process invisible choices

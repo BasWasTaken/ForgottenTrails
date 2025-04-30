@@ -20,6 +20,7 @@ extends Node
 
 #signal menu_open_requested(window:Control) leaving this signal for later, when|if i change how windows are management, or the current implementation starts causing problems
 
+
 signal printer_text_finished
 # signal control_requests_accept
 signal control_requests_continue

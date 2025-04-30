@@ -27,6 +27,7 @@ SceneNavigator="*res://project/scene_navigator.gd"
 printer_state="*res://project/VNState.gd"
 SignalBus="*res://project/signal_bus.gd"
 InputManager="*res://project/input_manager.gd"
+AudioManager="*res://project/audio_manager.gd"
 
 [display]
 

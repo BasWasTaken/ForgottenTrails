@@ -13,7 +13,13 @@ var typing_speed_net: float:
 		return typing_speed_base * typing_speed_modifier 
 
 func _on_speed_applied():
-	typing_speed_base = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed])
+	typing_speed_base = ConfigHandler.get_live_value(ConfigHandler.choose.keys()[ConfigHandler.choose.text_speed]) 
+	#no good. far better to use a subcribe pattern to listen for changes to the setting, and then update the value here. 
+	# the problem with this is that for continues settings such as volume, you'll have to call a get function every frame, which is not ideal.
+	# for now, i think i'll see if i can listen for the apply action, then update a variable with the getter.
+	# later i definitely want to cahnge this to a subscribe pattern
+
+
 	print("new speed: ",typing_speed_base, " times ", typing_speed_modifier, " = ", typing_speed_net, " characters per second") 		
 	
 

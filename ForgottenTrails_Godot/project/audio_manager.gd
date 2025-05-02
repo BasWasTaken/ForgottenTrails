@@ -9,7 +9,10 @@ extends Node
 func set_volume(bus: String, config):
 	# Get the bus index
 	var bus_index = AudioServer.get_bus_index(bus)
-	AudioServer.set_bus_volume_db(bus_index, ConfigHandler.get_live_value(config))
+	var linear_volume:float = ConfigHandler.get_live_value(config) as float
+	var db_volume = linear_to_db(linear_volume/100)	
+	AudioServer.set_bus_volume_db(bus_index, db_volume)
+	print("Volume for bus ", bus, " set to ", db_volume, " dB (", linear_volume, "%)")
 
 func play_audio(stream: AudioStream, source: String):
 	var player: AudioStreamPlayer
@@ -55,6 +58,13 @@ func _ready():
 			elif id == ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume]:
 				set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
 	)
+	# Set the initial volume for each bus
+	set_volume("Master", ConfigHandler.choose.keys()[ConfigHandler.choose.master_volume])
+	set_volume("VOX", ConfigHandler.choose.keys()[ConfigHandler.choose.voice_volume])
+	set_volume("SFX", ConfigHandler.choose.keys()[ConfigHandler.choose.sfx_volume])
+	set_volume("Ambience", ConfigHandler.choose.keys()[ConfigHandler.choose.ambiant_volume])
+	set_volume("Music", ConfigHandler.choose.keys()[ConfigHandler.choose.music_volume])
+	set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
 
 
 func _on_button_clicked():

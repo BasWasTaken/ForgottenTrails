@@ -79,7 +79,7 @@ metadata/_tab_index = 2
 [node name="Full Screen" parent="Settings Tabs/Video" instance=ExtResource("4_asi8a")]
 visible = false
 layout_mode = 2
-affected_setting = 4
+affected_setting = 9
 
 [node name="Global Buttons" type="HBoxContainer" parent="."]
 layout_mode = 1

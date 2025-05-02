@@ -87,7 +87,6 @@ wait_time = 0.002
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="StoryController/HBoxContainer/TextPresenter"]
 stream = ExtResource("8_mi8ju")
-volume_db = -30.0
 pitch_scale = 1.2
 max_polyphony = 99
 bus = &"Typing"

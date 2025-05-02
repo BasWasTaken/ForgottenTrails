@@ -6,6 +6,11 @@ extends Node
 @onready var music_player = $MusicPlayer
 @onready var sysfx_player = $SystemPlayer
 
+func set_volume(bus: String, config):
+	# Get the bus index
+	var bus_index = AudioServer.get_bus_index(bus)
+	AudioServer.set_bus_volume_db(bus_index, ConfigHandler.get_live_value(config))
+
 func play_audio(stream: AudioStream, source: String):
 	var player: AudioStreamPlayer
 	match source:
@@ -34,6 +39,22 @@ func _ready():
 	# get the signal from godot's event system
 	SignalBus.ui_button_clicked.connect(_on_button_clicked)
 	SignalBus.ui_button_released.connect(_on_button_released)
+
+	ConfigHandler.setting_changed.connect(
+		func(id, _value):
+			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.master_volume]:
+				set_volume("Master", ConfigHandler.choose.keys()[ConfigHandler.choose.master_volume]) #todo make less error prone by using enums or so
+			elif id == ConfigHandler.choose.keys()[ConfigHandler.choose.voice_volume]:
+				set_volume("VOX", ConfigHandler.choose.keys()[ConfigHandler.choose.voice_volume])
+			elif id == ConfigHandler.choose.keys()[ConfigHandler.choose.sfx_volume]:
+				set_volume("SFX", ConfigHandler.choose.keys()[ConfigHandler.choose.sfx_volume])
+			elif id == ConfigHandler.choose.keys()[ConfigHandler.choose.ambiant_volume]:
+				set_volume("Ambience", ConfigHandler.choose.keys()[ConfigHandler.choose.ambiant_volume])
+			elif id == ConfigHandler.choose.keys()[ConfigHandler.choose.music_volume]:
+				set_volume("Music", ConfigHandler.choose.keys()[ConfigHandler.choose.music_volume])
+			elif id == ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume]:
+				set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
+	)
 
 
 func _on_button_clicked():

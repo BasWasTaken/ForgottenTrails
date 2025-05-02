@@ -90,13 +90,13 @@ enum choose{
 # fuck i don;t think this is sound, would be better to have defaults defined separate from this, due to issues later in reading. nvm for now
 @export var setting_dictionary: Dictionary = {
 	choose.keys()[choose.text_speed]: Setting_OptionButton.new(choose.text_speed, 50, {"literally 1 cpm":1,"so zetta slow":6, "v slow":12, "slow":25, "mid":50,"fast":100,"v fast":200, "wa-jow":1000, "instant":0}), #in cps
-	choose.keys()[choose.textbox_opacity]: Setting_Range.new(choose.textbox_opacity, 50, 0, 100, 1),
-	choose.keys()[choose.master_volume]: Setting_Range.new(choose.master_volume, 50, 0, 100, 1),
-	choose.keys()[choose.system_volume]: Setting_Range.new(choose.system_volume, 50, 0, 100, 1),
-	choose.keys()[choose.music_volume]: Setting_Range.new(choose.music_volume, 50, 0, 100, 1),
-	choose.keys()[choose.ambiant_volume]: Setting_Range.new(choose.ambiant_volume, 50, 0, 100, 1),
-	choose.keys()[choose.sfx_volume]: Setting_Range.new(choose.sfx_volume, 50, 0, 100, 1),
-	choose.keys()[choose.voice_volume]: Setting_Range.new(choose.voice_volume, 50, 0, 100, 1),
+	choose.keys()[choose.textbox_opacity]: Setting_Range.new(choose.textbox_opacity, 50, 0.0, 100, 1.0),
+	choose.keys()[choose.master_volume]: Setting_Range.new(choose.master_volume, 50, 0.0, 100, 1.0),
+	choose.keys()[choose.system_volume]: Setting_Range.new(choose.system_volume, 50, 0.0, 100, 1.0),
+	choose.keys()[choose.music_volume]: Setting_Range.new(choose.music_volume, 50, 0.0, 100, 1.0),
+	choose.keys()[choose.ambiant_volume]: Setting_Range.new(choose.ambiant_volume, 50, 0.0, 100, 1.0),
+	choose.keys()[choose.sfx_volume]: Setting_Range.new(choose.sfx_volume, 50, 0.0, 100, 1.0),
+	choose.keys()[choose.voice_volume]: Setting_Range.new(choose.voice_volume, 50, 0.0, 100, 1.0),
 	choose.keys()[choose.full_screen]: Setting_CheckBox.new(choose.full_screen, false)
 }
 

@@ -51,7 +51,7 @@ func _ready():
 	_on_opacity_change_applied()
 	_on_speed_applied()	
 	_init()
-	printer_state.set_state(printer_state.WAITING)
+	printer_state.set_state(printer_state.VN_State.WAITING)
 	present_story("Press Continue To Start/Continue the Story.")
 
 func _init():
@@ -75,7 +75,7 @@ func present_console_message(content: String, warning: bool = false) -> void:
 
 func present_story(content: String) -> void:
 	# set state
-	printer_state.set_state(printer_state.PRINTING)
+	printer_state.set_state(printer_state.VN_State.PRINTING)
 
 	# Prep Textbox
 	self.clear()
@@ -123,7 +123,7 @@ func finish_text():
 	
 	# stop typing
 	timer.stop()
-	printer_state.set_state(printer_state.WAITING)
+	printer_state.set_state(printer_state.VN_State.WAITING)
 	SignalBus.printer_text_finished.emit() #give signal
 
 func _spd(new):

@@ -148,7 +148,7 @@ var state: File_State = File_State.none:
 	get:
 		return state
 	set(value):
-		print("State changed to:", value)
+		print("State changed to:", File_State.find_key(value))
 		state = value
 
 func _on_setting_changed(id: String, value: Variant):

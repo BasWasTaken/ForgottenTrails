@@ -63,10 +63,17 @@ var default_value:
 
 var using_default: bool:
 	get:
+		# first check if both values are set, if not, return false
+		assert(input_value != null and default_value != null, "Input value or default value is null")
+		# Check if the input_value is the same as the default_value.
 		return input_value == default_value
 
 var change_pending: bool:
 	get:
+		# first check if both values are set, if not, return false
+		assert(input_value != null and live_value != null, "Input value or default value is null")
+
+		# Check if the input_value is different from the live_value.
 		return input_value != live_value
 
 func _ready():

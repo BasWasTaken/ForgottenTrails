@@ -64,10 +64,4 @@ EXTERNAL _Music_Play(listItem, float)
 === function Music_Stop()
 ~ Music = Music.none
 ~ _Music_Play(Music.none, 0)
-  <i>Music: {Music}</i>>
-EXTERNAL _Music_Play(listItem, float) 
-
-=== function Music_Stop()
-~ Music = Music.none
-~ _Music_Play(Music.none, 0)
   

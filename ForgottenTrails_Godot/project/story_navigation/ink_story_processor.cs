@@ -70,22 +70,22 @@ public partial class ink_story_processor : Node
 	public delegate void ink_function_sprite_remove_allEventHandler();
 
 	[Signal]
-	public delegate void ink_function_audio_vox_playEventHandler();
+	public delegate void ink_function_audio_vox_playEventHandler(string clip, float volume);
 
 	[Signal]
-	public delegate void ink_function_audio_sfx_playEventHandler();
+	public delegate void ink_function_audio_sfx_playEventHandler(string clip, float volume);
 
 	[Signal]
-	public delegate void ink_function_audio_ambience_playEventHandler();
+	public delegate void ink_function_audio_ambience_playEventHandler(string clip, float volume);
 
 	[Signal]
-	public delegate void ink_function_audio_ambience_removeEventHandler();
+	public delegate void ink_function_audio_ambience_removeEventHandler(string clip);
 
 	[Signal]
 	public delegate void ink_function_audio_ambience_remove_allEventHandler();
 
 	[Signal]
-	public delegate void ink_function_audio_music_playEventHandler();
+	public delegate void ink_function_audio_music_playEventHandler(string clip, float volume);
 	
 
 	public override void _Ready()

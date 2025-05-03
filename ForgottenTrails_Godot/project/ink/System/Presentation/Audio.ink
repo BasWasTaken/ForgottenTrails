@@ -10,7 +10,7 @@ LIST Vox =  NA
 <<i>Vox: {listItem} at {float} volume</i>>   
 EXTERNAL _Vox_Play(listItem, float)
 
-LIST Sfx = gong
+LIST Sfx = gong, punch
 // SFX. Done with external function.
 === function Sfx_Play(clip, volume)// use volume between 0.0 and 1.0
 ~ Sfx = clip // assign clip to sfx list to ensure fit of argument

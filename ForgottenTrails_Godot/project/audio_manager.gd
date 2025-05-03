@@ -31,11 +31,6 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 	player.stop()
 	# Set the new stream
 	player.stream = stream
-	# set looping if ambient or music
-	if source == "ambient" or source == "music":
-		player.loop = true
-	else:
-		player.loop = false
 	# Set the volume for the player
 	player.volume_db = linear_to_db(volume) #AudioServer.get_bus_volume_db(AudioServer.get_bus_index(source)) + linear_to_db(volume)
 	# Play the audio

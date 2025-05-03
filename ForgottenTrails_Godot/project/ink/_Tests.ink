@@ -44,6 +44,9 @@ Flower gates
 ~Flash("white", 1)
 Flash!
 ~Flash("red", 3)
+~Sfx_Play(punch,0.3)
+~Sfx_Play(punch,0.5)
+~Sfx_Play(punch,0.8)
 Flash!
 
 

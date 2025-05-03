@@ -14,7 +14,7 @@ func set_volume(bus: String, config):
 	AudioServer.set_bus_volume_db(bus_index, db_volume)
 	print("Volume for bus ", bus, " set to ", db_volume, " dB (", linear_volume, "%)")
 
-func play_audio(stream: AudioStream, source: String):
+func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 	var player: AudioStreamPlayer
 	match source:
 		"vox":
@@ -31,10 +31,12 @@ func play_audio(stream: AudioStream, source: String):
 	player.stop()
 	# Set the new stream
 	player.stream = stream
+	# Set the volume for the player
+	player.volume_db = linear_to_db(volume) #AudioServer.get_bus_volume_db(AudioServer.get_bus_index(source)) + linear_to_db(volume)
 	# Play the audio
 	player.play()
 
-func play_audio_by_string(stream: String, source: String):
+func play_audio_by_string(stream: String, source: String, volume: float = 1.0):
 	# Load the audio stream from the string path
 	var audio_stream: AudioStream = load(stream)
 	# Call the play_audio function with the loaded stream and source
@@ -73,10 +75,10 @@ func _ready():
 	set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
 
 	# listen for audio signals from ink, with a proxy function to add the source parameter
-	SignalBus.ink_func_audio_vox_play.connect(func(stream): play_audio(stream, "vox"))
-	SignalBus.ink_func_audio_sfx_play.connect(func(stream): play_audio(stream, "sfx"))
-	SignalBus.ink_func_audio_ambience_play.connect(func(stream): play_audio(stream, "ambient"))
-	SignalBus.ink_func_audio_music_play.connect(func(stream): play_audio(stream, "music"))
+	SignalBus.ink_func_audio_vox_play.connect(func(stream, volume): play_audio(stream, "vox", volume))
+	SignalBus.ink_func_audio_sfx_play.connect(func(stream, volume): play_audio(stream, "sfx", volume))
+	SignalBus.ink_func_audio_ambience_play.connect(func(stream, volume): play_audio(stream, "ambient", volume))
+	SignalBus.ink_func_audio_music_play.connect(func(stream, volume): play_audio(stream, "music", volume))
 
 	SignalBus.ink_func_audio_ambience_rmv.connect(play_audio)
 	SignalBus.ink_func_audio_ambience_rmv_all.connect(play_audio)

@@ -36,10 +36,16 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 	# Play the audio
 	player.play()
 
-func remove_ambience():	
+func remove_ambience(stream: AudioStream):	
 	# Stop the ambience player
 	print("removing individual ambience clips is not implemented yet")
 	ambient_player.stop()
+
+func remove_ambience_by_string(stream: String):
+	# Load the audio stream from the string path
+	var audio_stream: AudioStream = load(stream)
+	# Call the remove_ambience function with the loaded stream
+	remove_ambience(audio_stream)
 
 func remove_all_ambience():
 	# Stop the ambience player
@@ -48,7 +54,7 @@ func remove_all_ambience():
 
 func play_audio_by_string(stream: String, source: String, volume: float = 1.0):
 	# Load the audio stream from the string path
-	var audio_stream: AudioStream = load(stream)
+	var audio_stream: AudioStream = load("res://project/assets/audio/" + stream+".wav")
 	# Call the play_audio function with the loaded stream and source
 	play_audio(audio_stream, source)
 

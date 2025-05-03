@@ -21,7 +21,7 @@ LIST Sfx = gong, punch
 EXTERNAL _Sfx_Play(listItem, float)
 
 
-LIST Ambiance = (none), chatter
+LIST Ambiance = (none), chatter, river
 // Ambiance. Handled with external function.
 === function Ambiance_Add(clip, volume) //use volume between 0.0 and 1.0
 ~ Ambiance += clip
@@ -30,13 +30,6 @@ LIST Ambiance = (none), chatter
 === function _Ambiance_Play(listItem, float) // adds audio on an ambiance channel, looping
 <<i>Ambiance: {Ambiance} </i>>
 EXTERNAL _Ambiance_Play(listItem, float)
-
-=== function Ambiance_Adjust(clip, newVolume)
-{ Ambiance ? clip:
-    ~ _Ambiance_Play(clip, newVolume)
-- else:
-    ~ print_warning("{clip} Not found")
-}
 
 === function Ambiance_Remove(clip)
 ~ Ambiance -= clip 
@@ -66,6 +59,12 @@ LIST Music = (none), theStreetsOfWhiteRun, TabiNoTochuu
 
 === function _Music_Play(listItem, float) // plays audio on music channel, looping // use volume between 0.0 and 1.0
 <<i>Music: {Music}</i>>
+EXTERNAL _Music_Play(listItem, float) 
+
+=== function Music_Stop()
+~ Music = Music.none
+~ _Music_Play(Music.none, 0)
+  <i>Music: {Music}</i>>
 EXTERNAL _Music_Play(listItem, float) 
 
 === function Music_Stop()

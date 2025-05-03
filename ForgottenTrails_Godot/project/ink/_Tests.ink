@@ -4,8 +4,11 @@ INCLUDE Functions_Dev.ink
 ~FadeToWhite(0)
 ~ print("Testing console log")
 Once upon a time..
+~Ambiance_Add(river, 0.5)
+Sound of a river.
 ~FadeIn(1)
 
+Fadein.
 
 
 Testing some sprites on the spriteboard.
@@ -13,6 +16,8 @@ Testing some sprites on the spriteboard.
 Placing Brian somewhere.
 ~Spriteboard_Present(Gabriel, Happy, random)
 Placing Gabriel somewhere.
+~Ambiance_Add(chatter, 0.5)
+Making more sound
 ~Spriteboard_Move(Brian, top_left)
 Moving Brian.
 ~Spriteboard_Move(Brian, bottom_right)

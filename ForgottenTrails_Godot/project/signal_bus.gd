@@ -20,6 +20,7 @@ extends Node
 
 #signal menu_open_requested(window:Control) leaving this signal for later, when|if i change how windows are management, or the current implementation starts causing problems
 
+
 signal printer_text_finished
 # signal control_requests_accept
 signal control_requests_continue
@@ -34,6 +35,8 @@ signal control_requests_options
 signal control_requests_quicksave
 signal control_requests_quickload
 
+signal ui_button_clicked()
+signal ui_button_released()
 
 signal ink_sent_story(story: String)
 signal ink_sent_choices(choices: Array)

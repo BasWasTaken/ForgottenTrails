@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://daj1rgbg0p28k"]
+
+[ext_resource type="Script" path="res://project/audio_manager.gd" id="1_backx"]
+
+[node name="AudioManager" type="Node"]
+script = ExtResource("1_backx")
+
+[node name="VOXPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"VOX"
+
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="AmbiencePlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Ambience"
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Music"
+
+[node name="SystemPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"System"

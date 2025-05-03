@@ -14,10 +14,13 @@ var input_value:
 	get:
 		assert(input != null, "Input control is null")
 		if input is Range:
+			print("Getting value for: " + ref + " with value: " + str(input.value) + " and type: " + str(input))
 			return input.value
 		elif input is OptionButton:
+			print("Getting value for: " + ref + " with value: " + str(input.get_selected_id()) + " and type: " + str(input))
 			return input.get_selected_id()
 		elif input is CheckBox:
+			print("Getting value for: " + ref + " with value: " + str(input.button_pressed) + " and type: " + str(input))
 			return input.button_pressed
 		else:
 			assert(false, "Could not get unrecognised input type of" + str(input))
@@ -25,7 +28,8 @@ var input_value:
 	set(value):
 		assert(input != null, "Input control is null")
 		if input is Range:
-			input.value = value
+			print("Setting value for: " + ref + " with value: " + str(value) + " and type: " + str(input))
+			input.value = value # Set the value of the Range control
 		elif input is OptionButton:
 			input.select(input.get_item_index(value)) # get index by inputting ID, i.e. live_value
 		elif input is CheckBox:
@@ -63,10 +67,17 @@ var default_value:
 
 var using_default: bool:
 	get:
+		# first check if both values are set, if not, return false
+		assert(input_value != null and default_value != null, "Input value or default value is null")
+		# Check if the input_value is the same as the default_value.
 		return input_value == default_value
 
 var change_pending: bool:
 	get:
+		# first check if both values are set, if not, return false
+		assert(input_value != null and live_value != null, "Input value or default value is null")
+
+		# Check if the input_value is different from the live_value.
 		return input_value != live_value
 
 func _ready():

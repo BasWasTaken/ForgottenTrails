@@ -56,7 +56,7 @@ func hack(): #needed because the variantarray cannot by itself be sent through a
 	
 
 func input_continue():
-	printer_state.set_state(printer_state.PROCESSING)
+	printer_state.set_state(printer_state.VN_State.PROCESSING)
 	my_story_getter.ContinueStory();
 
 

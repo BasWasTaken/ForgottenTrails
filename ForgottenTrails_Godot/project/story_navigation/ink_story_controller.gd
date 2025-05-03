@@ -48,6 +48,12 @@ func _ready():
 	my_story_getter.ink_function_sprite_present.connect(SignalBus.ink_func_sprite_present_by_string.emit)
 	my_story_getter.ink_function_sprite_remove.connect(SignalBus.ink_func_sprite_remove.emit)
 	my_story_getter.ink_function_sprite_remove_all.connect(SignalBus.ink_func_sprite_remove_all.emit)
+	my_story_getter.ink_function_audio_vox_play.connect(SignalBus.ink_func_audio_vox_play.emit)
+	my_story_getter.ink_function_audio_sfx_play.connect(SignalBus.ink_func_audio_sfx_play.emit)
+	my_story_getter.ink_function_audio_ambience_play.connect(SignalBus.ink_func_audio_ambience_play.emit)
+	my_story_getter.ink_function_audio_ambience_remove.connect(SignalBus.ink_func_audio_ambience_rmv.emit)	
+	my_story_getter.ink_function_audio_ambience_remove.connect(SignalBus.ink_func_audio_ambience_rmv_all.emit)
+	my_story_getter.ink_function_audio_music_play.connect(SignalBus.ink_func_audio_music_play.emit)
 
 
 func hack(): #needed because the variantarray cannot by itself be sent through a signal

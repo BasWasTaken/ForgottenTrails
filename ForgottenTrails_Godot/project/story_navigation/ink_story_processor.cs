@@ -69,6 +69,23 @@ public partial class ink_story_processor : Node
 	[Signal]
 	public delegate void ink_function_sprite_remove_allEventHandler();
 
+	[Signal]
+	public delegate void ink_function_audio_vox_playEventHandler();
+
+	[Signal]
+	public delegate void ink_function_audio_sfx_playEventHandler();
+
+	[Signal]
+	public delegate void ink_function_audio_ambience_playEventHandler();
+
+	[Signal]
+	public delegate void ink_function_audio_ambience_removeEventHandler();
+
+	[Signal]
+	public delegate void ink_function_audio_ambience_remove_allEventHandler();
+
+	[Signal]
+	public delegate void ink_function_audio_music_playEventHandler();
 	
 
 	public override void _Ready()
@@ -86,6 +103,12 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("_Spriteboard_Present", (string character, string variant, string position) => EmitSignal(SignalName.ink_function_sprite_present, character, variant, position));
 		story.BindExternalFunction("_Spriteboard_Remove", (string character) => EmitSignal(SignalName.ink_function_sprite_remove, character));
 		story.BindExternalFunction("_Spriteboard_Remove_All", () => EmitSignal(SignalName.ink_function_sprite_remove_all));
+		story.BindExternalFunction("_Audio_Vox_Play", () => EmitSignal(SignalName.ink_function_audio_vox_play));
+		story.BindExternalFunction("_Audio_SFX_Play", () => EmitSignal(SignalName.ink_function_audio_sfx_play));
+		story.BindExternalFunction("_Audio_Ambience_Play", () => EmitSignal(SignalName.ink_function_audio_ambience_play));
+		story.BindExternalFunction("_Audio_Ambience_Remove", () => EmitSignal(SignalName.ink_function_audio_ambience_remove));
+		story.BindExternalFunction("_Audio_Ambience_Remove_All", () => EmitSignal(SignalName.ink_function_audio_ambience_remove_all));
+		story.BindExternalFunction("_Audio_Music_Play", () => EmitSignal(SignalName.ink_function_audio_music_play));
 	}
 	
 	public void ContinueStory()

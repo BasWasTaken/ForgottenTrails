@@ -34,6 +34,12 @@ func play_audio(stream: AudioStream, source: String):
 	# Play the audio
 	player.play()
 
+func play_audio_by_string(stream: String, source: String):
+	# Load the audio stream from the string path
+	var audio_stream: AudioStream = load(stream)
+	# Call the play_audio function with the loaded stream and source
+	play_audio(audio_stream, source)
+
 var button_click_sound: AudioStream = preload("res://project/system/button_click.mp3")
 var button_release_sound: AudioStream = preload("res://project/system/button_release.mp3")
 
@@ -66,6 +72,15 @@ func _ready():
 	set_volume("Music", ConfigHandler.choose.keys()[ConfigHandler.choose.music_volume])
 	set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
 
+	# listen for audio signals from ink, with a proxy function to add the source parameter
+	SignalBus.ink_func_audio_vox_play.connect(func(stream): play_audio(stream, "vox"))
+	SignalBus.ink_func_audio_sfx_play.connect(func(stream): play_audio(stream, "sfx"))
+	SignalBus.ink_func_audio_ambience_play.connect(func(stream): play_audio(stream, "ambient"))
+	SignalBus.ink_func_audio_music_play.connect(func(stream): play_audio(stream, "music"))
+
+	SignalBus.ink_func_audio_ambience_rmv.connect(play_audio)
+	SignalBus.ink_func_audio_ambience_rmv_all.connect(play_audio)
+	
 
 func _on_button_clicked():
 	# Play the button click sound

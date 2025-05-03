@@ -14,10 +14,8 @@ var input_value:
 	get:
 		assert(input != null, "Input control is null")
 		if input is Range:
-			var cast: float = input.value # Cast to Range type for better type safety
 			print("Getting value for: " + ref + " with value: " + str(input.value) + " and type: " + str(input))
-			print("input.value type:", typeof(cast), "value:", cast)
-			return cast
+			return input.value
 		elif input is OptionButton:
 			print("Getting value for: " + ref + " with value: " + str(input.get_selected_id()) + " and type: " + str(input))
 			return input.get_selected_id()
@@ -30,10 +28,8 @@ var input_value:
 	set(value):
 		assert(input != null, "Input control is null")
 		if input is Range:
-			# Cast to Range type for better type safety
-			var cast: float = value # Cast to Range type for better type safety
 			print("Setting value for: " + ref + " with value: " + str(value) + " and type: " + str(input))
-			input.value = cast # Set the value of the Range control
+			input.value = value # Set the value of the Range control
 		elif input is OptionButton:
 			input.select(input.get_item_index(value)) # get index by inputting ID, i.e. live_value
 		elif input is CheckBox:

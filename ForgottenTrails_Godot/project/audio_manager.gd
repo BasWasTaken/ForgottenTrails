@@ -31,10 +31,25 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 	player.stop()
 	# Set the new stream
 	player.stream = stream
+	# set looping if ambient or music
+	if source == "ambient" or source == "music":
+		player.loop = true
+	else:
+		player.loop = false
 	# Set the volume for the player
 	player.volume_db = linear_to_db(volume) #AudioServer.get_bus_volume_db(AudioServer.get_bus_index(source)) + linear_to_db(volume)
 	# Play the audio
 	player.play()
+
+func remove_ambience():	
+	# Stop the ambience player
+	print("removing individual ambience clips is not implemented yet")
+	ambient_player.stop()
+
+func remove_all_ambience():
+	# Stop the ambience player
+	ambient_player.stop()
+
 
 func play_audio_by_string(stream: String, source: String, volume: float = 1.0):
 	# Load the audio stream from the string path
@@ -67,12 +82,13 @@ func _ready():
 				set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
 	)
 	# Set the initial volume for each bus
+	# beetje lelijk zoveel verschillende signalen te hebben, maar ach
 	set_volume("Master", ConfigHandler.choose.keys()[ConfigHandler.choose.master_volume])
 	set_volume("VOX", ConfigHandler.choose.keys()[ConfigHandler.choose.voice_volume])
 	set_volume("SFX", ConfigHandler.choose.keys()[ConfigHandler.choose.sfx_volume])
 	set_volume("Ambience", ConfigHandler.choose.keys()[ConfigHandler.choose.ambiant_volume])
 	set_volume("Music", ConfigHandler.choose.keys()[ConfigHandler.choose.music_volume])
-	set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume])
+	set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume]) 
 
 	# listen for audio signals from ink, with a proxy function to add the source parameter
 	SignalBus.ink_func_audio_vox_play.connect(func(stream, volume): play_audio(stream, "vox", volume))
@@ -80,8 +96,8 @@ func _ready():
 	SignalBus.ink_func_audio_ambience_play.connect(func(stream, volume): play_audio(stream, "ambient", volume))
 	SignalBus.ink_func_audio_music_play.connect(func(stream, volume): play_audio(stream, "music", volume))
 
-	SignalBus.ink_func_audio_ambience_rmv.connect(play_audio)
-	SignalBus.ink_func_audio_ambience_rmv_all.connect(play_audio)
+	SignalBus.ink_func_audio_ambience_rmv.connect(remove_ambience)
+	SignalBus.ink_func_audio_ambience_rmv_all.connect(remove_all_ambience)
 	
 
 func _on_button_clicked():

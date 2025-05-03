@@ -52,6 +52,7 @@ Flash!
 ~Sfx_Play(punch,0.3)
 ~Sfx_Play(punch,0.5)
 ~Sfx_Play(punch,0.8)
+Punch sounds! Heard?
 Flash!
 
 

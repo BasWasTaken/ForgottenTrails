@@ -92,10 +92,10 @@ func _ready():
 	set_volume("System", ConfigHandler.choose.keys()[ConfigHandler.choose.system_volume]) 
 
 	# listen for audio signals from ink, with a proxy function to add the source parameter
-	SignalBus.ink_func_audio_vox_play.connect(func(stream, volume): play_audio(stream, "vox", volume))
-	SignalBus.ink_func_audio_sfx_play.connect(func(stream, volume): play_audio(stream, "sfx", volume))
-	SignalBus.ink_func_audio_ambience_play.connect(func(stream, volume): play_audio(stream, "ambient", volume))
-	SignalBus.ink_func_audio_music_play.connect(func(stream, volume): play_audio(stream, "music", volume))
+	SignalBus.ink_func_audio_vox_play.connect(func(stream, volume): play_audio_by_string(stream, "vox", volume))
+	SignalBus.ink_func_audio_sfx_play.connect(func(stream, volume): play_audio_by_string(stream, "sfx", volume))
+	SignalBus.ink_func_audio_ambience_play.connect(func(stream, volume): play_audio_by_string(stream, "ambient", volume))
+	SignalBus.ink_func_audio_music_play.connect(func(stream, volume): play_audio_by_string(stream, "music", volume))
 
 	SignalBus.ink_func_audio_ambience_rmv.connect(remove_ambience)
 	SignalBus.ink_func_audio_ambience_rmv_all.connect(remove_all_ambience)

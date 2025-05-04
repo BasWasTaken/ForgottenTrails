@@ -30,7 +30,7 @@ func fire_effect(prompt: String, duration: float=0.0):
 # 		await FadeUtils.fade_color(self, Color(1, 1, 1, 1), duration)
 
 func fade_in(duration: float=0.0):
-	fade_to_color("transparent", duration)
+	await FadeUtils.fade_alpha(self, 0.0, duration)
 
 func flash(prompt: String="white", amount: int=1):
 	var s_color = self.modulate

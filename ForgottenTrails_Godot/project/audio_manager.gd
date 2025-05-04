@@ -25,16 +25,19 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 			player = ambient_player
 		"music":
 			player = music_player
-		"sysfx":
+		"system":
 			player = sysfx_player
-	# Stop any currently playing audio #TODO only sometimes, sometimes you'll want it overlapping
-	player.stop()
+	# cast to pylophonic for ambient player
+	if source == "ambient":
+	#	stream = stream as AudioStreamPolyphonic
+		print("polyphonic playing is not implemented yet")
 	# Set the new stream
 	player.stream = stream
 	# Set the volume for the player
 	player.volume_db = linear_to_db(volume) #AudioServer.get_bus_volume_db(AudioServer.get_bus_index(source)) + linear_to_db(volume)
 	# Play the audio
 	player.play()
+	print("Playing audio", stream, "  from source: ", source, " with volume: ", volume)
 
 func remove_ambience(stream: AudioStream):	
 	# Stop the ambience player
@@ -103,9 +106,9 @@ func _ready():
 
 func _on_button_clicked():
 	# Play the button click sound
-	AudioManager.play_audio(button_click_sound, "sfx")
+	AudioManager.play_audio(button_click_sound, "system")
 	# Optionally, you can add more logic here if needed
 func _on_button_released():
 	# Play the button release sound
-	AudioManager.play_audio(button_release_sound, "sfx")
+	AudioManager.play_audio(button_release_sound, "system")
 	# Optionally, you can add more logic here if needed

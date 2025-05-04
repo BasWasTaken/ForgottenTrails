@@ -10,13 +10,12 @@ Sound of a river.
 
 Fadein.
 
-
 Testing some sprites on the spriteboard.
 ~Spriteboard_Present(Brian, Happy, random)
 Placing Brian somewhere.
 ~Spriteboard_Present(Gabriel, Happy, random)
 Placing Gabriel somewhere.
-~Ambiance_Add(chatter, 0.5)
+~Ambiance_Add(chatter, 0.2)
 Making more sound
 ~Spriteboard_Move(Brian, top_left)
 Moving Brian.
@@ -31,7 +30,8 @@ Removing Brian.
 ~Spriteboard_Present(Gabriel, Happy, "40,60")
 Moving Gabriel to 40, 60 and making him happy.
 
-
+~Spriteboard_Remove_All()
+Removing all sprites.
 
 
 

@@ -2,7 +2,7 @@ extends Node
 
 @onready var vox_player = $VOXPlayer
 @onready var sfx_player = $SFXPlayer
-@onready var ambient_player = $AmbiencePlayer
+@onready var ambience_player = $AmbiencePlayer
 @onready var music_player = $MusicPlayer
 @onready var sysfx_player = $SystemPlayer
 
@@ -21,14 +21,14 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 			player = vox_player
 		"sfx":
 			player = sfx_player
-		"ambient":
-			player = ambient_player
+		"ambience":
+			player = ambience_player
 		"music":
 			player = music_player
 		"system":
 			player = sysfx_player
-	# cast to pylophonic for ambient player
-	if source == "ambient":
+	# cast to pylophonic for ambience player
+	if source == "ambience":
 	#	stream = stream as AudioStreamPolyphonic
 		print("polyphonic playing is not implemented yet")
 	
@@ -49,7 +49,7 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 func remove_ambience(_stream: AudioStream):	
 	# Stop the ambience player
 	print("removing individual ambience clips is not implemented yet")
-	ambient_player.stop()
+	ambience_player.stop()
 
 func remove_ambience_by_string(stream: String):
 	# Load the audio stream from the string path
@@ -59,17 +59,17 @@ func remove_ambience_by_string(stream: String):
 
 func remove_all_ambience():
 	# Stop the ambience player
-	ambient_player.stop()
+	ambience_player.stop()
 
 
-func play_audio_by_string(stream: String, source: String, volume: float = 1.0):
+func play_audio_by_string(clip: String, source: String, volume: float = 1.0):
 	# Load the audio stream from the string path
-	var audio_stream: AudioStream = load("res://project/assets/audio/" + stream+".wav")
+	var audio_stream: AudioStream = load("res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip+".wav")
 	# Call the play_audio function with the loaded stream and source
 	play_audio(audio_stream, source, volume)
 
-var button_click_sound: AudioStream = preload("res://project/system/button_click.mp3")
-var button_release_sound: AudioStream = preload("res://project/system/button_release.mp3")
+var button_click_sound: AudioStream = preload("res://project/assets/audio/system/snd_ui_click.mp3")
+var button_release_sound: AudioStream = preload("res://project/assets/audio/system/snd_ui_release.mp3")
 
 func _ready():
 	# Connect the signal to the function
@@ -104,7 +104,7 @@ func _ready():
 	# listen for audio signals from ink, with a proxy function to add the source parameter
 	SignalBus.ink_func_audio_vox_play.connect(func(stream, volume): play_audio_by_string(stream, "vox", volume))
 	SignalBus.ink_func_audio_sfx_play.connect(func(stream, volume): play_audio_by_string(stream, "sfx", volume))
-	SignalBus.ink_func_audio_ambience_play.connect(func(stream, volume): play_audio_by_string(stream, "ambient", volume))
+	SignalBus.ink_func_audio_ambience_play.connect(func(stream, volume): play_audio_by_string(stream, "ambience", volume))
 	SignalBus.ink_func_audio_music_play.connect(func(stream, volume): play_audio_by_string(stream, "music", volume))
 
 	SignalBus.ink_func_audio_ambience_rmv.connect(remove_ambience)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b816jtrsg0ebu"
-path="res://.godot/imported/flower_gates.jpg-b4d571d89ea29d75635bd0e8abf8e8db.ctex"
+uid="uid://rb41u71xfx1s"
+path="res://.godot/imported/img_bg_swamp_house.jpg-e7cf66b74724e5448206e929aca238b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/assets/visual/backgrounds/flower_gates.jpg"
-dest_files=["res://.godot/imported/flower_gates.jpg-b4d571d89ea29d75635bd0e8abf8e8db.ctex"]
+source_file="res://project/assets/visual/backgrounds/img_bg_swamp_house.jpg"
+dest_files=["res://.godot/imported/img_bg_swamp_house.jpg-e7cf66b74724e5448206e929aca238b7.ctex"]
 
 [params]
 

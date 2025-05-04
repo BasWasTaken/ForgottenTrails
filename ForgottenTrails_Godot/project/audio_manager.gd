@@ -31,10 +31,17 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
 	if source == "ambient":
 	#	stream = stream as AudioStreamPolyphonic
 		print("polyphonic playing is not implemented yet")
+	
+	if (source == "sfx" or source == "vox" or source == "system") and player.playing:
+		# play as soon as player is available
+		await player.finished # wait for the player to be available
+
 	# Set the new stream
 	player.stream = stream
 	# Set the volume for the player
 	player.volume_db = linear_to_db(volume) #AudioServer.get_bus_volume_db(AudioServer.get_bus_index(source)) + linear_to_db(volume)
+	# NOTE: this sets the volume for the player, not the stream itself. thus you cannot have different volume levels for ambiences
+ 	
 	# Play the audio
 	player.play()
 	print("Playing audio", stream, "  from source: ", source, " with volume: ", volume)

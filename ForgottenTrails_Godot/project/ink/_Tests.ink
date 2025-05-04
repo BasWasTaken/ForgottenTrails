@@ -48,10 +48,9 @@ Flash!
 
 // sfx
 ~Sfx_Play(punch,0.3)
-Punch sounds!
-~Sfx_Play(punch,0.3)
 ~Sfx_Play(punch,0.5)
 ~Sfx_Play(punch,0.8)
+Punch sounds!
 
 // textbased functions
 ~ spd(4)

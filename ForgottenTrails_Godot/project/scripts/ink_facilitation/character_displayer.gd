@@ -117,28 +117,28 @@ func parse_location(location: String) -> Vector2:
 	return Vector2(50, 50)
 
 
-func _input(event):
-	if event.is_action_pressed("test_event_1"):
-		present_character("gabriel", "happy", Vector2(0,0))
+# func _input(event):
+# 	if event.is_action_pressed("test_event_1"):
+# 		present_character("gabriel", "happy", Vector2(0,0))
 	
-	if event.is_action_pressed("test_event_2"):
-		present_character("gabriel", "angry", Vector2(100, 100))
+# 	if event.is_action_pressed("test_event_2"):
+# 		present_character("gabriel", "angry", Vector2(100, 100))
 	
-	if event.is_action_pressed("test_event_3"):
-		present_character("gabriel", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
+# 	if event.is_action_pressed("test_event_3"):
+# 		present_character("gabriel", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
 
-	if event.is_action_pressed("test_event_4"):
-		present_character("brian", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
+# 	if event.is_action_pressed("test_event_4"):
+# 		present_character("brian", "happy", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
-	if event.is_action_pressed("test_event_5"):
-		present_character("brian", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
+# 	if event.is_action_pressed("test_event_5"):
+# 		present_character("brian", "angry", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
-	if event.is_action_pressed("test_event_6"):
-		present_character("brian", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
+# 	if event.is_action_pressed("test_event_6"):
+# 		present_character("brian", "sad", Vector2(randi_range(0, 100), randi_range(0, 100)))
 	
-	if event.is_action_pressed("test_event_7"):
-		remove_character("gabriel")
-	if event.is_action_pressed("test_event_8"):
-		remove_character("brian")
-	if event.is_action_pressed("test_event_9"):
-		remove_all_characters()
+# 	if event.is_action_pressed("test_event_7"):
+# 		remove_character("gabriel")
+# 	if event.is_action_pressed("test_event_8"):
+# 		remove_character("brian")
+# 	if event.is_action_pressed("test_event_9"):
+# 		remove_all_characters()

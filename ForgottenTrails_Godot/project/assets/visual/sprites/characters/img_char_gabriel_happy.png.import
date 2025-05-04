@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bprbkdcflibj7"
-path="res://.godot/imported/brian_happy.png-4936f504aabb038ade5379eb170156ec.ctex"
+uid="uid://gv78vdbjcb8d"
+path="res://.godot/imported/img_char_gabriel_happy.png-84c7711c413817179534ebbbe0b3da9d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/assets/visual/sprites/characters/brian_happy.png"
-dest_files=["res://.godot/imported/brian_happy.png-4936f504aabb038ade5379eb170156ec.ctex"]
+source_file="res://project/assets/visual/sprites/characters/img_char_gabriel_happy.png"
+dest_files=["res://.godot/imported/img_char_gabriel_happy.png-84c7711c413817179534ebbbe0b3da9d.ctex"]
 
 [params]
 

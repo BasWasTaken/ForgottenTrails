@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gv78vdbjcb8d"
-path="res://.godot/imported/gabriel_happy.png-3fa33ef8d53b2759d47e75f6f1eb656c.ctex"
+uid="uid://cepw1q00xku5j"
+path="res://.godot/imported/img_char_gabriel_angry.png-1293aa537224957c751c15555e4ddb9d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/assets/visual/sprites/characters/gabriel_happy.png"
-dest_files=["res://.godot/imported/gabriel_happy.png-3fa33ef8d53b2759d47e75f6f1eb656c.ctex"]
+source_file="res://project/assets/visual/sprites/characters/img_char_gabriel_angry.png"
+dest_files=["res://.godot/imported/img_char_gabriel_angry.png-1293aa537224957c751c15555e4ddb9d.ctex"]
 
 [params]
 

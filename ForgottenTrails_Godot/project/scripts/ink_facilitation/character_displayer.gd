@@ -55,7 +55,7 @@ func present_character(character : String, variant: String="not_specified", coor
 	# set the variant
 	if variant != "not_specified" && variant != "":
 		# get the image path
-		var image_path = "res://project/assets/images/" + character + "_" + variant + ".png" #TODO whenever referring in code to asset pahts, this should go through some sort of global path helper, so you only have to update what the pahts to various folders are in one location
+		var image_path = "res://project/assets/visual/sprites/characters/img_char_" + character + "_" + variant + ".png" #TODO whenever referring in code to asset pahts, this should go through some sort of global path helper, so you only have to update what the pahts to various folders are in one location
 		if !ResourceLoader.exists(image_path):
 			print("Image not found at path: " + image_path)
 		subject.texture = load(image_path)	

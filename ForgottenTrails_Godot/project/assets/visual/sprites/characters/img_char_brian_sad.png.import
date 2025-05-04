@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7pdvk3albjhs"
-path="res://.godot/imported/brian_angry.png-20dc56b9e8a1d041d1791d438d187803.ctex"
+uid="uid://b55sew7dacfr6"
+path="res://.godot/imported/img_char_brian_sad.png-2f63e2f033940fe29ce9239b82f7b2ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://project/assets/visual/sprites/characters/brian_angry.png"
-dest_files=["res://.godot/imported/brian_angry.png-20dc56b9e8a1d041d1791d438d187803.ctex"]
+source_file="res://project/assets/visual/sprites/characters/img_char_brian_sad.png"
+dest_files=["res://.godot/imported/img_char_brian_sad.png-2f63e2f033940fe29ce9239b82f7b2ce.ctex"]
 
 [params]
 

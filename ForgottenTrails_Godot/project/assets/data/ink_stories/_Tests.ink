@@ -2,6 +2,7 @@ INCLUDE Functions_Dev.ink
 
 // opening
 ~FadeToWhite(0)
+~BackdropImage(flower_gates,0)
 ~ print("Testing console log")
 Once upon a time..
 ~Ambiance_Add(river, 0.5)
@@ -50,7 +51,7 @@ Flash!
 ~Sfx_Play(punch,0.3)
 ~Sfx_Play(punch,0.5)
 ~Sfx_Play(punch,0.8)
-Punch sounds!
+Punch sounds! (3, but you only here 2...)
 
 // textbased functions
 ~ spd(4)

@@ -1,6 +1,5 @@
-[gd_scene load_steps=18 format=3 uid="uid://tuvvqraku1dp"]
+[gd_scene load_steps=17 format=3 uid="uid://tuvvqraku1dp"]
 
-[ext_resource type="Texture2D" uid="uid://rb41u71xfx1s" path="res://project/assets/visual/backgrounds/img_bg_swamp_house.jpg" id="1_pufdv"]
 [ext_resource type="Script" path="res://project/scripts/ink_facilitation/backdrop.gd" id="2_pixcj"]
 [ext_resource type="Script" path="res://project/scripts/ink_facilitation/character_displayer.gd" id="3_on7ai"]
 [ext_resource type="PackedScene" uid="uid://dpvkllqk6wuyj" path="res://project/scenes/sprite.tscn" id="4_etj7k"]
@@ -36,7 +35,6 @@ layout_mode = 2
 
 [node name="BackgroundDisplay" type="TextureRect" parent="PanelContainer"]
 layout_mode = 2
-texture = ExtResource("1_pufdv")
 expand_mode = 2
 script = ExtResource("2_pixcj")
 

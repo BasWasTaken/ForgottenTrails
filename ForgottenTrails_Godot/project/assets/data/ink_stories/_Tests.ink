@@ -5,7 +5,7 @@ INCLUDE Functions_Dev.ink
 ~BackdropImage(flower_gates,0)
 ~ print("Testing console log")
 Once upon a time..
-~Ambiance_Add(river, 0.5)
+~Ambiance_Add(river, 0.8)
 Sound of a river.
 ~FadeIn(1)
 Fadein.
@@ -15,7 +15,7 @@ Fadein.
 Placing Brian somewhere.
 ~Spriteboard_Present(Gabriel, Happy, random)
 Placing Gabriel somewhere.
-~Ambiance_Add(chatter, 0.2)
+~Ambiance_Add(chatter, 0.4)
 Making more sound
 ~Spriteboard_Move(Brian, top_left)
 Moving Brian.
@@ -33,16 +33,16 @@ Moving Gabriel to 40, 60 and making him happy.
 Removing all sprites.
 
 // backdrops and visual effects
+~FadeToBlack(0.25)
+Fade to Black
+~BackdropImage(swamp_house,0)
+~FadeIn(0.25)
+Swamp House, Fade in
 ~FadeToWhite(0.5)
 Fade to White
 ~BackdropImage(flower_gates,0)
 ~FadeIn(0.5)
 Flower gates, Fade in
-~FadeToBlack(1)
-Fade to Black
-~BackdropImage(swamp_house,0)
-~FadeIn(1)
-Swamp House, Fade in
 ~Flash("white", 1)
 Flash!
 ~Flash("red", 3)

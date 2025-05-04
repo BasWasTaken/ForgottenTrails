@@ -17,7 +17,7 @@
 
 VAR PlayerName = "PlayerName"
 
-EXTERNAL prompt_name()
+// TEMP 20250504150953 removal will be back EXTERNAL prompt_name()
 === function prompt_name()
 ~PlayerName = "Player"
 
@@ -83,6 +83,10 @@ VAR guy = "guy"
         ~ person = "person"
         ~ kid = "kid"
         ~ lad = "lad"
+        ~ guy = "guy"
+}
+
+~ lad = "lad"
         ~ guy = "guy"
 }
 

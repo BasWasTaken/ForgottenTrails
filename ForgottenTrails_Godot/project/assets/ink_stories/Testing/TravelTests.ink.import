@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dt008l2i44s6e"
+path="res://.godot/imported/TravelTests.ink-49d298d60af3519053580c2ed94fa654.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/Testing/TravelTests.ink"
+dest_files=["res://.godot/imported/TravelTests.ink-49d298d60af3519053580c2ed94fa654.res"]
+
+[params]
+
+is_main_file=false
+compress=true

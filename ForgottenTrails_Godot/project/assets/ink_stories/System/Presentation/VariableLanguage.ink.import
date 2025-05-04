@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://4stx6f8wb7eu"
+path="res://.godot/imported/VariableLanguage.ink-63969e1cc607e8b43ec84d30169052d9.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/System/Presentation/VariableLanguage.ink"
+dest_files=["res://.godot/imported/VariableLanguage.ink-63969e1cc607e8b43ec84d30169052d9.res"]
+
+[params]
+
+is_main_file=false
+compress=true

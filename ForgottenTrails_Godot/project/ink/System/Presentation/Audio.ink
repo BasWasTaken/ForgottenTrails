@@ -10,7 +10,7 @@ LIST Vox =  NA
 <<i>Vox: {listItem} at {float} volume</i>>   
 EXTERNAL _Vox_Play(listItem, float)
 
-LIST Sfx = gong
+LIST Sfx = gong, punch
 // SFX. Done with external function.
 === function Sfx_Play(clip, volume)// use volume between 0.0 and 1.0
 ~ Sfx = clip // assign clip to sfx list to ensure fit of argument
@@ -21,7 +21,7 @@ LIST Sfx = gong
 EXTERNAL _Sfx_Play(listItem, float)
 
 
-LIST Ambiance = (none), chatter
+LIST Ambiance = (none), chatter, river
 // Ambiance. Handled with external function.
 === function Ambiance_Add(clip, volume) //use volume between 0.0 and 1.0
 ~ Ambiance += clip
@@ -30,13 +30,6 @@ LIST Ambiance = (none), chatter
 === function _Ambiance_Play(listItem, float) // adds audio on an ambiance channel, looping
 <<i>Ambiance: {Ambiance} </i>>
 EXTERNAL _Ambiance_Play(listItem, float)
-
-=== function Ambiance_Adjust(clip, newVolume)
-{ Ambiance ? clip:
-    ~ _Ambiance_Play(clip, newVolume)
-- else:
-    ~ print_warning("{clip} Not found")
-}
 
 === function Ambiance_Remove(clip)
 ~ Ambiance -= clip 

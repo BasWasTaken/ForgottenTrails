@@ -1,18 +1,21 @@
 INCLUDE Functions_Dev.ink
 
-
+// opening
 ~FadeToWhite(0)
 ~ print("Testing console log")
 Once upon a time..
+~Ambiance_Add(river, 0.5)
+Sound of a river.
 ~FadeIn(1)
+Fadein.
 
-
-
-Testing some sprites on the spriteboard.
+// spriteboard 
 ~Spriteboard_Present(Brian, Happy, random)
 Placing Brian somewhere.
 ~Spriteboard_Present(Gabriel, Happy, random)
 Placing Gabriel somewhere.
+~Ambiance_Add(chatter, 0.2)
+Making more sound
 ~Spriteboard_Move(Brian, top_left)
 Moving Brian.
 ~Spriteboard_Move(Brian, bottom_right)
@@ -25,28 +28,31 @@ Making Gabriel Angry.
 Removing Brian.
 ~Spriteboard_Present(Gabriel, Happy, "40,60")
 Moving Gabriel to 40, 60 and making him happy.
+~Spriteboard_Remove_All()
+Removing all sprites.
 
-
-
-
-
-Testing out some backdrops:
+// backdrops and visual effects
+~FadeToWhite(0.5)
+Fade to White
+~BackdropImage(flower_gates,0)
+~FadeIn(0.5)
+Flower gates, Fade in
 ~FadeToBlack(1)
 Fade to Black
-~FadeToWhite(1)
-Fade to White
 ~BackdropImage(swamp_house,0)
-Swamp House
 ~FadeIn(1)
-Fade in
-~BackdropImage(flower_gates,0)
-Flower gates
+Swamp House, Fade in
 ~Flash("white", 1)
 Flash!
 ~Flash("red", 3)
-Flash!
 
+// sfx
+~Sfx_Play(punch,0.3)
+~Sfx_Play(punch,0.5)
+~Sfx_Play(punch,0.8)
+Punch sounds!
 
+// textbased functions
 ~ spd(4)
 
 There was fast text. 

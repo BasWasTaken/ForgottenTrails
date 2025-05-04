@@ -5,6 +5,9 @@ class_name FadeUtils
 static func fade_color(node: ColorRect, to_color: Color, duration: float = 1.0) -> void:
 	var start_color = node.modulate
 	var elapsed := 0.0
+	if duration <= 0.0:
+		node.modulate = to_color
+		return
 	while elapsed < duration:
 		await node.get_tree().process_frame
 		elapsed += node.get_process_delta_time()

@@ -2,7 +2,7 @@ INCLUDE Functions_Dev.ink
 
 // opening
 ~FadeToWhite(0)
-~BackdropImage(flower_gates,0)
+~FadeToImage(flower_gates,0)
 ~ print("Testing console log")
 Once upon a time..
 ~Ambiance_Add(river, 0.8)
@@ -35,12 +35,12 @@ Removing all sprites.
 // backdrops and visual effects
 ~FadeToBlack(0.25)
 Fade to Black
-~BackdropImage(swamp_house,0)
+~FadeToImage(swamp_house,0)
 ~FadeIn(0.25)
 Swamp House, Fade in
 ~FadeToWhite(0.5)
 Fade to White
-~BackdropImage(flower_gates,0)
+~FadeToImage(flower_gates,0)
 ~FadeIn(0.5)
 Flower gates, Fade in
 ~Flash("white", 1)

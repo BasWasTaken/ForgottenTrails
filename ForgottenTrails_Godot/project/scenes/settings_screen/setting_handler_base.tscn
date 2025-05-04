@@ -1,7 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cwjoo1lwuwf5j"]
 
-[ext_resource type="Script" path="res://project/scripts/autoloads/setting_broker.gd" id="1_f1ypg"]
-
+[ext_resource type="Script" uid="uid://c5se3eycv848o" path="res://project/scripts/autoloads/setting_broker.gd" id="1_f1ypg"]
 
 [node name="Setting Handler" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
 script = ExtResource("1_f1ypg")

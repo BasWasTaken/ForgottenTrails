@@ -1,0 +1,140 @@
+[gd_scene load_steps=18 format=3 uid="uid://tuvvqraku1dp"]
+
+[ext_resource type="Texture2D" uid="uid://rb41u71xfx1s" path="res://project/assets/visual/backgrounds/swamp_house.jpg" id="1_pufdv"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/backdrop.gd" id="2_pixcj"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/character_displayer.gd" id="3_on7ai"]
+[ext_resource type="PackedScene" uid="uid://dpvkllqk6wuyj" path="res://project/scenes/sprite.tscn" id="4_etj7k"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/foreground.gd" id="5_t17d2"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/ink_story_controller.gd" id="6_clj8h"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/ink_story_processor.cs" id="7_ydrh0"]
+[ext_resource type="Resource" uid="uid://c4wsjwt6fs1nk" path="res://project/assets/data/ink_stories/_Tests.ink" id="8_4lueu"]
+[ext_resource type="Script" path="res://project/scripts/RTE_matrix.gd" id="9_gkm6c"]
+[ext_resource type="Script" path="res://project/scripts/RTE_ghost.gd" id="10_7rull"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/text_presenter.gd" id="11_b3ptg"]
+[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://project/assets/audio/system/typesound_physical.wav" id="12_xiivj"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/inkbutton_presenter/inkbutton_presenter.gd" id="13_larfh"]
+[ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://project/scenes/inkbutton_presenter/continue_button.tscn" id="14_ikmv8"]
+[ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://project/scenes/inkbutton_presenter/choice_button.tscn" id="15_6t4qh"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
+script = ExtResource("9_gkm6c")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_4ph1k"]
+script = ExtResource("10_7rull")
+
+[node name="InkPlayer" type="AspectRatioContainer"]
+custom_minimum_size = Vector2(1920, 1080)
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.7778
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="BackgroundDisplay" type="TextureRect" parent="PanelContainer"]
+layout_mode = 2
+texture = ExtResource("1_pufdv")
+expand_mode = 2
+script = ExtResource("2_pixcj")
+
+[node name="CharacterDisplayer" type="Panel" parent="PanelContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 810)
+layout_mode = 2
+size_flags_vertical = 0
+script = ExtResource("3_on7ai")
+prefab = ExtResource("4_etj7k")
+
+[node name="ForegroundDisplay" type="ColorRect" parent="PanelContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+script = ExtResource("5_t17d2")
+
+[node name="StoryController" type="PanelContainer" parent="." node_paths=PackedStringArray("my_story_getter")]
+custom_minimum_size = Vector2(0, 270)
+layout_mode = 2
+size_flags_vertical = 8
+script = ExtResource("6_clj8h")
+my_story_getter = NodePath("StoryProcessor")
+
+[node name="StoryProcessor" type="Node" parent="StoryController"]
+script = ExtResource("7_ydrh0")
+story = ExtResource("8_4lueu")
+
+[node name="ColorRect" type="ColorRect" parent="StoryController"]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="StoryController"]
+layout_mode = 2
+
+[node name="TextPresenter" type="RichTextLabel" parent="StoryController/HBoxContainer" node_paths=PackedStringArray("box")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost]
+[matrix]onzin[/matrix]"
+custom_effects = [SubResource("RichTextEffect_y4d4d"), SubResource("RichTextEffect_4ph1k")]
+script = ExtResource("11_b3ptg")
+box = NodePath("../../ColorRect")
+
+[node name="Timer" type="Timer" parent="StoryController/HBoxContainer/TextPresenter"]
+wait_time = 0.002
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="StoryController/HBoxContainer/TextPresenter"]
+stream = ExtResource("12_xiivj")
+volume_db = -20.0
+pitch_scale = 1.2
+max_polyphony = 99
+bus = &"Typing"
+
+[node name="MarginContainer" type="MarginContainer" parent="StoryController/HBoxContainer"]
+custom_minimum_size = Vector2(540, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="StoryController/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ChoicePresenter" type="VBoxContainer" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+alignment = 2
+script = ExtResource("13_larfh")
+
+[node name="ContinueButton" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("14_ikmv8")]
+layout_mode = 2
+
+[node name="ChoiceButton" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton2" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton3" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton4" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton5" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton6" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton7" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton8" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[node name="ChoiceButton9" parent="StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+layout_mode = 2
+
+[connection signal="timeout" from="StoryController/HBoxContainer/TextPresenter/Timer" to="StoryController/HBoxContainer/TextPresenter" method="_on_timer_timeout"]

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dse00bdql4wxy"
+path="res://.godot/imported/EdanMarket.ink-2ab2ea7f64d974e03ba4e9dc8d3319e0.res"
+
+[deps]
+
+source_file="res://project/assets/data/ink_stories/Edan/EdanMarket.ink"
+dest_files=["res://.godot/imported/EdanMarket.ink-2ab2ea7f64d974e03ba4e9dc8d3319e0.res"]
+
+[params]
+
+is_main_file=false
+compress=true

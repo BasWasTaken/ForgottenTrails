@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://c00vfbj67md5j"
+path="res://.godot/imported/States.ink-b0910ad489623ce7a20e38cd852d4a2d.res"
+
+[deps]
+
+source_file="res://project/assets/data/ink_stories/System/Track/States.ink"
+dest_files=["res://.godot/imported/States.ink-b0910ad489623ce7a20e38cd852d4a2d.res"]
+
+[params]
+
+is_main_file=false
+compress=true

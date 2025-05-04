@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpvkllqk6wuyj"]
+
+[ext_resource type="Texture2D" uid="uid://gv78vdbjcb8d" path="res://project/assets/visual/sprites/characters/gabriel_happy.png" id="1_txxi8"]
+[ext_resource type="Script" path="res://project/scripts/ink_facilitation/character.gd" id="2_8d75k"]
+
+[node name="Character" type="TextureRect" groups=["character"]]
+offset_right = 369.0
+offset_bottom = 398.0
+texture = ExtResource("1_txxi8")
+script = ExtResource("2_8d75k")

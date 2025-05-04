@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://co8mfm8ntuc3a"
+path="res://.godot/imported/Travel.ink-b7a82c8919695d178d6f4c0e5ea9ecfb.res"
+
+[deps]
+
+source_file="res://project/assets/data/ink_stories/System/Modules/Travel.ink"
+dest_files=["res://.godot/imported/Travel.ink-b7a82c8919695d178d6f4c0e5ea9ecfb.res"]
+
+[params]
+
+is_main_file=false
+compress=true

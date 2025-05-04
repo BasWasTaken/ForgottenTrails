@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cxf7evyaakvnr"
+path="res://.godot/imported/Time.ink-20034ef40e700e667d16942a2af447a2.res"
+
+[deps]
+
+source_file="res://project/assets/data/ink_stories/System/Track/Time.ink"
+dest_files=["res://.godot/imported/Time.ink-20034ef40e700e667d16942a2af447a2.res"]
+
+[params]
+
+is_main_file=false
+compress=true

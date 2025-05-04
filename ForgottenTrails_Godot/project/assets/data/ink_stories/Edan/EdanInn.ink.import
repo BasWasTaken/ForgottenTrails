@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://catcb4k584343"
+path="res://.godot/imported/EdanInn.ink-20fb3fedb78f4a29a3dd14bad243acfc.res"
+
+[deps]
+
+source_file="res://project/assets/data/ink_stories/Edan/EdanInn.ink"
+dest_files=["res://.godot/imported/EdanInn.ink-20fb3fedb78f4a29a3dd14bad243acfc.res"]
+
+[params]
+
+is_main_file=false
+compress=true

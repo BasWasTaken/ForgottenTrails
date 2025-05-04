@@ -1,0 +1,131 @@
+[gd_scene load_steps=5 format=3 uid="uid://dkr7obwclut2x"]
+
+[ext_resource type="Script" path="res://project/scripts/settings_screen.gd" id="1_j51ml"]
+[ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://project/scenes/settings_screen/setting_handler_slider.tscn" id="2_h2cb7"]
+[ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://project/scenes/settings_screen/setting_handler_dropdown.tscn" id="2_kkcbu"]
+[ext_resource type="PackedScene" uid="uid://cjnyg02autwl0" path="res://project/scenes/settings_screen/setting_handler_checkbox.tscn" id="4_asi8a"]
+
+[node name="Settings Screen" type="Control" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button", "close_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_j51ml")
+reset_button = NodePath("Global Buttons/Reset All Button")
+revert_button = NodePath("Global Buttons/Revert All Button")
+apply_button = NodePath("Global Buttons/Apply All Button")
+close_button = NodePath("Global Buttons/Close Button")
+
+[node name="Settings Tabs" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings Tabs"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings Tabs/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Gameplay" type="VBoxContainer" parent="Settings Tabs/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings Tabs/ScrollContainer/VBoxContainer/Gameplay"]
+layout_mode = 2
+text = "Gameplay"
+
+[node name="Speed" parent="Settings Tabs/ScrollContainer/VBoxContainer/Gameplay" instance=ExtResource("2_kkcbu")]
+layout_mode = 2
+affected_setting = 1
+
+[node name="Opacity" parent="Settings Tabs/ScrollContainer/VBoxContainer/Gameplay" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 2
+
+[node name="Audio" type="VBoxContainer" parent="Settings Tabs/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio"]
+layout_mode = 2
+text = "Audio"
+
+[node name="Master Volume" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 3
+
+[node name="System Volume" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 4
+
+[node name="Music Volume" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 5
+
+[node name="Ambient Volume" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 6
+
+[node name="SFX Volume" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 7
+
+[node name="VOX Volume" parent="Settings Tabs/ScrollContainer/VBoxContainer/Audio" instance=ExtResource("2_h2cb7")]
+layout_mode = 2
+affected_setting = 8
+
+[node name="Video" type="VBoxContainer" parent="Settings Tabs/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Settings Tabs/ScrollContainer/VBoxContainer/Video"]
+layout_mode = 2
+text = "Video"
+
+[node name="Full Screen" parent="Settings Tabs/ScrollContainer/VBoxContainer/Video" instance=ExtResource("4_asi8a")]
+layout_mode = 2
+affected_setting = 9
+
+[node name="Global Buttons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Reset All Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+disabled = true
+text = "Reset All Settings"
+
+[node name="Revert All Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+disabled = true
+text = "Revert All Changes"
+
+[node name="Apply All Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+disabled = true
+text = "Apply All Changes"
+
+[node name="Close Button" type="Button" parent="Global Buttons"]
+layout_mode = 2
+text = "Close Window"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+
+[connection signal="visibility_changed" from="." to="." method="_on_open_or_close"]
+[connection signal="pressed" from="Global Buttons/Reset All Button" to="." method="reset"]
+[connection signal="pressed" from="Global Buttons/Revert All Button" to="." method="revert"]
+[connection signal="pressed" from="Global Buttons/Apply All Button" to="." method="apply"]

@@ -68,8 +68,9 @@ func play_audio_by_string(clip: String, source: String, volume: float = 1.0):
 	# Call the play_audio function with the loaded stream and source
 	play_audio(audio_stream, source, volume)
 
-var button_click_sound: AudioStream = preload("res://project/assets/audio/system/snd_ui_click.mp3")
-var button_release_sound: AudioStream = preload("res://project/assets/audio/system/snd_ui_release.mp3")
+var button_click_sound: AudioStream = preload("res://project/assets/audio/system/snd_system_ui_click.mp3")
+var button_release_sound: AudioStream = preload("res://project/assets/audio/system/snd_system_ui_release.mp3") #NOTE dit legt eigenlijk blood dat de Naam "system" onzin is, het zou "UI" moeten zijn, dat maakt meteen deze redundance onnodig
+# TODO rename system channel and bus to ui and update all references as well as naming convention
 
 func _ready():
 	# Connect the signal to the function

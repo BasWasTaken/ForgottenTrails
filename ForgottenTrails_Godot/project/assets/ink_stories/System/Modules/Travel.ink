@@ -113,7 +113,7 @@ VAR LowRationsLimit = 3 // amount of rations that causes party to complain if yo
 === function _OpenMap() === // opens the map screen in unity
 \{UNITY:OpenMap()\}
 
-EXTERNAL _OpenMap()
+// TEMP REMOVE 20250504150041 WILL BE BUILT BACK EXTERNAL _OpenMap()
     
 === function _MapChoice(destination) === // used to present an inky choice that will be represented visually on a map in unity. (in ink it simply lists as a normal choice)
 \{MapChoice({destination})\in unity.

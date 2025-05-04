@@ -29,7 +29,7 @@ VAR Party = () // list of characters in party
 === function _OpenPartyScreen() === // opens the map screen in unity
 \{UNITY:OpenPartyScreen()\}
 
-EXTERNAL _OpenPartyScreen()
+//TEMP REMOVE 20250504150041. Will be built back EXTERNAL _OpenPartyScreen()
 
 
 === PartyScreen(-> returnTo) // the party knot. visit to open the party screen in unity. 

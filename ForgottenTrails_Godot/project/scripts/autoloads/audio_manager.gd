@@ -65,6 +65,17 @@ func remove_all_ambience():
 func play_audio_by_string(clip: String, source: String, volume: float = 1.0):
 	# Load the audio stream from the string path
 	var audio_stream: AudioStream = load("res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip+".wav")
+	
+	# TODO make a helper script for retreiving files, so that the various attempts can be handled there. reduces redundant code.
+	if audio_stream == null:
+		audio_stream = load("res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip+".mp3")
+		if audio_stream == null:
+			audio_stream = load("res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip+".ogg")
+			if audio_stream == null:
+				print("Audio stream not found at path: " + "res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip)
+
+
+
 	# Call the play_audio function with the loaded stream and source
 	play_audio(audio_stream, source, volume)
 

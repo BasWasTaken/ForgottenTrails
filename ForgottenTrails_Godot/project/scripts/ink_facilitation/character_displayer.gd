@@ -55,9 +55,23 @@ func present_character(character : String, variant: String="not_specified", coor
 	# set the variant
 	if variant != "not_specified" && variant != "":
 		# get the image path
-		var image_path = "res://project/assets/visual/sprites/characters/img_char_" + character + "_" + variant + ".png" #TODO whenever referring in code to asset pahts, this should go through some sort of global path helper, so you only have to update what the pahts to various folders are in one location
+		var image_path_without_extension = "res://project/assets/visual/sprites/characters/img_char_" + character + "_" + variant #TODO whenever referring in code to asset pahts, this should go through some sort of global path helper, so you only have to update what the pahts to various folders are in one location
+		var image_path = image_path_without_extension + ".png" #TODO make this a helper function that checks for the file extension and returns the correct one, so that it can be used in other places as well
 		if !ResourceLoader.exists(image_path):
-			print("Image not found at path: " + image_path)
+			image_path = image_path_without_extension + ".jpg"
+			if !ResourceLoader.exists(image_path):
+				image_path = image_path_without_extension + ".jpeg"
+				if !ResourceLoader.exists(image_path):
+					image_path = image_path_without_extension + ".webp"
+					if !ResourceLoader.exists(image_path):
+						image_path = image_path_without_extension + ".bmp"
+						if !ResourceLoader.exists(image_path):
+							image_path = image_path_without_extension + ".tga"
+							if !ResourceLoader.exists(image_path):
+								print("Image not found at path: " + image_path_without_extension)
+								return
+		# VERY hacky
+
 		subject.texture = load(image_path)	
 		subject.variant = variant
 

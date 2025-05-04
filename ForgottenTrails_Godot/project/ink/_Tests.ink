@@ -35,25 +35,26 @@ Moving Gabriel to 40, 60 and making him happy.
 
 
 
-Testing out some backdrops:
+Testing out some backdrops and visual effects:
+~FadeToWhite(0.5)
+Fade to White
+~BackdropImage(flower_gates,0)
+~FadeIn(0.5)
+Flower gates, Fade in
 ~FadeToBlack(1)
 Fade to Black
-~FadeToWhite(1)
-Fade to White
 ~BackdropImage(swamp_house,0)
-Swamp House
 ~FadeIn(1)
+Swamp House
 Fade in
-~BackdropImage(flower_gates,0)
-Flower gates
 ~Flash("white", 1)
 Flash!
 ~Flash("red", 3)
 ~Sfx_Play(punch,0.3)
+Punch sounds!
+~Sfx_Play(punch,0.3)
 ~Sfx_Play(punch,0.5)
 ~Sfx_Play(punch,0.8)
-Punch sounds! Heard?
-Flash!
 
 
 ~ spd(4)

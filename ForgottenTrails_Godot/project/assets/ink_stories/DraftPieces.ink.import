@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://j8lnyi8nm05m"
+path="res://.godot/imported/DraftPieces.ink-a956e91614f41808823b583d79783e3c.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/DraftPieces.ink"
+dest_files=["res://.godot/imported/DraftPieces.ink-a956e91614f41808823b583d79783e3c.res"]
+
+[params]
+
+is_main_file=false
+compress=true

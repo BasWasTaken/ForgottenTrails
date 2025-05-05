@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cjfbkyk7ct0y3"
+path="res://.godot/imported/Foreground.ink-3ac2d2362ac7b119ce2997b336287f71.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/System/Presentation/Foreground.ink"
+dest_files=["res://.godot/imported/Foreground.ink-3ac2d2362ac7b119ce2997b336287f71.res"]
+
+[params]
+
+is_main_file=false
+compress=true

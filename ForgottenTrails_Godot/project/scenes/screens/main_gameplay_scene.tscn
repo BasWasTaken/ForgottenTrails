@@ -22,10 +22,11 @@ layout_mode = 2
 
 [node name="Menus" type="TabContainer" parent="."]
 self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 900)
 layout_mode = 2
 size_flags_vertical = 0
 tab_alignment = 2
+current_tab = 0
 all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
 tab_focus_mode = 0
@@ -33,7 +34,6 @@ deselect_enabled = true
 script = ExtResource("3_u24dq")
 
 [node name="Log" parent="Menus" instance=ExtResource("3_8o2lg")]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 

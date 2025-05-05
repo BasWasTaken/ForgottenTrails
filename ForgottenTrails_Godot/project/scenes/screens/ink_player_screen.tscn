@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cmunct5vdvrho" path="res://project/scripts/ink_facilitation/backdrop.gd" id="2_pixcj"]
 [ext_resource type="Script" uid="uid://bar1uo6eorhn" path="res://project/scripts/ink_facilitation/character_displayer.gd" id="3_on7ai"]
-[ext_resource type="PackedScene" uid="uid://dpvkllqk6wuyj" path="res://project/scenes/sprite.tscn" id="4_etj7k"]
+[ext_resource type="PackedScene" uid="uid://dpvkllqk6wuyj" path="res://project/scenes/components/sprite.tscn" id="4_etj7k"]
 [ext_resource type="Script" uid="uid://c7msf73yfa1wn" path="res://project/scripts/ink_facilitation/foreground.gd" id="5_t17d2"]
 [ext_resource type="Script" uid="uid://dytqmc741pvph" path="res://project/scripts/ink_facilitation/ink_story_controller.gd" id="6_clj8h"]
 [ext_resource type="Resource" uid="uid://opvfthfnjjqd" path="res://project/assets/ink_stories/Main.ink" id="7_sdl0n"]
@@ -12,8 +12,8 @@
 [ext_resource type="Script" uid="uid://dhfqyrs3ao4cb" path="res://project/scripts/ink_facilitation/text_presenter.gd" id="11_b3ptg"]
 [ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://project/assets/audio/system/snd_system_ui_type_physical.wav" id="12_xiivj"]
 [ext_resource type="Script" uid="uid://dj0a74ul7n1u0" path="res://project/scripts/ink_facilitation/inkbutton_presenter/inkbutton_presenter.gd" id="13_larfh"]
-[ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://project/scenes/inkbutton_presenter/continue_button.tscn" id="14_ikmv8"]
-[ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://project/scenes/inkbutton_presenter/choice_button.tscn" id="15_6t4qh"]
+[ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://project/scenes/components/continue_button.tscn" id="14_ikmv8"]
+[ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://project/scenes/components/choice_button.tscn" id="15_6t4qh"]
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
 script = ExtResource("9_gkm6c")

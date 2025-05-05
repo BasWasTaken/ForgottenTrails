@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ga7ualj4ktmf"]
 
-[ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://project/scenes/ink_player_screen.tscn" id="1_r2cfs"]
-[ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://project/scenes/settings_screen/settings_screen.tscn" id="2_fv7wo"]
+[ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://project/scenes/screens/ink_player_screen.tscn" id="1_r2cfs"]
+[ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://project/scenes/screens/settings_screen.tscn" id="2_fv7wo"]
 
 [node name="MainGameplayScene" type="PanelContainer"]
 anchors_preset = 15

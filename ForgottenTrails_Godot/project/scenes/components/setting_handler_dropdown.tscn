@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://ne7hxq7y2dar"]
 
-[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/scenes/settings_screen/setting_handler_base.tscn" id="1_18ard"]
+[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/scenes/components/setting_handler_base.tscn" id="1_18ard"]
+
 
 [node name="Setting With Dropdown" node_paths=PackedStringArray("input") instance=ExtResource("1_18ard")]
 input = NodePath("Value Input")

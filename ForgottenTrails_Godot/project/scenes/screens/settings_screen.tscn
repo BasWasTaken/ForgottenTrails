@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dkr7obwclut2x"]
 
 [ext_resource type="Script" uid="uid://b7upahwpt2077" path="res://project/scripts/settings_screen.gd" id="1_j51ml"]
-[ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://project/scenes/settings_screen/setting_handler_slider.tscn" id="2_h2cb7"]
-[ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://project/scenes/settings_screen/setting_handler_dropdown.tscn" id="2_kkcbu"]
-[ext_resource type="PackedScene" uid="uid://cjnyg02autwl0" path="res://project/scenes/settings_screen/setting_handler_checkbox.tscn" id="4_asi8a"]
+[ext_resource type="PackedScene" uid="uid://dbtdbb1r7ikd0" path="res://project/scenes/components/setting_handler_slider.tscn" id="2_h2cb7"]
+[ext_resource type="PackedScene" uid="uid://ne7hxq7y2dar" path="res://project/scenes/components/setting_handler_dropdown.tscn" id="2_kkcbu"]
+[ext_resource type="PackedScene" uid="uid://cjnyg02autwl0" path="res://project/scenes/components/setting_handler_checkbox.tscn" id="4_asi8a"]
 
 [node name="Settings Screen" type="Control" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button", "close_button")]
 layout_mode = 3
@@ -19,6 +19,15 @@ reset_button = NodePath("Global Buttons/Reset All Button")
 revert_button = NodePath("Global Buttons/Revert All Button")
 apply_button = NodePath("Global Buttons/Apply All Button")
 close_button = NodePath("Global Buttons/Close Button")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.266575, 0.266575, 0.266575, 1)
 
 [node name="Settings Tabs" type="PanelContainer" parent="."]
 layout_mode = 1

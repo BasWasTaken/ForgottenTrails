@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ForgottenTrails"
-run/main_scene="res://project/scenes/main_menu_scene.tscn"
+run/main_scene="res://project/scenes/screens/main_menu_scene.tscn"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://project/assets/visual/backgrounds/ForgottenTrailsTitle_IMG.png"
 
@@ -27,7 +27,7 @@ SceneNavigator="*res://project/scripts/autoloads/scene_navigator.gd"
 printer_state="*res://project/scripts/autoloads/VNState.gd"
 SignalBus="*res://project/scripts/autoloads/signal_bus.gd"
 InputManager="*res://project/scripts/autoloads/input_manager.gd"
-AudioManager="*res://project/scenes/audio_manager.tscn"
+AudioManager="*res://project/scenes/managers/audio_manager.tscn"
 
 [display]
 

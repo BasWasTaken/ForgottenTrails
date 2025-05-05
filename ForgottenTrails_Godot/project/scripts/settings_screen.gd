@@ -14,7 +14,7 @@ var settings_all:
 		for child in get_all_children(self):
 			#print(child)
 			if child is Setting_Broker: 
-				print(child)
+				#print(child)
 				list.append(child)
 		#print(list)
 		return list
@@ -95,7 +95,7 @@ func _on_open_or_close(): #on visibility changed
 
 
 func _on_open():
-	print("Settings Screen Opened")
+	print("Opening Settings Screen")
 	for child in settings_all:
 		child.refresh_ui_element()
 	check_buttons()

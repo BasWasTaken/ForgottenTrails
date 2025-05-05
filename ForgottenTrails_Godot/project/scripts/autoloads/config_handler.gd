@@ -148,11 +148,11 @@ var state: File_State = File_State.none:
 	get:
 		return state
 	set(value):
-		print("State changed to:", File_State.find_key(value))
+		print("FileState changed to:", File_State.find_key(value))
 		state = value
 
 func _on_setting_changed(id: String, value: Variant):
-	print("Setting changed for:", id, "to:", value)
+	print("Changed setting:", id, "to:", value)
 	if state == File_State.none:
 		state = File_State.flagged_for_writing
 		# print("Flagged for writing")
@@ -185,7 +185,7 @@ func write_to_disk(): # Q: should this go via the data manager?
 		saving_config.set_value(DataManager.player_name, setting, setting_dictionary[setting].live_value)
 	
 	saving_config.save("user://config.cfg") # ask for overwrite if changes
-	print("Saved to disk")
+	print("saved config to disk at", "user://config.cfg") #TODO avoid hardcoding "magic value".
 	state = File_State.none
 
 func read_from_disk(): # Q: should this go via the data manager?
@@ -216,7 +216,7 @@ func read_from_disk(): # Q: should this go via the data manager?
 					print("No value found for", setting)
 					setting_dictionary[setting].live_value = setting_dictionary[setting].default_value
 
-	print("Readed from disk")
+	print("Readed config from disk")
 
 	state = File_State.none
 

@@ -128,27 +128,27 @@ public partial class ink_story_processor : Node
 			EmitSignal(SignalName.continued_story, content);
 			if(story.CanContinue)
 			{
-				GD.Print("Still continuing, no choices.");
+				//GD.Print("Still continuing, no choices.");
 				EmitSignal(SignalName.encountered_no_choices); // does nothing as of now?
 			}
 			else
 			{
-				GD.Print("Checking choices: " + story.CurrentChoices.Count);
+				//GD.Print("Checking choices: " + story.CurrentChoices.Count);
 				//convert ireadonlylist to array
 				InkChoice[] seeSharpArray = new InkChoice[story.CurrentChoices.Count];
 				for(int i = 0; i < story.CurrentChoices.Count; i++)
 				{
 					seeSharpArray[i] = story.CurrentChoices[i];
 				}
-				GD.Print("Choices: " + seeSharpArray.Length);
+				//GD.Print("Choices: " + seeSharpArray.Length);
 				// convert c# array to godot array
 				Array variantArray = new Array(seeSharpArray);
 				// test array conversion
 				foreach(InkChoice choice in seeSharpArray)
 				{
-					GD.Print(choice.Text);
+					//GD.Print(choice.Text);
 				}
-				GD.Print(variantArray);
+				//GD.Print(variantArray);
 				
 				choices_array = variantArray;
 				EmitSignal(SignalName.fetch_my_choices_plx);
@@ -162,7 +162,7 @@ public partial class ink_story_processor : Node
 	
 	public void FeedChoice(int index)
 	{
-		GD.Print("story_getter received choice, feeding now");
+		//GD.Print("story_getter received choice, feeding now");
 		story.ChooseChoiceIndex(index);
 	}
 
@@ -170,7 +170,7 @@ public partial class ink_story_processor : Node
 	{
 		// get story state
 		latest_state = story.SaveState();
-		GD.Print("getting story state: " + latest_state);
+		GD.Print("getting story state to save ");
 		
 		return latest_state;
 		// TODO also save log
@@ -179,7 +179,7 @@ public partial class ink_story_processor : Node
 	public void LoadState(string saveState)
 	{
 		// load story state
-		GD.Print("loading story state: " + saveState);
+		GD.Print("loading story state to set. ");
 		//TODO Also set other objects
 		story.LoadState(saveState);
 		// if(story.CanContinue)

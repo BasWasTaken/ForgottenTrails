@@ -44,7 +44,7 @@ func play_audio(stream: AudioStream, source: String, volume: float = 1.0):
  	
 	# Play the audio
 	player.play()
-	print("Playing audio", stream, "  from source: ", source, " with volume: ", volume)
+	print("Playing audio ", stream, " from source: ", source, " with volume: ", volume) #NOTE cannot figure out how to get name of the clip...
 
 func remove_ambience(_stream: AudioStream):	
 	# Stop the ambience player

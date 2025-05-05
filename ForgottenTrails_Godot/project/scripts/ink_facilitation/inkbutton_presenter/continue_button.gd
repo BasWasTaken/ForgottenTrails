@@ -15,5 +15,5 @@ func _on_pressed():
 	elif printer_state.get_state != printer_state.VN_State.WAITING: #other states are illegal (like locked or prosessing)
 		print("but it was illegal")
 		return
-	print("and it was legal")
+	#print("and it was legal")
 	SignalBus.control_requests_continue.emit()

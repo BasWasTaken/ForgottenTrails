@@ -30,7 +30,7 @@ func autosave_game(state: String):
 	save_game(state, "auto")
 
 func save_game(state: String, method: String):
-	print("Starting " + method + " save with state: " + state)
+	print("Starting " + method + " save")
 	
 
 	# Get timestamp (safe filename format)
@@ -59,7 +59,7 @@ func save_game(state: String, method: String):
 		save_file.store_line(json_string)
 
 	save_file.close()
-	print("Game saved")
+	print("Game saved to file: " + filename)
 
 # Retrieve saved files
 func get_files(_player: String = player_name, type: String = "any") -> Array:
@@ -175,4 +175,4 @@ func load_game(file: String):
 		# 	if key not in ["filename", "parent", "pos_x", "pos_y"]:
 		# 		new_object.set(key, node_data[key])
 		
-	print("Game loaded")
+	print("Game loaded from file: " + file)

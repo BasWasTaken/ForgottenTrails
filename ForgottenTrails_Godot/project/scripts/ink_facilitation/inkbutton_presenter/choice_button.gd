@@ -3,7 +3,7 @@ extends Button
 var index: int
 
 func _ready():
-	print("choice button ready")
+	#print("choice button ready")
 	button_down.connect(SignalBus.ui_button_clicked.emit)
 	#pressed.connect(_on_pressed)
 	button_up.connect(SignalBus.ui_button_released.emit)
@@ -16,5 +16,5 @@ func _on_pressed():
 	elif printer_state.get_state != printer_state.VN_State.WAITING: #other states are illegal (like locked or prosessing)
 		print("but it was illegal")
 		return
-	print("and it was legal")
+	#print("and it was legal")
 	SignalBus.control_requests_choice.emit(index)

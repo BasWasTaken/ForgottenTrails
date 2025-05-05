@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjnyg02autwl0"]
+
+[ext_resource type="PackedScene" uid="uid://cwjoo1lwuwf5j" path="res://project/scenes/settings_screen/setting_handler_base.tscn" id="1_5m15b"]
+
+[node name="Setting Handler" node_paths=PackedStringArray("input") instance=ExtResource("1_5m15b")]
+input = NodePath("Value Input")
+
+[node name="Reset" parent="Button Handler" index="1"]
+visible = true
+
+[node name="Revert" parent="Button Handler" index="2"]
+visible = true
+
+[node name="Apply" parent="Button Handler" index="3"]
+visible = true
+
+[node name="Value Input" type="CheckBox" parent="." index="1"]
+layout_mode = 2

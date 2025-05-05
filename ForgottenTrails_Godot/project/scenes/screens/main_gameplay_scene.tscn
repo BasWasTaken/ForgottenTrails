@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://ga7ualj4ktmf"]
+[gd_scene load_steps=5 format=3 uid="uid://ga7ualj4ktmf"]
 
 [ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://project/scenes/screens/ink_player_screen.tscn" id="1_r2cfs"]
 [ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://project/scenes/screens/settings_screen.tscn" id="2_fv7wo"]
+[ext_resource type="PackedScene" uid="uid://dimwm1crrw0rj" path="res://project/scenes/screens/log.tscn" id="3_8o2lg"]
+[ext_resource type="PackedScene" uid="uid://bx7wv3dyc1kjw" path="res://project/scenes/screens/inventory_screen.tscn" id="4_u24dq"]
 
 [node name="MainGameplayScene" type="PanelContainer"]
 anchors_preset = 15
@@ -18,9 +20,18 @@ visible = false
 layout_mode = 2
 
 [node name="Menus" type="TabContainer" parent="."]
-visible = false
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-tabs_visible = false
 all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
+deselect_enabled = true
+
+[node name="Log" parent="Menus" instance=ExtResource("3_8o2lg")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Inventory" parent="Menus" instance=ExtResource("4_u24dq")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1

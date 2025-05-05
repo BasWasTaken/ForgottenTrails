@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://dimwm1crrw0rj"]
+
+[ext_resource type="Script" uid="uid://bbyob63u6x0o8" path="res://project/scripts/ink_facilitation/text_log.gd" id="1_htrxy"]
+
+[node name="Log" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -0.5
+offset_right = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+layout_mode = 2
+color = Color(0.147672, 0.147672, 0.147672, 1)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+text = "TEXT LOG GOES HERE"
+script = ExtResource("1_htrxy")

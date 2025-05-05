@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dpvkllqk6wuyj" path="res://project/scenes/components/sprite.tscn" id="4_etj7k"]
 [ext_resource type="Script" uid="uid://c7msf73yfa1wn" path="res://project/scripts/ink_facilitation/foreground.gd" id="5_t17d2"]
 [ext_resource type="Script" uid="uid://dytqmc741pvph" path="res://project/scripts/ink_facilitation/ink_story_controller.gd" id="6_clj8h"]
-[ext_resource type="Resource" uid="uid://opvfthfnjjqd" path="res://project/assets/ink_stories/Main.ink" id="7_sdl0n"]
+[ext_resource type="Resource" uid="uid://c4wsjwt6fs1nk" path="res://project/assets/ink_stories/_Tests.ink" id="7_iqa4r"]
 [ext_resource type="Script" uid="uid://bvb3l0gmfwr7f" path="res://project/scripts/ink_facilitation/ink_story_processor.cs" id="7_ydrh0"]
 [ext_resource type="Script" uid="uid://dli8n6jgewrdw" path="res://project/scripts/RTE_matrix.gd" id="9_gkm6c"]
 [ext_resource type="Script" uid="uid://d03m1mgytcqtk" path="res://project/scripts/RTE_ghost.gd" id="10_7rull"]
@@ -60,7 +60,7 @@ my_story_getter = NodePath("StoryProcessor")
 
 [node name="StoryProcessor" type="Node" parent="StoryController"]
 script = ExtResource("7_ydrh0")
-story = ExtResource("7_sdl0n")
+story = ExtResource("7_iqa4r")
 
 [node name="ColorRect" type="ColorRect" parent="StoryController"]
 layout_mode = 2

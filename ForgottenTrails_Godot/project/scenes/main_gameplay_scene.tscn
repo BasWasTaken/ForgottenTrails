@@ -10,19 +10,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="InkPlayer" parent="." instance=ExtResource("1_r2cfs")]
+layout_mode = 2
+
+[node name="Settings Screen" parent="." instance=ExtResource("2_fv7wo")]
+visible = false
+layout_mode = 2
+
 [node name="Menus" type="TabContainer" parent="."]
+visible = false
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-current_tab = 0
 tabs_visible = false
 all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
-
-[node name="InkPlayer" parent="Menus" instance=ExtResource("1_r2cfs")]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="Settings Screen" parent="Menus" instance=ExtResource("2_fv7wo")]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1

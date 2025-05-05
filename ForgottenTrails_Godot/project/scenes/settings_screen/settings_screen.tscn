@@ -20,6 +20,15 @@ revert_button = NodePath("Global Buttons/Revert All Button")
 apply_button = NodePath("Global Buttons/Apply All Button")
 close_button = NodePath("Global Buttons/Close Button")
 
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.266575, 0.266575, 0.266575, 1)
+
 [node name="Settings Tabs" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15

@@ -5,7 +5,7 @@ INCLUDE Functions_Dev.ink
 ~FadeToImage(flower_gates,0)
 ~ print("Testing console log")
 Once upon a time..
-~Ambiance_Add(river, 0.8)
+~Ambiance_Play(river, 0.8)
 Sound of a river.
 ~FadeIn(1)
 Fadein.
@@ -15,7 +15,7 @@ Fadein.
 Placing Brian somewhere.
 ~Spriteboard_Present(Gabriel, Happy, random)
 Placing Gabriel somewhere.
-~Ambiance_Add(chatter, 0.4)
+~Ambiance_Play(chatter, 0.4)
 Making more sound
 ~Spriteboard_Move(Brian, top_left)
 Moving Brian.

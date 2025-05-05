@@ -86,6 +86,9 @@ public partial class ink_story_processor : Node
 
 	[Signal]
 	public delegate void ink_function_audio_music_playEventHandler(string clip, float volume);
+
+	[Signal]
+	public delegate void ink_function_audio_music_stopEventHandler();
 	
 
 	public override void _Ready()
@@ -106,9 +109,10 @@ public partial class ink_story_processor : Node
 		story.BindExternalFunction("_Vox_Play", (string clip, float volume) => EmitSignal(SignalName.ink_function_audio_vox_play, clip, volume));
 		story.BindExternalFunction("_Sfx_Play", (string clip, float volume) => EmitSignal(SignalName.ink_function_audio_sfx_play, clip, volume));
 		story.BindExternalFunction("_Ambiance_Play", (string clip, float volume) => EmitSignal(SignalName.ink_function_audio_ambience_play, clip, volume));
-		story.BindExternalFunction("_Ambiance_Remove", (string clip) => EmitSignal(SignalName.ink_function_audio_ambience_remove, clip));
-		story.BindExternalFunction("_Ambiance_RemoveAll", () => EmitSignal(SignalName.ink_function_audio_ambience_remove_all));
+		story.BindExternalFunction("_Ambiance_Stop", (string clip) => EmitSignal(SignalName.ink_function_audio_ambience_remove, clip));
+		story.BindExternalFunction("_Ambiance_StopAll", () => EmitSignal(SignalName.ink_function_audio_ambience_remove_all));
 		story.BindExternalFunction("_Music_Play", (string clip, float volume) => EmitSignal(SignalName.ink_function_audio_music_play, clip, volume));
+		story.BindExternalFunction("_Music_Stop", () => EmitSignal(SignalName.ink_function_audio_music_stop));
 	}
 	
 	public void ContinueStory()

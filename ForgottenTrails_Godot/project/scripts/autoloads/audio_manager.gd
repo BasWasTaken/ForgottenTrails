@@ -121,6 +121,7 @@ func _ready():
 
 	SignalBus.ink_func_audio_ambience_rmv.connect(remove_ambience)
 	SignalBus.ink_func_audio_ambience_rmv_all.connect(remove_all_ambience)
+	SignalBus.ink_func_audio_music_stop.connect(func(): music_player.stop())
 	
 
 func _on_button_clicked():

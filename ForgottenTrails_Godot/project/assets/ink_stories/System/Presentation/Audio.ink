@@ -23,7 +23,7 @@ EXTERNAL _Sfx_Play(listItem, float)
 
 LIST Ambiance = (none), chatter, river
 // Ambiance. Handled with external function.
-=== function Ambiance_Add(clip, volume) //use volume between 0.0 and 1.0
+=== function Ambiance_Play(clip, volume) //use volume between 0.0 and 1.0
 ~ Ambiance += clip
 ~ _Ambiance_Play(clip, volume)
 
@@ -31,25 +31,21 @@ LIST Ambiance = (none), chatter, river
 <<i>Ambiance: {Ambiance} </i>>
 EXTERNAL _Ambiance_Play(listItem, float)
 
-=== function Ambiance_Remove(clip)
+=== function Ambiance_Stop(clip)
 ~ Ambiance -= clip 
-~ _Ambiance_Remove(clip)
+~ _Ambiance_Stop(clip)
 
-=== function _Ambiance_Remove(listItem)
+=== function _Ambiance_Stop(listItem)
 <<i>Ambiance: {Ambiance} </i>>
-EXTERNAL _Ambiance_Remove(listItem)
+EXTERNAL _Ambiance_Stop(listItem)
 
-=== function Ambiance_RemoveAll()
+=== function Ambiance_StopAll()
 ~ Ambiance = Ambiance.none
-~ _Ambiance_RemoveAll()
+~ _Ambiance_StopAll()
 
-=== function _Ambiance_RemoveAll()
+=== function _Ambiance_StopAll()
 <<i>Removed all ambiance. </i>>
-EXTERNAL _Ambiance_RemoveAll()
-
-=== function Ambiance_Play(clip, volume)
-~_Ambiance_RemoveAll()
-~Ambiance_Add(clip, volume)
+EXTERNAL _Ambiance_StopAll()
 
 LIST Music = (none), theStreetsOfWhiteRun, TabiNoTochuu
 // Music. Handled with external function.

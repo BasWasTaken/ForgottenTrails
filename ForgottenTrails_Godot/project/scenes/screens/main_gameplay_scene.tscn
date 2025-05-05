@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://ga7ualj4ktmf"]
+[gd_scene load_steps=6 format=3 uid="uid://ga7ualj4ktmf"]
 
 [ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://project/scenes/screens/ink_player_screen.tscn" id="1_r2cfs"]
 [ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://project/scenes/screens/settings_screen.tscn" id="2_fv7wo"]
 [ext_resource type="PackedScene" uid="uid://dimwm1crrw0rj" path="res://project/scenes/screens/log.tscn" id="3_8o2lg"]
+[ext_resource type="Script" uid="uid://cwbvesdwh01vr" path="res://project/scenes/screens/tab_deselecter.gd" id="3_u24dq"]
 [ext_resource type="PackedScene" uid="uid://bx7wv3dyc1kjw" path="res://project/scenes/screens/inventory_screen.tscn" id="4_u24dq"]
 
 [node name="MainGameplayScene" type="PanelContainer"]
@@ -29,6 +30,7 @@ all_tabs_in_front = true
 use_hidden_tabs_for_min_size = true
 tab_focus_mode = 0
 deselect_enabled = true
+script = ExtResource("3_u24dq")
 
 [node name="Log" parent="Menus" instance=ExtResource("3_8o2lg")]
 visible = false

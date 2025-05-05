@@ -1,7 +1,7 @@
 extends Node
 
-@export var main_gameplay = preload("res://project/scenes/main_gameplay_scene.tscn")
-@export var main_menu = preload("res://project/scenes/main_menu_scene.tscn")
+@export var main_gameplay = preload("res://project/scenes/screens/main_gameplay_scene.tscn")
+@export var main_menu = preload("res://project/scenes/screens/main_menu_scene.tscn")
 var instance_menu
 var instance_gameplay
 

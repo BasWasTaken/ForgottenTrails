@@ -1,7 +1,7 @@
 extends VBoxContainer
 
-@onready var continue_button_scene = preload("res://project/scenes/inkbutton_presenter/continue_button.tscn")
-@onready var choice_button_scene = preload("res://project/scenes/inkbutton_presenter/choice_button.tscn")
+@onready var continue_button_scene = preload("res://project/scenes/components/continue_button.tscn")
+@onready var choice_button_scene = preload("res://project/scenes/components/choice_button.tscn")
 
 func _ready():
 	#continue_button_scene = preload("res://UI/continue_button.tscn")

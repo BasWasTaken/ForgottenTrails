@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dimwm1crrw0rj"]
+[gd_scene load_steps=2 format=3 uid="uid://dimwm1crrw0rj"]
+
+[ext_resource type="Script" uid="uid://bbyob63u6x0o8" path="res://project/scripts/ink_facilitation/text_log.gd" id="1_htrxy"]
 
 [node name="Log" type="MarginContainer"]
 anchors_preset = 15
@@ -14,3 +16,4 @@ color = Color(0.147672, 0.147672, 0.147672, 1)
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 layout_mode = 2
 text = "TEXT LOG GOES HERE"
+script = ExtResource("1_htrxy")

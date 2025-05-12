@@ -16,15 +16,11 @@ grow_vertical = 2
 [node name="InkPlayer" parent="." instance=ExtResource("1_r2cfs")]
 layout_mode = 2
 
-[node name="Settings Screen" parent="." instance=ExtResource("2_fv7wo")]
+[node name="Menus" type="TabContainer" parent="InkPlayer"]
 visible = false
-layout_mode = 2
-
-[node name="Menus" type="TabContainer" parent="."]
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 900)
 layout_mode = 2
-size_flags_vertical = 0
 tab_alignment = 2
 current_tab = 0
 all_tabs_in_front = true
@@ -33,11 +29,17 @@ tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("3_u24dq")
 
-[node name="Log" parent="Menus" instance=ExtResource("3_8o2lg")]
+[node name="Log" parent="InkPlayer/Menus" instance=ExtResource("3_8o2lg")]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Inventory" parent="Menus" instance=ExtResource("4_u24dq")]
+[node name="Inventory" parent="InkPlayer/Menus" instance=ExtResource("4_u24dq")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="Settings Screen" parent="." instance=ExtResource("2_fv7wo")]
+visible = false
+layout_mode = 2
+
+[editable path="InkPlayer"]

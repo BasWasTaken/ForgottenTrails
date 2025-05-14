@@ -2,8 +2,8 @@ extends RichTextLabel
 
 func _ready():
 	clear()
-	#disable SignalBus.ink_sent_story.connect(log_story)
-	#disable SignalBus.ink_sent_choices.connect(log_choices)
+	SignalBus.ink_sent_story.connect(log_story)
+	SignalBus.ink_sent_choices.connect(log_choices)
 
 func log_story(story: String):
 	# Add the story text to the log

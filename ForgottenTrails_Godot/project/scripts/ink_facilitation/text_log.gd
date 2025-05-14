@@ -13,6 +13,6 @@ func log_choices(choices: Array):
 	# Add the choices to the log
 	for choice in choices:
 		append_text("\t") 
-		append_text(choice)
+		append_text(choice.text)  # Assuming each choice has a 'text' property
 		append_text("\n")  # Add a newline after each choice
 	# TODO: indicate which choice was selected

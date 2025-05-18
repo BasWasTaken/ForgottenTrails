@@ -2,13 +2,13 @@
 ===Opening===
 ~ FadeToImage(BG_VaultLibrary, 1)
 ~ SetLocation(LOC_DreamState)
-The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by endless books if their caretakers could work in the dark.
+The smell of dusty books fills your nostrils. Around you stark white pillars stretch upward to support an almost impossible ceiling, draped in downward facing flowers made of stone. Against the wall countless bookshelves are lined up. You see various cloaked figures milling about; carrying books to and fro, replacing volumes, having heated (but hushed) discussions and, of course, being engrossed in a book. The near endless shelves seem to only surrender their stranglehold on the place to the stained glass windows, although you get the feeling that those too would be covered by bookshelves if their caretakers could work in the dark.
 
 It's a place that in an ancient past held a different name but you know it by two: "The Vault of Forgotten Books" and "Home". 
 Home? Didn't you leave home months ago?
 
 You ponder this briefly. A dream perhaps? Maybe. Surely! Surely? Maybe... 
-The thought has nearly solidified in your mind when an unexpected blow knocks you to the ground. As you look up you see one of the caretakers on the floor, just like you, with books scattered about everywhere. The young man begins to apologize profusely, all the while gathering the dropped books. Before you can even get a word in he has already reformed the towering stack, undoubtedly the thing that obstructed his vision in the first place, and has continued on his way. <br>
+The thought has nearly solidified in your mind when an unexpected blow knocks you to the ground. As you look up you see one of the caretakers on the floor, just like you, with books scattered about everywhere. The young man begins to apologize profusely, all the while gathering his dropped books. Before you can even get a word in he has already reformed the towering stack, undoubtedly the thing that obstructed his vision in the first place, and has continued on his way. <br>
 On the floor, a mirror sparkles with light's reflection. Did he drop this?
 *(MirrorY)[Pick it up]
 As you reach to pick it up, a reflection stares back at you.
@@ -164,7 +164,7 @@ Right. A young {person} called {PlayerName}.
 
 = Master
 ~ FadeToImage(BG_VaultOffice, 1)
-{Opening.MirrorY: As you lower the mirror in your hand}{Opening.MirrorN: As you leave the mirror on the floor} you hear a familiar voice call out to you. You turn to face it and find that the scenery has changed around you. The comforting smell of books remains but a small open window provides some fresh air. The office is just as you remember it: a small space that forms a stark contrast with the garden outside its window. Its floorboards are barely visible beneath the array of books, knick-knacks and tea cups that should have been returned to the kitchen days ago. You're sitting in a woodback chair. Across from you, behind a hardwooden desk, sits an elderly man. His kind eyes look into yours and you feel a bout of homesickness brewing in your stomach, although cannot fathom why. <br>
+{Opening.MirrorY: As you lower the mirror in your hand}{Opening.MirrorN: As you leave the mirror on the floor} you hear a familiar voice call out to you. You turn to face it and find that the scenery has changed around you. The comforting smell of books remains but a small open window provides some fresh air. The office is just as you remember it: a small space that forms a stark contrast with the garden outside its window. Its floorboards are barely visible beneath the array of books, knick-knacks and tea cups that should have been returned to the kitchen days ago. You're sitting in a woodback chair. Across from you, behind a worn desk, sits an elderly man. His kind eyes look into yours and you feel a bout of homesickness brewing in your stomach, although cannot fathom why. <br>
 He hands you a large, leatherbound tome: your journal. Your most important possession. If you can fill its pages with knowledge not yet held within the Vault, or document where and how you found a tome not yet present on its shelves, you can become like the man in front of you: a keeper. A guaranteed lifetime within these halls, curating knowledge and educating the next generation. If you can't...<br>
 You decide not to think about that. You give your master a <>
 *...firm handshake <>

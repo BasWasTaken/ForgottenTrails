@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://op2d8aagi35f"
-path="res://.godot/imported/GodotInk.svg-0c8ec83d82b5d336ec3fed92ffcbc8bc.ctex"
+uid="uid://17wpjyv41aj7"
+path="res://.godot/imported/Instruct5.png-001538ed8b5682dcf232de08035aab38.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/GodotInk/GodotInk.svg"
-dest_files=["res://.godot/imported/GodotInk.svg-0c8ec83d82b5d336ec3fed92ffcbc8bc.ctex"]
+source_file="res://addons/Todo_Manager/doc/images/Instruct5.png"
+dest_files=["res://.godot/imported/Instruct5.png-001538ed8b5682dcf232de08035aab38.ctex"]
 
 [params]
 
@@ -32,6 +32,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

@@ -6,8 +6,8 @@ VAR DEBUG = false
 {
 -DEBUG:
 	IN DEVELOPER MODE!
-    + [Proceed with Vugs' sequence]
-        -> RuinedCoast
+    + [Proceed to the test area]
+        -> TestingGrounds
     + [Proceed to Character Creation]
     -> Opening
 

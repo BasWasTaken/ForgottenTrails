@@ -123,7 +123,7 @@ VAR AliveRubert = 1
     ++{EdieLocations == EdLEdanInnFirstFloorLanding} \ [{knows(EdieKnowState.Name):Adelaine|The servant girl}]
     ->EdanInnFirstFloorChoices
     ->END
-+(Talk)[Talk to...]
+//+(Talk)[Talk to...]
     ++{AliceLocations == AlLEdanInnFirstFloorLanding} \ [{knows(AliceKnowState.Name):Alice|The bard}]
     ->EdanInnFirstFloorChoices
     ++{RubertLocations == RuLEdanInnFirstFloorLanding} \ [{knows(RobertKnowState.Name):Robert|The bartender}]

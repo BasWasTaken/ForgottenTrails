@@ -18,7 +18,7 @@ If he left it behind then that is his problem. But as you stand up you cannot he
 -> Opening.CharCreation0
 *[I'm a developer, skip me past the creation.]
 ~ PlayerName = "Developer"
--> Awakening
+//-> Awakening
 
 = CharCreation0
 You see <>
@@ -236,7 +236,7 @@ The wraith simply tilts its head at you, still wearing its grotesque smile, almo
         A roar. 
         A bestial growl reverberates through your body. You look up, just in time to see a bear collide forcefully with the creature. The beast tears into the wraith, somehow capable of tearing through metal as if it were cloth. Between the harsh sounds of ripping metal you hear the monster scream. Inhuman, horrible, but scream nonetheless. Then, silence. 
         The bear stands there, panting. Still catching his breath, he turns towards you. He slowly walks over, his mouth dripping with salliva. He sniffs you. His mouth, reeking with a nearly bloodlike metal smell, mere inches from your face. Without a sound, he opens his strong jaws and bites down on you-
-            ->Awakening
+//            ->Awakening
 =Woodland
 The wood looks more appealing and you set off in its direction at a trot. Before long, you find yourself surrounded by tall oaks, beeches and other greenery. A gentle breeze carries the song of a variety of birds. 
 As you press on, your ears pick up another melody. Faintly at first, but with every step you hear it more clearly: a melancholic tune in a woman's voice. You decide to

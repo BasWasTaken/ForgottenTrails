@@ -9,6 +9,7 @@ INCLUDE System/Track/Locations.ink
 INCLUDE System/Modules/Travel.ink
 INCLUDE System/Modules/Inventory.ink
 INCLUDE System/Modules/Party.ink
+INCLUDE System/Modules/Actions.ink
 
 INCLUDE System/Presentation/Audio.ink
 INCLUDE System/Presentation/Sprites.ink

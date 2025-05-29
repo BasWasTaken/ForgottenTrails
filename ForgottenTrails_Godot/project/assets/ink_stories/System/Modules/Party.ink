@@ -5,7 +5,7 @@
    /* ---------------------------------
    #### List: Characters
    ----------------------------------*/
-LIST PartyCandidates = Player, Alice, Robert // potential party members // Vugs may add items to this list.
+LIST PartyCandidates = Player, Alice, Robert, Wesley // potential party members // Vugs may add items to this list.
 VAR Party = () // list of characters in party
 
 ~ Party = PartyCandidates() // restrict to characters defined in list
@@ -42,4 +42,4 @@ VAR Party = () // list of characters in party
 
     
 === function _PartyChoice(character) === // used to present an inky choice that will be represented by a portrait in unity. in inky, it will just be an ormal option to click
-\{PartyChoice({character})\}
+\{PartyChoice({character})\

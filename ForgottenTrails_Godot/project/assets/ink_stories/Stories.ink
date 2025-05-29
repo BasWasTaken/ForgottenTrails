@@ -1,14 +1,14 @@
 //Introduction Ink files
-INCLUDE Introduction/CharacterCreation.ink
+INCLUDE IntroductionCharacterCreation.ink
 
 
 //Testing Ink files
-INCLUDE Testing/PartyDialogues.ink
-INCLUDE Testing/TestingGrounds.ink
+INCLUDE TestingPartyDialogues.ink
+INCLUDE TestingTestingGrounds.ink
 
 //Region narrative files
-INCLUDE Regions/CrumblingMonasteryWeert/MainHall.ink
+INCLUDE CrumblingMonasteryMainHall.ink
 
 //Dialogue files
-INCLUDE Dialogue/DialogueWesley.ink
-INCLUDE Dialogue/DialogueYourself.ink
+INCLUDE DialogueWesley.ink
+INCLUDE DialogueYourself.ink

@@ -1,17 +1,17 @@
 INCLUDE Functions.ink
 INCLUDE Stories.ink
-INCLUDE System/DevMode.ink
+INCLUDE SystemDevMode.ink
 
 //Files that need to be included to not break something else, but need to be replaced
-INCLUDE Archive/EdanRegion/RandomEvents.ink
-INCLUDE Archive/IntroductionAwakening.ink
-INCLUDE Archive/EdanRegion/RuinedCoast.ink
-INCLUDE Archive/EdanRegion/SeaBreezePath.ink
-INCLUDE Archive/EdanRegion/SouthernRoads.ink
-INCLUDE Archive/Edan/EdanGate.ink
-INCLUDE Archive/Edan/EdanInn.ink
-INCLUDE Archive/Edan/EdanMarket.ink
-INCLUDE Archive/Edan/EdanPrison.ink
+INCLUDE ArchiveEdanRegionRandomEvents.ink
+INCLUDE ArchiveIntroductionAwakening.ink
+INCLUDE ArchiveEdanRegionRuinedCoast.ink
+INCLUDE ArchiveEdanRegionSeaBreezePath.ink
+INCLUDE ArchiveEdanRegionSouthernRoads.ink
+INCLUDE ArchiveEdanGate.ink
+INCLUDE ArchiveEdanInn.ink
+INCLUDE ArchiveEdanMarket.ink
+INCLUDE ArchiveEdanPrison.ink
 
 
 
@@ -24,8 +24,6 @@ INCLUDE Archive/Edan/EdanPrison.ink
 ->Start
 
 === Start ===
-//@Bas was there a reason for including change weather here?
-~ChangeWeather()
 Do you want to toggle developer mode?
 +[Yes]
 -> developer_mode_toggle

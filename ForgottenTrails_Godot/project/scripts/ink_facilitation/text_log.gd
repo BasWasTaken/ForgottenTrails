@@ -9,10 +9,10 @@ func log_story(story: String):
 	# Add the story text to the log
 	append_text(story)
 
-func log_choices(choices: Array):
+func log_choices(choices: Array[InkChoice]):
 	# Add the choices to the log
 	for choice in choices:
 		append_text("\t") 
-		append_text(choice.text)  # Assuming each choice has a 'text' property
+		append_text(choice.text)
 		append_text("\n")  # Add a newline after each choice
 	# TODO: indicate which choice was selected

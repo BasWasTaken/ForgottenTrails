@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://boi5d04vql3aw"
+path="res://.godot/imported/Functions.ink-f1a3857f90f89997feb0dc9ad5991555.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/Functions.ink"
+dest_files=["res://.godot/imported/Functions.ink-f1a3857f90f89997feb0dc9ad5991555.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://de48nlb5ofllg"
+path="res://.godot/imported/SystemPresentationBackground.ink-e6d5c592f8dc4408d1114594f89491a8.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemPresentationBackground.ink"
+dest_files=["res://.godot/imported/SystemPresentationBackground.ink-e6d5c592f8dc4408d1114594f89491a8.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://mpat7y1fss76"
+path="res://.godot/imported/CrumblingMonasteryMainHall.ink-2e4ae4628c63ee31c8cf16b7e504394b.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/CrumblingMonasteryMainHall.ink"
+dest_files=["res://.godot/imported/CrumblingMonasteryMainHall.ink-2e4ae4628c63ee31c8cf16b7e504394b.res"]
+
+[params]
+
+is_main_file=false
+compress=true

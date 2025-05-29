@@ -72,7 +72,8 @@ func play_audio_by_string(clip: String, source: String, volume: float = 1.0):
 		if audio_stream == null:
 			audio_stream = load("res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip+".ogg")
 			if audio_stream == null:
-				print("Audio stream not found at path: " + "res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip)
+				push_error("Audio stream not found at path: " + "res://project/assets/audio/" +source +"/snd_"+source+"_"+ clip)
+				return
 
 
 

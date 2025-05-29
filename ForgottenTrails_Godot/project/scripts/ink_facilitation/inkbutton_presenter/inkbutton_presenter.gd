@@ -52,9 +52,15 @@ func present_choices(choices: Array) -> void: #TODO: connext to signal
 			if i<10:
 				pass #TODO: add keyboard shortcuts for the first 10 choices (using index i-1)
 			i=i+1
+	if(current==null): # no choice exists
+		push_warning("no (visible) choices have been provided. likely this thread cannot be further explored in godot")
+		return
+	if(first==null): # only 1 choice exists
+		first = current
 	current.focus_neighbor_bottom = first.get_path()
 	first.focus_neighbor_top = current.get_path()
 	first.grab_focus()
+
 	#set the focus neighbors for the first and last choice
 
 

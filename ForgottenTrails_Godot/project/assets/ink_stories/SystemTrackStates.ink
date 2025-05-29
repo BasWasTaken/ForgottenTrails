@@ -6,6 +6,7 @@ VAR LightSource = 0
 
 =LightSourceToggleOff
 ~LightSource = 0
+{DEBUG == true:{LightSource}}
 ->->
 
 === ItemStateTorch ===
@@ -16,6 +17,7 @@ VAR TorchState = 0
 =TorchToggleOn
 ~LightSource = 1
 ~TorchState = 1
+{DEBUG == true:{LightSource}}
 ->->
 
 =TorchToggleOff
@@ -31,6 +33,7 @@ VAR LanternState = 0
 =LanternToggleOn
 ~LightSource = 1
 ~LanternState = 1
+{DEBUG == true:{LightSource}}
 ->->
 
 =LanternToggleOff

@@ -15,8 +15,14 @@ INCLUDE ArchiveEdanPrison.ink
 
 
 
+
+
+
+
+
+
 //Set inventory
-~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
+~ Inventory = (Journal)
 
 //Set party
 ~ Party = (Player)

@@ -1,5 +1,5 @@
 === CrumblingMonasteryChurchMainHall
-Testy mctestface(LOC_CrumblingChurchMainHall)
+~SetLocation(LOC_CrumblingMonasteryChurchMainHall)
 Testing
 ->Actions
 

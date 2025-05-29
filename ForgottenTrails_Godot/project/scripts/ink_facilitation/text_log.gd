@@ -1,9 +1,10 @@
 extends RichTextLabel
-
+# TODO: make this a moveable window
 func _ready():
 	clear()
-	#disable SignalBus.ink_sent_story.connect(log_story)
-	#disable SignalBus.ink_sent_choices.connect(log_choices)
+	SignalBus.ink_sent_story.connect(log_story)
+	SignalBus.ink_sent_choices.connect(log_choices)
+	SignalBus.control_requests_choice.connect(log_decision)
 
 func log_story(story: String):
 	# Add the story text to the log
@@ -11,8 +12,8 @@ func log_story(story: String):
 
 func log_choices(choices: Array):
 	# Add the choices to the log
-	for choice in choices:
-		append_text("\t") 
-		append_text(choice)
-		append_text("\n")  # Add a newline after each choice
-	# TODO: indicate which choice was selected
+	for choice: InkChoice in choices:
+		append_text("\t" + str(choice.Index) + choice.Text + "\n")  # Add a newline after each choice
+
+func log_decision(index: int):
+	append_text("chose " + str(index))

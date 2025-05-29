@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://cnb3o2eqa4mhg"
+path="res://.godot/imported/SystemRandom.ink-527ba726d0ed03b1c572a4e6665fbc39.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemRandom.ink"
+dest_files=["res://.godot/imported/SystemRandom.ink-527ba726d0ed03b1c572a4e6665fbc39.res"]
+
+[params]
+
+is_main_file=false
+compress=true

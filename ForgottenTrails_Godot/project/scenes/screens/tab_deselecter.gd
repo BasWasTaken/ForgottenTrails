@@ -8,7 +8,7 @@ func _ready():
 
 func _on_visibility_changed():
 	if current_tab == -1 || is_visible_in_tree(): # if no tab is selected, do nothing
-		#TODO set free the state
+		#TODO release the ink interaction lock here (by changing the vn state)
 		hide()
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 	else:

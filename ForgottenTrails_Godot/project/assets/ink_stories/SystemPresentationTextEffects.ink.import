@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://djscgkugxxsuj"
+path="res://.godot/imported/SystemPresentationTextEffects.ink-2879fe6835f1ef51eda9bc2f5ed92a50.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemPresentationTextEffects.ink"
+dest_files=["res://.godot/imported/SystemPresentationTextEffects.ink-2879fe6835f1ef51eda9bc2f5ed92a50.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://bfetfoum3j7r6"
+path="res://.godot/imported/IntroductionCharacterCreation.ink-00e603e8a2fa4c610ddcbfb622fc9449.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/IntroductionCharacterCreation.ink"
+dest_files=["res://.godot/imported/IntroductionCharacterCreation.ink-00e603e8a2fa4c610ddcbfb622fc9449.res"]
+
+[params]
+
+is_main_file=false
+compress=true

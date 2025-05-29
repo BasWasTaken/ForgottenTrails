@@ -15,7 +15,6 @@
 [ext_resource type="PackedScene" uid="uid://bqcmnadgsbyxk" path="res://project/scenes/components/continue_button.tscn" id="14_ikmv8"]
 [ext_resource type="PackedScene" uid="uid://njban37j7mga" path="res://project/scenes/components/choice_button.tscn" id="15_6t4qh"]
 
-
 [sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
 script = ExtResource("9_gkm6c")
 

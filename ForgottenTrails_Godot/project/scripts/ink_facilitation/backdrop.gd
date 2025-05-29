@@ -26,7 +26,9 @@ func fade_to_image(prompt: String, duration: float=0.0):
 					if !ResourceLoader.exists(image_path):
 						image_path = image_path_without_extension + ".tga"
 						if !ResourceLoader.exists(image_path):
-							print("Image not found at path: " + image_path_without_extension)
+							push_error("Image not found at path: " + image_path_without_extension)
+							img = null
+							return
 	# TODO make cleaner way to check multiple file extentions (and probably make in helper script)
 	var image = load(image_path) #allowing different images would be a matter of rewriting so that it does not always look in background folder
 	assert(image, "Image not found")

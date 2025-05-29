@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://bxuemic6v4f78"
+path="res://.godot/imported/SystemCore.ink-c2a3705965d731e6d984e05489d8bf44.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemCore.ink"
+dest_files=["res://.godot/imported/SystemCore.ink-c2a3705965d731e6d984e05489d8bf44.res"]
+
+[params]
+
+is_main_file=false
+compress=true

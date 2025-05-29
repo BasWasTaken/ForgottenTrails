@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://u4vj7ufeuyia"
+path="res://.godot/imported/SystemDevMode.ink-94ad25e89e72fb56ef496fc43289f496.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemDevMode.ink"
+dest_files=["res://.godot/imported/SystemDevMode.ink-94ad25e89e72fb56ef496fc43289f496.res"]
+
+[params]
+
+is_main_file=false
+compress=true

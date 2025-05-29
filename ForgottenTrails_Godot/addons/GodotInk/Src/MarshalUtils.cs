@@ -69,8 +69,8 @@ public static class MarshalUtils
         if (objects.Count <= 0)
             return Array.Empty<Variant>();
 
-        var variants = new Variant[objects.Count];
-        for (var i = 0; i < objects.Count; ++i)
+        Variant[] variants = new Variant[objects.Count];
+        for (int i = 0; i < objects.Count; ++i)
             variants[i] = ToVariant(objects[i]);
         return variants;
     }
@@ -87,8 +87,8 @@ public static class MarshalUtils
         if (variants.Count <= 0)
             return Array.Empty<object?>();
 
-        var objects = new object?[variants.Count];
-        for (var i = 0; i < variants.Count; ++i)
+        object?[] objects = new object[variants.Count];
+        for (int i = 0; i < variants.Count; ++i)
             objects[i] = FromVariant(variants[i]);
         return objects;
     }

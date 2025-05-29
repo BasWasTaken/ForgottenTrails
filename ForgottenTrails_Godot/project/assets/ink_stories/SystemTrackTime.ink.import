@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://duq3tn2engh6y"
+path="res://.godot/imported/SystemTrackTime.ink-0ac1fe13168c0727a1397cd2f5cd32c9.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemTrackTime.ink"
+dest_files=["res://.godot/imported/SystemTrackTime.ink-0ac1fe13168c0727a1397cd2f5cd32c9.res"]
+
+[params]
+
+is_main_file=false
+compress=true

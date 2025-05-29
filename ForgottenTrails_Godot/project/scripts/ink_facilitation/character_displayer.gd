@@ -68,7 +68,7 @@ func present_character(character : String, variant: String="not_specified", coor
 						if !ResourceLoader.exists(image_path):
 							image_path = image_path_without_extension + ".tga"
 							if !ResourceLoader.exists(image_path):
-								print("Image not found at path: " + image_path_without_extension)
+								push_error("Image not found at path: " + image_path_without_extension)
 								return
 		# VERY hacky
 

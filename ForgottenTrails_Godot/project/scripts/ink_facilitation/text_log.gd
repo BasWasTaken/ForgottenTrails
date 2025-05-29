@@ -1,5 +1,6 @@
 extends RichTextLabel
 # TODO: make this a moveable window
+# TODO: also create a text log on disk and write in that. expand to not only list the ink story there but also any significant console message, as an after action report for vugs
 func _ready():
 	clear()
 	SignalBus.ink_sent_story.connect(log_story)
@@ -13,7 +14,7 @@ func log_story(story: String):
 func log_choices(choices: Array):
 	# Add the choices to the log
 	for choice: InkChoice in choices:
-		append_text("\t" + str(choice.Index) + choice.Text + "\n")  # Add a newline after each choice
+		append_text("\t" + str(choice.Index) +") "+ choice.Text + "\n")  # Add a newline after each choice
 
 func log_decision(index: int):
-	append_text("chose " + str(index))
+	append_text("\t (" + str(index)+")\n")

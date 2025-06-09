@@ -54,6 +54,7 @@ script = ExtResource("3_on7ai")
 prefab = ExtResource("4_etj7k")
 
 [node name="Spacer" type="Panel" parent="PanelContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -61,10 +62,14 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="Spacer" type="Panel" parent="VSplitContainer"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="StoryController" type="PanelContainer" parent="VSplitContainer" node_paths=PackedStringArray("my_story_getter")]
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
 script = ExtResource("6_clj8h")
 my_story_getter = NodePath("StoryProcessor")
 

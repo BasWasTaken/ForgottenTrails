@@ -22,10 +22,11 @@ script = ExtResource("9_gkm6c")
 script = ExtResource("10_7rull")
 
 [node name="InkPlayer" type="AspectRatioContainer"]
-custom_minimum_size = Vector2(1920, 1080)
-offset_top = -1.0
-offset_right = 1920.0
-offset_bottom = 1079.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 ratio = 1.7778
 
 [node name="PanelContainer" type="PanelContainer" parent="."]

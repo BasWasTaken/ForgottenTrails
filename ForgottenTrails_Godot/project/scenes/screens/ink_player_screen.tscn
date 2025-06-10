@@ -27,26 +27,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-ratio = 1.7778
+ratio = 1.8
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Visual Display" type="PanelContainer" parent="."]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
-[node name="BackgroundDisplay" type="TextureRect" parent="PanelContainer"]
+[node name="BackgroundDisplay" type="TextureRect" parent="Visual Display"]
 layout_mode = 2
 expand_mode = 2
 script = ExtResource("2_pixcj")
 
-[node name="ForegroundDisplay" type="ColorRect" parent="PanelContainer"]
+[node name="ForegroundDisplay" type="ColorRect" parent="Visual Display"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 script = ExtResource("5_t17d2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+[node name="CharacterAndSpacer" type="VBoxContainer" parent="Visual Display"]
 layout_mode = 2
 
-[node name="CharacterDisplayer" type="Panel" parent="PanelContainer/VBoxContainer"]
+[node name="CharacterDisplayer" type="Panel" parent="Visual Display/CharacterAndSpacer"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -54,44 +54,44 @@ size_flags_stretch_ratio = 10.0
 script = ExtResource("3_on7ai")
 prefab = ExtResource("4_etj7k")
 
-[node name="Spacer" type="Panel" parent="PanelContainer/VBoxContainer"]
+[node name="Spacer" type="Panel" parent="Visual Display/CharacterAndSpacer"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VSplitContainer" type="VBoxContainer" parent="."]
+[node name="StoryController_With_Spacer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Spacer" type="Panel" parent="VSplitContainer"]
+[node name="Spacer" type="Panel" parent="StoryController_With_Spacer"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="StoryController" type="PanelContainer" parent="VSplitContainer" node_paths=PackedStringArray("my_story_getter")]
+[node name="StoryController" type="PanelContainer" parent="StoryController_With_Spacer" node_paths=PackedStringArray("my_story_getter")]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 script = ExtResource("6_clj8h")
 my_story_getter = NodePath("StoryProcessor")
 
-[node name="StoryProcessor" type="Node" parent="VSplitContainer/StoryController"]
+[node name="StoryProcessor" type="Node" parent="StoryController_With_Spacer/StoryController"]
 script = ExtResource("7_ydrh0")
 story = ExtResource("7_iqa4r")
 
-[node name="ColorRect" type="ColorRect" parent="VSplitContainer/StoryController"]
+[node name="ColorRect" type="ColorRect" parent="StoryController_With_Spacer/StoryController"]
 layout_mode = 2
 color = Color(0, 0, 0, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VSplitContainer/StoryController"]
+[node name="HBoxContainer" type="HBoxContainer" parent="StoryController_With_Spacer/StoryController"]
 clip_contents = true
 layout_mode = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="VSplitContainer/StoryController/HBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="StoryController_With_Spacer/StoryController/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="TextPresenter" type="RichTextLabel" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer2" node_paths=PackedStringArray("box")]
+[node name="TextPresenter" type="RichTextLabel" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer2" node_paths=PackedStringArray("box")]
 clip_contents = false
 layout_mode = 2
 bbcode_enabled = true
@@ -102,59 +102,59 @@ custom_effects = [SubResource("RichTextEffect_y4d4d"), SubResource("RichTextEffe
 script = ExtResource("11_b3ptg")
 box = NodePath("../../../ColorRect")
 
-[node name="Timer" type="Timer" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer2/TextPresenter"]
+[node name="Timer" type="Timer" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer2/TextPresenter"]
 wait_time = 0.002
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer2/TextPresenter"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer2/TextPresenter"]
 stream = ExtResource("12_xiivj")
 volume_db = -20.0
 pitch_scale = 1.2
 max_polyphony = 99
 bus = &"Typing"
 
-[node name="MarginContainer" type="MarginContainer" parent="VSplitContainer/StoryController/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="StoryController_With_Spacer/StoryController/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="ChoicePresenter" type="VBoxContainer" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer"]
+[node name="ChoicePresenter" type="VBoxContainer" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer"]
 layout_mode = 2
 alignment = 2
 script = ExtResource("13_larfh")
 
-[node name="ContinueButton" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("14_ikmv8")]
+[node name="ContinueButton" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("14_ikmv8")]
 layout_mode = 2
 
-[node name="ChoiceButton" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton2" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton2" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton3" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton3" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton4" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton4" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton5" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton5" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton6" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton6" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton7" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton7" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton8" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton8" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton9" parent="VSplitContainer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton9" parent="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[connection signal="timeout" from="VSplitContainer/StoryController/HBoxContainer/MarginContainer2/TextPresenter/Timer" to="VSplitContainer/StoryController/HBoxContainer/MarginContainer2/TextPresenter" method="_on_timer_timeout"]
+[connection signal="timeout" from="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer2/TextPresenter/Timer" to="StoryController_With_Spacer/StoryController/HBoxContainer/MarginContainer2/TextPresenter" method="_on_timer_timeout"]

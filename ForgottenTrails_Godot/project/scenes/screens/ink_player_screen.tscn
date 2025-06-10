@@ -79,23 +79,27 @@ size_flags_stretch_ratio = 10.0
 script = ExtResource("3_on7ai")
 prefab = ExtResource("4_etj7k")
 
-[node name="StoryContainer" type="PanelContainer" parent="."]
+[node name="StoryContainer" type="Panel" parent="."]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = -1
+anchor_top = 0.667
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -73.0
+offset_top = -0.360046
 grow_horizontal = 2
 grow_vertical = 0
 
 [node name="OptionalReadingBackground" type="ColorRect" parent="StoryContainer"]
 layout_mode = 2
+offset_right = 1920.0
+offset_bottom = 360.0
 color = Color(0, 0, 0, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="StoryContainer"]
 clip_contents = true
 layout_mode = 2
+offset_right = 1920.0
+offset_bottom = 360.0
 
 [node name="MarginContainer2" type="MarginContainer" parent="StoryContainer/HBoxContainer"]
 layout_mode = 2

@@ -36,7 +36,7 @@ my_story_getter = NodePath("StoryProcessor")
 script = ExtResource("7_ydrh0")
 story = ExtResource("7_iqa4r")
 
-[node name="Visual Display" type="PanelContainer" parent="."]
+[node name="Visual Display" type="Panel" parent="."]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -46,30 +46,38 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BackgroundDisplay" type="TextureRect" parent="Visual Display"]
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 expand_mode = 2
 script = ExtResource("2_pixcj")
 
 [node name="ForegroundDisplay" type="ColorRect" parent="Visual Display"]
 modulate = Color(1, 1, 1, 0)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("5_t17d2")
 
-[node name="CharacterAndSpacer" type="VBoxContainer" parent="Visual Display"]
-layout_mode = 2
-
-[node name="CharacterDisplayer" type="Panel" parent="Visual Display/CharacterAndSpacer"]
+[node name="CharacterDisplayer" type="Panel" parent="Visual Display"]
 self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.667
+offset_bottom = -0.360046
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 10.0
 script = ExtResource("3_on7ai")
 prefab = ExtResource("4_etj7k")
-
-[node name="Spacer" type="Panel" parent="Visual Display/CharacterAndSpacer"]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="StoryContainer" type="PanelContainer" parent="."]
 layout_mode = 1

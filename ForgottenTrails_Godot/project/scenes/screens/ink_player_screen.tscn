@@ -112,6 +112,10 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
 
 [node name="TextPresenter" type="RichTextLabel" parent="Story Diplay/HBoxContainer/Story Output" node_paths=PackedStringArray("box")]
 clip_contents = false

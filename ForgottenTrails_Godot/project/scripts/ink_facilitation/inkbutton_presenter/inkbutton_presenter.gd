@@ -24,6 +24,7 @@ func _clear():
 
 
 func present_continue_button() -> void: 
+	print("prompt continue")
 	#await SignalBus.printer_text_finished 
 	var continue_button = continue_button_scene.instantiate() #create object
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices

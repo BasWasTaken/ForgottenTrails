@@ -63,6 +63,7 @@ func save_game(state: String, method: String):
 	print("Game saved to file: " + filename)
 
 func show_savegames():
+	print(get_files)
 	pass
 
 # Retrieve saved files

@@ -10,7 +10,8 @@ func _unhandled_input(event):
 		SignalBus.control_requests_quicksave.emit()
 	elif event.is_action_pressed("quickload"):
 		#print("input manager received quickload")
-		SignalBus.control_requests_quickload.emit()
+		#SignalBus.control_requests_quickload.emit()
+		SignalBus.control_requests_load.emit()
 	elif event.is_action_pressed("skip"):# | StoryNavigator.text_presenter.typing: TEMPORARYLI DISABLED SKIPPING due to this not working without reference, en ik ga zometeen een state machine bouwen dus dan vind ik nu dit neerzetten niet worth.
 		#print("input manager received skip")
 		SignalBus.control_requests_skip.emit()

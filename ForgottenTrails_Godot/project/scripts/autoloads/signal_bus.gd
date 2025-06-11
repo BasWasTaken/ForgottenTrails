@@ -34,6 +34,7 @@ signal ink_func_spd(speed: int)
 signal control_requests_options
 signal control_requests_quicksave
 signal control_requests_quickload
+signal control_requests_load
 
 signal ui_button_clicked()
 signal ui_button_released()

@@ -184,5 +184,3 @@ layout_mode = 2
 
 [node name="ChoiceButton9" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
-
-[connection signal="timeout" from="Story Diplay/HBoxContainer/Story Output/TextPresenter/Timer" to="Story Diplay/HBoxContainer/Story Output/TextPresenter" method="_on_timer_timeout"]

@@ -124,7 +124,8 @@ func finish_text():
 	# stop typing
 	timer.stop()
 	printer_state.set_state(printer_state.VN_State.WAITING)
-	SignalBus.printer_text_finished.emit() #give signal
+	SignalBus.printer_text_finished.emit() #give signal #NOTE : is it true that this signal is used nowhere??
+	# TODO: either use this signal or conclude that it's an old leftover and deprecate it in favor of the statesystem or some other replacement that's elready here?
 
 func _spd(new):
 	typing_speed_modifier = new

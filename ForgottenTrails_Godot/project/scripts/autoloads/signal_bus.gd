@@ -22,7 +22,10 @@ extends Node
 
 @warning_ignore_start("unused_signal")
 
-signal printer_text_finished
+signal request_clear_buttons
+
+signal printer_requests_buttons
+
 # signal control_requests_accept
 signal control_requests_continue
 # signal control_requests_cancel

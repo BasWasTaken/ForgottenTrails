@@ -25,8 +25,7 @@ func _clear():
 
 
 func present_continue_button() -> void: 
-	print("prompt continue")
-	#await SignalBus.printer_text_finished 
+	await SignalBus.printer_text_finished 
 	var continue_button = continue_button_scene.instantiate() #create object
 	print(continue_button)
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
@@ -37,7 +36,7 @@ func present_continue_button() -> void:
 
 #TODO: catch event for end of script better. now if no continue it just assumes there is a choice
 func present_choices(choices: Array) -> void: #TODO: connext to signal
-	#await SignalBus.printer_text_finished # this is here because it needs to wait for the text to finish printing before it can present the choices, but i belive this is what is causing issues with the loading sometimes. i believe it should rather just check the state of the printer
+	await SignalBus.printer_text_finished # NOTE: since you've reactivated this (2025-06-25), you should expect issues again with saveloading. but the solution is not to comment this oput. rather, you shhould make it so that old signals are cut off or checked for releance, to prevent old signals causing behaviour after reloading.
 	var i: int = 0
 	var first: Button = null
 	var prev: Button = null

@@ -1,21 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://ga7ualj4ktmf"]
+[gd_scene load_steps=6 format=3 uid="uid://ga7ualj4ktmf"]
 
 [ext_resource type="PackedScene" uid="uid://tuvvqraku1dp" path="res://project/scenes/screens/ink_player_screen.tscn" id="1_r2cfs"]
 [ext_resource type="PackedScene" uid="uid://dkr7obwclut2x" path="res://project/scenes/screens/settings_screen.tscn" id="2_fv7wo"]
-[ext_resource type="Script" uid="uid://dli8n6jgewrdw" path="res://project/scripts/RTE_matrix.gd" id="2_qg0j6"]
 [ext_resource type="PackedScene" uid="uid://dimwm1crrw0rj" path="res://project/scenes/screens/log.tscn" id="3_8o2lg"]
 [ext_resource type="Script" uid="uid://cwbvesdwh01vr" path="res://project/scenes/screens/tab_deselecter.gd" id="3_u24dq"]
-[ext_resource type="Script" uid="uid://d03m1mgytcqtk" path="res://project/scripts/RTE_ghost.gd" id="3_v36qr"]
-[ext_resource type="Script" uid="uid://dhfqyrs3ao4cb" path="res://project/scripts/ink_facilitation/text_presenter.gd" id="4_jhies"]
 [ext_resource type="PackedScene" uid="uid://bx7wv3dyc1kjw" path="res://project/scenes/screens/inventory_screen.tscn" id="4_u24dq"]
-[ext_resource type="AudioStream" uid="uid://bnwkjesnavu2r" path="res://project/assets/audio/system/snd_system_ui_type_physical.wav" id="5_drtl2"]
-[ext_resource type="Script" uid="uid://dj0a74ul7n1u0" path="res://project/scripts/ink_facilitation/inkbutton_presenter/inkbutton_presenter.gd" id="6_fajws"]
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_y4d4d"]
-script = ExtResource("2_qg0j6")
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_4ph1k"]
-script = ExtResource("3_v36qr")
 
 [node name="MainGameplayScene" type="PanelContainer"]
 anchors_preset = 15
@@ -25,111 +14,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="InkPlayer" parent="." instance=ExtResource("1_r2cfs")]
-layout_mode = 2
-
-[node name="StoryController" parent="InkPlayer" index="1"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.764
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -105.12
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="OptionalReadingBackground" parent="InkPlayer/StoryController" index="1"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
-
-[node name="HBoxContainer" parent="InkPlayer/StoryController" index="2"]
-clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Story Output" parent="InkPlayer/StoryController/HBoxContainer" index="0"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 5
-
-[node name="TextPresenter" parent="InkPlayer/StoryController/HBoxContainer/Story Output" index="0" node_paths=PackedStringArray("box")]
-clip_contents = false
-layout_mode = 2
-bbcode_enabled = true
-text = "[ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost][ghost][wave]Hello[/wave] [rainbow]World[/rainbow]![/ghost]
-[matrix]onzin[/matrix]"
-custom_effects = [SubResource("RichTextEffect_y4d4d"), SubResource("RichTextEffect_4ph1k")]
-script = ExtResource("4_jhies")
-box = NodePath("../../../OptionalReadingBackground")
-
-[node name="Timer" parent="InkPlayer/StoryController/HBoxContainer/Story Output/TextPresenter" index="1"]
-wait_time = 0.002
-
-[node name="AudioStreamPlayer" parent="InkPlayer/StoryController/HBoxContainer/Story Output/TextPresenter" index="2"]
-stream = ExtResource("5_drtl2")
-volume_db = -20.0
-pitch_scale = 1.2
-max_polyphony = 99
-bus = &"Typing"
-
-[node name="VSeparator" parent="InkPlayer/StoryController/HBoxContainer" index="1"]
-layout_mode = 2
-
-[node name="Story Input" parent="InkPlayer/StoryController/HBoxContainer" index="2"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 25
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_bottom = 10
-
-[node name="ScrollContainer" parent="InkPlayer/StoryController/HBoxContainer/Story Input" index="0"]
-layout_mode = 2
-
-[node name="ChoicePresenter" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer" index="0"]
-layout_mode = 2
-alignment = 2
-script = ExtResource("6_fajws")
-
-[node name="ContinueButton" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="0"]
-layout_mode = 2
-
-[node name="ChoiceButton" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="1"]
-layout_mode = 2
-
-[node name="ChoiceButton2" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="2"]
-layout_mode = 2
-
-[node name="ChoiceButton3" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="3"]
-layout_mode = 2
-
-[node name="ChoiceButton4" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="4"]
-layout_mode = 2
-
-[node name="ChoiceButton5" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="5"]
-layout_mode = 2
-
-[node name="ChoiceButton6" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="6"]
-layout_mode = 2
-
-[node name="ChoiceButton7" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="7"]
-layout_mode = 2
-
-[node name="ChoiceButton8" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="8"]
-layout_mode = 2
-
-[node name="ChoiceButton9" parent="InkPlayer/StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" index="9"]
 layout_mode = 2
 
 [node name="Menus" type="TabContainer" parent="InkPlayer"]
@@ -157,7 +41,5 @@ metadata/_tab_index = 1
 [node name="Settings Screen" parent="." instance=ExtResource("2_fv7wo")]
 visible = false
 layout_mode = 2
-
-[connection signal="timeout" from="InkPlayer/StoryController/HBoxContainer/Story Output/TextPresenter/Timer" to="InkPlayer/StoryController/HBoxContainer/Story Output/TextPresenter" method="_on_timer_timeout"]
 
 [editable path="InkPlayer"]

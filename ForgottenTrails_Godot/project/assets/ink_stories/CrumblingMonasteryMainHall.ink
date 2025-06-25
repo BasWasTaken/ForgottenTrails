@@ -1,6 +1,6 @@
 === CrumblingMonasteryChurchMainHall
 ~SetLocation(LOC_CrumblingMonasteryChurchMainHall)
-Testing
+Content coming soon! 
 ->Actions
 
 === MoveCrumblingChurchMainHall ===

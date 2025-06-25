@@ -12,6 +12,8 @@ INCLUDE ArchiveEdanGate.ink
 INCLUDE ArchiveEdanInn.ink
 INCLUDE ArchiveEdanMarket.ink
 INCLUDE ArchiveEdanPrison.ink
+INCLUDE SystemModulesItems.ink
+
 
 
 

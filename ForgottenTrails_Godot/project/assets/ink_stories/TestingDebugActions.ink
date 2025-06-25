@@ -33,6 +33,8 @@ Removed Robert from the party!
 ->Use
 
 === TestingDebugMovement ===
++[Go to the Testing Grounds]
+-> TestingGrounds
 +[Go to Crumbling Monastery Church Main Hall]
 -> CrumblingMonasteryChurchMainHall
 +[Go to Crumbling Monastery Church Crypt]

@@ -1,4 +1,6 @@
 === Actions ===
++{DEBUG == true}[Show debug options]
+->TestingDebugActions
 +[Talk]
 ->Talk
 +[Examine]
@@ -14,6 +16,7 @@
 ->ItemStateTorch->
 -> Actions
 
+
 === Talk ===
 +{Party has Wesley}[Talk to Wes]
 ->DialogueWesley
@@ -23,18 +26,19 @@
 ->Actions
 
 === Examine ===
-{CurrentLocation == LOC_TestingGrounds:->ExamineTestingGrounds}
+{CurrentLocation == LOC_TestingGrounds:->TestingGroundsExamine}
+{CurrentLocation == LOC_CrumblingMonasteryChurchCrypt:->CrumblingMonasteryChurchExamine}
 
 === Use ===
-//DebugOptions
-//Debug Adding Party Members
-+{DEBUG == true}[Show debug options]
-->TestingDebugActions
+{CurrentLocation == LOC_TestingGrounds:->TestingGroundsUse}
+{CurrentLocation == LOC_CrumblingMonasteryChurchCrypt:->CrumblingMonasteryChurchCryptUse}
 +[Nevermind]
 ->Actions
 
 === Move ===
-
-//Testing Grounds Choices (This should include every accessible location)
 +{DEBUG == true}[Show debug options]
 ->TestingDebugMovement
++{CurrentLocation == LOC_CrumblingMonasteryChurchCrypt && LeftCrypt == 1}[Leave the crypt]
+->CrumblingMonasteryChurchMainHall
++[Nevermind]
+->Actions

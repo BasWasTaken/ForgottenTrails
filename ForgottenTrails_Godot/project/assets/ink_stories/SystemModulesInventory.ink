@@ -1,6 +1,6 @@
 // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, Torch, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod, Journal // existing items // Vugs may add items to this list.
+LIST Items = Knife, Pot, Rope, Lantern, Torch, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod, Journal, GoldRing // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 

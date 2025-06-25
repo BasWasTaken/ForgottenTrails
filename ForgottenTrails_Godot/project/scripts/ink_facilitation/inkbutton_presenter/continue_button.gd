@@ -17,3 +17,4 @@ func _on_pressed():
 		return #other states are illegal (like locked or prosessing)
 	#print("and it was legal")
 	SignalBus.control_requests_continue.emit()
+

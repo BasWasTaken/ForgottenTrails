@@ -19,6 +19,7 @@ func _on_input2(_index: int):
 func clear():
 	_clear()
 func _clear():
+	print("clearing buttons")
 	for child in get_children():
 		child.queue_free()
 
@@ -27,7 +28,11 @@ func present_continue_button() -> void:
 	print("prompt continue")
 	#await SignalBus.printer_text_finished 
 	var continue_button = continue_button_scene.instantiate() #create object
+	print(continue_button)
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
+	
+	print(continue_button.get_parent())
+	# Ok so the object EXISTS, but it gets disappeared???
 	continue_button.grab_focus() #set focus to this button
 
 #TODO: catch event for end of script better. now if no continue it just assumes there is a choice

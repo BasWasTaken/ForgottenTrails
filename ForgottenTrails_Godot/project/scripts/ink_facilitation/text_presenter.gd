@@ -124,7 +124,7 @@ func finish_text():
 	# stop typing
 	timer.stop()
 	printer_state.set_state(printer_state.VN_State.WAITING)
-	SignalBus.printer_text_finished.emit() #give signal #NOTE: currently no listeners to this signal
+	SignalBus.printer_text_finished.emit() #give signal #NOTE: currently no listeners to this signal # TODO: make the button presenter listen to this before creating buttons
 
 func _spd(new):
 	typing_speed_modifier = new

@@ -118,7 +118,6 @@ func skip_to_printed():
 
 func finish_text():
 	#TODO: Add finish line sound?
-	#TODO pas hier de knoppen laten verschijnen
 	visible_characters = -1 # set all visible
 	
 	# stop typing

@@ -1,7 +1,7 @@
 extends VBoxContainer
 
-@onready var continue_button_scene = preload("res://project/scenes/components/continue_button.tscn")
-@onready var choice_button_scene = preload("res://project/scenes/components/choice_button.tscn")
+@export var continue_button_scene = preload("res://project/scenes/components/continue_button.tscn")
+@export var choice_button_scene = preload("res://project/scenes/components/choice_button.tscn")
 
 func _ready():
 	#continue_button_scene = preload("res://UI/continue_button.tscn")
@@ -9,30 +9,30 @@ func _ready():
 	#SignalBus.ink_sent_story.connect(_clear)
 	SignalBus.ink_sent_choices.connect(present_choices)
 	SignalBus.ink_sent_no_choices.connect(present_continue_button)
-	SignalBus.control_requests_continue.connect(_on_input)
-	SignalBus.control_requests_choice.connect(_on_input2)
-	
-func _on_input():
-	_clear()
-func _on_input2(_index: int):
-	_clear()
-func clear():
-	_clear()
+	SignalBus.request_clear_buttons.connect(_clear)
+
 func _clear():
+	print("clearing buttons")
 	for child in get_children():
 		child.queue_free()
 
 
 func present_continue_button() -> void: 
-	print("prompt continue")
-	#await SignalBus.printer_text_finished 
+	print("continue button ready, waiting for signal")
+	await SignalBus.printer_requests_buttons 
+	print("presenting continue button")
 	var continue_button = continue_button_scene.instantiate() #create object
+	print(continue_button)
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices
+	
+	print(continue_button.get_parent())
+	# Ok so the object EXISTS, but it gets disappeared???
 	continue_button.grab_focus() #set focus to this button
 
 #TODO: catch event for end of script better. now if no continue it just assumes there is a choice
 func present_choices(choices: Array) -> void: #TODO: connext to signal
-	#await SignalBus.printer_text_finished # this is here because it needs to wait for the text to finish printing before it can present the choices, but i belive this is what is causing issues with the loading sometimes. i believe it should rather just check the state of the printer
+	print("choice buttons ready, waiting for signal") #NOTE you could probably move this, and generate the buttons first, just not show them yet
+	await SignalBus.printer_requests_buttons # NOTE: since you've reactivated this (2025-06-25), you should expect issues again with saveloading. but the solution is not to comment this oput. rather, you shhould make it so that old signals are cut off or checked for releance, to prevent old signals causing behaviour after reloading.
 	var i: int = 0
 	var first: Button = null
 	var prev: Button = null

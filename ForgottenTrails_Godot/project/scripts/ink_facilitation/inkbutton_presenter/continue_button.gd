@@ -12,8 +12,10 @@ func _on_pressed():
 	if printer_state.get_state == printer_state.VN_State.PRINTING:
 		print("request skip")
 		SignalBus.control_requests_skip.emit()
-	elif printer_state.get_state != printer_state.VN_State.WAITING: #other states are illegal (like locked or prosessing)
+	elif printer_state.get_state != printer_state.VN_State.WAITING: 
 		print("but it was illegal")
-		return
+		return #other states are illegal (like locked or prosessing)
 	#print("and it was legal")
 	SignalBus.control_requests_continue.emit()
+	SignalBus.request_clear_buttons.emit()
+

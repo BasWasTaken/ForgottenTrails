@@ -123,7 +123,7 @@ public partial class ink_story_processor : Node
 			//GD.Print("continueing story");
 			string content = story.Continue();
 			//GD.Print(content);
-			content = content.Replace('<', '[').Replace('>', ']');
+			content = content.Replace('<', '[').Replace('>', ']'); // ink uses < and > for tags, but we use [ and ] in Godot
 
 			EmitSignal(SignalName.continued_story, content);
 			if(story.CanContinue)

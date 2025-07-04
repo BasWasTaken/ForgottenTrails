@@ -18,9 +18,7 @@ func _clear():
 
 
 func present_continue_button() -> void: 
-	print("continue button ready, waiting for signal")
 	await SignalBus.printer_requests_buttons 
-	print("presenting continue button")
 	var continue_button = continue_button_scene.instantiate() #create object
 	print(continue_button)
 	add_child(continue_button) #place in hierarchy #could also activate and de-activate as needed, but it makes sense to me to do the same as with the choice buttons, because then you can very easily just destroy all children to remove choices

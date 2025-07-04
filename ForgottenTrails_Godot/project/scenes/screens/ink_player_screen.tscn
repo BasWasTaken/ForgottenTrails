@@ -28,6 +28,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="StoryController" type="Node" parent="." node_paths=PackedStringArray("my_story_getter")]
+script = ExtResource("6_clj8h")
+my_story_getter = NodePath("StoryProcessor")
+
+[node name="StoryProcessor" type="Node" parent="StoryController"]
+script = ExtResource("7_ydrh0")
+story = ExtResource("7_iqa4r")
+
 [node name="Visual Display" type="Panel" parent="."]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
@@ -71,23 +79,17 @@ size_flags_stretch_ratio = 10.0
 script = ExtResource("3_on7ai")
 prefab = ExtResource("4_etj7k")
 
-[node name="StoryController" type="Panel" parent="." node_paths=PackedStringArray("my_story_getter")]
+[node name="Story Diplay" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.764
+anchor_top = 0.667
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -105.12
+offset_top = -0.360046
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("6_clj8h")
-my_story_getter = NodePath("StoryProcessor")
 
-[node name="StoryProcessor" type="Node" parent="StoryController"]
-script = ExtResource("7_ydrh0")
-story = ExtResource("7_iqa4r")
-
-[node name="OptionalReadingBackground" type="ColorRect" parent="StoryController"]
+[node name="OptionalReadingBackground" type="ColorRect" parent="Story Diplay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -96,7 +98,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="StoryController"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Story Diplay"]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -104,8 +106,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Story Output" type="MarginContainer" parent="StoryController/HBoxContainer"]
+[node name="Story Output" type="MarginContainer" parent="Story Diplay/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
@@ -114,7 +117,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="TextPresenter" type="RichTextLabel" parent="StoryController/HBoxContainer/Story Output" node_paths=PackedStringArray("box")]
+[node name="TextPresenter" type="RichTextLabel" parent="Story Diplay/HBoxContainer/Story Output" node_paths=PackedStringArray("box")]
 clip_contents = false
 layout_mode = 2
 bbcode_enabled = true
@@ -124,60 +127,60 @@ custom_effects = [SubResource("RichTextEffect_y4d4d"), SubResource("RichTextEffe
 script = ExtResource("11_b3ptg")
 box = NodePath("../../../OptionalReadingBackground")
 
-[node name="Timer" type="Timer" parent="StoryController/HBoxContainer/Story Output/TextPresenter"]
+[node name="Timer" type="Timer" parent="Story Diplay/HBoxContainer/Story Output/TextPresenter"]
 wait_time = 0.002
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="StoryController/HBoxContainer/Story Output/TextPresenter"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Story Diplay/HBoxContainer/Story Output/TextPresenter"]
 stream = ExtResource("12_xiivj")
 volume_db = -20.0
 pitch_scale = 1.2
 max_polyphony = 99
 bus = &"Typing"
 
-[node name="VSeparator" type="VSeparator" parent="StoryController/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="Story Diplay/HBoxContainer"]
 layout_mode = 2
 
-[node name="Story Input" type="MarginContainer" parent="StoryController/HBoxContainer"]
+[node name="Story Input" type="MarginContainer" parent="Story Diplay/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="StoryController/HBoxContainer/Story Input"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Story Diplay/HBoxContainer/Story Input"]
 layout_mode = 2
 
-[node name="ChoicePresenter" type="VBoxContainer" parent="StoryController/HBoxContainer/Story Input/ScrollContainer"]
+[node name="ChoicePresenter" type="VBoxContainer" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer"]
 layout_mode = 2
 alignment = 2
 script = ExtResource("13_larfh")
 
-[node name="ContinueButton" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("14_ikmv8")]
+[node name="ContinueButton" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("14_ikmv8")]
 layout_mode = 2
 
-[node name="ChoiceButton" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton2" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton2" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton3" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton3" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton4" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton4" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton5" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton5" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton6" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton6" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton7" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton7" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton8" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton8" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2
 
-[node name="ChoiceButton9" parent="StoryController/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
+[node name="ChoiceButton9" parent="Story Diplay/HBoxContainer/Story Input/ScrollContainer/ChoicePresenter" instance=ExtResource("15_6t4qh")]
 layout_mode = 2

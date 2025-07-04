@@ -7,15 +7,15 @@
 
 //Area Action System Prompts
 === CrumblingMonasteryChurchCryptUse
-+{LightSource == 1 && LeftCrypt == 0}[Use the door]
++{LightSource == 1 && LeftCrypt == 0}[Open the door]
 You pull on the doorhandle which, when coaxed with a bit of force, gives way and accompanied by a characteristic creeking sound lets you open the door. Beyond it, you see a short hallway that quickly transitions into a steep stairway leading upward.
 ->CrumblingMonasteryChurchCryptLeave
-+{LightSource == 0 && LeftCrypt == 0}[Use what you presume to be a doorhandle]
++{LightSource == 0 && LeftCrypt == 0 && CryptDoor ==1}[Use what you presume to be a doorhandle]
     You pull on the handle and with a creak the door gives way. Unfortunately, it is just as dark on the other side.
         ++[Step forward]
         You take a step into the darkness, the same type of flooring greeting your feet.
             +++[Keep going]
-            You keep walking forward. While dark, this actually seems pretty doable? You set one foot in front of the other and make goo-
+            You keep walking forward. While dark, this actually seems pretty doable? You set one foot in front of the other and make good-
             //Add sound here
             With a yelp you trip and crash into hard, lined stone. It seems to feel like a staircase? What you also feel are painful arms and shins which are undoubtedly scraped and bruised from the fall. 
                 ++++[Climb up the stairs]
@@ -73,7 +73,7 @@ On several of the alcoves you find effigies made of wood. They seem to depict tw
 ->Actions
 
 +{LightSource == 0}[Try to examine the room]
-{The room is obscured in deep darkness. As you carefully feel around, you feel the damp stone walls of the room pass by your fingers.|You stumble around in the darkness, trying to find something to grip. Suddenly, the wall gives way to a hole causing you to almost tumble in. {LitCrypt == 0:Steadying yourself, you feel around. It appears to be some sort of shelf in the stone, a wooden box atop it.|You must have fallen into one of the alcoves. Judging by the wood beneath your fingertips, this one seems to hold a coffin.}->CrumblingMonasteryChurchCryptBoxToggle|Continueing to rummage around in the dark, you trek your way along the walls. Eventually, stone makes way briefly for metal and then wood. {LitCrypt == 0:A door perhaps? ->CrumblingMonasteryChurchCryptDoorToggle|You seem to have found the door.}|You fumble around in the dark some more, but don't seem to find anything of interest.}
+{The room is obscured in deep darkness. As you carefully feel around, you feel the damp stone walls of the room pass by your fingers.|You stumble around in the darkness, trying to find something to grip. Suddenly, the wall gives way to a hole causing you to almost tumble in. {LitCrypt == 0:Steadying yourself, you feel around. It appears to be some sort of shelf in the stone, a wooden box atop it.|You must have fallen into one of the alcoves. Judging by the wood beneath your fingertips, this one seems to hold a coffin.}->CrumblingMonasteryChurchCryptBoxToggle|Continueing to rummage around in the dark, you trek your way along the walls. Eventually, stone makes way briefly for metal and then wood. {LitCrypt == 0:Your hands brush over what feels to be a handle. Perhaps it's a door? ->CrumblingMonasteryChurchCryptDoorToggle|You seem to have found the door.}|You fumble around in the dark some more, but don't seem to find anything of interest.}
 ->Actions
 
 +{LightSource == 0 && CryptBox == 1}[Examine the {LitCrypt == 0:box(?) on the wallshelf|coffins in the alcove}]

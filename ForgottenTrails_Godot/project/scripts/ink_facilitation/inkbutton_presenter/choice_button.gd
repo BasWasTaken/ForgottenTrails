@@ -18,4 +18,3 @@ func _on_pressed():
 		return
 	#print("and it was legal")
 	SignalBus.control_requests_choice.emit(index)
-	SignalBus.request_clear_buttons.emit()

@@ -113,18 +113,16 @@ func present_story(content: String) -> void:
 
 func skip_to_printed():
 	visible_characters = -1 # set all visible
-	# wait for the loop to exit, and it should automatically enter the finish_text() function
-	timer.stop()
 
 func finish_text():
 	#TODO: Add finish line sound?
-	#TODO pas hier de knoppen laten verschijnen
 	visible_characters = -1 # set all visible
 	
 	# stop typing
 	timer.stop()
 	printer_state.set_state(printer_state.VN_State.WAITING)
-	SignalBus.printer_text_finished.emit() #give signal
+	print("finished printing text")
+	SignalBus.printer_requests_buttons.emit() # request buttons to be presented
 
 func _spd(new):
 	typing_speed_modifier = new

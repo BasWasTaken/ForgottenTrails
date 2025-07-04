@@ -5,7 +5,7 @@ extends Node
 @export var my_story_getter: Node
 #@export var text_presenter: RichTextLabel #TODO according to refinement 20250301135148 this could be replaced by signals, but it's very low priority.
 #@export var choices_presenter: VBoxContainer #todo remove reference
-@onready var history_log #= get_node("HistoryLog")
+#@onready var history_log #= get_node("HistoryLog")
 var story_state_json: String:
 	get:
 		return my_story_getter.latest_state # PREVIOUSLY saved state

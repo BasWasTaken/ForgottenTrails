@@ -38,6 +38,12 @@ func _ready():
 	SignalBus.ink_func_print.connect(present_console_message)
 	SignalBus.ink_func_spd.connect(_spd)
 
+	
+	SignalBus.buttons_ready.connect(
+		func():
+			buttons_ready = true
+	)
+
 	ConfigHandler.setting_changed.connect(
 		func(id, _value):
 			if id == ConfigHandler.choose.keys()[ConfigHandler.choose.textbox_opacity]:
@@ -73,9 +79,12 @@ func present_console_message(content: String, warning: bool = false) -> void:
 	else:
 		print("Message from INK Script: " + content)
 
+var buttons_ready: bool = false
+
 func present_story(content: String) -> void:
 	# set state
 	printer_state.set_state(printer_state.VN_State.PRINTING)
+
 
 	# Prep Textbox
 	self.clear()
@@ -113,18 +122,22 @@ func present_story(content: String) -> void:
 
 func skip_to_printed():
 	visible_characters = -1 # set all visible
-	# wait for the loop to exit, and it should automatically enter the finish_text() function
-	timer.stop()
 
 func finish_text():
 	#TODO: Add finish line sound?
-	#TODO pas hier de knoppen laten verschijnen
 	visible_characters = -1 # set all visible
-	
+	timer.start(0.1) # give a small delay to allow the last character to be shown. this also allows the buttons some time to be ready
+	await timer.timeout	
 	# stop typing
 	timer.stop()
 	printer_state.set_state(printer_state.VN_State.WAITING)
-	SignalBus.printer_text_finished.emit() #give signal
+	print("finished printing text")
+	# if not buttons_ready: # wait for buttons to be ready
+	# 	await SignalBus.buttons_ready
+	# 	buttons_ready = true
+	# print("buttons are ready")
+	buttons_ready = false # reset the buttons ready state
+	SignalBus.printer_requests_buttons.emit() # request buttons to be presented
 
 func _spd(new):
 	typing_speed_modifier = new

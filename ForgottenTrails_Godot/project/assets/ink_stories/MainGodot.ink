@@ -12,11 +12,19 @@ INCLUDE ArchiveEdanGate.ink
 INCLUDE ArchiveEdanInn.ink
 INCLUDE ArchiveEdanMarket.ink
 INCLUDE ArchiveEdanPrison.ink
+INCLUDE SystemModulesItems.ink
+
+
+
+
+
+
+
 
 
 
 //Set inventory
-~ Inventory = (Knife, Rope, Lantern, ForagedMushrooms)
+~ Inventory = (Journal)
 
 //Set party
 ~ Party = (Player)

@@ -1,6 +1,6 @@
 === CrumblingMonasteryChurchMainHall
-Testy mctestface(LOC_CrumblingChurchMainHall)
-Testing
+~SetLocation(LOC_CrumblingMonasteryChurchMainHall)
+Content coming soon! 
 ->Actions
 
 === MoveCrumblingChurchMainHall ===

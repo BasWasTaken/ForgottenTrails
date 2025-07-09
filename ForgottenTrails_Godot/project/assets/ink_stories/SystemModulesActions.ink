@@ -1,4 +1,6 @@
 === Actions ===
++{DEBUG == true}[Show debug options]
+->TestingDebugActions
 +[Talk]
 ->Talk
 +[Examine]
@@ -7,6 +9,13 @@
 ->Use
 +[Move]
 ->Move
++[{ItemChoice("lantern")}]
+->ItemStateLantern->
+-> Actions
++[{ItemChoice("torch")}]
+->ItemStateTorch->
+-> Actions
+
 
 === Talk ===
 +{Party has Wesley}[Talk to Wes]
@@ -17,43 +26,19 @@
 ->Actions
 
 === Examine ===
-{CurrentLocation == LOC_TestingGrounds:->ExamineTestingGrounds}
+{CurrentLocation == LOC_TestingGrounds:->TestingGroundsExamine}
+{CurrentLocation == LOC_CrumblingMonasteryChurchCrypt:->CrumblingMonasteryChurchExamine}
 
 === Use ===
-//DebugOptions
-//Debug Adding Party Members
-+{DEBUG == true && Party hasnt Wesley}[Add Wes to the party]
-~Party_AddMember(Wesley)
-Added Wes to the party!
-->Actions
-
-+{DEBUG == true && Party has Wesley}[Remove Wes from the party]
-~Party_RemoveMember(Wesley)
-Removed Wes from the party!
-->Actions
-
-+{DEBUG == true && Party hasnt Alice}[Add Alice to the party]
-~Party_AddMember(Alice)
-Added Alice to the party!
-->Actions
-
-+{DEBUG == true && Party has Alice}[Remove Alice from the party]
-~Party_RemoveMember(Alice)
-Removed Alice from the party!
-->Actions
-
-+{DEBUG == true && Party hasnt Robert}[Add Robert to the party]
-~Party_AddMember(Robert)
-Added Robert to the party!
-->Actions
-
-+{DEBUG == true && Party has Robert}[Remove Robert from the party]
-~Party_RemoveMember(Robert)
-Removed Robert from the party!
+{CurrentLocation == LOC_TestingGrounds:->TestingGroundsUse}
+{CurrentLocation == LOC_CrumblingMonasteryChurchCrypt:->CrumblingMonasteryChurchCryptUse}
++[Nevermind]
 ->Actions
 
 === Move ===
-
-//Testing Grounds Choices (This should include every accessible location)
-+{CurrentLocation == LOC_TestingGrounds}Go to Crumbling Monastery Church Main Hall
--> CrumblingMonasteryChurchMainHall
++{DEBUG == true}[Show debug options]
+->TestingDebugMovement
++{CurrentLocation == LOC_CrumblingMonasteryChurchCrypt && LeftCrypt == 1}[Leave the crypt]
+->CrumblingMonasteryChurchMainHall
++[Nevermind]
+->Actions

@@ -3,7 +3,7 @@
 Welcome to the Testing Grounds! An empty, white void stretches all around you. If you haven't got dark mode enabled that is. 
 ->Actions
 
-=== ExamineTestingGrounds ===
+=== TestingGroundsExamine ===
 +[Look at the void]
 The void stares back. 
 ->Actions
@@ -11,6 +11,6 @@ The void stares back.
 The bug isn't fixed
 ->Actions
 
-=== MoveTestingGrounds ===
-+[Go to the Crumbling Church Main Hall]
-->CrumblingMonasteryChurchMainHall
+=== TestingGroundsUse ===
++[There's nothing here to use]
+->Actions

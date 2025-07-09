@@ -18,6 +18,8 @@ func _clear():
 
 
 func present_continue_button() -> void: 
+	SignalBus.buttons_ready.emit()
+	print("continue button ready, waiting for signal")
 	await SignalBus.printer_requests_buttons 
 	var continue_button = continue_button_scene.instantiate() #create object
 	print(continue_button)
@@ -29,6 +31,7 @@ func present_continue_button() -> void:
 
 #TODO: catch event for end of script better. now if no continue it just assumes there is a choice
 func present_choices(choices: Array) -> void: #TODO: connext to signal
+	SignalBus.buttons_ready.emit()
 	print("choice buttons ready, waiting for signal") #NOTE you could probably move this, and generate the buttons first, just not show them yet
 	await SignalBus.printer_requests_buttons # NOTE: since you've reactivated this (2025-06-25), you should expect issues again with saveloading. but the solution is not to comment this oput. rather, you shhould make it so that old signals are cut off or checked for releance, to prevent old signals causing behaviour after reloading.
 	var i: int = 0

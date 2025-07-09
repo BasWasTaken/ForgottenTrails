@@ -24,6 +24,7 @@ extends Node
 
 signal request_clear_buttons
 
+signal buttons_ready
 signal printer_requests_buttons
 
 # signal control_requests_accept

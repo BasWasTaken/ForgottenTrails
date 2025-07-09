@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://xos048wli6hj"
+path="res://.godot/imported/SystemModulesItems.ink-6727e9b615bf5b9f44946bf9df345930.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemModulesItems.ink"
+dest_files=["res://.godot/imported/SystemModulesItems.ink-6727e9b615bf5b9f44946bf9df345930.res"]
+
+[params]
+
+is_main_file=false
+compress=true

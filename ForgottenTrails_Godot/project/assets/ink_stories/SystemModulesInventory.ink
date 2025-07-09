@@ -1,6 +1,6 @@
 // Inventory is managed by the LIST variable in Ink, which is observed by Unity and matched accordingly.
 
-LIST Items = Knife, Pot, Rope, Lantern, Torch, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod // existing items // Vugs may add items to this list.
+LIST Items = Knife, Pot, Rope, Lantern, Torch, ForagedMushrooms, WornSword, EdanInnRoomKey1, EdanInnRoomKey2, EdanInnRoomKey3, EdanInnMasterKey, BasicFishingRod, Journal, GoldRing // existing items // Vugs may add items to this list.
 
 ~ Items = LIST_ALL(Items)  // Full list for Unity syncing. Note Bas: I should maybe  prefix with underscore
 
@@ -36,5 +36,6 @@ VAR UsedItem = () // container for unity to tell ink what item it just used
 
 === function item_remove_last_used() // remove item that was just used
 ~ item_remove(UsedItem)
+
 
 

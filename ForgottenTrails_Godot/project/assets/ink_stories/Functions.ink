@@ -20,9 +20,6 @@ INCLUDE SystemPresentationVariableLanguage.ink
 
 INCLUDE SystemModulesFishing.ink
 
-
-This is a testing line, delete after use
-
 // Ink is super inconcistent met casing, maar ik moet IETS hanteren, dus ik doe het volgende (gebaseerd op wat ze lijken te proberen):
 // - scenes & functies: snake_case
 // - lists & vars: camelCase (soms splitten ze lists & vars of camel  & pascal en soms niet. is vrij verwarrend samen dus ik laat het lekker zo.

@@ -20,8 +20,13 @@ extends Node
 
 #signal menu_open_requested(window:Control) leaving this signal for later, when|if i change how windows are management, or the current implementation starts causing problems
 
+@warning_ignore_start("unused_signal")
 
-signal printer_text_finished
+signal request_clear_buttons
+
+signal buttons_ready
+signal printer_requests_buttons
+
 # signal control_requests_accept
 signal control_requests_continue
 # signal control_requests_cancel

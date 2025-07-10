@@ -14,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="InkPlayer" parent="." instance=ExtResource("1_r2cfs")]
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 2
 
 [node name="Menus" type="TabContainer" parent="InkPlayer"]

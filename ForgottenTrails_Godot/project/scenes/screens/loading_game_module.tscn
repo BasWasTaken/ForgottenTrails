@@ -10,24 +10,32 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Load Game Button" type="Button" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-offset_right = 59.0
-offset_bottom = 31.0
-text = "Load..."
-
-[node name="OptionButton" type="OptionButton" parent="."]
-offset_left = 4.0
-offset_top = 32.0
-offset_right = 36.0
-offset_bottom = 52.0
-script = ExtResource("1_d3ihm")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-visible = false
-layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="Load Game Button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+text = "Load..."
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "een"
+popup/item_0/id = 0
+popup/item_1/text = "twee"
+popup/item_1/id = 1
+popup/item_2/text = "drie"
+popup/item_2/id = 2
+script = ExtResource("1_d3ihm")
+
+[node name="Confirm Load Game" type="Button" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Load..."
+
+[connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/OptionButton" method="toggle_hidden"]
+[connection signal="item_selected" from="VBoxContainer/OptionButton" to="VBoxContainer/Confirm Load Game" method="show" unbinds=1]
+[connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/OptionButton" method="_on_confirm_load_game_pressed"]

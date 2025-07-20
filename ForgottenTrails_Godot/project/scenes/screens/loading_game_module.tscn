@@ -19,6 +19,11 @@ offset_bottom = 40.0
 layout_mode = 2
 text = "Load..."
 
+[node name="Cancel Load Game Button" type="Button" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Cancel"
+
 [node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
@@ -34,8 +39,14 @@ script = ExtResource("1_d3ihm")
 [node name="Confirm Load Game" type="Button" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
-text = "Load..."
+text = "Confirm"
 
-[connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/OptionButton" method="toggle_hidden"]
+[connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/Load Game Button" method="hide"]
+[connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/Cancel Load Game Button" method="show"]
+[connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/OptionButton" method="choose_visible" binds= [true]]
+[connection signal="pressed" from="VBoxContainer/Cancel Load Game Button" to="VBoxContainer/Load Game Button" method="show"]
+[connection signal="pressed" from="VBoxContainer/Cancel Load Game Button" to="VBoxContainer/Cancel Load Game Button" method="hide"]
+[connection signal="pressed" from="VBoxContainer/Cancel Load Game Button" to="VBoxContainer/OptionButton" method="choose_visible" binds= [false]]
 [connection signal="item_selected" from="VBoxContainer/OptionButton" to="VBoxContainer/Confirm Load Game" method="show" unbinds=1]
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/OptionButton" method="_on_confirm_load_game_pressed"]
+[connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Confirm Load Game" method="hide"]

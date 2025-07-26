@@ -25,9 +25,11 @@ func _ready():
 
 # Quick, Auto, and Manual Save Functions
 func quicksave_game(state: String):
+	print("Quicksaving game")
 	save_game(state, "quick")
 
 func autosave_game(state: String):
+	print("Autosaving game")
 	save_game(state, "auto")
 
 func save_game(state: String, method: String):

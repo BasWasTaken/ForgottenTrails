@@ -7,6 +7,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -49,6 +51,6 @@ text = "Confirm"
 [connection signal="pressed" from="VBoxContainer/Cancel Load Game Button" to="VBoxContainer/OptionButton" method="choose_visible" binds= [false]]
 [connection signal="item_selected" from="VBoxContainer/OptionButton" to="VBoxContainer/Confirm Load Game" method="show" unbinds=1]
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Load Game Button" method="show"]
+[connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Cancel Load Game Button" method="hide"]
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/OptionButton" method="_on_confirm_load_game_pressed"]
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Confirm Load Game" method="hide"]
-[connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Cancel Load Game Button" method="hide"]

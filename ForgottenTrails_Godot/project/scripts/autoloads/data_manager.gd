@@ -2,6 +2,7 @@ extends Node
 
 @export_dir var saving_directory = "user://saves"
 var player_name = "dev"
+var saved_state: String = ""
 
 # Construct the full path for a player's save directory
 var file_path:
@@ -21,16 +22,19 @@ func _ready():
 	
 	SignalBus.control_requests_quicksave.connect(quicksave_game)
 	SignalBus.control_requests_quickload.connect(load_most_recent_quicksavefile)
-	SignalBus.control_requests_load.connect(show_savegames)
 
 # Quick, Auto, and Manual Save Functions
-func quicksave_game(state: String):
-	save_game(state, "quick")
+func quicksave_game():
+	print("Quicksaving game")
+	assert(saved_state != "", "No saved state available for quicksave")
+	save_game(saved_state, "quick")
 
 func autosave_game(state: String):
+	print("Autosaving game")
 	save_game(state, "auto")
 
 func save_game(state: String, method: String):
+	DataManager.saved_state = state # Store the state in the DataManager for later use (e.g. quicksave)
 	print("Starting " + method + " save")
 	
 
@@ -146,6 +150,11 @@ func load_game(file: String):
 	var save_file = FileAccess.open(file, FileAccess.READ)
 
 	# Clear existing objects in the "persist" group to prevent duplication
+	
+	# TODO: Manually clear text or set some sort of "you should not see this" text to the textpresenter?
+	SignalBus.request_clear_buttons.emit() # Emit signal to clear buttons, if needed
+	printer_state.set_state(printer_state.VN_State.LOCKED)
+
 	# var save_nodes = get_tree().get_nodes_in_group("persist")
 	# for node in save_nodes:
 	# 	node.queue_free()
@@ -153,8 +162,10 @@ func load_game(file: String):
 	# Read and process saved data
 
  	# Load the ink story state
-	load_story_state.emit(save_file.get_line())
-	#TODO: Can be improved with bugfixing - currently a bit volatile after loading, clickling l keeps continueing in a sense.
+	var state: String = save_file.get_line()
+	
+	saved_state = state # Store the state in the DataManager for later use (e.g. quicksave)
+	load_story_state.emit(state) # Emit signal to load the story state
 	# should really make sure that all processes are ahalted before loading, like its a still system and a clean start
 
 	while save_file.get_position() < save_file.get_length():
@@ -166,10 +177,10 @@ func load_game(file: String):
 		if parse_result != OK:
 			print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
 			continue
-
 		# Extract node data
 		var node_data = json.data
 
+		# TODO: Ensure the log item is included in this.
 		# # Recreate the object in the scene tree
 		# var new_object = load(node_data["filename"]).instantiate()
 		# get_node(node_data["parent"]).add_child(new_object)
@@ -180,4 +191,5 @@ func load_game(file: String):
 		# 	if key not in ["filename", "parent", "pos_x", "pos_y"]:
 		# 		new_object.set(key, node_data[key])
 		
+	printer_state.set_state(printer_state.VN_State.WAITING)
 	print("Game loaded from file: " + file)

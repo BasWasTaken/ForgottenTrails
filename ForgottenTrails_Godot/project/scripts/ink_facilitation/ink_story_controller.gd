@@ -65,16 +65,18 @@ func hack(): #needed because the variantarray cannot by itself be sent through a
 func input_continue():
 	printer_state.set_state(printer_state.VN_State.PROCESSING)
 	my_story_getter.ContinueStory();
-
+ 
 
 func input_choice(index:int):
 	my_story_getter.FeedChoice(index);
 	save_state()
-	DataManager.autosave_game(story_state_json) # save now #TODO instead regel dit met een signal?
 	input_continue()
 
 func load_state(state: String):
 	my_story_getter.LoadState(state)
 
-func save_state():
-	return my_story_getter.SaveState()
+func save_state(): #tell the c# script to save the story state
+	var state = my_story_getter.SaveState()
+	#DataManager.saved_state = state # Store the state in the DataManager for later use (e.g. quicksave)
+	DataManager.autosave_game(story_state_json) #NOTE: This could be done with a signal, perhaps, if I got the sequencing right. 
+	return state

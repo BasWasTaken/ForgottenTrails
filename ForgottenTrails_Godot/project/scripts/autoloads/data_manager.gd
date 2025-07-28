@@ -21,7 +21,6 @@ func _ready():
 	
 	SignalBus.control_requests_quicksave.connect(quicksave_game)
 	SignalBus.control_requests_quickload.connect(load_most_recent_quicksavefile)
-	SignalBus.control_requests_load.connect(show_savegames)
 
 # Quick, Auto, and Manual Save Functions
 func quicksave_game(state: String):

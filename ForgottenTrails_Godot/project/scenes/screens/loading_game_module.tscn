@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cteefbn7notdh"]
+[gd_scene load_steps=3 format=3 uid="uid://cteefbn7notdh"]
 
 [ext_resource type="Script" uid="uid://b5bd83phttdce" path="res://project/scripts/save_selector.gd" id="1_d3ihm"]
+[ext_resource type="Script" uid="uid://4lf4xaqhj325" path="res://project/scripts/quicksave.gd" id="2_m5nl2"]
 
 [node name="Loading Game Module" type="Control"]
 layout_mode = 3
@@ -43,6 +44,20 @@ visible = false
 layout_mode = 2
 text = "Confirm"
 
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -44.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Button" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+text = "Quicksave"
+script = ExtResource("2_m5nl2")
+
 [connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/Load Game Button" method="hide"]
 [connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/Cancel Load Game Button" method="show"]
 [connection signal="pressed" from="VBoxContainer/Load Game Button" to="VBoxContainer/OptionButton" method="choose_visible" binds= [true]]
@@ -54,3 +69,4 @@ text = "Confirm"
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Cancel Load Game Button" method="hide"]
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/OptionButton" method="_on_confirm_load_game_pressed"]
 [connection signal="pressed" from="VBoxContainer/Confirm Load Game" to="VBoxContainer/Confirm Load Game" method="hide"]
+[connection signal="pressed" from="VBoxContainer2/Button" to="VBoxContainer2/Button" method="quicksave"]

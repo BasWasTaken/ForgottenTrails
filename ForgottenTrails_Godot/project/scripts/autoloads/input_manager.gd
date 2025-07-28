@@ -7,6 +7,7 @@ func _unhandled_input(event):
 	#print("input received: " + str(event))
 	if event.is_action_pressed("quicksave"):
 		#print("input manager received quicksave")
+		print("input manager received quicksave")
 		SignalBus.control_requests_quicksave.emit()
 	elif event.is_action_pressed("quickload"):
 		#print("input manager received quickload")

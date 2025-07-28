@@ -2,6 +2,7 @@ extends Node
 
 @export_dir var saving_directory = "user://saves"
 var player_name = "dev"
+var saved_state: String = ""
 
 # Construct the full path for a player's save directory
 var file_path:
@@ -23,15 +24,17 @@ func _ready():
 	SignalBus.control_requests_quickload.connect(load_most_recent_quicksavefile)
 
 # Quick, Auto, and Manual Save Functions
-func quicksave_game(state: String):
+func quicksave_game():
 	print("Quicksaving game")
-	save_game(state, "quick")
+	assert(saved_state != "", "No saved state available for quicksave")
+	save_game(saved_state, "quick")
 
 func autosave_game(state: String):
 	print("Autosaving game")
 	save_game(state, "auto")
 
 func save_game(state: String, method: String):
+	DataManager.saved_state = state # Store the state in the DataManager for later use (e.g. quicksave)
 	print("Starting " + method + " save")
 	
 
@@ -154,7 +157,10 @@ func load_game(file: String):
 	# Read and process saved data
 
  	# Load the ink story state
-	load_story_state.emit(save_file.get_line())
+	var state: String = save_file.get_line()
+	
+	saved_state = state # Store the state in the DataManager for later use (e.g. quicksave)
+	load_story_state.emit(state) # Emit signal to load the story state
 	#TODO: Can be improved with bugfixing - currently a bit volatile after loading, clickling l keeps continueing in a sense.
 	# should really make sure that all processes are ahalted before loading, like its a still system and a clean start
 

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://bc2472m0ae3iv"
+path="res://.godot/imported/DialogueYourself.ink-5f4b1e52bf9d1a29077802106b2d2f88.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/DialogueYourself.ink"
+dest_files=["res://.godot/imported/DialogueYourself.ink-5f4b1e52bf9d1a29077802106b2d2f88.res"]
+
+[params]
+
+is_main_file=false
+compress=true

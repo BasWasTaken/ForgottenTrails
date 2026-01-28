@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dml7v5n7jgbgw"
+path="res://.godot/imported/SystemModulesTravel.ink-86673475dc40f38f45585eae45da93c4.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemModulesTravel.ink"
+dest_files=["res://.godot/imported/SystemModulesTravel.ink-86673475dc40f38f45585eae45da93c4.res"]
+
+[params]
+
+is_main_file=false
+compress=true

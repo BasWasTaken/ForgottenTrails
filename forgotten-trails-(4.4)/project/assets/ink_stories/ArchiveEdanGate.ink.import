@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://bl2su8h4tlh0d"
+path="res://.godot/imported/ArchiveEdanGate.ink-98912631bca981c2490f438b920c2d09.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/ArchiveEdanGate.ink"
+dest_files=["res://.godot/imported/ArchiveEdanGate.ink-98912631bca981c2490f438b920c2d09.res"]
+
+[params]
+
+is_main_file=false
+compress=true

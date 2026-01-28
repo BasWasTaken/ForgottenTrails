@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwjoo1lwuwf5j"]
+
+[ext_resource type="Script" uid="uid://c5se3eycv848o" path="res://project/scripts/autoloads/setting_broker.gd" id="1_f1ypg"]
+
+[node name="Setting Handler" type="VBoxContainer" node_paths=PackedStringArray("reset_button", "revert_button", "apply_button")]
+script = ExtResource("1_f1ypg")
+reset_button = NodePath("Button Handler/Reset")
+revert_button = NodePath("Button Handler/Revert")
+apply_button = NodePath("Button Handler/Apply")
+
+[node name="Button Handler" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Button Handler"]
+layout_mode = 2
+
+[node name="Reset" type="Button" parent="Button Handler"]
+visible = false
+layout_mode = 2
+text = "Reset"
+
+[node name="Revert" type="Button" parent="Button Handler"]
+visible = false
+layout_mode = 2
+text = "Revert"
+
+[node name="Apply" type="Button" parent="Button Handler"]
+visible = false
+layout_mode = 2
+text = "Apply"
+
+[connection signal="pressed" from="Button Handler/Reset" to="." method="reset"]
+[connection signal="pressed" from="Button Handler/Revert" to="." method="revert"]
+[connection signal="pressed" from="Button Handler/Apply" to="." method="apply"]

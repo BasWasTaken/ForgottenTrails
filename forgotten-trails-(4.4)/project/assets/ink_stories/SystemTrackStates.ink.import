@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://dfpwa4excvgqo"
+path="res://.godot/imported/SystemTrackStates.ink-8d9574727f1275b07c6a3ba97aecfc8b.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/SystemTrackStates.ink"
+dest_files=["res://.godot/imported/SystemTrackStates.ink-8d9574727f1275b07c6a3ba97aecfc8b.res"]
+
+[params]
+
+is_main_file=false
+compress=true

@@ -1,0 +1,16 @@
+[remap]
+
+importer="ink"
+type="Resource"
+uid="uid://csngk1862x6nn"
+path="res://.godot/imported/ArchiveEdanRegionRandomEvents.ink-3e0d20cf40711fcc5ea6ff85b7b414fe.res"
+
+[deps]
+
+source_file="res://project/assets/ink_stories/ArchiveEdanRegionRandomEvents.ink"
+dest_files=["res://.godot/imported/ArchiveEdanRegionRandomEvents.ink-3e0d20cf40711fcc5ea6ff85b7b414fe.res"]
+
+[params]
+
+is_main_file=false
+compress=true
